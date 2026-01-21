@@ -1,0 +1,7 @@
+<stdin>:4:10: error: failed to legalize operation 'llhd.constant_time' that was explicitly marked illegal
+    %0 = llhd.constant_time <0ns, 1d, 0e>
+         ^
+<stdin>:4:10: note: see current operation: %1 = "llhd.constant_time"() <{value = #llhd.time<0ns, 1d, 0e>}> : () -> !llhd.time
+<stdin>:1:1: error: conversion to arcs failed
+module {
+^

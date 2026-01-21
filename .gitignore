@@ -1,0 +1,61 @@
+# Ignore system files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Ignore build outputs
+*.o
+*.so
+*.a
+*.dylib
+*.exe
+
+# Ignore Docker build cache
+.dockerignore
+
+# Ignore test results (keep sample results in repo)
+# results/
+# *.err
+# *.out
+
+# Ignore large binary files
+*.tar.gz
+*.zip
+*.bin
+*.elf
+
+# Ignore temporary files
+tmp/
+temp/
+*.tmp
+
+# Ignore logs
+*.log
+
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+
+# Ignore Node modules
+node_modules/
+
+# Ignore sensitive data
+*.key
+*.pem
+*.cert
+credentials.json
+.env
+
+# Keep important result files for documentation
+!circt-1/results/

@@ -1,0 +1,28 @@
+[
+  {
+    "name": "top_arc",
+    "numStateBytes": 72,
+    "initialFnSym": "",
+    "finalFnSym": "",
+    "states": [
+      {
+        "name": "clkin_data",
+        "offset": 0,
+        "numBits": 64,
+        "type": "input"
+      },
+      {
+        "name": "in_data",
+        "offset": 16,
+        "numBits": 192,
+        "type": "input"
+      },
+      {
+        "name": "out_data",
+        "offset": 48,
+        "numBits": 192,
+        "type": "output"
+      }
+    ]
+  }
+]
