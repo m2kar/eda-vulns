@@ -37,10 +37,12 @@ jobs:
             if [ -n "$PR_NUMBER" ]; then
               echo "tag=pr-$PR_NUMBER" >> $GITHUB_OUTPUT
             else
-              echo "tag=${{ github.event.workflow_run.head_branch }}-${{ github.event.workflow_run.head_sha }}" >> $GITHUB_OUTPUT
+              SHORT_SHA=$(echo "${{ github.event.workflow_run.head_sha }}" | cut -c1-7)
+              echo "tag=${{ github.event.workflow_run.head_branch }}-${SHORT_SHA}" >> $GITHUB_OUTPUT
             fi
           else
-            echo "tag=${{ github.event.workflow_run.head_branch }}-${{ github.event.workflow_run.head_sha }}" >> $GITHUB_OUTPUT
+            SHORT_SHA=$(echo "${{ github.event.workflow_run.head_sha }}" | cut -c1-7)
+            echo "tag=${{ github.event.workflow_run.head_branch }}-${SHORT_SHA}" >> $GITHUB_OUTPUT
           fi
 
       - name: Pull Docker image
