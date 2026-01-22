@@ -18,7 +18,8 @@ eda-vulns/
 ├── .github/
 │   └── workflows/    # GitHub Actions for CI/CD
 ├── circt-1/          # CIRCT vulnerability CVE-PENDING (CVSS 5.3)
-│   ├── report.md     # Full technical CVE report
+│   ├── README.md     # Full technical CVE report (English)
+│   ├── README.zh.md  # Full technical CVE report (Chinese)
 │   ├── Dockerfile    # Reproduction environment
 │   └── ...           # Test files and scripts
 └── ...               # Future vulnerability reports
@@ -57,8 +58,8 @@ CIRCT compiler fails to handle direct array indexing (e.g., `clkin_data[0]`) in 
 **Links:**
 - [GitHub Issue](https://github.com/llvm/circt/issues/9469)
 - [Fix PR](https://github.com/llvm/circt/pull/9481)
-- [Full Report](circt-1/report.md)
-- [Docker Environment](circt-1/README_DOCKER.md)
+- [Full Report (English)](circt-1/README.md)
+- [完整报告 (中文)](circt-1/README.zh.md)
 
 **Docker Image:**
 ```bash
