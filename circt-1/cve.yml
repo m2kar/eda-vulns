@@ -1,0 +1,32 @@
+"Select a request type": "Report Vulnerability/Request CVE ID"
+"Enter your e-mail address": "zhiqing@iscas.ac.cn"
+"Enter a PGP Key (to encrypt)": ""
+"Number of vulnerabilities reported or IDs requested (1-10)": 1
+"I have verified that this vulnerability is not in a CNA-covered product.": true
+"I have verified that the vulnerability has not already been assigned a CVE ID.": true
+"Vulnerability type": "Other or Unknown"
+"Other vulnerability type": "CWE-703: Improper Check or Handling of Exceptional Conditions"
+"Vendor of the product(s)": "llvm"
+"Affected product(s)/code base":
+  - "Product": "circt"
+    "Version": "<=1.139.0; fixed in main after PR #9481 (2026-01-21)"
+"Has vendor confirmed or acknowledged the vulnerability?": "Yes"
+"Attack type": "Local"
+"Impact":
+  - "Denial of Service"
+"Affected component(s)": "circt-verilog, arcilator, LLHD lowering pipeline (Mem2Reg, HoistSignals), WaitEventOpConversion"
+"Attack vector(s)": "Compile SystemVerilog always_ff with direct array indexing in the sensitivity list (e.g., posedge clkin_data[0])."
+"Suggested description of the vulnerability for use in the CVE": |
+  llvm circt-1.139.0 and earlier mishandles direct array indexing in SystemVerilog always_ff sensitivity lists
+  (e.g., posedge clkin_data[0]), causing illegal llhd.constant_time operations during LLHD lowering and compilation failure.
+"Discoverer(s)/Credits": "Zhiqing Rui (Institute of Software, Chinese Academy of Sciences)"
+"Reference(s)": |
+  https://github.com/m2kar/eda-vulns/tree/main/circt-1
+  https://github.com/llvm/circt/issues/9469
+  https://github.com/llvm/circt/pull/9481
+"Additional information": |
+  CVSS v3.1: 5.3 (MEDIUM)
+  Vector: CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:L
+  CWE: CWE-703, CWE-697, CWE-1304
+  PoC: https://github.com/m2kar/eda-vulns/tree/main/circt-1
+"Enter Security Code": ""
