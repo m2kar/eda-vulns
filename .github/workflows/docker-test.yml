@@ -1,0 +1,59 @@
+name: Test Docker Images
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'circt-1/**'
+      - '.github/workflows/docker-test.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'circt-1/**'
+  workflow_dispatch:
+
+jobs:
+  test-circt-1:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: |
+          cd circt-1
+          docker build --platform linux/amd64 -t circt-vuln-test .
+
+      - name: Run vulnerability reproduction test
+        run: |
+          docker run --platform linux/amd64 --rm circt-vuln-test --all
+
+      - name: Test vulnerable code only
+        run: |
+          docker run --platform linux/amd64 --rm circt-vuln-test --vuln-only
+
+      - name: Test workaround code only
+        run: |
+          docker run --platform linux/amd64 --rm circt-vuln-test --workaround-only
+
+      - name: Extract test results
+        if: always()
+        run: |
+          mkdir -p test-artifacts
+          docker run --platform linux/amd64 --rm \
+            -v $(pwd)/test-artifacts:/vuln-reproduction/output \
+            circt-vuln-test --all || true
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: circt-1-test-results
+          path: test-artifacts/
+          retention-days: 30

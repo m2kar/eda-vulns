@@ -1,5 +1,10 @@
 # EDA Vulnerabilities Research
 
+[![Docker Build](https://github.com/m2kar/eda-vulns/actions/workflows/docker-build.yml/badge.svg)](https://github.com/m2kar/eda-vulns/actions/workflows/docker-build.yml)
+[![Docker Test](https://github.com/m2kar/eda-vulns/actions/workflows/docker-test.yml/badge.svg)](https://github.com/m2kar/eda-vulns/actions/workflows/docker-test.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+
 Collection of vulnerability research and CVE submissions for EDA (Electronic Design Automation) tools, focusing on hardware compilers, synthesis tools, and simulation platforms.
 
 ## Overview
@@ -10,12 +15,31 @@ This repository contains vulnerability reports, proof-of-concept code, and repro
 
 ```
 eda-vulns/
+├── .github/
+│   └── workflows/    # GitHub Actions for CI/CD
 ├── circt-1/          # CIRCT vulnerability CVE-PENDING (CVSS 5.3)
 │   ├── report.md     # Full technical CVE report
 │   ├── Dockerfile    # Reproduction environment
 │   └── ...           # Test files and scripts
 └── ...               # Future vulnerability reports
 ```
+
+## Docker Images
+
+Pre-built Docker images are available on GitHub Container Registry for easy reproduction:
+
+**CIRCT-1 (CVE-PENDING):**
+```bash
+docker pull ghcr.io/m2kar/eda-vulns/circt-1:latest
+docker run --platform linux/amd64 --rm ghcr.io/m2kar/eda-vulns/circt-1:latest
+```
+
+Available tags:
+- `latest` - Latest build from main branch
+- `firtool-1.139.0` - Specific CIRCT version
+- `main-<sha>` - Commit-specific builds
+
+Images are automatically built and tested via GitHub Actions.
 
 ## Current Vulnerabilities
 
@@ -36,7 +60,16 @@ CIRCT compiler fails to handle direct array indexing (e.g., `clkin_data[0]`) in 
 - [Full Report](circt-1/report.md)
 - [Docker Environment](circt-1/README_DOCKER.md)
 
-**Quick Start:**
+**Docker Image:**
+```bash
+# Pull from GitHub Container Registry
+docker pull ghcr.io/m2kar/eda-vulns/circt-1:latest
+
+# Run vulnerability reproduction
+docker run --platform linux/amd64 --rm ghcr.io/m2kar/eda-vulns/circt-1:latest
+```
+
+**Quick Start (Build from source):**
 ```bash
 cd circt-1
 ./test.sh build    # Build Docker image
