@@ -1,0 +1,51 @@
+# CIRCT base environment for bug reproduction
+#
+# Build with:
+#   docker build -f Dockerfile.circt --build-arg VERSION=firtool-1.139.0 -t circt:firtool-1.139.0 .
+#
+# Notes:
+# - VERSION should match a CIRCT GitHub release tag (e.g. firtool-1.139.0)
+# - This Dockerfile only installs CIRCT and runtime deps; reproduce scripts/files
+#   should be copied in by a downstream Dockerfile or mounted at runtime.
+
+FROM ubuntu:24.04
+
+LABEL maintainer="M2kar <zhiqing.rui@gmail.com>"
+LABEL description="Base environment for CIRCT bug reproduction"
+LABEL version="1.0"
+
+# CIRCT release tag (e.g. firtool-1.139.0)
+ARG VERSION=firtool-1.139.0
+
+LABEL circt.version="${VERSION}"
+
+# Prevent interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
+
+# Install required dependencies
+RUN apt-get update && apt-get install -y \
+    wget \
+    tar \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install CIRCT precompiled package (VERSION)
+WORKDIR /opt/circt
+RUN wget -q "https://github.com/llvm/circt/releases/download/${VERSION}/circt-full-shared-linux-x64.tar.gz" -O circt.tar.gz \
+    && tar -xzf circt.tar.gz \
+    && rm circt.tar.gz
+
+# Add CIRCT binaries to PATH
+ENV CIRCT_HOME="/opt/circt/${VERSION}"
+ENV PATH="${CIRCT_HOME}/bin:${PATH}"
+ENV LD_LIBRARY_PATH="${CIRCT_HOME}/lib:${LD_LIBRARY_PATH}"
+
+# Verify CIRCT installation
+RUN circt-verilog --version && \
+    arcilator --version && \
+    echo "CIRCT installation successful (${VERSION})"
+
+# Default to an interactive shell; downstream images can override
+CMD ["bash"]
+
