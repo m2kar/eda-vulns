@@ -38,7 +38,8 @@ temp/
 *.tmp
 
 # Ignore logs
-*.log
+# *.log
+log/
 
 # Ignore Python cache
 __pycache__/
