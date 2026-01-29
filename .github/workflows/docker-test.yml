@@ -54,23 +54,23 @@ jobs:
 
       - name: Run vulnerability reproduction test
         run: |
-          docker run --platform linux/amd64 --rm circt-vuln-test --all
+          docker run --platform linux/amd64 --rm circt-vuln-test
 
       - name: Test vulnerable code only
         run: |
-          docker run --platform linux/amd64 --rm circt-vuln-test --vuln-only
+          docker run --platform linux/amd64 --rm circt-vuln-test /repro/reproduce.sh --vuln-only
 
       - name: Test workaround code only
         run: |
-          docker run --platform linux/amd64 --rm circt-vuln-test --workaround-only
+          docker run --platform linux/amd64 --rm circt-vuln-test /repro/reproduce.sh --workaround-only
 
       - name: Extract test results
         if: always()
         run: |
           mkdir -p test-artifacts
           docker run --platform linux/amd64 --rm \
-            -v $(pwd)/test-artifacts:/vuln-reproduction/output \
-            circt-vuln-test --all || true
+            -v $(pwd)/test-artifacts:/repro/output \
+            circt-vuln-test || true
 
       - name: Upload test artifacts
         if: always()
