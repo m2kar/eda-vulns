@@ -1,0 +1,1 @@
+mlir-opt --lower-affine --scf-for-to-while bug.mlir | circt-opt --pass-pipeline='builtin.module(lower-scf-to-calyx{top-level-function=f})'
