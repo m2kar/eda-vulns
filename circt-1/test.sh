@@ -32,7 +32,7 @@ case "${1:-run}" in
     save)
         echo "💾 Running and saving output files to ./results/..."
         mkdir -p results
-        docker run --platform "$PLATFORM" --rm -v "$(pwd)/results:/vuln-reproduction/output" "$IMAGE_NAME"
+        docker run --platform "$PLATFORM" --rm -v "$(pwd)/results:/repro/output" "$IMAGE_NAME"
         echo ""
         echo "✅ Output files saved in ./results/"
         ls -lh results/
@@ -40,18 +40,18 @@ case "${1:-run}" in
     
     vuln)
         echo "🔴 Testing VULNERABLE code only..."
-        docker run --platform "$PLATFORM" --rm "$IMAGE_NAME" --vuln-only
+        docker run --platform "$PLATFORM" --rm "$IMAGE_NAME" /repro/reproduce.sh --vuln-only
         ;;
     
     workaround)
         echo "🟢 Testing WORKAROUND code only..."
-        docker run --platform "$PLATFORM" --rm "$IMAGE_NAME" --workaround-only
+        docker run --platform "$PLATFORM" --rm "$IMAGE_NAME" /repro/reproduce.sh --workaround-only
         ;;
     
     analyze)
         echo "🔍 Running IR analysis..."
         mkdir -p results
-        docker run --platform "$PLATFORM" --rm -v "$(pwd)/results:/vuln-reproduction/output" "$IMAGE_NAME" --analyze
+        docker run --platform "$PLATFORM" --rm -v "$(pwd)/results:/repro/output" "$IMAGE_NAME" /repro/reproduce.sh --analyze
         echo ""
         echo "✅ IR dumps saved in ./results/"
         ls -lh results/*.mlir 2>/dev/null || echo "No IR files generated"
