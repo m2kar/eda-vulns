@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T14:45:00+08:00",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang",
+    "message": "Build succeeded: 0 errors, 0 warnings"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": "",
+    "notes": "inout ports are valid IEEE 1800 SystemVerilog, supported by all major tools"
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": null,
+    "notes": "arcilator does not support inout ports (converts to !llhd.ref type which fails in LowerState pass)"
+  },
+  "cross_tool_validation": {
+    "slang": "pass",
+    "verilator": "pass",
+    "icarus": "pass"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid SystemVerilog test case causes crash in CIRCT arcilator. All major EDA tools accept this code without errors. This is a legitimate bug in arcilator's handling of inout ports."
+  },
+  "bug_details": {
+    "component": "arcilator",
+    "pass": "LowerState",
+    "root_cause": "inout ports are converted to !llhd.ref type which is not supported by arc::StateType::get()",
+    "error_type": "legalization_failure",
+    "error_message": "failed to legalize operation 'arc.state_write' ... (!arc.state<!llhd.ref<i1>>, !llhd.ref<i1>)"
+  }
+}

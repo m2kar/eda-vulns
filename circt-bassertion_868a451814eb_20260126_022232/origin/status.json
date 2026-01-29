@@ -1,0 +1,23 @@
+{
+  "crash_id": "circt-bassertion_868a451814eb_20260126_022232",
+  "status": "report_ready",
+  "phase": "completed",
+  "created_at": "2026-01-28T06:21:00Z",
+  "updated_at": "2026-01-28T06:44:00Z",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed"
+    },
+    "phase2": {
+      "status": "completed"
+    },
+    "phase3": {
+      "status": "completed"
+    }
+  }
+}

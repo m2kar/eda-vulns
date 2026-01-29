@@ -1,0 +1,78 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T12:00:00+08:00",
+  "crash_type": "assertion",
+  "hash": "fc1ea6b0a85f",
+  "original_program": "program_20260125_200840_222700.sv",
+  "original_tool": {
+    "name": "circt-verilog + arcilator",
+    "version": "circt-1.139.0",
+    "path": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/"
+  },
+  "current_tool": {
+    "name": "circt-verilog + arcilator",
+    "version": "LLVM 22.0.0git",
+    "path": "/opt/firtool/bin/circt-verilog"
+  },
+  "original_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_85ldhy3n/test_fc1ea6b0a85f.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_85ldhy3n/test_fc1ea6b0a85f.o",
+  "simplified_command": "circt-verilog --ir-hw source.sv | arcilator",
+  "reproduction": {
+    "attempted": true,
+    "reproduced": false,
+    "exit_code": 0,
+    "reason": "Bug appears FIXED in current CIRCT version (LLVM 22.0.0git)"
+  },
+  "crash_signature": {
+    "original": {
+      "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+      "assertion": "Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed.",
+      "file": "StorageUniquerSupport.h",
+      "line": 180
+    },
+    "reproduced": null
+  },
+  "stack_trace": {
+    "key_frames": [
+      {
+        "frame": 11,
+        "symbol": "circt::arc::StateType::get(mlir::Type)",
+        "file": "ArcTypes.cpp.inc",
+        "line": 108
+      },
+      {
+        "frame": 12,
+        "symbol": "(anonymous namespace)::ModuleLowering::run()",
+        "file": "LowerState.cpp",
+        "line": 219
+      },
+      {
+        "frame": 14,
+        "symbol": "(anonymous namespace)::LowerStatePass::runOnOperation()",
+        "file": "LowerState.cpp",
+        "line": 1198
+      },
+      {
+        "frame": 24,
+        "symbol": "processBuffer(mlir::MLIRContext&, ...)",
+        "file": "arcilator.cpp",
+        "line": 330
+      }
+    ],
+    "crash_location": {
+      "file": "LowerState.cpp",
+      "function": "ModuleLowering::run",
+      "line": 219
+    }
+  },
+  "test_case": {
+    "file": "source.sv",
+    "language": "systemverilog",
+    "constructs": [
+      "inout port",
+      "always_ff",
+      "tristate assignment"
+    ]
+  },
+  "log_file": "reproduce.log",
+  "status": "bug_fixed"
+}

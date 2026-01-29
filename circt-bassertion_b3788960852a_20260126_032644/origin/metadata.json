@@ -1,0 +1,13 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "original_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_85ldhy3n/test_b3788960852a.sv",
+    "reproduction_command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv",
+    "crash_signature_match": true,
+    "crash_signature": "SVModuleOpConversion::matchAndRewrite MooreToCore.cpp"
+  },
+  "tool_version": "CIRCT firtool-1.139.0, LLVM 22.0.0git, slang 9.1.0",
+  "crash_type": "segfault_or_abort",
+  "original_error_type": "assertion",
+  "original_assertion": "detail::isPresent(Val) && dyn_cast on a non-existent value"
+}

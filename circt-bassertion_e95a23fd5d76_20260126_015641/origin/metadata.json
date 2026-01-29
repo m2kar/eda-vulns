@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T15:54:03+00:00",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "arcilator",
+    "version": "CIRCT firtool-1.139.0 / LLVM 22.0.0git",
+    "path": "/opt/firtool/bin/arcilator"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv | arcilator",
+    "exit_code": 0,
+    "reproduced": false,
+    "match_result": "no_crash"
+  },
+  "crash_signature": {
+    "original": "Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed. in circt::arc::StateType::get",
+    "original_error": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "reproduced": null
+  },
+  "files": {
+    "reproduce_log": "reproduce.log"
+  },
+  "notes": "Bug appears to be fixed in current CIRCT version (firtool-1.139.0). Original crash was in arcilator LowerState pass with StateType::get assertion failure."
+}

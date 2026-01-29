@@ -1,0 +1,109 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T12:50:10.225344",
+  "search_terms": {
+    "dialect": "Moore",
+    "failing_pass": "MooreToCore",
+    "crash_type": "assertion",
+    "keywords": [
+      "string",
+      "DynamicStringType",
+      "ModulePortInfo",
+      "InOutType",
+      "dyn_cast",
+      "MooreToCore",
+      "port",
+      "sanitizeInOut",
+      "type conversion",
+      "hw::PortInfo"
+    ],
+    "assertion_message": "dyn_cast on a non-existent value"
+  },
+  "results": {
+    "total_found": 10,
+    "top_score": 10.5,
+    "issues": [
+      {
+        "number": 8930,
+        "title": "[MooreToCore] Crash with sqrt/floor",
+        "body": "dyn_cast(const From &) [To = mlir::IntegerType, From = mlir::Type]: Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"' failed. moore.conversion CRASH MooreToCore moore.real",
+        "labels": [
+          {
+            "name": "Moore"
+          }
+        ],
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8930",
+        "createdAt": "2025-09-06T09:21:38Z",
+        "similarity_score": 10.5
+      },
+      {
+        "number": 8269,
+        "title": "[MooreToCore] Support real constants",
+        "body": "real constants on sv-tests-results...",
+        "labels": [
+          {
+            "name": "Moore"
+          }
+        ],
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8269",
+        "createdAt": "2025-02-23T19:01:31Z",
+        "similarity_score": 7.5
+      },
+      {
+        "number": 9206,
+        "title": "[ImportVerilog] moore.conversion generated instead of moore.int_to_string",
+        "body": "string.len() tests...",
+        "labels": [
+          {
+            "name": "Moore"
+          },
+          {
+            "name": "ImportVerilog"
+          }
+        ],
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/9206",
+        "createdAt": "2025-11-07T16:36:26Z",
+        "similarity_score": 6.5
+      },
+      {
+        "number": 8973,
+        "title": "[MooreToCore] Lowering to math.ipow?",
+        "body": "PowUOp to math.ipow...",
+        "labels": [
+          {
+            "name": "Moore"
+          }
+        ],
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8973",
+        "createdAt": "2025-09-16T14:19:34Z",
+        "similarity_score": 5.5
+      },
+      {
+        "number": 8476,
+        "title": "[MooreToCore] Lower exponentiation to math.ipowi",
+        "body": "moore.pow operation...",
+        "labels": [
+          {
+            "name": "Moore"
+          },
+          {
+            "name": "good first issue"
+          }
+        ],
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8476",
+        "createdAt": "2025-05-12T16:08:01Z",
+        "similarity_score": 5.5
+      }
+    ]
+  },
+  "recommendation": {
+    "action": "review_existing",
+    "confidence": "high",
+    "reason": "High similarity score indicates potential duplicate"
+  }
+}

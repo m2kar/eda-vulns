@@ -1,0 +1,123 @@
+{
+  "version": "1.0",
+  "search_timestamp": "2026-01-28T00:00:00Z",
+  "keywords_searched": [
+    "string",
+    "DynamicStringType",
+    "ModulePortInfo",
+    "sanitizeInOut",
+    "InOutType",
+    "MooreToCore",
+    "port type",
+    "dyn_cast"
+  ],
+  "assertion_searched": "dyn_cast on a non-existent value",
+  "total_issues_found": 25,
+  "scoring_weights": {
+    "title_keyword": 2.0,
+    "body_keyword": 1.0,
+    "assertion_match": 3.0,
+    "dialect_label": 1.5
+  },
+  "potential_duplicates": [
+    {
+      "number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "url": "https://github.com/llvm/circt/issues/8930",
+      "state": "open",
+      "labels": ["Moore"],
+      "similarity_score": 8.5,
+      "score_breakdown": {
+        "title_keyword_matches": ["MooreToCore"],
+        "title_score": 2.0,
+        "body_keyword_matches": ["MooreToCore", "dyn_cast", "InOutType"],
+        "body_score": 3.0,
+        "assertion_match": true,
+        "assertion_score": 3.0,
+        "dialect_match": true,
+        "dialect_score": 0.0
+      },
+      "relevance": "HIGH - Same assertion message 'dyn_cast on a non-existent value' in MooreToCore pass, but different trigger (sqrt/floor vs string port)"
+    },
+    {
+      "number": 8332,
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "url": "https://github.com/llvm/circt/issues/8332",
+      "state": "open",
+      "labels": [],
+      "similarity_score": 6.0,
+      "score_breakdown": {
+        "title_keyword_matches": ["MooreToCore", "StringType"],
+        "title_score": 4.0,
+        "body_keyword_matches": ["string"],
+        "body_score": 1.0,
+        "assertion_match": false,
+        "assertion_score": 0.0,
+        "dialect_match": false,
+        "dialect_score": 0.0
+      },
+      "relevance": "MEDIUM - Discusses StringType support in MooreToCore, related to string handling but different focus (lowering to LLVM)"
+    },
+    {
+      "number": 8283,
+      "title": "[ImportVerilog] Cannot compile forward declared string type",
+      "url": "https://github.com/llvm/circt/issues/8283",
+      "state": "open",
+      "labels": [],
+      "similarity_score": 5.0,
+      "score_breakdown": {
+        "title_keyword_matches": ["string"],
+        "title_score": 2.0,
+        "body_keyword_matches": ["string", "MooreToCore"],
+        "body_score": 2.0,
+        "assertion_match": false,
+        "assertion_score": 0.0,
+        "dialect_match": false,
+        "dialect_score": 0.0
+      },
+      "relevance": "MEDIUM - Related to string type handling, mentions MooreToCore lacks string-type conversion"
+    },
+    {
+      "number": 7535,
+      "title": "[MooreToCore] VariableOp lowered failed",
+      "url": "https://github.com/llvm/circt/issues/7535",
+      "state": "open",
+      "labels": [],
+      "similarity_score": 4.5,
+      "score_breakdown": {
+        "title_keyword_matches": ["MooreToCore"],
+        "title_score": 2.0,
+        "body_keyword_matches": ["InOutType", "MooreToCore"],
+        "body_score": 2.0,
+        "assertion_match": false,
+        "assertion_score": 0.0,
+        "dialect_match": false,
+        "dialect_score": 0.0
+      },
+      "relevance": "LOW - Different crash scenario (struct type), mentions hw::InOutType casting issue"
+    },
+    {
+      "number": 8219,
+      "title": "[ESI] Assertion: dyn_cast on a non-existent value",
+      "url": "https://github.com/llvm/circt/issues/8219",
+      "state": "closed",
+      "labels": ["ESI"],
+      "similarity_score": 4.0,
+      "score_breakdown": {
+        "title_keyword_matches": ["dyn_cast"],
+        "title_score": 2.0,
+        "body_keyword_matches": ["dyn_cast"],
+        "body_score": 1.0,
+        "assertion_match": true,
+        "assertion_score": 0.0,
+        "dialect_match": false,
+        "dialect_score": 0.0
+      },
+      "relevance": "LOW - Same assertion but different dialect (ESI), already closed"
+    }
+  ],
+  "recommendation": "likely_new",
+  "recommendation_reason": "The highest scoring issue (#8930) shares the same assertion message but has a different root cause (sqrt/floor operations vs string port type). Issue #8332 discusses StringType support but focuses on lowering to LLVM dialect. No existing issue specifically addresses DynamicStringType causing dyn_cast failure in ModulePortInfo::sanitizeInOut() when used as a module port type.",
+  "top_score": 8.5,
+  "top_issue": 8930
+}

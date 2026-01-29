@@ -1,0 +1,60 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T15:58:20+00:00",
+  "input_file": "source.sv",
+  "historical_bug": true,
+  "bug_status": "fixed",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang",
+    "tool_version": "10.0.6+3d7e6cd2e",
+    "errors": 0,
+    "warnings": 0
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": "",
+    "features_used": [
+      "typedef",
+      "struct packed",
+      "logic",
+      "module",
+      "always_comb",
+      "assign",
+      "inout wire"
+    ]
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "verilator": {
+      "status": "pass",
+      "version": "5.022",
+      "exit_code": 0
+    },
+    "icarus": {
+      "status": "pass",
+      "version": "13.0",
+      "exit_code": 0
+    },
+    "slang": {
+      "status": "pass",
+      "version": "10.0.6+3d7e6cd2e",
+      "exit_code": 0
+    }
+  },
+  "classification": {
+    "result": "historical_bug",
+    "confidence": "high",
+    "reason": "Valid test case that triggered a crash in older CIRCT version (1.139.0). Bug is now fixed in current version.",
+    "original_crash": {
+      "tool": "arcilator",
+      "pass": "LowerState",
+      "assertion": "state type must have a known bit width; got '!llhd.ref<i1>'",
+      "location": "circt::arc::StateType::get"
+    }
+  },
+  "recommendation": "Document as historical bug for regression testing. The crash was in arcilator's LowerState pass when handling LLHD ref types."
+}

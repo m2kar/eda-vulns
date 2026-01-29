@@ -1,0 +1,92 @@
+{
+  "search_queries": [
+    "string port MooreToCore",
+    "StringType",
+    "MooreToCore type converter",
+    "dyn_cast non-existent",
+    "Moore string"
+  ],
+  "results": [
+    {
+      "issue_number": 8332,
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "similarity_score": 12.5,
+      "matched_keywords": [
+        "StringType (title: 2.0)",
+        "MooreToCore (title: 2.0)",
+        "string (body: 1.0)",
+        "type conversion (body: 1.0)",
+        "typeConverter (body: 1.0)",
+        "convertType (body: 1.0)",
+        "Moore dialect (label: 1.5)"
+      ],
+      "url": "https://github.com/llvm/circt/issues/8332",
+      "relevance_notes": "Directly discusses StringType support in MooreToCore. Same root cause - missing StringType converter."
+    },
+    {
+      "issue_number": 8283,
+      "title": "[ImportVerilog] Cannot compile forward declared string type",
+      "similarity_score": 9.0,
+      "matched_keywords": [
+        "string (title: 2.0)",
+        "MooreToCore (body: 1.0)",
+        "type conversion (body: 1.0)",
+        "StringType (body: 1.0)",
+        "moore.variable (body: 1.0)"
+      ],
+      "url": "https://github.com/llvm/circt/issues/8283",
+      "relevance_notes": "Reports string type compilation failure in MooreToCore. Same underlying issue - lack of string type conversion."
+    },
+    {
+      "issue_number": 7535,
+      "title": "[MooreToCore] VariableOp lowered failed",
+      "similarity_score": 6.5,
+      "matched_keywords": [
+        "MooreToCore (title: 2.0)",
+        "type conversion (body: 1.0)",
+        "dyn_cast (body: 1.0)",
+        "hw::InOutType (body: 1.0)"
+      ],
+      "url": "https://github.com/llvm/circt/issues/7535",
+      "relevance_notes": "Similar crash pattern in MooreToCore with type conversion failure. Different trigger (struct type vs string type)."
+    },
+    {
+      "issue_number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "similarity_score": 6.0,
+      "matched_keywords": [
+        "MooreToCore (title: 2.0)",
+        "dyn_cast non-existent (assertion: 3.0)",
+        "type conversion (body: 1.0)"
+      ],
+      "url": "https://github.com/llvm/circt/issues/8930",
+      "relevance_notes": "Same assertion message 'dyn_cast on a non-existent value'. Different trigger (real type conversion)."
+    },
+    {
+      "issue_number": 8219,
+      "title": "[ESI] Assertion: dyn_cast on a non-existent value",
+      "similarity_score": 4.0,
+      "matched_keywords": [
+        "dyn_cast non-existent (assertion: 3.0)",
+        "type conversion (body: 1.0)"
+      ],
+      "url": "https://github.com/llvm/circt/issues/8219",
+      "relevance_notes": "Same assertion but in ESI dialect, not Moore. Different root cause."
+    },
+    {
+      "issue_number": 8292,
+      "title": "[MooreToCore] Support for Unsized Array Type",
+      "similarity_score": 4.0,
+      "matched_keywords": [
+        "MooreToCore (title: 2.0)",
+        "type conversion (body: 1.0)"
+      ],
+      "url": "https://github.com/llvm/circt/issues/8292",
+      "relevance_notes": "Related feature request for type support in MooreToCore. Different type (unsized array)."
+    }
+  ],
+  "recommendation": "review_existing",
+  "top_score": 12.5,
+  "top_issue": 8332,
+  "analysis_summary": "Issue #8332 is highly related - it directly discusses adding StringType support to MooreToCore. Issue #8283 is also very relevant, reporting the same underlying problem. The current crash is likely a manifestation of the known missing StringType converter."
+}

@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T14:30:00+08:00",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "arcilator",
+    "version": "CIRCT firtool-1.139.0 (LLVM 22.0.0git)",
+    "path": "/opt/firtool/bin/arcilator"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv | arcilator --observe-ports",
+    "original_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_85ldhy3n/test_654e5bdc2f99.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_85ldhy3n/test_654e5bdc2f99.o",
+    "exit_code": 1,
+    "reproduced": true,
+    "match_result": "partial_match",
+    "signature": {
+      "original": "state type must have a known bit width; got '!llhd.ref<i6>'",
+      "reproduced": "failed to legalize operation 'arc.state_write' ... (!arc.state<!llhd.ref<i6>>, !llhd.ref<i6>)"
+    },
+    "notes": "Same root cause (arcilator cannot handle !llhd.ref<i6> type from inout ports), but error manifestation differs. Original was an assertion crash in StateType::get verifyInvariants; current version gives cleaner error message. Bug still exists but with improved error handling."
+  },
+  "crash_signature": {
+    "original": "Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed",
+    "reproduced": "error: failed to legalize operation 'arc.state_write'",
+    "common_pattern": "!llhd.ref<i6> type not supported in arcilator LowerState pass"
+  },
+  "root_cause_hint": {
+    "dialect": "Arc",
+    "failing_pass": "LowerState",
+    "problematic_type": "!llhd.ref<i6>",
+    "trigger": "inout port in SystemVerilog module processed by arcilator"
+  },
+  "files": {
+    "reproduce_log": "reproduce.log",
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  }
+}

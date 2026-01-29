@@ -1,0 +1,18 @@
+{
+  "bug_id": "assertion_42fd07831a6c_20260125_204235",
+  "crash_hash": "42fd07831a6c",
+  "crash_type": "assertion",
+  "tool": "circt-verilog",
+  "tool_version": "firtool-1.139.0",
+  "reproduction": {
+    "reproduced": true,
+    "command": "circt-verilog --ir-hw source.sv",
+    "original_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_85ldhy3n/test_42fd07831a6c.sv",
+    "crash_signature": "SVModuleOpConversion::matchAndRewrite MooreToCore.cpp",
+    "signature_match": true
+  },
+  "source_file": "source.sv",
+  "error_file": "error.txt",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCore"
+}

@@ -1,0 +1,86 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Arc",
+  "failing_pass": "LowerState",
+  "crash_type": "assertion",
+  "assertion_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "crash_location": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "function": "ModuleLowering::run",
+    "line": 219
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "inout port",
+      "always_ff",
+      "tristate assignment"
+    ],
+    "problematic_patterns": [
+      "inout logic c - bidirectional port not supported by Arc"
+    ]
+  },
+  "hypotheses": [
+    {
+      "description": "Arc dialect does not support inout ports, but lacks early detection causing crash in LowerState pass when attempting to create StateType for !llhd.ref<i1>",
+      "confidence": "high",
+      "evidence": [
+        "Test case uses 'inout logic c' port",
+        "Error message explicitly states '!llhd.ref<i1>' cannot create StateType",
+        "ArcOps.cpp:338-339 confirms Arc does not support inout by design",
+        "Stack trace confirms crash point at LowerState.cpp:219",
+        "computeLLVMBitWidth() in ArcTypes.cpp does not handle llhd.ref type"
+      ]
+    },
+    {
+      "description": "computeLLVMBitWidth() should handle more types or provide meaningful error",
+      "confidence": "medium",
+      "evidence": [
+        "Function only handles 4 types: ClockType, IntegerType, ArrayType, StructType",
+        "Returns nullopt for unknown types leading to assertion",
+        "llhd.ref is a reference type that could theoretically compute bit width"
+      ]
+    }
+  ],
+  "keywords": [
+    "arcilator",
+    "inout",
+    "StateType",
+    "llhd.ref",
+    "LowerState",
+    "known bit width",
+    "bidirectional port"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "reason": "Crash point - StateType::get() call for module arguments"
+    },
+    {
+      "path": "lib/Dialect/Arc/ArcTypes.cpp",
+      "reason": "StateType verification logic and computeLLVMBitWidth()"
+    },
+    {
+      "path": "lib/Dialect/Arc/ArcOps.cpp",
+      "reason": "ModelOp::verify() contains inout port check that runs too late"
+    },
+    {
+      "path": "tools/arcilator/arcilator.cpp",
+      "reason": "Tool entry point - early validation could be added here"
+    }
+  ],
+  "bug_classification": {
+    "type": "missing_early_validation",
+    "severity": "medium",
+    "component": "Arc dialect / arcilator",
+    "is_genuine_bug": true,
+    "is_unsupported_feature": true,
+    "recommended_action": "Add early detection for inout ports with clear error message"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv | arcilator",
+    "tool": "arcilator",
+    "input_type": "HW IR with inout ports"
+  }
+}

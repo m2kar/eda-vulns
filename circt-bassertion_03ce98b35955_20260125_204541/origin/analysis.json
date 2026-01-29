@@ -1,0 +1,92 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "crash_id": "circt-bassertion_03ce98b35955_20260125_204541",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCorePass",
+  "crash_type": "assertion",
+  "assertion_message": "detail::isPresent(Val) && \"dyn_cast on a non-existent value\"",
+  "crash_location": {
+    "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+    "function": "getModulePortInfo",
+    "line": 259,
+    "called_from": {
+      "function": "SVModuleOpConversion::matchAndRewrite",
+      "line": 276
+    }
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "packed union",
+      "typedef",
+      "module port with user-defined type"
+    ],
+    "problematic_patterns": [
+      "union type used as module port type"
+    ],
+    "minimal_trigger": "typedef union packed {...} T; module M(input T x);"
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "Missing type converter for moore::UnionType in MooreToCore pass",
+      "confidence": "high",
+      "confidence_score": 0.95,
+      "evidence": [
+        "No addConversion call for UnionType in populateTypeConversion()",
+        "StructType has converter but UnionType does not",
+        "Crash occurs when typeConverter.convertType() returns null for union port type",
+        "Stack trace shows crash path through getModulePortInfo -> convertType"
+      ],
+      "mechanism": "When converting SVModuleOp to hw::HWModuleOp, getModulePortInfo() calls typeConverter.convertType() for each port. For UnionType ports, this returns null because no converter is registered. The null type is later used in dyn_cast, triggering the assertion.",
+      "fix_suggestion": "Add typeConverter.addConversion for UnionType similar to StructType converter"
+    },
+    {
+      "id": 2,
+      "description": "Incomplete union type support in Moore dialect lowering",
+      "confidence": "medium",
+      "confidence_score": 0.80,
+      "evidence": [
+        "UnionType defined in MooreTypes.td alongside StructType",
+        "Struct types fully supported, unions not",
+        "Pattern suggests incremental feature implementation"
+      ],
+      "mechanism": "Union types were added to Moore dialect for parsing but lowering support was not completed.",
+      "fix_suggestion": "Complete union type support in MooreToCore conversion"
+    }
+  ],
+  "root_cause_summary": "MooreToCore type conversion lacks handler for moore::UnionType, causing null type propagation and assertion failure when packed unions are used as module port types.",
+  "keywords": [
+    "UnionType",
+    "packed union",
+    "MooreToCore",
+    "type conversion",
+    "module port",
+    "typeConverter",
+    "dyn_cast",
+    "SVModuleOp"
+  ],
+  "affected_components": [
+    "lib/Conversion/MooreToCore/MooreToCore.cpp",
+    "include/circt/Dialect/Moore/MooreTypes.h"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Main conversion pass, needs UnionType converter"
+    },
+    {
+      "path": "include/circt/Dialect/Moore/MooreTypes.td",
+      "reason": "Union type definitions"
+    },
+    {
+      "path": "include/circt/Dialect/HW/HWTypes.h",
+      "reason": "Target type system for conversion"
+    }
+  ],
+  "severity": "high",
+  "reproducibility": "always",
+  "category": "missing_feature",
+  "ieee_reference": "IEEE 1800-2017 Section 7.3 (Packed unions)"
+}

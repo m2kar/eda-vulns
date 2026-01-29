@@ -1,0 +1,52 @@
+{
+  "version": "1.0",
+  "validation_type": "cross_tool",
+  "result": "report",
+  "testcase": {
+    "file": "bug.sv",
+    "lines": 4,
+    "language": "systemverilog",
+    "constructs": ["output string port"]
+  },
+  "syntax_check": {
+    "valid": true,
+    "standard": "IEEE 1800-2017",
+    "notes": "string type as module port is valid SystemVerilog"
+  },
+  "cross_tool_validation": {
+    "verilator": {
+      "version": "5.022",
+      "result": "pass",
+      "errors": 0,
+      "warnings": 0
+    },
+    "slang": {
+      "version": "10.0.6",
+      "result": "pass",
+      "errors": 0,
+      "warnings": 0
+    },
+    "circt": {
+      "version": "1.139.0",
+      "result": "crash",
+      "crash_type": "assertion",
+      "crash_location": "MooreToCore.cpp:259"
+    }
+  },
+  "classification": {
+    "is_valid_testcase": true,
+    "is_genuine_bug": true,
+    "is_unsupported_feature": false,
+    "is_design_limitation": false,
+    "recommendation": "report"
+  },
+  "reasoning": [
+    "Test case uses valid SystemVerilog syntax (IEEE 1800-2017)",
+    "string type as module port is a standard feature",
+    "Verilator and Slang both accept the code without errors",
+    "CIRCT crashes with assertion failure instead of graceful error",
+    "Even if string ports are unsupported, CIRCT should emit diagnostic, not crash"
+  ],
+  "severity": "high",
+  "confidence": "high"
+}

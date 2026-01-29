@@ -1,0 +1,77 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCore",
+  "crash_type": "assertion",
+  "assertion_message": "dyn_cast on a non-existent value",
+  "crash_location": {
+    "file": "MooreToCore.cpp",
+    "function": "getModulePortInfo",
+    "line": 259
+  },
+  "secondary_crash_location": {
+    "file": "PortImplementation.h",
+    "function": "sanitizeInOut",
+    "line": 177
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "string type on output port",
+      "string variable",
+      "always_comb block"
+    ],
+    "problematic_patterns": [
+      "output string str_out - string type used as module port"
+    ]
+  },
+  "hypotheses": [
+    {
+      "description": "sim::DynamicStringType is not a valid HW port type, and getModulePortInfo doesn't validate port types before constructing ModulePortInfo. When sanitizeInOut() attempts dyn_cast<hw::InOutType> on this type, the cast fails with an assertion.",
+      "confidence": "high",
+      "evidence": [
+        "string type is converted to sim::DynamicStringType (MooreToCore.cpp:2277-2279)",
+        "ModulePortInfo constructor calls sanitizeInOut() on all ports",
+        "sanitizeInOut() uses dyn_cast<hw::InOutType> which fails on non-HW types",
+        "Assertion message confirms dyn_cast received invalid type"
+      ]
+    },
+    {
+      "description": "The dyn_cast<hw::InOutType> has a precondition requiring the source type to be in the HW type hierarchy, which sim::DynamicStringType is not.",
+      "confidence": "medium",
+      "evidence": [
+        "Assertion is detail::isPresent(Val) - type system validation",
+        "sim::DynamicStringType is from sim dialect, not hw dialect"
+      ]
+    }
+  ],
+  "keywords": [
+    "string",
+    "DynamicStringType",
+    "ModulePortInfo",
+    "InOutType",
+    "dyn_cast",
+    "MooreToCore",
+    "port",
+    "sanitizeInOut",
+    "type conversion",
+    "hw::PortInfo"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Main conversion logic - getModulePortInfo function"
+    },
+    {
+      "path": "include/circt/Dialect/HW/PortImplementation.h",
+      "reason": "ModulePortInfo and sanitizeInOut implementation"
+    },
+    {
+      "path": "include/circt/Dialect/HW/HWTypes.h",
+      "reason": "HW type validation utilities"
+    }
+  ],
+  "root_cause_summary": "Using SystemVerilog 'string' type as a module port causes crash because string is converted to sim::DynamicStringType which is not a valid hardware port type. The ModulePortInfo::sanitizeInOut() function attempts dyn_cast<hw::InOutType> on this incompatible type, triggering an assertion failure.",
+  "suggested_fix": "Add port type validation in getModulePortInfo() to reject non-hardware types with a clear error message instead of crashing."
+}

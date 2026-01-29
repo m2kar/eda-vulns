@@ -1,0 +1,64 @@
+{
+  "crash_id": "assertion_cb4fec9b25c5_20260125_215528",
+  "status": "duplicate",
+  "phase": "completed",
+  "final_result": "duplicate",
+  "duplicate_of": "https://github.com/llvm/circt/issues/8332",
+  "created_at": "2026-01-28T14:09:53+00:00",
+  "updated_at": "2026-01-28T14:18:10+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed",
+      "reproduce": {
+        "reproduced": true,
+        "command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw source.sv"
+      },
+      "root_cause": {
+        "completed": true,
+        "dialect": "Moore",
+        "failing_pass": "MooreToCore",
+        "crash_type": "assertion"
+      }
+    },
+    "phase2": {
+      "status": "completed",
+      "minimize": {
+        "completed": true,
+        "original_lines": 26,
+        "minimized_lines": 2
+      },
+      "validate": {
+        "completed": true,
+        "is_bug": false,
+        "category": "unsupported_feature"
+      },
+      "check_duplicates": {
+        "completed": true,
+        "found_duplicate": true,
+        "duplicate_issue": 8332
+      }
+    },
+    "phase3": {
+      "status": "completed",
+      "issue_generated": true,
+      "submit_recommended": false
+    }
+  },
+  "output_files": [
+    "bug.sv",
+    "reproduce.log",
+    "metadata.json",
+    "analysis.json",
+    "root_cause.md",
+    "validation.json",
+    "validation.md",
+    "duplicates.json",
+    "duplicates.md",
+    "issue.md"
+  ]
+}

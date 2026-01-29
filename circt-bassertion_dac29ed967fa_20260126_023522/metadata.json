@@ -1,0 +1,30 @@
+{
+  "bug_id": "assertion_dac29ed967fa_20260126_023522",
+  "crash_type": "assertion",
+  "hash": "dac29ed967fa",
+  "reproduction": {
+    "reproduced": true,
+    "command": "circt-verilog --ir-hw source.sv",
+    "tool_path": "/opt/firtool/bin/circt-verilog",
+    "tool_version": "CIRCT firtool-1.139.0",
+    "llvm_version": "22.0.0git",
+    "exit_code": 139,
+    "timestamp": "2026-01-28T15:35:55+00:00"
+  },
+  "crash_signature": {
+    "assertion_message": "dyn_cast on a non-existent value",
+    "crash_location": "SVModuleOpConversion::matchAndRewrite",
+    "crash_file": "MooreToCore.cpp",
+    "failing_pass": "MooreToCorePass",
+    "dialect": "moore"
+  },
+  "original": {
+    "program_file": "program_20260126_023520_010742.sv",
+    "original_hash": "dac29ed967fa"
+  },
+  "test_case": {
+    "file": "source.sv",
+    "language": "systemverilog",
+    "key_constructs": ["string type", "output string port", "always_ff", "always_comb"]
+  }
+}

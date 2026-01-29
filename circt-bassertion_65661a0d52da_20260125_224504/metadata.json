@@ -1,0 +1,21 @@
+{
+  "tool": {
+    "name": "circt-verilog",
+    "version": "firtool-1.139.0",
+    "llvm_version": "22.0.0git"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv",
+    "exit_code": 139,
+    "reproduced": true
+  },
+  "crash_signature": {
+    "original": "SVModuleOpConversion::matchAndRewrite MooreToCore.cpp dyn_cast on a non-existent value",
+    "reproduced": "SVModuleOpConversion::matchAndRewrite MooreToCore.cpp",
+    "crash_type": "assertion/segfault",
+    "failing_pass": "MooreToCore",
+    "failing_function": "SVModuleOpConversion::matchAndRewrite"
+  },
+  "source_file": "source.sv",
+  "error_file": "error.txt"
+}

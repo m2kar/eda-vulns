@@ -1,0 +1,92 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCore",
+  "crash_type": "assertion",
+  "assertion_message": "dyn_cast on a non-existent value",
+  "crash_location": {
+    "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+    "function": "getModulePortInfo",
+    "line": 259
+  },
+  "tool_info": {
+    "tool": "circt-verilog",
+    "arguments": ["--ir-hw"],
+    "version": "1.139.0"
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "string type port",
+      "output port",
+      "always_comb block"
+    ],
+    "problematic_patterns": [
+      "string type as module output port"
+    ],
+    "minimal_trigger": "output string <name>"
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "MooreToCore TypeConverter 缺少 moore::StringType 的转换注册",
+      "confidence": "high",
+      "evidence": [
+        "populateTypeConversion 函数中没有 StringType 的转换器",
+        "错误消息明确指出 dyn_cast on a non-existent value",
+        "测例唯一不常见的构造是 string 类型端口",
+        "FormatStringType 有转换器但 StringType 没有"
+      ],
+      "mechanism": "StringType 无转换器导致 convertType 返回 null，null 被传入 hw::PortInfo，后续 dyn_cast 失败"
+    },
+    {
+      "id": 2,
+      "description": "getModulePortInfo 缺少对类型转换失败的检查",
+      "confidence": "medium",
+      "evidence": [
+        "代码直接使用 convertType 返回值未检查 null",
+        "其他转换函数会检查并返回 std::optional 空值",
+        "应该发出错误诊断而非崩溃"
+      ],
+      "mechanism": "缺少防御性检查，null Type 被无检查传递导致后续崩溃"
+    }
+  ],
+  "keywords": [
+    "StringType",
+    "MooreToCore",
+    "string port",
+    "dyn_cast",
+    "TypeConverter",
+    "getModulePortInfo",
+    "non-existent value"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "需要添加 StringType 转换器或错误检查"
+    },
+    {
+      "path": "include/circt/Dialect/Moore/MooreTypes.h",
+      "reason": "StringType 定义位置"
+    }
+  ],
+  "fix_suggestions": [
+    {
+      "type": "add_type_converter",
+      "location": "populateTypeConversion function",
+      "description": "添加 moore::StringType 到 HW/LLVM 类型的转换"
+    },
+    {
+      "type": "add_error_check",
+      "location": "getModulePortInfo function",
+      "description": "在 convertType 返回后检查 null 并发出诊断"
+    }
+  ],
+  "classification": {
+    "bug_type": "missing_type_conversion",
+    "severity": "crash",
+    "reproducibility": "always",
+    "affected_feature": "string type ports in SystemVerilog"
+  }
+}

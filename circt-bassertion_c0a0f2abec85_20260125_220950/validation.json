@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "testcase": "bug.sv",
+  "validation_date": "2026-01-28",
+  "syntax_validation": {
+    "verilator": {
+      "command": "verilator --lint-only bug.sv",
+      "result": "pass",
+      "errors": 0,
+      "warnings": 0
+    },
+    "slang": {
+      "command": "slang --lint-only bug.sv",
+      "result": "pass",
+      "errors": 0,
+      "warnings": 0
+    },
+    "icarus": {
+      "command": "iverilog -g2012 -o /dev/null bug.sv",
+      "result": "pass",
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "feature_support": {
+    "inout_port": {
+      "ieee_1800_2017": "supported",
+      "verilator": "supported",
+      "slang": "supported",
+      "icarus": "supported",
+      "circt_arcilator": "not_supported"
+    }
+  },
+  "crash_verification": {
+    "tool": "arcilator",
+    "version": "1.139.0",
+    "command": "circt-verilog --ir-hw bug.sv | arcilator",
+    "result": "crash",
+    "error_type": "assertion_failure",
+    "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'"
+  },
+  "classification": {
+    "result": "report",
+    "reason": "Valid SystemVerilog code (passes all lint tools) causes arcilator assertion failure instead of graceful error handling",
+    "bug_type": "missing_validation",
+    "severity": "medium",
+    "is_regression": false
+  },
+  "notes": [
+    "inout ports are valid SystemVerilog construct per IEEE 1800-2017",
+    "arcilator should reject inout ports with clear error message instead of assertion failure",
+    "The crash occurs in LowerState pass when encountering llhd::RefType"
+  ]
+}

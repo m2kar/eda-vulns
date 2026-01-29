@@ -1,0 +1,4 @@
+<stdin>:2:19: error: failed to legalize operation 'arc.state_write'
+  hw.module @M(in %d : !llhd.ref<i1>) {
+                  ^
+<stdin>:2:19: note: see current operation: "arc.state_write"(%5, %7) : (!arc.state<!llhd.ref<i1>>, !llhd.ref<i1>) -> ()

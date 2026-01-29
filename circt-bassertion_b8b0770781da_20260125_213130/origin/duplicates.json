@@ -1,0 +1,97 @@
+{
+  "version": "1.0",
+  "search_timestamp": "2026-01-28T12:00:00Z",
+  "crash_signature": "dyn_cast on a non-existent value",
+  "keywords_used": ["string", "port", "MooreToCore", "getModulePortInfo", "DynamicStringType"],
+  "search_queries": [
+    "\"string port\" MooreToCore",
+    "\"DynamicStringType\"",
+    "\"string type\" crash",
+    "MooreToCore string",
+    "getModulePortInfo"
+  ],
+  "related_issues": [
+    {
+      "number": 8283,
+      "title": "[ImportVerilog] Cannot compile forward decleared string type",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8283",
+      "relevance_score": 12.5,
+      "score_breakdown": {
+        "title_keywords": 2.0,
+        "body_keywords": 6.0,
+        "assertion_match": 0.0,
+        "dialect_match": 1.5,
+        "context_bonus": 3.0
+      },
+      "matching_keywords": ["string", "MooreToCore", "moore.variable", "string type"],
+      "analysis": "Related issue about string type support in MooreToCore. Different crash location (moore.variable vs getModulePortInfo). This issue is about string variables, not string ports."
+    },
+    {
+      "number": 8332,
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8332",
+      "relevance_score": 11.0,
+      "score_breakdown": {
+        "title_keywords": 4.0,
+        "body_keywords": 4.0,
+        "assertion_match": 0.0,
+        "dialect_match": 1.5,
+        "context_bonus": 1.5
+      },
+      "matching_keywords": ["MooreToCore", "StringType", "string", "sim dialect"],
+      "analysis": "Feature request/discussion about lowering StringType. Related to string type handling but not a crash report. No mention of port-specific issues."
+    },
+    {
+      "number": 8292,
+      "title": "[MooreToCore] Support for Unsized Array Type",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8292",
+      "relevance_score": 3.0,
+      "score_breakdown": {
+        "title_keywords": 2.0,
+        "body_keywords": 0.0,
+        "assertion_match": 0.0,
+        "dialect_match": 1.0,
+        "context_bonus": 0.0
+      },
+      "matching_keywords": ["MooreToCore"],
+      "analysis": "Tangentially related - about unsized types in MooreToCore. Not specifically about string types."
+    },
+    {
+      "number": 7628,
+      "title": "[MooreToCore] Support string constants",
+      "state": "closed",
+      "url": "https://github.com/llvm/circt/issues/7628",
+      "relevance_score": 7.0,
+      "score_breakdown": {
+        "title_keywords": 4.0,
+        "body_keywords": 1.0,
+        "assertion_match": 0.0,
+        "dialect_match": 1.5,
+        "context_bonus": 0.5
+      },
+      "matching_keywords": ["MooreToCore", "string"],
+      "analysis": "Closed issue about string constants support. Different from dynamic string type ports."
+    }
+  ],
+  "summary": {
+    "total_searched": 5,
+    "related_found": 4,
+    "exact_duplicates": 0,
+    "likely_duplicates": 0,
+    "possibly_related": 2,
+    "top_score": 12.5,
+    "top_issue": 8283,
+    "recommendation": "likely_new"
+  },
+  "analysis_notes": [
+    "No exact duplicate found - no issue reports crash in getModulePortInfo with string port types",
+    "#8283 is closest but covers string variables, not string ports specifically",
+    "The assertion 'dyn_cast on a non-existent value' in getModulePortInfo is not mentioned in any existing issue",
+    "#8332 discusses StringType lowering design but is a feature request, not bug report",
+    "String type as module port causing crash in port info extraction is a unique scenario"
+  ],
+  "recommendation_reasoning": "While #8283 and #8332 discuss string type support in MooreToCore, they don't address the specific crash scenario where string type used as module port causes assertion failure in getModulePortInfo(). This appears to be a new, unreported crash path."
+}

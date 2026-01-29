@@ -1,0 +1,120 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "target_dialects": ["HW", "Comb", "LLHD", "Sim"],
+  "failing_pass": "MooreToCore",
+  "failing_pattern": "SVModuleOpConversion",
+  "crash_type": "assertion",
+  "assertion_message": "dyn_cast on a non-existent value",
+  "crash_location": {
+    "file": "MooreToCore.cpp",
+    "function": "getModulePortInfo",
+    "line": 259,
+    "context": "hw::ModulePortInfo constructor calls sanitizeInOut() which performs dyn_cast<hw::InOutType> on incompatible type"
+  },
+  "secondary_crash_location": {
+    "file": "PortImplementation.h",
+    "function": "sanitizeInOut",
+    "line": 177,
+    "context": "dyn_cast<hw::InOutType>(p.type) fails when type is sim::DynamicStringType"
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "file": "source.sv",
+    "key_constructs": [
+      "string port type",
+      "string.len() method",
+      "always_comb block",
+      "part-select assignment"
+    ],
+    "problematic_patterns": [
+      "input string a - dynamic string type as module port"
+    ],
+    "trigger_construct": "input string a"
+  },
+  "type_conversion_chain": {
+    "source_type": "moore::StringType",
+    "converted_type": "sim::DynamicStringType",
+    "expected_type": "hw::InOutType or valid HW type",
+    "failure_point": "dyn_cast<hw::InOutType> on sim::DynamicStringType"
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "hw::ModulePortInfo::sanitizeInOut() assumes all port types are HW dialect compatible, but sim::DynamicStringType is not",
+      "confidence": "high",
+      "evidence": [
+        "dyn_cast<hw::InOutType> can only safely operate on HW dialect types",
+        "sim::DynamicStringType is a Sim dialect type, not part of HW type system",
+        "Stack trace clearly points to dyn_cast call failure at PortImplementation.h:177"
+      ],
+      "mechanism": "dyn_cast triggers isPresent assertion when type is completely incompatible with target type hierarchy"
+    },
+    {
+      "id": 2,
+      "description": "MooreToCore conversion lacks validation for non-synthesizable types (like string) used as port types",
+      "confidence": "medium",
+      "evidence": [
+        "getModulePortInfo does not validate if converted portTy is a valid HW port type",
+        "SystemVerilog string type is typically not supported in hardware synthesis"
+      ],
+      "mechanism": "Should check port type synthesizability before conversion, emit error for simulation-only types"
+    },
+    {
+      "id": 3,
+      "description": "sanitizeInOut implementation is too aggressive, should only check types that could possibly be InOutType",
+      "confidence": "low",
+      "evidence": [
+        "dyn_cast should return null for incompatible types, not crash",
+        "May be MLIR type system behavior issue in specific configurations"
+      ]
+    }
+  ],
+  "keywords": [
+    "string",
+    "StringType",
+    "DynamicStringType",
+    "port",
+    "getModulePortInfo",
+    "sanitizeInOut",
+    "InOutType",
+    "dyn_cast",
+    "MooreToCore",
+    "SVModuleOpConversion",
+    "assertion",
+    "isPresent"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Main conversion logic, getModulePortInfo function"
+    },
+    {
+      "path": "include/circt/Dialect/HW/PortImplementation.h",
+      "reason": "sanitizeInOut implementation that triggers the crash"
+    },
+    {
+      "path": "include/circt/Dialect/HW/HWTypes.h",
+      "reason": "HW type definitions and validation utilities"
+    },
+    {
+      "path": "include/circt/Dialect/Moore/MooreTypes.h",
+      "reason": "Moore StringType definition"
+    }
+  ],
+  "suggested_fix": {
+    "approach": "Add port type validation in getModulePortInfo",
+    "description": "Before constructing hw::PortInfo, validate that converted type is a valid HW port type using hw::isHWValueType() or similar. Emit diagnostic error for unsupported types like sim::DynamicStringType.",
+    "alternative_approaches": [
+      "Use dyn_cast_if_present in sanitizeInOut to handle null/incompatible types gracefully",
+      "Mark sim::DynamicStringType as invalid for port usage in type conversion"
+    ]
+  },
+  "classification": {
+    "is_genuine_bug": true,
+    "bug_category": "missing_validation",
+    "severity": "medium",
+    "reproducibility": "deterministic"
+  }
+}

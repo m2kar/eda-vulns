@@ -1,0 +1,50 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCore",
+  "crash_type": "assertion",
+  "assertion_message": "detail::isPresent(Val) && \"dyn_cast on a non-existent value\"",
+  "crash_location": {
+    "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+    "function": "getModulePortInfo / SVModuleOpConversion::matchAndRewrite",
+    "line": 243
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": ["string type port", "string variable", "always_comb", "conditional assignment"],
+    "problematic_patterns": ["output string str_out - string type used as module port"]
+  },
+  "hypotheses": [
+    {
+      "description": "MooreToCore type converter lacks StringType conversion - typeConverter.convertType(StringType) returns null, causing assertion failure when constructing hw::PortInfo",
+      "confidence": "high",
+      "evidence": [
+        "populateTypeConversion() in MooreToCore.cpp has no StringType handler (lines 2220-2341)",
+        "FormatStringType has conversion (line 2238) but StringType does not",
+        "Test case uses 'output string str_out' which requires StringType conversion",
+        "Crash occurs in SVModuleOpConversion when building port info with null type"
+      ]
+    },
+    {
+      "description": "Missing null check after port type conversion in getModulePortInfo()",
+      "confidence": "medium",
+      "evidence": [
+        "getModulePortInfo() does not check convertType() return value",
+        "Other type conversions use std::optional<Type> and check for null",
+        "Port type conversion directly uses potentially null result"
+      ]
+    }
+  ],
+  "keywords": ["string", "StringType", "MooreToCore", "port", "type conversion", "SVModuleOp", "dyn_cast", "assertion", "hw::PortInfo"],
+  "suggested_sources": [
+    {"path": "lib/Conversion/MooreToCore/MooreToCore.cpp", "reason": "Main type conversion logic - needs StringType handler"},
+    {"path": "include/circt/Dialect/Moore/MooreTypes.td", "reason": "StringType definition"},
+    {"path": "lib/Dialect/Moore/MooreTypes.cpp", "reason": "StringType implementation"}
+  ],
+  "fix_suggestions": [
+    "Add StringType conversion in populateTypeConversion()",
+    "Add null check after typeConverter.convertType() in getModulePortInfo()",
+    "Emit clear error message for unsupported string port type"
+  ]
+}

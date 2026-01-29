@@ -1,0 +1,41 @@
+{
+  "validation_time": "2026-01-28T07:15:00+08:00",
+  "test_file": "bug.sv",
+  "syntax_valid": true,
+  "ieee_compliant": true,
+  "cross_tool_results": {
+    "verilator": {
+      "tool_version": "5.022",
+      "command": "verilator --lint-only bug.sv",
+      "exit_code": 0,
+      "result": "pass",
+      "notes": "Lint check passed"
+    },
+    "icarus": {
+      "tool_version": "548010e",
+      "command": "iverilog -g2012 -o /dev/null bug.sv",
+      "exit_code": 0,
+      "result": "pass",
+      "notes": "Compilation successful"
+    },
+    "slang": {
+      "tool_version": "9.1.0",
+      "command": "slang --lint-only bug.sv",
+      "exit_code": 0,
+      "result": "pass",
+      "notes": "Build succeeded: 0 errors, 0 warnings"
+    }
+  },
+  "classification": {
+    "result": "report",
+    "type": "genuine_bug",
+    "reason": "Valid SystemVerilog code causes arcilator to crash",
+    "confidence": "high"
+  },
+  "feature_analysis": {
+    "construct": "inout port (bidirectional)",
+    "ieee_section": "IEEE 1800-2017 §23.2.2.3",
+    "widely_supported": true,
+    "circt_status": "crashes in arcilator"
+  }
+}

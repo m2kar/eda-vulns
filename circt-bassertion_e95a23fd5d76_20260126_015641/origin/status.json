@@ -1,0 +1,40 @@
+{
+  "crash_id": "origin",
+  "status": "report_ready",
+  "phase": "completed",
+  "created_at": "2026-01-28T15:51:59+00:00",
+  "updated_at": "2026-01-28T16:01:57+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "reproduction_result": {
+    "reproduced": false,
+    "note": "Bug appears to be fixed in current CIRCT version (firtool-1.139.0)",
+    "exit_code": 0
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed",
+      "reproduce": "completed",
+      "root_cause_analysis": "completed"
+    },
+    "phase2": {
+      "status": "completed",
+      "minimize_validate": "completed",
+      "check_duplicates": "completed"
+    },
+    "phase3": {
+      "status": "completed",
+      "generate_issue": "completed"
+    }
+  },
+  "final_status": {
+    "issue_generated": true,
+    "issue_file": "issue.md",
+    "submitted_to_github": false,
+    "classification": "historical_bug",
+    "note": "Historical bug documented for reference - no submission to GitHub per user request"
+  }
+}

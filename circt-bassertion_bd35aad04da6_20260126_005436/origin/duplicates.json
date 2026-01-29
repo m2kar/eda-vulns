@@ -1,0 +1,122 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T16:30:00+08:00",
+  "search_terms": {
+    "dialect": "Moore",
+    "failing_pass": "MooreToCore",
+    "crash_type": "assertion",
+    "keywords": [
+      "StringType",
+      "MooreToCore",
+      "string port",
+      "dyn_cast",
+      "TypeConverter",
+      "getModulePortInfo",
+      "non-existent value"
+    ],
+    "assertion_message": "dyn_cast on a non-existent value"
+  },
+  "results": {
+    "total_found": 5,
+    "top_score": 8.5,
+    "issues": [
+      {
+        "number": 8332,
+        "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8332",
+        "createdAt": "2025-03-20T02:36:53Z",
+        "labels": [],
+        "similarity_score": 8.5,
+        "match_reasons": [
+          "Title: StringType (2.0), MooreToCore (2.0)",
+          "Body: StringType, moore, llvm, conversionOp (2.0)",
+          "Exact feature: StringType support in MooreToCore (2.5)"
+        ]
+      },
+      {
+        "number": 8930,
+        "title": "[MooreToCore] Crash with sqrt/floor",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8930",
+        "createdAt": "2025-09-06T09:21:38Z",
+        "labels": [
+          {
+            "name": "Moore",
+            "color": "04673D"
+          }
+        ],
+        "similarity_score": 6.5,
+        "match_reasons": [
+          "Title: MooreToCore (2.0)",
+          "Body: dyn_cast, non-existent value assertion (3.0)",
+          "Label: Moore (1.5)"
+        ]
+      },
+      {
+        "number": 8292,
+        "title": "[MooreToCore] Support for Unsized Array Type",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8292",
+        "createdAt": "2025-03-04T15:38:48Z",
+        "labels": [],
+        "similarity_score": 2.0,
+        "match_reasons": [
+          "Title: MooreToCore (2.0)"
+        ]
+      },
+      {
+        "number": 8269,
+        "title": "[MooreToCore] Support `real` constants",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8269",
+        "createdAt": "2025-02-23T19:01:31Z",
+        "labels": [
+          {
+            "name": "Moore",
+            "color": "04673D"
+          }
+        ],
+        "similarity_score": 3.5,
+        "match_reasons": [
+          "Title: MooreToCore (2.0)",
+          "Label: Moore (1.5)"
+        ]
+      },
+      {
+        "number": 8476,
+        "title": "[MooreToCore] Lower exponentiation to `math.ipowi`",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8476",
+        "createdAt": "2025-05-12T16:08:01Z",
+        "labels": [
+          {
+            "name": "good first issue",
+            "color": "7057ff"
+          },
+          {
+            "name": "Moore",
+            "color": "04673D"
+          }
+        ],
+        "similarity_score": 3.5,
+        "match_reasons": [
+          "Title: MooreToCore (2.0)",
+          "Label: Moore (1.5)"
+        ]
+      }
+    ]
+  },
+  "recommendation": {
+    "action": "review_existing",
+    "confidence": "high",
+    "reason": "Issue #8332 directly discusses StringType support in MooreToCore conversion. This crash is caused by missing StringType converter, which is the exact topic of #8332. This is likely a duplicate or closely related issue."
+  },
+  "top_match": {
+    "issue_number": 8332,
+    "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+    "url": "https://github.com/llvm/circt/issues/8332",
+    "relationship": "exact_match",
+    "explanation": "Issue #8332 discusses adding StringType support from Moore to LLVM dialect. Our crash occurs because StringType has no converter in MooreToCore, causing dyn_cast on null value. This is the same underlying problem."
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T01:05:30+00:00",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "circt-verilog + arcilator",
+    "version": "LLVM 22.0.0git / slang 9.1.0+0",
+    "path": "/opt/firtool/bin/circt-verilog"
+  },
+  "original_tool": {
+    "version": "circt-1.139.0",
+    "path": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv | arcilator",
+    "exit_code": 0,
+    "reproduced": false,
+    "match_result": "no_crash"
+  },
+  "crash_signature": {
+    "original": "Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed.",
+    "original_error": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "reproduced": null
+  },
+  "analysis_notes": "Bug appears to be FIXED in current CIRCT version. Original crash was in arcilator LowerState pass when handling inout ports with llhd.ref<i1> type. Current version successfully compiles to LLVM IR.",
+  "files": {
+    "reproduce_log": "reproduce.log"
+  }
+}

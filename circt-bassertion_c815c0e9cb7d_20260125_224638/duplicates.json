@@ -1,0 +1,88 @@
+{
+  "version": "1.0",
+  "search_timestamp": "2026-01-28T00:00:00Z",
+  "keywords_used": [
+    "string port MooreToCore",
+    "dyn_cast assertion MooreToCore",
+    "ModulePortInfo crash",
+    "sanitizeInOut",
+    "Moore string",
+    "DynamicStringType",
+    "string port crash",
+    "InOutType assertion"
+  ],
+  "total_issues_searched": 15,
+  "similar_issues": [
+    {
+      "number": 8283,
+      "title": "[ImportVerilog] Cannot compile forward declared string type",
+      "url": "https://github.com/llvm/circt/issues/8283",
+      "state": "OPEN",
+      "labels": [],
+      "similarity_score": 75,
+      "match_reasons": [
+        "Same issue: string type not properly supported in Moore/MooreToCore",
+        "Same error pattern: MooreToCore lacks string-type conversion",
+        "Same root cause: string type variables fail during lowering",
+        "Keywords match: string, Moore, MooreToCore"
+      ]
+    },
+    {
+      "number": 8332,
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "url": "https://github.com/llvm/circt/issues/8332",
+      "state": "OPEN",
+      "labels": [],
+      "similarity_score": 70,
+      "match_reasons": [
+        "Related: discusses StringType support in MooreToCore",
+        "Feature request for string type handling",
+        "Keywords match: string, MooreToCore"
+      ]
+    },
+    {
+      "number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "url": "https://github.com/llvm/circt/issues/8930",
+      "state": "OPEN",
+      "labels": ["Moore"],
+      "similarity_score": 45,
+      "match_reasons": [
+        "Same assertion message: dyn_cast on a non-existent value",
+        "Same failing pass: MooreToCore (convert-moore-to-core)",
+        "Same crash location: Casting.h dyn_cast",
+        "Different trigger: real type conversion vs string port"
+      ]
+    },
+    {
+      "number": 8173,
+      "title": "[ImportVerilog] Crash on ordering-methods-reverse test",
+      "url": "https://github.com/llvm/circt/issues/8173",
+      "state": "OPEN",
+      "labels": ["bug", "ImportVerilog"],
+      "similarity_score": 40,
+      "match_reasons": [
+        "Related to string type handling",
+        "Error: expression of type '!moore.string' cannot be cast",
+        "Different crash pattern but string-related"
+      ]
+    },
+    {
+      "number": 4036,
+      "title": "[PrepareForEmission] Crash when inout operations are passed to instance ports",
+      "url": "https://github.com/llvm/circt/issues/4036",
+      "state": "OPEN",
+      "labels": [],
+      "similarity_score": 25,
+      "match_reasons": [
+        "InOutType assertion failure (different context)",
+        "Port handling crash",
+        "Different dialect (HW vs Moore)"
+      ]
+    }
+  ],
+  "recommendation": "likely_new",
+  "recommendation_reason": "While #8283 describes the same underlying issue (string type not supported in MooreToCore), it focuses on string variables. This crash specifically involves string-typed MODULE PORTS which may be a distinct code path. The dyn_cast assertion in ModulePortInfo/sanitizeInOut is a specific manifestation not covered by existing issues. Consider referencing #8283 as related.",
+  "top_score": 75,
+  "top_issue": 8283
+}

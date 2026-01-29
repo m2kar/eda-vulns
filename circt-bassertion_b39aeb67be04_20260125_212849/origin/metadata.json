@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "bug_id": "assertion_b39aeb67be04_20260125_212849",
+  "reproduction": {
+    "reproduced": false,
+    "original_crash_type": "assertion",
+    "original_crash_hash": "b39aeb67be04",
+    "original_assertion": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "original_tool_version": "circt-1.139.0",
+    "current_tool_version": "circt-1.139.0 (firtool-1.139.0)",
+    "reproduction_result": "success (no crash)",
+    "exit_code": 0,
+    "note": "Bug appears to be fixed in current CIRCT build - same version (1.139.0) but different build"
+  },
+  "command": {
+    "original": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw <source> | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator",
+    "reproduced": "/opt/firtool/bin/circt-verilog --ir-hw source.sv | /opt/firtool/bin/arcilator"
+  },
+  "files": {
+    "source": "source.sv",
+    "error_log": "error.txt",
+    "reproduce_log": "reproduce.log"
+  },
+  "timestamp": "2026-01-28T11:05:00Z"
+}

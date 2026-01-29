@@ -1,0 +1,49 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T00:00:00+08:00",
+  "search_terms": {
+    "dialect": "Moore",
+    "failing_pass": "MooreToCore",
+    "crash_type": "assertion",
+    "keywords": ["string", "StringType", "MooreToCore", "port", "type conversion"],
+    "assertion_message": "dyn_cast on a non-existent value"
+  },
+  "results": {
+    "total_found": 3,
+    "top_score": 6.0,
+    "issues": [
+      {
+        "number": 8332,
+        "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8332",
+        "similarity_score": 6.0,
+        "match_type": "feature_request",
+        "notes": "Feature request for StringType support, not a crash report"
+      },
+      {
+        "number": 8382,
+        "title": "[FIRRTL] Crash with fstring type on port",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8382",
+        "similarity_score": 3.0,
+        "match_type": "related",
+        "notes": "Similar issue in FIRRTL dialect, different pass"
+      },
+      {
+        "number": 8292,
+        "title": "[MooreToCore] Support for Unsized Array Type",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8292",
+        "similarity_score": 2.0,
+        "match_type": "related",
+        "notes": "Similar type conversion issue in MooreToCore"
+      }
+    ]
+  },
+  "recommendation": {
+    "action": "likely_new",
+    "confidence": "high",
+    "reason": "Issue #8332 is a feature request for StringType support, but no crash report exists. Our bug demonstrates that using string type ports causes assertion failure crash, which should be handled gracefully."
+  }
+}

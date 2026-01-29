@@ -1,0 +1,22 @@
+{
+  "bug_id": "assertion_c815c0e9cb7d_20260125_224638",
+  "crash_type": "assertion",
+  "hash": "c815c0e9cb7d",
+  "reproduction": {
+    "reproduced": true,
+    "command": "circt-verilog --ir-hw origin/source.sv",
+    "tool_version": "firtool-1.139.0",
+    "exit_code": 139,
+    "crash_signature": {
+      "function": "SVModuleOpConversion::matchAndRewrite",
+      "pass": "MooreToCorePass",
+      "file": "MooreToCore.cpp"
+    }
+  },
+  "original": {
+    "program_file": "program_20260125_224636_129918.sv",
+    "assertion_message": "dyn_cast on a non-existent value"
+  },
+  "source_file": "origin/source.sv",
+  "error_file": "origin/error.txt"
+}

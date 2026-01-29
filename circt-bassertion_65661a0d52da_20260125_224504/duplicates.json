@@ -1,0 +1,143 @@
+{
+  "version": "1.0",
+  "status": "completed",
+  "search_timestamp": "2026-01-28T00:00:00Z",
+  "search_queries": [
+    "string type port",
+    "MooreToCore crash",
+    "dyn_cast assertion",
+    "Moore",
+    "getModulePortInfo",
+    "sanitizeInOut",
+    "InOutType port"
+  ],
+  "current_bug": {
+    "dialect": "Moore",
+    "failing_pass": "MooreToCorePass",
+    "crash_type": "assertion",
+    "assertion_message": "dyn_cast on a non-existent value",
+    "crash_location": "include/circt/Dialect/HW/PortImplementation.h:sanitizeInOut:177",
+    "trigger_location": "lib/Conversion/MooreToCore/MooreToCore.cpp:getModulePortInfo:259",
+    "keywords": [
+      "string",
+      "StringType",
+      "DynamicStringType",
+      "MooreToCore",
+      "getModulePortInfo",
+      "sanitizeInOut",
+      "dyn_cast",
+      "port",
+      "type conversion",
+      "InOutType",
+      "module port"
+    ]
+  },
+  "similar_issues": [
+    {
+      "number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "url": "https://github.com/llvm/circt/issues/8930",
+      "state": "open",
+      "labels": ["Moore"],
+      "score_breakdown": {
+        "title_keywords": {
+          "MooreToCore": 2.0,
+          "Crash": 2.0
+        },
+        "body_keywords": {
+          "dyn_cast on a non-existent value": 3.0,
+          "MooreToCore.cpp": 1.0
+        },
+        "dialect_match": 1.5,
+        "pass_match": 2.0,
+        "assertion_match": 3.0
+      },
+      "total_score": 14.5,
+      "analysis": "Very similar crash in MooreToCore with same dyn_cast assertion. Different trigger: ConversionOp (real type) vs SVModuleOp (string type). Both involve type conversion failure leading to null type."
+    },
+    {
+      "number": 8176,
+      "title": "[MooreToCore] Crash when getting values to observe",
+      "url": "https://github.com/llvm/circt/issues/8176",
+      "state": "open",
+      "labels": ["Moore"],
+      "score_breakdown": {
+        "title_keywords": {
+          "MooreToCore": 2.0,
+          "Crash": 2.0
+        },
+        "body_keywords": {
+          "moore.module": 1.0
+        },
+        "dialect_match": 1.5,
+        "pass_match": 2.0,
+        "assertion_match": 0.0
+      },
+      "total_score": 8.5,
+      "analysis": "MooreToCore crash but different mechanism - unattached region issue rather than type conversion. Different root cause."
+    },
+    {
+      "number": 7627,
+      "title": "[MooreToCore] Unpacked array causes crash",
+      "url": "https://github.com/llvm/circt/issues/7627",
+      "state": "closed",
+      "labels": ["bug", "Moore"],
+      "score_breakdown": {
+        "title_keywords": {
+          "MooreToCore": 2.0,
+          "crash": 2.0
+        },
+        "body_keywords": {
+          "MooreToCore conversion": 1.0
+        },
+        "dialect_match": 1.5,
+        "pass_match": 2.0,
+        "assertion_match": 0.0
+      },
+      "total_score": 8.5,
+      "analysis": "Closed issue about unpacked array crash in MooreToCore. Different trigger (array extraction vs string port type)."
+    },
+    {
+      "number": 8219,
+      "title": "[ESI] Assertion: dyn_cast on a non-existent value",
+      "url": "https://github.com/llvm/circt/issues/8219",
+      "state": "closed",
+      "labels": ["ESI"],
+      "score_breakdown": {
+        "title_keywords": {
+          "dyn_cast": 2.0
+        },
+        "body_keywords": {
+          "dyn_cast on a non-existent value": 3.0
+        },
+        "dialect_match": 0.0,
+        "pass_match": 0.0,
+        "assertion_match": 3.0
+      },
+      "total_score": 8.0,
+      "analysis": "Same assertion message but in ESI dialect, not Moore. Different root cause and pass."
+    },
+    {
+      "number": 9315,
+      "title": "[FIRRTL] ModuleInliner removes NLA referred by circt.tracker",
+      "url": "https://github.com/llvm/circt/issues/9315",
+      "state": "closed",
+      "labels": [],
+      "score_breakdown": {
+        "title_keywords": {},
+        "body_keywords": {
+          "dyn_cast on a non-existent value": 3.0
+        },
+        "dialect_match": 0.0,
+        "pass_match": 0.0,
+        "assertion_match": 3.0
+      },
+      "total_score": 6.0,
+      "analysis": "Same assertion message but in FIRRTL dialect. Unrelated root cause."
+    }
+  ],
+  "recommendation": "likely_new",
+  "top_score": 14.5,
+  "top_issue": 8930,
+  "reasoning": "Issue #8930 is the most similar with score 14.5 (threshold for review_existing is 8.0). Both are MooreToCore crashes with the same 'dyn_cast on a non-existent value' assertion. However, they have DIFFERENT root causes:\n\n- #8930: Triggered by ConversionOp handling 'real' type, fails in hw::getBitWidth()\n- Current: Triggered by SVModuleOp with 'string' port type, fails in sanitizeInOut()\n\nBoth issues stem from type conversion failures in MooreToCore, but for different unsupported types (real vs string). The current bug is likely a new manifestation of incomplete type handling in MooreToCore.\n\nRecommendation: This is likely a NEW issue but should REFERENCE #8930 as a related issue since they share the same underlying pattern (missing null checks after type conversion)."
+}

@@ -1,0 +1,133 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Comb",
+  "failing_pass": "Canonicalizer",
+  "crash_type": "assertion",
+  "assertion_message": "expected 'op' to have no uses",
+  "crash_location": {
+    "file": "PatternMatch.cpp",
+    "function": "mlir::RewriterBase::eraseOp",
+    "line": 156
+  },
+  "pattern_location": {
+    "file": "lib/Dialect/Comb/CombFolds.cpp",
+    "function": "extractConcatToConcatExtract",
+    "line": 547
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "bit-indexed array access",
+      "assign statements",
+      "always_comb procedural block",
+      "bit extraction operations"
+    ],
+    "problematic_patterns": [
+      "multiple extract operations from same source variable",
+      "mixed assignment styles (continuous and procedural)",
+      "extract(concat(...)) fold pattern"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "GreedyPatternRewriteDriver applies multiple patterns in same iteration, and extractConcatToConcatExtract doesn't check if operation's uses have been modified by other patterns",
+      "confidence": "high",
+      "evidence": [
+        "Crash occurs in canonicalizer which uses GreedyPatternRewriteDriver",
+        "Assertion fails when trying to erase operation that should have had all uses replaced",
+        "Test case has multiple extract operations from same source creating multiple pattern match opportunities",
+        "Pattern calls replaceOp directly without checking if op still has valid uses",
+        "Namehint modification in replaceOpAndCopyNamehint happens before replacement, which could trigger listener notifications"
+      ]
+    },
+    {
+      "id": 2,
+      "description": "extractConcatToConcatExtract has logic bug where reverseConcatArgs.size() == 1 but computed reverseConcatArgs[0] is same as operation's result, creating self-reference",
+      "confidence": "medium",
+      "evidence": [
+        "Pattern creates reverseConcatArgs by iterating over concat inputs",
+        "When extracting entire width of single concat argument, optimization may incorrectly identify pattern",
+        "Test case has constant assignments (out[3] = 1'h0) which may create trivial concat patterns"
+      ]
+    },
+    {
+      "id": 3,
+      "description": "modifyOpInPlace call in replaceOpAndCopyNamehint triggers listener notifications that modify IR state between replaceAllUsesWith and eraseOp",
+      "confidence": "low",
+      "evidence": [
+        "Namehint attribute is modified before replace operation",
+        "Listeners in MLIR pattern rewriters can modify IR in response to notifications",
+        "If listener adds a use to operation after replaceAllUsesWith but before eraseOp, assertion would fail"
+      ]
+    }
+  ],
+  "keywords": [
+    "canonicalizer",
+    "assertion",
+    "use_empty",
+    "ExtractOp",
+    "extractConcatToConcatExtract",
+    "replaceOp",
+    "GreedyPatternRewriteDriver",
+    "Comb",
+    "fold",
+    "pattern"
+  ],
+  "suggested_fixes": [
+    {
+      "id": 1,
+      "priority": "high",
+      "description": "Add use checking before replaceOp in extractConcatToConcatExtract",
+      "location": "lib/Dialect/Comb/CombFolds.cpp:546",
+      "code": "if (op->isDead() || !op->getOperand(0)) { return failure(); }"
+    },
+    {
+      "id": 2,
+      "priority": "high",
+      "description": "Return failure() instead of success() on edge cases",
+      "location": "lib/Dialect/Comb/CombFolds.cpp:546-549",
+      "code": "Check for self-replacement before calling replaceOp"
+    },
+    {
+      "id": 3,
+      "priority": "medium",
+      "description": "Use proper rewriter API sequence to avoid listener race conditions",
+      "location": "lib/Support/Naming.cpp:73-82",
+      "code": "Separate namehint modification from replace operation"
+    },
+    {
+      "id": 4,
+      "priority": "low",
+      "description": "Improve GreedyPatternRewriteDriver state management at MLIR level",
+      "location": "llvm/mlir/lib/Transforms/Utils/GreedyPatternRewriteDriver.cpp",
+      "code": "Ensure operations are properly invalidated when their uses are modified"
+    }
+  ],
+  "related_sources": [
+    {
+      "path": "lib/Dialect/Comb/CombFolds.cpp",
+      "reason": "Contains extractConcatToConcatExtract pattern (lines 475-553)"
+    },
+    {
+      "path": "lib/Support/Naming.cpp",
+      "reason": "Contains replaceOpAndCopyNamehint helper function (lines 73-82)"
+    },
+    {
+      "path": "llvm/mlir/lib/IR/PatternMatch.cpp",
+      "reason": "Contains replaceOp and eraseOp implementations (lines 127-156)"
+    },
+    {
+      "path": "llvm/mlir/lib/Transforms/Utils/GreedyPatternRewriteDriver.cpp",
+      "reason": "Pattern application driver that may have race conditions"
+    },
+    {
+      "path": "llvm/mlir/lib/Transforms/Canonicalizer.cpp",
+      "reason": "Canonicalizer pass that triggers the crash"
+    }
+  ],
+  "test_case_minimal": true,
+  "test_case_lines": 16,
+  "reproducibility": "deterministic"
+}
