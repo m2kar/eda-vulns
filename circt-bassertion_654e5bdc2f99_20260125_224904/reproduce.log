@@ -1,4 +1,0 @@
-<stdin>:2:64: error: failed to legalize operation 'arc.state_write'
-  hw.module @MixedPorts(in %a : i6, in %b : i6, out c : i6, in %d : !llhd.ref<i6>) {
-                                                               ^
-<stdin>:2:64: note: see current operation: "arc.state_write"(%30, %27) : (!arc.state<!llhd.ref<i6>>, !llhd.ref<i6>) -> ()

@@ -1,4 +1,0 @@
-issue_6343/result/output/lowered2.mlir:82:17: error: failed to legalize operation 'func.call' that was explicitly marked illegal
-          %12 = func.call @llvm.smax.i32(%11, %c0_i32) : (i32, i32) -> i32
-                ^
-issue_6343/result/output/lowered2.mlir:82:17: note: see current operation: %33 = "func.call"(%32, %17) <{callee = @llvm.smax.i32}> : (i32, i32) -> i32

@@ -1,5 +1,3 @@
-# Ignore circt src 
-circt-src/
 # Ignore system files
 .DS_Store
 .AppleDouble
@@ -60,10 +58,5 @@ node_modules/
 credentials.json
 .env
 
-# Ignore per-crash Claude scratchpads (except circt-b0)
-circt-b*/.claude/
-!circt-b0/.claude/
-!circt-b0/.claude/**
-
 # Keep important result files for documentation
-!circt-*/results/
+!circt-1/results/

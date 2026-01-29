@@ -1,9 +1,0 @@
-module {
-  hw.module @test_module(in %in : i1) {
-    hw.output
-  }
-}
---- Reproduction attempt ---
-Exit code: 0
-Tool: /opt/firtool/bin/circt-verilog
-Version: LLVM (http://llvm.org/):
