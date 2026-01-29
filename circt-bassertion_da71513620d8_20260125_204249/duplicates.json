@@ -1,0 +1,102 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T15:29:29+00:00",
+  "search_terms": {
+    "dialect": "Moore",
+    "failing_pass": "MooreToCore",
+    "crash_type": "assertion",
+    "keywords": ["string port", "DynamicStringType", "MooreToCore", "module port", "simulation type", "HW dialect", "type conversion", "SystemVerilog string", "port type", "crash"],
+    "assertion_message": "dyn_cast on a non-existent value - dyn_cast<InOutType>"
+  },
+  "results": {
+    "total_found": 10,
+    "top_score": 3.0,
+    "issues": [
+      {
+        "number": 8283,
+        "title": "[ImportVerilog] Cannot compile forward declared string type",
+        "url": "https://github.com/llvm/circt/issues/8283",
+        "state": "OPEN",
+        "similarity_score": 3.0,
+        "matched_keywords": ["MooreToCore", "string type"]
+      },
+      {
+        "number": 8332,
+        "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+        "url": "https://github.com/llvm/circt/issues/8332",
+        "state": "OPEN",
+        "similarity_score": 3.0,
+        "matched_keywords": ["MooreToCore", "string type"]
+      },
+      {
+        "number": 5640,
+        "title": "[SV] Introduce SystemVerilog `string` type",
+        "url": "https://github.com/llvm/circt/issues/5640",
+        "state": "OPEN",
+        "similarity_score": 2.0,
+        "matched_keywords": ["string type", "SV"]
+      },
+      {
+        "number": 8292,
+        "title": "[MooreToCore] Support for Unsized Array Type",
+        "url": "https://github.com/llvm/circt/issues/8292",
+        "state": "OPEN",
+        "similarity_score": 2.0,
+        "matched_keywords": ["MooreToCore", "type"]
+      },
+      {
+        "number": 9206,
+        "title": "[ImportVerilog] moore.conversion generated instead of moore.int_to_string",
+        "url": "https://github.com/llvm/circt/issues/9206",
+        "state": "OPEN",
+        "similarity_score": 2.0,
+        "matched_keywords": ["MooreToCore", "string type"]
+      },
+      {
+        "number": 9490,
+        "title": "[OM][Evaluator][FIRRTL] Should we be able to evaluate ext classes if we don't use outputs?",
+        "url": "https://github.com/llvm/circt/issues/9490",
+        "state": "OPEN",
+        "similarity_score": 1.5,
+        "matched_keywords": ["string"]
+      },
+      {
+        "number": 8930,
+        "title": "[MooreToCore] Crash with sqrt/floor",
+        "url": "https://github.com/llvm/circt/issues/8930",
+        "state": "OPEN",
+        "similarity_score": 1.0,
+        "matched_keywords": ["MooreToCore", "crash"]
+      },
+      {
+        "number": 8176,
+        "title": "[MooreToCore] Crash when getting values to observe",
+        "url": "https://github.com/llvm/circt/issues/8176",
+        "state": "OPEN",
+        "similarity_score": 1.0,
+        "matched_keywords": ["MooreToCore", "crash"]
+      },
+      {
+        "number": 7531,
+        "title": "[Moore] Input triggers assertion in canonicalizer infra",
+        "url": "https://github.com/llvm/circt/issues/7531",
+        "state": "OPEN",
+        "similarity_score": 1.0,
+        "matched_keywords": ["Moore", "assertion"]
+      },
+      {
+        "number": 8211,
+        "title": "[MooreToCore]Unexpected observed values in llhd.wait",
+        "url": "https://github.com/llvm/circt/issues/8211",
+        "state": "OPEN",
+        "similarity_score": 1.0,
+        "matched_keywords": ["MooreToCore", "crash"]
+      }
+    ]
+  },
+  "recommendation": {
+    "action": "new_issue",
+    "confidence": "high",
+    "reason": "Low similarity score (3.0) indicates this is likely a new bug. The most similar issue (#8283) discusses string type issues in MooreToCore but specifically about forward declarations, not about string type as module output ports causing crashes."
+  }
+}

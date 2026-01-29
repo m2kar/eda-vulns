@@ -1,0 +1,78 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCore",
+  "crash_type": "assertion",
+  "assertion_message": "Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"' failed",
+  "crash_location": {
+    "file": "MooreToCore.cpp",
+    "line": 259,
+    "function": "getModulePortInfo"
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": ["string", "output", "always_comb"],
+    "problematic_patterns": ["string type output port"]
+  },
+  "hypotheses": [
+    {
+      "description": "Type conversion returns null for string type in output port context - sim::DynamicStringType may not be valid as HW port type",
+      "confidence": "high",
+      "evidence": [
+        "Test case has output string port as only output",
+        "Stack trace shows crash in SVModuleOpConversion::matchAndRewrite",
+        "Assertion indicates dyn_cast on non-existent (null) value",
+        "sim::DynamicStringType is for simulation, not synthesizable hardware"
+      ]
+    },
+    {
+      "description": "Missing null check after typeConverter.convertType() in getModulePortInfo()",
+      "confidence": "medium",
+      "evidence": [
+        "Code at line 243 doesn't validate portTy is non-null",
+        "Other CIRCT patterns typically check conversion results",
+        "Null type propagates to sanitizeInOut() where dyn_cast crashes"
+      ]
+    },
+    {
+      "description": "String types are fundamentally unsupported for module ports in HW dialect",
+      "confidence": "low",
+      "evidence": [
+        "HW dialect targets synthesizable hardware",
+        "String types have no hardware equivalent",
+        "Should emit error message rather than crash"
+      ]
+    }
+  ],
+  "keywords": [
+    "string",
+    "output",
+    "port",
+    "MooreToCore",
+    "InOutType",
+    "dyn_cast",
+    "convertType",
+    "DynamicStringType",
+    "sanitizeInOut",
+    "SVModuleOp"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Main conversion logic with getModulePortInfo() crash site"
+    },
+    {
+      "path": "include/circt/Dialect/HW/PortImplementation.h",
+      "reason": "sanitizeInOut() function where dyn_cast crashes"
+    },
+    {
+      "path": "include/circt/Dialect/Sim/SimTypes.td",
+      "reason": "DynamicStringType definition"
+    },
+    {
+      "path": "include/circt/Dialect/Moore/MooreTypes.td",
+      "reason": "Moore StringType definition"
+    }
+  ]
+}

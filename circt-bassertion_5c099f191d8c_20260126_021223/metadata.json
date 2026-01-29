@@ -1,0 +1,37 @@
+{
+  "version": "2.0",
+  "bug_id": "assertion_5c099f191d8c_20260126_021223",
+  "crash_type": "assertion",
+  "hash": "5c099f191d8c",
+  "original_crash_folder": "assertion_5c099f191d8c_20260126_021223",
+  "timestamp": "2026-01-26T02:12:23",
+  "work_dir": "/home/zhiqing/edazz/eda-vulns/circt-bassertion_5c099f191d8c_20260126_021223",
+  "status": "in_progress",
+  "crash_signature": {
+    "assertion": "expected 'op' to have no uses",
+    "file": "PatternMatch.cpp:156",
+    "function": "mlir::RewriterBase::eraseOp",
+    "failing_pass": "Canonicalizer",
+    "dialect": "Comb",
+    "failing_op": "ExtractOp::canonicalize",
+    "pattern": "extractConcatToConcatExtract"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv",
+    "reproduced": true,
+    "reproduced_at": "2026-01-28T04:04:32Z",
+    "toolchain": "LLVM 22.0.0git, CIRCT firtool-1.139.0"
+  },
+  "workflow": {
+    "reproduce": "completed",
+    "root_cause_analysis": "completed",
+    "minimize": "in_progress",
+    "validate": "pending",
+    "check_duplicates": "pending",
+    "generate_issue": "pending"
+  },
+  "analysis_files": {
+    "root_cause_md": "root_cause.md",
+    "analysis_json": "analysis.json"
+  }
+}

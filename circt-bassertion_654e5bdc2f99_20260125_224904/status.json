@@ -1,0 +1,29 @@
+{
+  "crash_id": "circt-bassertion_654e5bdc2f99_20260125_224904",
+  "status": "report_ready",
+  "phase": "completed",
+  "created_at": "$(date -Iseconds)",
+  "updated_at": "2026-01-28T04:44:13+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed",
+      "started_at": "$(date -Iseconds)",
+      "completed_at": "2026-01-28T04:36:48+00:00"
+    },
+    "phase2": {
+      "status": "completed",
+      "started_at": "2026-01-28T04:36:48+00:00",
+      "completed_at": "2026-01-28T04:42:08+00:00"
+    },
+    "phase3": {
+      "status": "completed",
+      "started_at": "2026-01-28T04:42:08+00:00",
+      "completed_at": "2026-01-28T04:44:13+00:00"
+    }
+  }
+}

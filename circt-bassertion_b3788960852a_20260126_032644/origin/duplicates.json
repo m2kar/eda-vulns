@@ -1,0 +1,36 @@
+{
+  "search_performed": true,
+  "search_queries": [
+    "string port crash",
+    "MooreToCore string",
+    "DynamicStringType port"
+  ],
+  "potential_duplicates": [
+    {
+      "issue_number": 8332,
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "state": "OPEN",
+      "url": "https://github.com/llvm/circt/issues/8332",
+      "similarity": 0.85,
+      "match_reason": "Directly discusses StringType support in MooreToCore conversion, same root cause area",
+      "is_duplicate": true
+    },
+    {
+      "issue_number": 8283,
+      "title": "[ImportVerilog] Cannot compile forward decleared string type",
+      "state": "OPEN",
+      "url": "https://github.com/llvm/circt/issues/8283",
+      "similarity": 0.75,
+      "match_reason": "Related to string type handling in Moore dialect, discusses similar conversion failures",
+      "is_duplicate": false
+    }
+  ],
+  "duplicate_found": true,
+  "primary_duplicate": {
+    "issue_number": 8332,
+    "relationship": "same_root_cause",
+    "notes": "Issue #8332 is a feature request to support StringType in MooreToCore. Our crash is a symptom of the same missing support - string types are not properly handled during module port conversion."
+  },
+  "recommendation": "DO_NOT_SUBMIT",
+  "recommendation_reason": "The crash we found is a manifestation of the known issue #8332. The fix for #8332 (proper StringType support) would also fix our crash. Consider adding a comment to #8332 with our specific crash scenario (string port causing crash in getModulePortInfo)."
+}

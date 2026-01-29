@@ -1,0 +1,46 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCore",
+  "crash_type": "segfault",
+  "original_crash_type": "assertion",
+  "crash_location": {
+    "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+    "function": "getModulePortInfo",
+    "line": 243
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": ["string output port", "string variable", "continuous assignment"],
+    "problematic_patterns": ["string type used as module output port"]
+  },
+  "hypotheses": [
+    {
+      "description": "sim::DynamicStringType is not a valid hardware port type, causing crash when constructing hw::PortInfo",
+      "confidence": "high",
+      "evidence": [
+        "Type converter converts StringType to sim::DynamicStringType (line 2277)",
+        "getModulePortInfo() uses converted type without validation",
+        "hw::PortInfo requires hardware-compatible types",
+        "Crash occurs in SVModuleOpConversion::matchAndRewrite"
+      ]
+    },
+    {
+      "description": "Missing type validation for simulation-only types in hardware module port context",
+      "confidence": "medium",
+      "evidence": [
+        "Other non-synthesizable types (chandle, class) return std::nullopt",
+        "String conversion unconditionally succeeds",
+        "No context-aware rejection for port types"
+      ]
+    }
+  ],
+  "root_cause_summary": "The Moore-to-Core conversion converts SystemVerilog string type to sim::DynamicStringType, which is not a valid hardware port type. When creating hw::PortInfo for a string output port, the invalid type causes a crash.",
+  "keywords": ["string", "port", "MooreToCore", "DynamicStringType", "getModulePortInfo", "hw::PortInfo", "type conversion", "sim"],
+  "suggested_sources": [
+    {"path": "lib/Conversion/MooreToCore/MooreToCore.cpp", "reason": "Main conversion logic with crash site"},
+    {"path": "include/circt/Dialect/Sim/SimTypes.h", "reason": "DynamicStringType definition"}
+  ],
+  "suggested_fix": "Add validation in getModulePortInfo() to check if converted type is a valid hardware type, and emit a proper error diagnostic instead of crashing"
+}

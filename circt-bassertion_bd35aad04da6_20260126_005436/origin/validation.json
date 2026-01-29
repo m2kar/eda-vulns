@@ -1,0 +1,32 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T12:21:27+00:00",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": ""
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "slang": "pass",
+    "verilator": "pass",
+    "icarus": "unsupported"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid SystemVerilog syntax (confirmed by slang and verilator), CIRCT crashes instead of graceful error"
+  },
+  "minimization": {
+    "original_lines": 12,
+    "minimized_lines": 2,
+    "reduction_percent": 83.3
+  }
+}

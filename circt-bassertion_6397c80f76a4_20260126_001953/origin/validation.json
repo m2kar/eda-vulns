@@ -1,0 +1,57 @@
+{
+  "version": "1.0",
+  "testcase": {
+    "file": "bug.sv",
+    "lines": 5,
+    "original_lines": 12,
+    "reduction_percent": 58
+  },
+  "syntax_check": {
+    "ieee_standard": "1800-2005",
+    "is_valid": true,
+    "notes": "SystemVerilog string type as module port is syntactically valid per IEEE 1800"
+  },
+  "cross_tool_validation": {
+    "verilator": {
+      "version": "5.022",
+      "result": "pass",
+      "exit_code": 0,
+      "output": "",
+      "notes": "Lint-only mode passes silently"
+    },
+    "slang": {
+      "version": "10.0.6",
+      "result": "pass",
+      "exit_code": 0,
+      "output": "Build succeeded: 0 errors, 0 warnings",
+      "notes": "Accepts string port as valid syntax"
+    },
+    "iverilog": {
+      "version": "13.0",
+      "result": "error",
+      "exit_code": 1,
+      "output": "sorry: Port `str_out` of module `test_module` with type `string` is not supported.",
+      "notes": "Graceful error - feature not supported, no crash"
+    },
+    "circt": {
+      "version": "1.139.0",
+      "result": "crash",
+      "exit_code": 134,
+      "crash_type": "assertion",
+      "crash_location": "SVModuleOpConversion::matchAndRewrite in MooreToCore.cpp",
+      "notes": "Assertion failure instead of proper error message"
+    }
+  },
+  "classification": {
+    "result": "report",
+    "reasoning": "Test case is syntactically valid (confirmed by Verilator and Slang). While string ports may not be synthesizable, CIRCT should emit a proper error message instead of crashing with an assertion failure. Icarus demonstrates the expected behavior: graceful 'not supported' error.",
+    "is_genuine_bug": true,
+    "bug_type": "crash_on_valid_input",
+    "severity": "high"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw bug.sv",
+    "crash_signature": "SVModuleOpConversion::matchAndRewrite in MooreToCore.cpp",
+    "reproducible": true
+  }
+}

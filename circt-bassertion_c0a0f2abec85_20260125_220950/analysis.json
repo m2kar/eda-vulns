@@ -1,0 +1,102 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Arc",
+  "related_dialects": ["LLHD", "Moore", "HW"],
+  "failing_pass": "LowerStatePass",
+  "crash_type": "assertion",
+  "crash_location": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "function": "ModuleLowering::run()",
+    "line": 219
+  },
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i8>'",
+  "assertion_info": {
+    "file": "StorageUniquerSupport.h",
+    "line": 180,
+    "condition": "succeeded(ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))"
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "inout port",
+      "tri-state driver",
+      "high-impedance (8'bz)",
+      "always_ff",
+      "always_comb"
+    ],
+    "problematic_patterns": [
+      "inout logic [7:0] c",
+      "assign c = drive_enable ? count : 8'bz"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "LowerState pass lacks early check for inout ports (!llhd.ref type), causing StateType::get() to fail assertion when encountering unsupported type",
+      "confidence": "high",
+      "evidence": [
+        "Error message explicitly states '!llhd.ref<i8>' has no known bit width",
+        "computeLLVMBitWidth() in ArcTypes.cpp doesn't handle llhd::RefType",
+        "StateType::verify() returns failure for unsupported types",
+        "ModelOp::verify() has inout check (line 339) but executes too late in pipeline"
+      ],
+      "root_cause_type": "missing_validation"
+    },
+    {
+      "id": 2,
+      "description": "arcilator preprocessing pipeline missing HWEliminateInOutPorts pass to convert inout ports before LowerState",
+      "confidence": "medium",
+      "evidence": [
+        "HWEliminateInOutPorts pass exists in CIRCT",
+        "populateArcPreprocessingPipeline() doesn't include this pass",
+        "Pass could eliminate inout ports before LowerState runs"
+      ],
+      "root_cause_type": "missing_pass"
+    }
+  ],
+  "keywords": [
+    "inout",
+    "llhd.ref",
+    "StateType",
+    "LowerState",
+    "arcilator",
+    "bit width",
+    "RefType",
+    "tri-state",
+    "assertion"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "reason": "Crash location - needs early inout port check"
+    },
+    {
+      "path": "lib/Dialect/Arc/ArcTypes.cpp",
+      "reason": "StateType verification logic"
+    },
+    {
+      "path": "lib/Dialect/Arc/ArcOps.cpp",
+      "reason": "ModelOp::verify() has inout check but runs too late"
+    },
+    {
+      "path": "lib/Tools/arcilator/pipelines.cpp",
+      "reason": "arcilator pass pipeline configuration"
+    },
+    {
+      "path": "lib/Dialect/SV/Transforms/HWEliminateInOutPorts.cpp",
+      "reason": "Potential solution reference for inout elimination"
+    }
+  ],
+  "classification": {
+    "is_bug": true,
+    "bug_type": "missing_validation",
+    "severity": "medium",
+    "user_impact": "arcilator crashes with assertion failure instead of providing user-friendly error message when input contains inout ports"
+  },
+  "suggested_fix": {
+    "approach": "Add early validation in LowerState pass to reject inout ports with clear error message",
+    "location": "lib/Dialect/Arc/Transforms/LowerState.cpp:215-220",
+    "code_snippet": "// Before processing arguments:\nfor (auto arg : moduleOp.getBodyBlock()->getArguments()) {\n  if (isa<llhd::RefType>(arg.getType())) {\n    return moduleOp.emitOpError()\n        << \"inout ports are not supported in arcilator\";\n  }\n}"
+  }
+}

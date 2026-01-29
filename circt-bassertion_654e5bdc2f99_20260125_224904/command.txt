@@ -1,0 +1,1 @@
+circt-verilog --ir-hw bug.sv | arcilator --observe-ports

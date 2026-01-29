@@ -1,0 +1,97 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Arc",
+  "failing_pass": "LowerStatePass",
+  "crash_type": "assertion",
+  "crash_location": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "function": "ModuleLowering::run()",
+    "line": 219
+  },
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "inout port",
+      "bidirectional signal",
+      "tri-state driver",
+      "struct array",
+      "always_ff"
+    ],
+    "problematic_patterns": [
+      "inout logic c"
+    ],
+    "trigger_type": "llhd.ref type in module argument"
+  },
+  "ir_analysis": {
+    "problematic_ir": "in %c : !llhd.ref<i1>",
+    "source_construct": "inout logic c",
+    "type_mismatch": "llhd::RefType cannot be wrapped in arc::StateType"
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "LowerState pass does not filter out llhd.ref typed arguments before creating StateType",
+      "confidence": "high",
+      "evidence": [
+        "LowerState.cpp:215-221 processes ALL module arguments without type filtering",
+        "No check for llhd::RefType before StateType::get() call",
+        "llhd.ref represents bidirectional ports that need special handling"
+      ],
+      "suggested_fix": "Add type check to skip or reject llhd.ref inputs in LowerState"
+    },
+    {
+      "id": 2,
+      "description": "Missing llhd::RefType support in computeLLVMBitWidth()",
+      "confidence": "medium",
+      "evidence": [
+        "computeLLVMBitWidth only handles Clock, Integer, Array, Struct",
+        "Could potentially extract inner type from RefType"
+      ],
+      "counter_evidence": [
+        "RefType semantically represents a reference, not a value",
+        "Adding bit width may be semantically incorrect"
+      ]
+    },
+    {
+      "id": 3,
+      "description": "Frontend should not emit llhd.ref for arcilator",
+      "confidence": "low",
+      "evidence": [
+        "LLHD is for continuous-time modeling",
+        "Arcilator is discrete-event"
+      ]
+    }
+  ],
+  "keywords": [
+    "inout",
+    "llhd.ref",
+    "StateType",
+    "LowerState",
+    "arcilator",
+    "bidirectional",
+    "port",
+    "RefType"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "reason": "Contains crash location, needs type filtering"
+    },
+    {
+      "path": "lib/Dialect/Arc/ArcTypes.cpp",
+      "reason": "Contains StateType verification logic"
+    },
+    {
+      "path": "include/circt/Dialect/LLHD/IR/LLHDTypes.td",
+      "reason": "Definition of RefType"
+    }
+  ],
+  "classification": {
+    "type": "genuine_bug",
+    "severity": "medium",
+    "scope": "arcilator",
+    "fix_complexity": "simple"
+  }
+}

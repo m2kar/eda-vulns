@@ -1,0 +1,61 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T12:30:00+08:00",
+  "input_file": "bug.sv",
+  "result": "report",
+  "classification": {
+    "result": "report",
+    "category": "bug",
+    "reason": "Valid SystemVerilog syntax (confirmed by slang and verilator) causes assertion failure in CIRCT. The test case uses string type as module output port which is legal per IEEE 1800-2017 but triggers a crash in MooreToCore conversion."
+  },
+  "syntax_check": {
+    "valid": true,
+    "tool": "slang",
+    "tool_version": "10.0.6+3d7e6cd2e",
+    "errors": []
+  },
+  "feature_support": {
+    "supported": false,
+    "unsupported_features": [
+      {
+        "feature": "string type as module port",
+        "ieee_section": "6.16 String data type",
+        "circt_status": "crashes instead of proper error"
+      }
+    ],
+    "notes": "string is a valid SystemVerilog data type but is simulation-only. CIRCT should either support it or emit a proper error, not crash."
+  },
+  "cross_tool_validation": {
+    "tested": true,
+    "results": [
+      {
+        "tool": "slang",
+        "version": "10.0.6+3d7e6cd2e",
+        "status": "pass",
+        "exit_code": 0,
+        "message": "Build succeeded: 0 errors, 0 warnings"
+      },
+      {
+        "tool": "verilator",
+        "version": "5.022",
+        "status": "pass",
+        "exit_code": 0,
+        "message": ""
+      },
+      {
+        "tool": "iverilog",
+        "version": "unknown",
+        "status": "error",
+        "exit_code": 1,
+        "message": "Port with type string is not supported (tool limitation, not syntax error)"
+      }
+    ]
+  },
+  "ieee_compliance": {
+    "standard": "IEEE 1800-2017",
+    "section": "6.16 String data type",
+    "valid": true,
+    "notes": "string is a built-in data type in SystemVerilog. While it is a simulation-only type and not synthesizable, it is valid syntax."
+  },
+  "recommendation": "Report as bug. CIRCT should handle string port types gracefully - either by supporting simulation constructs or by emitting a proper error message instead of crashing."
+}

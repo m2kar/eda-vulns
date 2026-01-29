@@ -1,0 +1,56 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T00:00:00Z",
+  "test_case": "bug.sv",
+  "result": "report",
+  "classification": {
+    "type": "bug",
+    "subtype": "assertion_failure",
+    "reason": "Valid SystemVerilog syntax causes assertion failure instead of graceful error message"
+  },
+  "syntax_validation": {
+    "ieee_compliant": true,
+    "ieee_section": "6.16 String data type",
+    "notes": "string type as module port is valid per IEEE 1800-2017"
+  },
+  "tool_validation": {
+    "slang": {
+      "version": "9.1.0",
+      "result": "pass",
+      "message": "Build succeeded: 0 errors, 0 warnings"
+    },
+    "verilator": {
+      "version": "available",
+      "result": "pass",
+      "message": "lint-only passed"
+    },
+    "circt_verilog": {
+      "version": "firtool-1.139.0",
+      "result": "crash",
+      "message": "Assertion failure: dyn_cast on a non-existent value"
+    }
+  },
+  "feature_analysis": {
+    "feature": "string type as module port",
+    "synthesizable": false,
+    "simulation_valid": true,
+    "circt_support_status": "unsupported",
+    "expected_behavior": "emit error message",
+    "actual_behavior": "assertion failure / crash"
+  },
+  "bug_characteristics": {
+    "is_valid_testcase": true,
+    "is_genuine_bug": true,
+    "is_feature_request": false,
+    "rationale": "CIRCT should reject unsupported features with a clear error, not crash"
+  },
+  "recommendation": {
+    "action": "report",
+    "priority": "medium",
+    "suggested_fix": [
+      "Add validation in getModulePortInfo() to check if converted port types are HW-compatible",
+      "Emit diagnostic error for unsupported port types like string",
+      "Alternative: reject string ports during Moore dialect import"
+    ]
+  }
+}

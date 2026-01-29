@@ -1,0 +1,92 @@
+{
+  "version": "2.0",
+  "search_queries": [
+    "string module port",
+    "MooreToCore",
+    "InOutType",
+    "dyn_cast"
+  ],
+  "total_issues_found": 23,
+  "top_matches": [
+    {
+      "issue_number": 8283,
+      "title": "[ImportVerilog] Cannot compile forward decleared string type",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8283",
+      "similarity_score": 8.5,
+      "matched_keywords": [
+        "string (title: +2.0)",
+        "MooreToCore (+1.5)",
+        "StringType (+1.0)",
+        "type conversion (+1.0)",
+        "moore.variable (+1.0)",
+        "string type (+2.0)"
+      ],
+      "is_duplicate": true,
+      "summary": "Reports same root cause: MooreToCore lacks string-type conversion, causing moore.variable to fail for string type. Same underlying issue - missing type converter for moore::StringType."
+    },
+    {
+      "issue_number": 8332,
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8332",
+      "similarity_score": 7.5,
+      "matched_keywords": [
+        "string (title: +2.0)",
+        "MooreToCore (title: +1.5)",
+        "StringType (+1.0)",
+        "type conversion (+1.0)",
+        "VariableOp (+1.0)",
+        "moore (+1.0)"
+      ],
+      "is_duplicate": false,
+      "summary": "Feature discussion about adding StringType support to MooreToCore. Related but this is a feature request/discussion, not a bug report for the crash."
+    },
+    {
+      "issue_number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8930",
+      "similarity_score": 6.5,
+      "matched_keywords": [
+        "MooreToCore (title: +1.5)",
+        "dyn_cast on a non-existent value (assertion: +3.0)",
+        "moore label (+1.5)",
+        "type conversion (+0.5)"
+      ],
+      "is_duplicate": false,
+      "summary": "Same assertion message 'dyn_cast on a non-existent value' in MooreToCore, but caused by real type conversion (sqrt/floor), not string type. Different trigger but similar underlying mechanism."
+    },
+    {
+      "issue_number": 7535,
+      "title": "[MooreToCore] VariableOp lowered failed",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/7535",
+      "similarity_score": 5.0,
+      "matched_keywords": [
+        "MooreToCore (title: +1.5)",
+        "InOutType (+1.5)",
+        "type conversion (+1.0)",
+        "VariableOp (+1.0)"
+      ],
+      "is_duplicate": false,
+      "summary": "MooreToCore crash when casting hw::InOutType for struct type. Related type conversion issue but for struct type, not string type."
+    },
+    {
+      "issue_number": 8973,
+      "title": "[MooreToCore] Lowering to math.ipow?",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8973",
+      "similarity_score": 2.0,
+      "matched_keywords": [
+        "MooreToCore (title: +1.5)",
+        "moore label (+0.5)"
+      ],
+      "is_duplicate": false,
+      "summary": "Discussion about lowering PowUOp in MooreToCore. Unrelated to string type issue."
+    }
+  ],
+  "recommendation": "review_existing",
+  "confidence": "high",
+  "analysis_notes": "Issue #8283 directly describes the same problem: MooreToCore lacks string-type conversion causing moore.variable to fail. The test case in #8283 uses string as a local variable, while our crash uses string as a module port, but the root cause is identical - missing type converter for moore::StringType. This should be considered a duplicate or very closely related issue."
+}

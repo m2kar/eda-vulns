@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T11:56:43+00:00",
+  "input_file": "bug.mlir",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "mlir-opt",
+    "details": "MLIR parses successfully, passes lower-affine and scf-for-to-while without errors"
+  },
+  "feature_support": {
+    "status": "supported",
+    "constructs_used": ["affine.for", "func.call", "func.func private"],
+    "unsupported_found": ""
+  },
+  "known_limitations": {
+    "matched": true,
+    "description": "func.call inside SCF while loop not supported by SCFToCalyx",
+    "github_issue": "https://github.com/llvm/circt/issues/6343"
+  },
+  "cross_tool_validation": {
+    "mlir-opt": "pass",
+    "mlir-opt --lower-affine": "pass",
+    "mlir-opt --lower-affine --scf-for-to-while": "pass",
+    "circt-opt --lower-scf-to-calyx": "crash"
+  },
+  "minimization": {
+    "original_lines": 22,
+    "minimized_lines": 11,
+    "reduction_percent": 50.0,
+    "key_constructs_preserved": ["affine.for", "func.call"]
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid MLIR test case causes segmentation fault in circt-opt SCFToCalyx pass. Matches known issue #6343.",
+    "is_duplicate": true,
+    "duplicate_of": "https://github.com/llvm/circt/issues/6343"
+  }
+}

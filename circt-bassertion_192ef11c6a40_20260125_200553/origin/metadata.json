@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "bug_id": "assertion_192ef11c6a40_20260125_200553",
+  "original_crash": {
+    "type": "assertion",
+    "hash": "192ef11c6a40",
+    "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "assertion": "Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed.",
+    "crash_location": {
+      "function": "circt::arc::StateType::get",
+      "file": "ArcTypes.cpp.inc",
+      "source_file": "LowerState.cpp",
+      "line": 219
+    },
+    "tool": "arcilator",
+    "dialect": "arc"
+  },
+  "reproduction": {
+    "reproduced": true,
+    "command": "circt-verilog --ir-hw source.sv | arcilator",
+    "full_command": "export PATH=/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin:$PATH && circt-verilog --ir-hw source.sv | arcilator",
+    "output": "reproduce.log",
+    "signature_match": {
+      "error_message": true,
+      "assertion": true,
+      "crash_function": true
+    }
+  },
+  "source_file": "source.sv",
+  "toolchain": {
+    "circt_version": "1.139.0",
+    "path": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin"
+  },
+  "timestamps": {
+    "original": "20260125_200553",
+    "reproduction": "2026-01-28"
+  }
+}

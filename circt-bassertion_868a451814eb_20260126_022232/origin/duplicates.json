@@ -1,0 +1,94 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T06:40:03.734062",
+  "search_terms": {
+    "dialect": "Moore",
+    "failing_pass": "MooreToCore",
+    "crash_type": "assertion",
+    "keywords": [
+      "string",
+      "output",
+      "port",
+      "MooreToCore",
+      "InOutType",
+      "dyn_cast",
+      "convertType",
+      "DynamicStringType",
+      "sanitizeInOut",
+      "SVModuleOp"
+    ],
+    "assertion_message": "Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"' failed"
+  },
+  "results": {
+    "total_found": 15,
+    "top_score": 12.5,
+    "issues": [
+      {
+        "number": 8930,
+        "title": "[MooreToCore] Crash with sqrt/floor",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8930",
+        "labels": [
+          {
+            "name": "Moore"
+          }
+        ],
+        "body": "circt-verilog: Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"' failed. MooreToCore ConversionOp getBitWidth",
+        "similarity_score": 12.5
+      },
+      {
+        "number": 8276,
+        "title": "[MooreToCore] Support for UnpackedArrayType emission",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8276",
+        "labels": [],
+        "body": "MooreToCore pass converts unpacked arrays to packed arrays",
+        "similarity_score": 9.0
+      },
+      {
+        "number": 8973,
+        "title": "[MooreToCore] Lowering to math.ipow?",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8973",
+        "labels": [
+          {
+            "name": "Moore"
+          }
+        ],
+        "body": "Is there a strong reason to go from PowUOp to math.ipow as opposed to lowering to a sequence of multiplications? MooreToCore.cpp",
+        "similarity_score": 8.5
+      },
+      {
+        "number": 8476,
+        "title": "[MooreToCore] Lower exponentiation to `math.ipowi`",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8476",
+        "labels": [
+          {
+            "name": "Moore"
+          }
+        ],
+        "body": "MooreToCore conversion. moore.pow operation could be lowered to math.ipowi and math.powf",
+        "similarity_score": 8.5
+      },
+      {
+        "number": 8163,
+        "title": "[MooreToCore] Out-of-bounds moore.extract lowered incorrectly",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8163",
+        "labels": [
+          {
+            "name": "Moore"
+          }
+        ],
+        "body": "MooreToCore needs to check if the attribute is out of bounds",
+        "similarity_score": 8.5
+      }
+    ]
+  },
+  "recommendation": {
+    "action": "review_existing",
+    "confidence": "high",
+    "reason": "High similarity score indicates potential duplicate"
+  }
+}

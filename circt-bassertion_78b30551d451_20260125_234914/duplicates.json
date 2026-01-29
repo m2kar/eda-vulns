@@ -1,0 +1,120 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T00:00:00+08:00",
+  "search_terms": {
+    "dialect": "Moore",
+    "failing_pass": "MooreToCore",
+    "crash_type": "assertion",
+    "keywords": [
+      "string",
+      "StringType",
+      "DynamicStringType",
+      "port",
+      "getModulePortInfo",
+      "sanitizeInOut",
+      "InOutType",
+      "dyn_cast",
+      "MooreToCore",
+      "SVModuleOpConversion",
+      "assertion",
+      "isPresent"
+    ],
+    "assertion_message": "dyn_cast on a non-existent value"
+  },
+  "results": {
+    "total_found": 18,
+    "top_score": 7.0,
+    "issues": [
+      {
+        "number": 8332,
+        "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8332",
+        "labels": [],
+        "createdAt": "2025-03-20T02:36:53Z",
+        "similarity_score": 7.0,
+        "match_reasons": [
+          "Title: MooreToCore (weight 2.0)",
+          "Title: StringType (weight 2.0)",
+          "Body: string (weight 1.0)",
+          "Body: StringType (weight 1.0)",
+          "Failing pass match (weight 1.0)"
+        ]
+      },
+      {
+        "number": 8930,
+        "title": "[MooreToCore] Crash with sqrt/floor",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8930",
+        "labels": [{"name": "Moore"}],
+        "createdAt": "2025-09-06T09:21:38Z",
+        "similarity_score": 6.5,
+        "match_reasons": [
+          "Title: MooreToCore (weight 2.0)",
+          "Body: dyn_cast (weight 1.0)",
+          "Body: assertion (weight 1.0)",
+          "Body: dyn_cast on a non-existent value (weight 3.0 - exact assertion match, but different context)",
+          "Label: Moore (weight 1.5)",
+          "Note: Different crash location (ConversionOpConversion vs SVModuleOpConversion)"
+        ]
+      },
+      {
+        "number": 8176,
+        "title": "[MooreToCore] Crash when getting values to observe",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8176",
+        "labels": [{"name": "Moore"}],
+        "createdAt": "2025-02-03T10:27:41Z",
+        "similarity_score": 3.5,
+        "match_reasons": [
+          "Title: MooreToCore (weight 2.0)",
+          "Label: Moore (weight 1.5)"
+        ]
+      },
+      {
+        "number": 8269,
+        "title": "[MooreToCore] Support `real` constants",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8269",
+        "labels": [{"name": "Moore"}],
+        "createdAt": "2025-02-23T19:01:31Z",
+        "similarity_score": 3.5,
+        "match_reasons": [
+          "Title: MooreToCore (weight 2.0)",
+          "Label: Moore (weight 1.5)"
+        ]
+      },
+      {
+        "number": 7535,
+        "title": "[MooreToCore] VariableOp lowered failed",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/7535",
+        "labels": [],
+        "createdAt": "2024-08-20T01:51:29Z",
+        "similarity_score": 2.0,
+        "match_reasons": [
+          "Title: MooreToCore (weight 2.0)"
+        ]
+      }
+    ]
+  },
+  "recommendation": {
+    "action": "likely_new",
+    "confidence": "medium",
+    "reason": "Related issues found (#8332 discusses StringType support in MooreToCore, #8930 has same assertion message but different crash location). This crash is specifically about string type used as module PORT triggering sanitizeInOut assertion - a different bug from existing issues."
+  },
+  "analysis": {
+    "most_related_issue": {
+      "number": 8332,
+      "relevance": "Feature request for StringType support in MooreToCore, but does not report the specific port-related crash",
+      "is_duplicate": false,
+      "reason": "#8332 is a feature discussion, not a bug report. Our crash is a specific assertion failure when string type is used as module port."
+    },
+    "similar_crash_issue": {
+      "number": 8930,
+      "relevance": "Same assertion message 'dyn_cast on a non-existent value' but different context",
+      "is_duplicate": false,
+      "reason": "#8930 crashes in ConversionOpConversion (real type conversion), our crash is in SVModuleOpConversion/getModulePortInfo (port type handling)"
+    }
+  }
+}

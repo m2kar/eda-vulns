@@ -1,0 +1,44 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T02:44:24+00:00",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang",
+    "tool_version": "10.0.6",
+    "message": "Build succeeded: 0 errors, 0 warnings"
+  },
+  "feature_support": {
+    "status": "valid_sv_feature",
+    "feature": "string type as module port",
+    "ieee_standard": "IEEE 1800-2017 Section 6.16",
+    "note": "string is a valid SystemVerilog type but primarily for simulation/verification, not synthesis"
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": null
+  },
+  "cross_tool_validation": {
+    "slang": {
+      "status": "pass",
+      "version": "10.0.6",
+      "output": "Build succeeded: 0 errors, 0 warnings"
+    },
+    "verilator": {
+      "status": "pass",
+      "version": "5.022",
+      "output": "No errors"
+    },
+    "icarus": {
+      "status": "unsupported",
+      "version": "13.0",
+      "output": "sorry: Port with type string is not supported"
+    }
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid SystemVerilog code (confirmed by slang and verilator) causes crash in CIRCT. The string type is defined in IEEE 1800 and should either be handled or produce a graceful error, not an assertion failure."
+  },
+  "recommendation": "File as a bug report. CIRCT should either support string type conversion or emit a proper diagnostic error instead of crashing."
+}

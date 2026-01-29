@@ -1,0 +1,77 @@
+{
+  "search_results": [
+    {
+      "issue_number": 8825,
+      "title": "[LLHD] Switch from hw.inout to a custom signal reference type",
+      "state": "open",
+      "labels": ["LLHD"],
+      "similarity_score": 7.5,
+      "matched_keywords": ["llhd.ref", "inout"],
+      "matched_assertion": false,
+      "url": "https://github.com/llvm/circt/issues/8825",
+      "analysis": "Directly discusses llhd.ref type and hw.inout relationship. This is the tracking issue for the underlying type system limitation that causes our crash."
+    },
+    {
+      "issue_number": 8012,
+      "title": "[Moore][Arc][LLHD] Moore to LLVM lowering issues",
+      "state": "open",
+      "labels": [],
+      "similarity_score": 6.0,
+      "matched_keywords": ["arcilator", "LLHD"],
+      "matched_assertion": false,
+      "url": "https://github.com/llvm/circt/issues/8012",
+      "analysis": "General Moore/Arc/LLHD lowering issues. Different error (llhd.process not supported) but same pipeline area."
+    },
+    {
+      "issue_number": 8286,
+      "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+      "state": "open",
+      "labels": [],
+      "similarity_score": 5.5,
+      "matched_keywords": ["arcilator", "LLHD"],
+      "matched_assertion": false,
+      "url": "https://github.com/llvm/circt/issues/8286",
+      "analysis": "Related lowering issues with arcilator, but different error messages (llhd.constant_time, non-pure operation)."
+    },
+    {
+      "issue_number": 8065,
+      "title": "[LLHD][Arc] Indexing and slicing lowering from Verilog to LLVM IR",
+      "state": "open",
+      "labels": [],
+      "similarity_score": 4.0,
+      "matched_keywords": ["arcilator", "LLHD"],
+      "matched_assertion": false,
+      "url": "https://github.com/llvm/circt/issues/8065",
+      "analysis": "Indexing/slicing issues in LLHD-Arc pipeline, different mechanism from our inout port crash."
+    },
+    {
+      "issue_number": 4916,
+      "title": "[Arc] LowerState: nested arc.state get pulled in wrong clock tree",
+      "state": "open",
+      "labels": ["Arc"],
+      "similarity_score": 4.0,
+      "matched_keywords": ["LowerState", "Arc"],
+      "matched_assertion": false,
+      "url": "https://github.com/llvm/circt/issues/4916",
+      "analysis": "LowerState pass issue but different problem (clock tree ordering, not type verification)."
+    },
+    {
+      "issue_number": 9395,
+      "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+      "state": "closed",
+      "labels": ["Arc", "ImportVerilog"],
+      "similarity_score": 3.5,
+      "matched_keywords": ["arcilator", "assertion"],
+      "matched_assertion": false,
+      "url": "https://github.com/llvm/circt/issues/9395",
+      "analysis": "Different assertion failure in ConvertToArcs, not StateType verification."
+    }
+  ],
+  "top_issue": {
+    "issue_number": 8825,
+    "similarity_score": 7.5,
+    "reason": "Directly addresses llhd.ref type which appears in our error message. This is the tracking issue for implementing proper reference types that would solve the underlying limitation causing our crash."
+  },
+  "recommendation": "likely_new",
+  "recommendation_reason": "While issue #8825 tracks the underlying type system limitation (llhd.ref), it's a feature request for a new reference type. Our crash is a specific assertion failure when inout ports are used with arcilator that should be reported separately as a bug, potentially linking to #8825 as related."
+}

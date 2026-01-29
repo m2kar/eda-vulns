@@ -1,0 +1,35 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Arc",
+  "failing_pass": "LowerState",
+  "crash_type": "assertion",
+  "crash_location": {
+    "file": "LowerState.cpp",
+    "function": "ModuleLowering::run()",
+    "line": 219
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": ["inout wire", "always_ff", "tri-state"],
+    "problematic_patterns": ["inout port read in sequential logic"]
+  },
+  "hypotheses": [
+    {
+      "description": "LowerState pass doesn't handle LLHD reference types when creating Arc states for inout ports",
+      "confidence": "high",
+      "evidence": [
+        "Error: state type must have a known bit width; got '!llhd.ref<i1>'",
+        "Test uses inout wire c read in always_ff",
+        "Stack trace shows StateType::get failing with ref type",
+        "computeLLVMBitWidth() doesn't handle ref types"
+      ]
+    }
+  ],
+  "keywords": ["arcilator", "LowerState", "inout", "llhd", "ref", "StateType", "wire"],
+  "suggested_sources": [
+    {"path": "lib/Dialect/Arc/Transforms/LowerState.cpp", "reason": "Crash location, line 219 creates StateType from arg.getType()"},
+    {"path": "lib/Dialect/Arc/ArcTypes.cpp", "reason": "StateType::verify() and computeLLVMBitWidth() implementation"},
+    {"path": "lib/Conversion/HWToLLHD/", "reason": "HW to LLHD lowering that creates ref types"}
+  ]
+}

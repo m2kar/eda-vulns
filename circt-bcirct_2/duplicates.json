@@ -1,0 +1,62 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T00:00:00+08:00",
+  "search_terms": {
+    "dialect": "Calyx",
+    "failing_pass": "lower-scf-to-calyx",
+    "crash_type": "segmentation_fault",
+    "keywords": [
+      "SCFToCalyx",
+      "buildCFGControl",
+      "func.call",
+      "SuccessorRange",
+      "segfault",
+      "llvm.smax",
+      "lower-scf-to-calyx",
+      "Calyx"
+    ],
+    "assertion_message": "!NodePtr->isKnownSentinel()"
+  },
+  "results": {
+    "total_found": 2,
+    "top_score": 9.5,
+    "issues": [
+      {
+        "number": 6343,
+        "title": "MLIR lowering issue",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/6343",
+        "similarity_score": 9.5,
+        "match_reasons": [
+          "Identical crash: SCFToCalyx segfault with func.call @llvm.smax.i32",
+          "Same processing pipeline: mlir-opt --lower-affine | --scf-for-to-while | circt-opt --lower-scf-to-calyx",
+          "Same assertion: !NodePtr->isKnownSentinel()",
+          "Same root cause: func.call in loop body not supported"
+        ]
+      },
+      {
+        "number": 5031,
+        "title": "[scf-to-calyx] Mark `cf` operations illegal",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/5031",
+        "similarity_score": 2.0,
+        "match_reasons": [
+          "Related to scf-to-calyx pass",
+          "Different issue type (feature request for cf operations)"
+        ]
+      }
+    ]
+  },
+  "recommendation": {
+    "action": "review_existing",
+    "confidence": "high",
+    "reason": "Issue #6343 describes identical crash pattern: func.call @llvm.smax.i32 in affine loop causing SCFToCalyx segfault. The maintainer has confirmed this is a known bug."
+  },
+  "duplicate_of": {
+    "issue_number": 6343,
+    "issue_url": "https://github.com/llvm/circt/issues/6343",
+    "issue_title": "MLIR lowering issue",
+    "issue_status": "OPEN",
+    "confirmed": true
+  }
+}

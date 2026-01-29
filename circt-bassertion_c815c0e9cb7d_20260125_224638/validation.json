@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T10:30:00+08:00",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang",
+    "details": "Build succeeded: 0 errors, 0 warnings"
+  },
+  "feature_support": {
+    "status": "valid_but_limited",
+    "feature": "string type as module port",
+    "ieee_reference": "IEEE 1800-2017 Section 6.16 (String data type)"
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": null
+  },
+  "cross_tool_validation": {
+    "verilator": {
+      "status": "pass",
+      "version": "lint-only",
+      "notes": "Accepts string port declaration"
+    },
+    "icarus": {
+      "status": "error",
+      "message": "Port with type `string` is not supported",
+      "notes": "Icarus doesn't support string type ports"
+    },
+    "slang": {
+      "status": "pass",
+      "notes": "Full IEEE 1800-2017 compliance"
+    }
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid IEEE 1800 syntax accepted by slang and Verilator. CIRCT crashes instead of providing proper error message. Even if unsupported, should emit diagnostic, not crash."
+  },
+  "recommendation": "Report as bug. CIRCT should either support string-typed ports or emit a proper error message instead of crashing with an assertion failure."
+}

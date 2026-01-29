@@ -1,0 +1,129 @@
+{
+  "search_queries": [
+    "string port MooreToCore",
+    "getModulePortInfo assertion",
+    "Moore string type",
+    "dyn_cast InOutType",
+    "MooreToCore crash",
+    "DynamicStringType",
+    "SVModuleOp port",
+    "Moore type conversion crash",
+    "output port type",
+    "PortInfo assertion"
+  ],
+  "results": [
+    {
+      "issue_number": 8283,
+      "title": "[ImportVerilog] Cannot compile forward declared string type",
+      "url": "https://github.com/llvm/circt/issues/8283",
+      "state": "open",
+      "similarity_score": 12.5,
+      "matches": {
+        "title_keywords": ["string"],
+        "body_keywords": ["string", "MooreToCore", "type conversion"],
+        "assertion": false,
+        "dialect": "Moore",
+        "file": false
+      },
+      "relevance_notes": "Directly related to string type handling in MooreToCore. Reports that MooreToCore lacks string-type conversion. Very similar root cause."
+    },
+    {
+      "issue_number": 8332,
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "url": "https://github.com/llvm/circt/issues/8332",
+      "state": "open",
+      "similarity_score": 11.0,
+      "matches": {
+        "title_keywords": ["MooreToCore", "string"],
+        "body_keywords": ["string", "MooreToCore", "type"],
+        "assertion": false,
+        "dialect": "Moore",
+        "file": false
+      },
+      "relevance_notes": "Feature request for StringType support in MooreToCore. Related to the same underlying issue - string types not properly handled."
+    },
+    {
+      "issue_number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "url": "https://github.com/llvm/circt/issues/8930",
+      "state": "open",
+      "similarity_score": 9.5,
+      "matches": {
+        "title_keywords": ["MooreToCore"],
+        "body_keywords": ["MooreToCore", "dyn_cast", "assertion"],
+        "assertion": true,
+        "dialect": "Moore",
+        "file": false
+      },
+      "relevance_notes": "Same assertion message 'dyn_cast on a non-existent value' in MooreToCore. Different trigger (real type conversion) but same crash pattern."
+    },
+    {
+      "issue_number": 8173,
+      "title": "[ImportVerilog] Crash on ordering-methods-reverse test",
+      "url": "https://github.com/llvm/circt/issues/8173",
+      "state": "open",
+      "similarity_score": 7.0,
+      "matches": {
+        "title_keywords": [],
+        "body_keywords": ["string", "type"],
+        "assertion": false,
+        "dialect": "Moore",
+        "file": false
+      },
+      "relevance_notes": "Crash involving string type in SystemVerilog. Different crash location but related to string handling."
+    },
+    {
+      "issue_number": 8292,
+      "title": "[MooreToCore] Support for Unsized Array Type",
+      "url": "https://github.com/llvm/circt/issues/8292",
+      "state": "open",
+      "similarity_score": 5.0,
+      "matches": {
+        "title_keywords": ["MooreToCore"],
+        "body_keywords": ["MooreToCore", "type"],
+        "assertion": false,
+        "dialect": "Moore",
+        "file": false
+      },
+      "relevance_notes": "Related to type conversion limitations in MooreToCore. Different type but similar category of issue."
+    },
+    {
+      "issue_number": 8176,
+      "title": "[MooreToCore] Crash when getting values to observe",
+      "url": "https://github.com/llvm/circt/issues/8176",
+      "state": "open",
+      "similarity_score": 4.5,
+      "matches": {
+        "title_keywords": ["MooreToCore"],
+        "body_keywords": ["MooreToCore"],
+        "assertion": false,
+        "dialect": "Moore",
+        "file": false
+      },
+      "relevance_notes": "MooreToCore crash but different cause (unattached region)."
+    },
+    {
+      "issue_number": 8211,
+      "title": "[MooreToCore] Unexpected observed values in llhd.wait",
+      "url": "https://github.com/llvm/circt/issues/8211",
+      "state": "open",
+      "similarity_score": 4.0,
+      "matches": {
+        "title_keywords": ["MooreToCore"],
+        "body_keywords": ["MooreToCore"],
+        "assertion": false,
+        "dialect": "Moore",
+        "file": false
+      },
+      "relevance_notes": "MooreToCore issue but different problem (sensitivity list handling)."
+    }
+  ],
+  "top_issue": {
+    "number": 8283,
+    "title": "[ImportVerilog] Cannot compile forward declared string type",
+    "url": "https://github.com/llvm/circt/issues/8283",
+    "similarity_score": 12.5
+  },
+  "recommendation": "review_existing",
+  "recommendation_reason": "Issue #8283 directly addresses string type handling in MooreToCore with score 12.5. The current crash (string type as module output port causing assertion in getModulePortInfo) is closely related to the reported lack of string-type conversion support. Issue #8332 also discusses StringType support. This bug may be a specific manifestation of the broader string type support gap."
+}

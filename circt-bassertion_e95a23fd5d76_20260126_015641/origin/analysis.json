@@ -1,0 +1,77 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Arc",
+  "failing_pass": "LowerStatePass",
+  "crash_type": "assertion",
+  "assertion_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "crash_location": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "function": "ModuleLowering::run()",
+    "line": 219
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "inout wire port",
+      "packed struct",
+      "always_comb block"
+    ],
+    "problematic_patterns": [
+      "inout port converted to !llhd.ref<i1> type"
+    ]
+  },
+  "hypotheses": [
+    {
+      "description": "Arcilator's LowerState pass does not support inout ports represented as !llhd.ref<T> types. The computeLLVMBitWidth() function has no case for llhd::RefType, causing StateType::verify() to fail.",
+      "confidence": "high",
+      "evidence": [
+        "Error message: 'state type must have a known bit width; got !llhd.ref<i1>'",
+        "computeLLVMBitWidth() in ArcTypes.cpp only handles ClockType, IntegerType, ArrayType, StructType",
+        "Test case contains 'inout wire c' which maps to !llhd.ref<i1>",
+        "Stack trace shows crash in StateType::get() called from ModuleLowering::run()"
+      ]
+    },
+    {
+      "description": "The circt-verilog --ir-hw pipeline should not produce !llhd.ref<T> types when output is intended for arcilator",
+      "confidence": "medium",
+      "evidence": [
+        "Arcilator is designed for simulation",
+        "The --ir-hw flag suggests HW dialect output but LLHD types leak through",
+        "There may be a missing conversion step"
+      ]
+    }
+  ],
+  "keywords": [
+    "arcilator",
+    "inout",
+    "StateType",
+    "llhd.ref",
+    "LowerState",
+    "computeLLVMBitWidth",
+    "bit width",
+    "RefType"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "reason": "Crash location - needs inout port handling"
+    },
+    {
+      "path": "lib/Dialect/Arc/ArcTypes.cpp",
+      "reason": "computeLLVMBitWidth() and StateType::verify() implementation"
+    },
+    {
+      "path": "lib/Dialect/Arc/ArcOps.cpp",
+      "reason": "Contains existing check: 'inout ports are not supported'"
+    },
+    {
+      "path": "tools/arcilator/arcilator.cpp",
+      "reason": "Main tool entry point - may need input validation"
+    }
+  ],
+  "tool_chain": "circt-verilog --ir-hw | arcilator",
+  "affected_component": "arcilator",
+  "severity": "crash",
+  "reproducible": true
+}

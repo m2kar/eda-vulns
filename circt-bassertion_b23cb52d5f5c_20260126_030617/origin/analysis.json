@@ -1,0 +1,74 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Comb",
+  "failing_pass": "Canonicalizer",
+  "crash_type": "assertion",
+  "crash_location": {
+    "file": "PatternMatch.cpp",
+    "function": "RewriterBase::eraseOp",
+    "line": 156
+  },
+  "crash_site": {
+    "file": "CombFolds.cpp",
+    "function": "extractConcatToConcatExtract",
+    "line": 546-547
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": ["always_comb", "logic array", "bit indexing"],
+    "problematic_patterns": ["bit assignment from intermediate variable"]
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "extractConcatToConcatExtract directly reuses ConcatOp operand as replacement when reverseConcatArgs.size() == 1, but that operand still has active uses, causing eraseOp assertion failure",
+      "confidence": "high",
+      "evidence": [
+        "Stack trace shows failure in extractConcatToConcatExtract -> replaceOpAndCopyNamehint -> eraseOp",
+        "Assertion: 'expected 'op' to have no uses' failed",
+        "CombFolds.cpp:546-547 condition triggers replaceOpAndCopyNamehint when reverseConcatArgs.size() == 1",
+        "reverseConcatArgs[0] may be an operand that's still used elsewhere in the IR"
+      ]
+    },
+    {
+      "id": "H2",
+      "description": "Multiple canonicalization patterns in Greedy pattern rewrite driver interact, causing inconsistent use-chain state",
+      "confidence": "medium",
+      "evidence": [
+        "Crash occurs during Canonicalizer pass",
+        "GreedyPatternRewriteDriver::processWorklist() in stack trace",
+        "PatternMatch::RewriterBase::eraseOp assertion triggered"
+      ]
+    },
+    {
+      "id": "H3",
+      "description": "replaceOpAndCopyNamehint's modifyOpInPlace callback affects use-chain in edge cases",
+      "confidence": "low",
+      "evidence": [
+        "replaceOpAndCopyNamehint calls RewriterBase::replaceOp with modifyOpInPlace callback",
+        "Naming.cpp:73-82 implementation may have side effects on use chains"
+      ]
+    }
+  ],
+  "keywords": ["concat", "extract", "canonicalization", "eraseOp", "use-chain", "CombFolds", "PatternMatch"],
+  "suggested_fix": [
+    "Add use-chain validation before replaceOpAndCopyNamehint in extractConcatToConcatExtract",
+    "Ensure reverseConcatArgs[0] has no conflicting uses before replacement",
+    "Add defensive checks in CombFolds.cpp:546-547 before calling replaceOpAndCopyNamehint"
+  ],
+  "related_files": [
+    {
+      "path": "lib/Dialect/Comb/CombFolds.cpp",
+      "reason": "Contains extractConcatToConcatExtract function and ExtractOp::canonicalize"
+    },
+    {
+      "path": "lib/Support/Naming.cpp",
+      "reason": "Contains replaceOpAndCopyNamehint implementation"
+    },
+    {
+      "path": "llvm/mlir/lib/IR/PatternMatch.cpp",
+      "reason": "Contains RewriterBase::eraseOp with the failing assertion"
+    }
+  ]
+}

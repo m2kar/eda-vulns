@@ -1,0 +1,116 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Comb",
+  "failing_pass": "Canonicalizer",
+  "crash_type": "assertion",
+  "assertion_message": "expected 'op' to have no uses",
+  "crash_location": {
+    "file": "lib/Dialect/Comb/CombFolds.cpp",
+    "function": "extractConcatToConcatExtract",
+    "line": 547
+  },
+  "secondary_location": {
+    "file": "llvm/mlir/lib/IR/PatternMatch.cpp",
+    "function": "RewriterBase::eraseOp",
+    "line": 156
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "always_comb",
+      "logic array",
+      "bit indexing",
+      "intermediate variable"
+    ],
+    "problematic_patterns": [
+      "bit-level assignment to array element (s[0] = x)",
+      "extract/concat optimization pattern"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "extractConcatToConcatExtract replaces ExtractOp with a ConcatOp operand that still has uses from the original op or related operations, causing use chain inconsistency",
+      "confidence": "high",
+      "evidence": [
+        "Stack trace shows crash in eraseOp after replaceOpAndCopyNamehint",
+        "Assertion explicitly states op still has uses",
+        "When reverseConcatArgs.size() == 1, the function directly reuses ConcatOp's operand",
+        "Bit-level assignment s[0] = x generates extract/concat patterns that trigger this code path"
+      ]
+    },
+    {
+      "id": 2,
+      "description": "Greedy pattern rewrite driver causes multiple canonicalization patterns to interact incorrectly on related operations",
+      "confidence": "medium",
+      "evidence": [
+        "Stack trace shows GreedyPatternRewriteDriver in use",
+        "Canonicalizer applies patterns iteratively until fixpoint",
+        "Complex concat/extract chains may have interdependent patterns"
+      ]
+    },
+    {
+      "id": 3,
+      "description": "replaceOpAndCopyNamehint's modifyOpInPlace callback affects use chain correctness in edge cases",
+      "confidence": "low",
+      "evidence": [
+        "Function modifies newOp attributes before replaceOp",
+        "If newOp is related to the replaced op, may cause issues"
+      ]
+    }
+  ],
+  "keywords": [
+    "ExtractOp",
+    "ConcatOp",
+    "canonicalize",
+    "extractConcatToConcatExtract",
+    "replaceOp",
+    "eraseOp",
+    "use_empty",
+    "Comb",
+    "GreedyPatternRewriteDriver",
+    "always_comb",
+    "bit indexing"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Comb/CombFolds.cpp",
+      "reason": "Contains the crashing canonicalization pattern"
+    },
+    {
+      "path": "lib/Support/Naming.cpp",
+      "reason": "Contains replaceOpAndCopyNamehint implementation"
+    },
+    {
+      "path": "llvm/mlir/lib/IR/PatternMatch.cpp",
+      "reason": "MLIR rewriter infrastructure with eraseOp assertion"
+    },
+    {
+      "path": "llvm/mlir/lib/Transforms/Utils/GreedyPatternRewriteDriver.cpp",
+      "reason": "Pattern application driver"
+    }
+  ],
+  "suggested_fixes": [
+    {
+      "id": 1,
+      "description": "Add safety check in extractConcatToConcatExtract before replacing with size==1 case",
+      "type": "defensive_check"
+    },
+    {
+      "id": 2,
+      "description": "Use replaceAllUsesWith instead of replaceOp for the single-element case",
+      "type": "alternative_approach"
+    },
+    {
+      "id": 3,
+      "description": "Add stricter invariant checks in greedy driver",
+      "type": "infrastructure_improvement"
+    }
+  ],
+  "tool_info": {
+    "tool": "circt-verilog",
+    "version": "1.139.0",
+    "command": "circt-verilog --ir-hw source.sv"
+  }
+}

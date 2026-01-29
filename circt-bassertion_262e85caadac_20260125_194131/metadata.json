@@ -1,0 +1,33 @@
+{
+  "version": "2.0",
+  "crash_id": "262e85caadac",
+  "reproduction": {
+    "reproduced": true,
+    "command_used": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /home/zhiqing/edazz/eda-vulns/circt-bassertion_262e85caadac_20260125_194131/source.sv",
+    "assertion_matches": true,
+    "stack_trace_matches": true,
+    "notes": "Crash reproduced successfully with identical assertion message and failing pass. The assertion 'cannot RAUW a value with itself' triggers during Sig2RegPass in LLHD dialect."
+  },
+  "crash_signature": {
+    "assertion": "(!newValue || this != OperandType::getUseList(newValue)) && \"cannot RAUW a value with itself\"",
+    "file": "UseDefLists.h",
+    "line": 213,
+    "function": "replaceAllUsesWith",
+    "failing_pass": "Sig2RegPass",
+    "dialect": "LLHD"
+  },
+  "test_case": {
+    "file": "source.sv",
+    "language": "systemverilog",
+    "key_constructs": [
+      "negedge clock sensitivity",
+      "combinational feedback (q_out = ... ? ... : q_out)",
+      "internal wire assignments"
+    ]
+  },
+  "toolchain": {
+    "tool": "circt-verilog",
+    "version": "1.139.0",
+    "path": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog"
+  }
+}

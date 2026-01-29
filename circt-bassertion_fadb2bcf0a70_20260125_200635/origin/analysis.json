@@ -1,0 +1,96 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCorePass",
+  "crash_type": "assertion",
+  "crash_location": {
+    "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+    "function": "getModulePortInfo",
+    "line": 259
+  },
+  "assertion": {
+    "file": "llvm/llvm/include/llvm/Support/Casting.h",
+    "line": 650,
+    "message": "detail::isPresent(Val) && \"dyn_cast on a non-existent value\"",
+    "cast_type": "circt::hw::InOutType"
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "output string port",
+      "$sformatf string formatting",
+      "always_comb block"
+    ],
+    "problematic_patterns": [
+      "string type used as module output port"
+    ],
+    "minimal_trigger": "output string str"
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "sim::DynamicStringType is not a valid HW port type, causing dyn_cast<hw::InOutType> to fail on null/invalid type in sanitizeInOut()",
+      "confidence": "high",
+      "evidence": [
+        "Moore StringType converts to sim::DynamicStringType",
+        "sim::DynamicStringType is not in isHWValueType() accepted types",
+        "ModulePortInfo::sanitizeInOut() calls dyn_cast<hw::InOutType> on all port types",
+        "dyn_cast fails with 'non-existent value' when type is invalid"
+      ],
+      "root_cause": true
+    },
+    {
+      "id": 2,
+      "description": "Missing validation in getModulePortInfo() to reject non-HW-compatible port types",
+      "confidence": "medium",
+      "evidence": [
+        "No isHWValueType() check after type conversion",
+        "No error handling for unsupported port types",
+        "Function assumes all converted types are valid HW types"
+      ],
+      "root_cause": false
+    }
+  ],
+  "keywords": [
+    "string",
+    "DynamicStringType",
+    "ModulePortInfo",
+    "sanitizeInOut",
+    "InOutType",
+    "MooreToCore",
+    "port type",
+    "dyn_cast"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Type conversion and port handling logic"
+    },
+    {
+      "path": "include/circt/Dialect/HW/PortImplementation.h",
+      "reason": "ModulePortInfo and sanitizeInOut() implementation"
+    },
+    {
+      "path": "lib/Dialect/HW/HWTypes.cpp",
+      "reason": "isHWValueType() definition"
+    }
+  ],
+  "fix_suggestions": [
+    {
+      "location": "lib/Conversion/MooreToCore/MooreToCore.cpp:getModulePortInfo()",
+      "description": "Add validation to check if converted port type is HW-compatible before creating PortInfo"
+    },
+    {
+      "location": "Moore dialect parsing",
+      "description": "Reject string type ports during parsing with proper diagnostic"
+    },
+    {
+      "location": "include/circt/Dialect/HW/PortImplementation.h:sanitizeInOut()",
+      "description": "Add null/validity check before dyn_cast"
+    }
+  ],
+  "severity": "crash",
+  "reproducibility": "deterministic",
+  "affected_component": "MooreToCore conversion pass"
+}

@@ -1,0 +1,102 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCorePass",
+  "crash_type": "assertion",
+  "assertion_message": "dyn_cast on a non-existent value",
+  "crash_location": {
+    "file": "include/circt/Dialect/HW/PortImplementation.h",
+    "function": "sanitizeInOut",
+    "line": 177
+  },
+  "trigger_location": {
+    "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+    "function": "getModulePortInfo",
+    "line": 259
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "string type as module output port",
+      "string variable declaration",
+      "string literal assignment",
+      "module instantiation with string port"
+    ],
+    "problematic_patterns": [
+      "Using 'string' (unpacked, dynamically-sized type) as module port"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "Missing null check after typeConverter.convertType() in getModulePortInfo(). The conversion of StringType may fail or return an incompatible type, leading to a null Type being passed to dyn_cast.",
+      "confidence": "high",
+      "evidence": [
+        "Assertion message 'dyn_cast on a non-existent value' indicates null type",
+        "MooreToCore.cpp:243 calls typeConverter.convertType() without null check",
+        "TypeConverter::convertType() returns nullptr on conversion failure",
+        "sim::DynamicStringType is not a valid HW module port type"
+      ]
+    },
+    {
+      "id": 2,
+      "description": "sim::DynamicStringType is not supported as an HW module port type. The type conversion succeeds but produces a type incompatible with HW dialect port requirements.",
+      "confidence": "medium",
+      "evidence": [
+        "hw::isHWValueType() only accepts IntegerType, IntType, EnumType, ArrayType, StructType, UnionType, TypeAliasType",
+        "sim::DynamicStringType is not in the supported types list",
+        "HW module ports traditionally require synthesizable types"
+      ]
+    },
+    {
+      "id": 3,
+      "description": "Type converter registration order issue causing StringType to be handled incorrectly.",
+      "confidence": "low",
+      "evidence": [
+        "MLIR TypeConverter uses first-match semantics",
+        "Order of addConversion() calls matters"
+      ]
+    }
+  ],
+  "keywords": [
+    "string",
+    "StringType",
+    "DynamicStringType",
+    "MooreToCore",
+    "getModulePortInfo",
+    "sanitizeInOut",
+    "dyn_cast",
+    "port",
+    "type conversion",
+    "assertion",
+    "InOutType",
+    "module port"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Main conversion pass containing the bug - getModulePortInfo lacks null check"
+    },
+    {
+      "path": "include/circt/Dialect/HW/PortImplementation.h",
+      "reason": "Contains sanitizeInOut() where the crash occurs"
+    },
+    {
+      "path": "include/circt/Dialect/HW/HWTypes.h",
+      "reason": "Defines isHWValueType() for valid port types"
+    },
+    {
+      "path": "include/circt/Dialect/Sim/SimTypes.td",
+      "reason": "Defines DynamicStringType"
+    }
+  ],
+  "suggested_fix": {
+    "type": "null_check",
+    "location": "lib/Conversion/MooreToCore/MooreToCore.cpp:243-246",
+    "description": "Add null check after convertType() and emit diagnostic for unsupported port types"
+  },
+  "related_issues": [],
+  "severity": "crash",
+  "reproducibility": "always"
+}

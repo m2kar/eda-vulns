@@ -1,0 +1,107 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T12:00:00+08:00",
+  "search_terms": {
+    "dialect": "Moore",
+    "failing_pass": "MooreToCorePass",
+    "crash_type": "assertion",
+    "keywords": [
+      "StringType",
+      "string",
+      "MooreToCore",
+      "convertType",
+      "port",
+      "assertion",
+      "dyn_cast",
+      "InOutType",
+      "type conversion",
+      "populateTypeConversion"
+    ],
+    "assertion_message": "dyn_cast on a non-existent value"
+  },
+  "results": {
+    "total_found": 6,
+    "top_score": 11.5,
+    "issues": [
+      {
+        "number": 8930,
+        "title": "[MooreToCore] Crash with sqrt/floor",
+        "url": "https://github.com/llvm/circt/issues/8930",
+        "state": "OPEN",
+        "labels": ["Moore"],
+        "similarity_score": 11.5,
+        "match_reasons": [
+          "Title: MooreToCore (+2.0)",
+          "Body: dyn_cast, assertion, MooreToCore (+3.0)",
+          "Assertion message match: 'dyn_cast on a non-existent value' (+3.0)",
+          "Label: Moore (+1.5)",
+          "Same crash site: Casting.h:650 (+2.0)"
+        ]
+      },
+      {
+        "number": 8332,
+        "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+        "url": "https://github.com/llvm/circt/issues/8332",
+        "state": "OPEN",
+        "labels": [],
+        "similarity_score": 9.0,
+        "match_reasons": [
+          "Title: StringType (+2.0), MooreToCore (+2.0), string (+2.0)",
+          "Body: string, convertType, MooreToCore (+3.0)"
+        ]
+      },
+      {
+        "number": 8292,
+        "title": "[MooreToCore] Support for Unsized Array Type",
+        "url": "https://github.com/llvm/circt/issues/8292",
+        "state": "OPEN",
+        "labels": [],
+        "similarity_score": 4.0,
+        "match_reasons": [
+          "Title: MooreToCore (+2.0)",
+          "Body: MooreToCore (+1.0), type conversion (+1.0)"
+        ]
+      },
+      {
+        "number": 8476,
+        "title": "[MooreToCore] Lower exponentiation to `math.ipowi`",
+        "url": "https://github.com/llvm/circt/issues/8476",
+        "state": "OPEN",
+        "labels": ["Moore", "good first issue"],
+        "similarity_score": 3.5,
+        "match_reasons": [
+          "Title: MooreToCore (+2.0)",
+          "Label: Moore (+1.5)"
+        ]
+      },
+      {
+        "number": 4036,
+        "title": "[PrepareForEmission] Crash when inout operations are passed to instance ports",
+        "url": "https://github.com/llvm/circt/issues/4036",
+        "state": "OPEN",
+        "labels": [],
+        "similarity_score": 1.0,
+        "match_reasons": [
+          "Body: InOutType (+1.0)"
+        ]
+      }
+    ]
+  },
+  "recommendation": {
+    "action": "review_existing",
+    "confidence": "high",
+    "reason": "Top score 11.5 >= 8.0 threshold. Issue #8930 has the SAME assertion message 'dyn_cast on a non-existent value' and same crash location. Issue #8332 directly discusses StringType support which is the root cause."
+  },
+  "analysis": {
+    "is_same_root_cause": true,
+    "related_issues": {
+      "same_assertion": "#8930 - same 'dyn_cast on a non-existent value' assertion, same crash site",
+      "feature_request": "#8332 - explicit request for StringType support in MooreToCore"
+    },
+    "notes": [
+      "#8930 crashes on 'real' type conversion (similar pattern: unsupported type)",
+      "#8332 proposes StringType support implementation approach",
+      "Both issues stem from missing type conversion rules in MooreToCore"
+    ]
+  }
+}

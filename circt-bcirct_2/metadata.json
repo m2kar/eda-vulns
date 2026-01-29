@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T11:49:43+00:00",
+  "input": {
+    "error_file": "error.log",
+    "source_file": "test.mlir"
+  },
+  "tool": {
+    "name": "circt-opt",
+    "version": "firtool-1.139.0",
+    "path": "/opt/firtool-1.139.0/bin/circt-opt"
+  },
+  "reproduction": {
+    "command": "mlir-opt --lower-affine --scf-for-to-while test.mlir | circt-opt --pass-pipeline='builtin.module(lower-scf-to-calyx{top-level-function=test_func})'",
+    "exit_code": 139,
+    "reproduced": true,
+    "match_result": "exact_match"
+  },
+  "crash_signature": {
+    "original": "mlir::SuccessorRange::SuccessorRange(mlir::Block*) - segmentation fault in circt::scftocalyx::BuildControl::buildCFGControl",
+    "reproduced": "mlir::SuccessorRange::SuccessorRange(mlir::Block*) - segmentation fault in circt::scftocalyx::BuildControl::buildCFGControl"
+  },
+  "files": {
+    "reproduce_log": "reproduce.log"
+  }
+}

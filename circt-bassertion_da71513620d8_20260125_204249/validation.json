@@ -1,0 +1,34 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T15:27:57+00:00",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang",
+    "errors": 0,
+    "warnings": 0
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": "",
+    "key_features": [
+      "string type as module output port",
+      "always_comb combinational block",
+      "assign statement"
+    ]
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "slang": "pass",
+    "verilator": "pass",
+    "icarus": "untested"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid SystemVerilog syntax (verified by slang), accepted by other tools (Verilator), but CIRCT crashes with segfault instead of providing a proper error message. The issue is that CIRCT converts string type ports to sim::DynamicStringType which is incompatible with hardware module ports, leading to a crash instead of proper validation."
+  }
+}

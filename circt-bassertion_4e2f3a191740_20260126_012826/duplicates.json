@@ -1,0 +1,76 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-28T03:58:47.033197",
+  "gh_unavailable": false,
+  "search_query": "MooreToCore string port dyn_cast assertion type conversion",
+  "search_parameters": {
+    "dialect": "Moore",
+    "failing_pass": "MooreToCore",
+    "crash_type": "assertion",
+    "keywords": [
+      "string",
+      "port",
+      "MooreToCore",
+      "getModulePortInfo",
+      "dyn_cast",
+      "InOutType",
+      "type conversion",
+      "assertion",
+      "sanitizeInOut",
+      "DynamicStringType",
+      "SVModuleOp",
+      "HWModuleOp"
+    ],
+    "assertion_message": "dyn_cast on a non-existent value"
+  },
+  "total_issues": 6,
+  "top_issues": [
+    {
+      "issue_number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "url": "https://github.com/llvm/circt/issues/8930",
+      "state": "OPEN",
+      "score": 9.5,
+      "reason": "Title match: 'MooreToCore' (+2.0); Body match: 'MooreToCore' (+1.0); Body match: 'dyn_cast' (+1.0); Body match: 'assertion' (+1.0); Assertion match: 'dyn_cast on a non-existent value' (+3.0)"
+    },
+    {
+      "issue_number": 8283,
+      "title": "[ImportVerilog] Cannot compile forward declared string type",
+      "url": "https://github.com/llvm/circt/issues/8283",
+      "state": "OPEN",
+      "score": 7.0,
+      "reason": "Title match: 'string' (+2.0); Title match: 'port' (+2.0); Body match: 'string' (+1.0); Body match: 'MooreToCore' (+1.0); Body match: 'type conversion' (+1.0)"
+    },
+    {
+      "issue_number": 8332,
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "url": "https://github.com/llvm/circt/issues/8332",
+      "state": "OPEN",
+      "score": 7.0,
+      "reason": "Title match: 'string' (+2.0); Title match: 'port' (+2.0); Title match: 'MooreToCore' (+2.0); Body match: 'string' (+1.0)"
+    },
+    {
+      "issue_number": 9206,
+      "title": "[ImportVerilog] moore.conversion generated instead of moore.int_to_string",
+      "url": "https://github.com/llvm/circt/issues/9206",
+      "state": "OPEN",
+      "score": 6.5,
+      "reason": "Title match: 'string' (+2.0); Title match: 'port' (+2.0); Body match: 'string' (+1.0); Label match: 'Moore' (+1.5)"
+    },
+    {
+      "issue_number": 7629,
+      "title": "[MooreToCore] Support net op",
+      "url": "https://github.com/llvm/circt/issues/7629",
+      "state": "OPEN",
+      "score": 5.5,
+      "reason": "Title match: 'port' (+2.0); Title match: 'MooreToCore' (+2.0); Label match: 'Moore' (+1.5)"
+    }
+  ],
+  "recommendation": "review_existing",
+  "top_score": 9.5,
+  "analysis_notes": {
+    "highest_match": "#8930 has same assertion message 'dyn_cast on a non-existent value' in MooreToCore",
+    "key_difference": "#8930 crashes in ConversionOp (sqrt/floor), our crash is in getModulePortInfo (string port type)",
+    "conclusion": "Same assertion message but different crash locations - likely related but distinct bugs"
+  }
+}

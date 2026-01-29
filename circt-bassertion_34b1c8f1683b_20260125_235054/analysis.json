@@ -1,0 +1,92 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCorePass",
+  "crash_type": "assertion",
+  "assertion_message": "dyn_cast on a non-existent value",
+  "crash_location": {
+    "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+    "function": "getModulePortInfo",
+    "line": 259
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "string type as output port",
+      "string type as internal variable",
+      "string literal assignments",
+      "always block with string",
+      "initial block with string"
+    ],
+    "problematic_patterns": [
+      "string type used as module port - no type conversion rule exists"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "Missing type conversion rule for moore::StringType in populateTypeConversion(). The type converter doesn't know how to convert StringType to any target type, causing convertType() to return null.",
+      "confidence": "high",
+      "evidence": [
+        "Test case uses 'string' type as output port (str_out)",
+        "populateTypeConversion() in MooreToCore.cpp has no handler for StringType",
+        "StringType is defined in MooreTypes.td line 40-42 but no conversion exists",
+        "typeConverter.convertType() returns null for unknown types",
+        "Assertion message indicates dyn_cast on non-existent (null) value"
+      ]
+    },
+    {
+      "id": 2,
+      "description": "Error handling during FailureOr<> return interacts badly with local SmallVector destruction, causing crash during cleanup rather than clean error reporting.",
+      "confidence": "medium",
+      "evidence": [
+        "Stack trace shows crash in SmallVector<hw::PortInfo> destructor",
+        "Crash occurs at line 259 (function closing brace)",
+        "hw::PortInfo might have invariants violated when type is null"
+      ]
+    },
+    {
+      "id": 3,
+      "description": "SystemVerilog 'string' type is fundamentally unsupported for hardware lowering as it's a dynamic type with runtime-known length.",
+      "confidence": "medium",
+      "evidence": [
+        "string in SV is dynamic, unlike fixed-width types",
+        "Cannot be directly mapped to hardware",
+        "Similar dynamic types (chandle, class) map to LLVM::LLVMPointerType"
+      ]
+    }
+  ],
+  "keywords": [
+    "StringType",
+    "string",
+    "MooreToCore",
+    "convertType",
+    "port",
+    "assertion",
+    "dyn_cast",
+    "InOutType",
+    "type conversion",
+    "populateTypeConversion"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Main conversion pass - add StringType conversion in populateTypeConversion()"
+    },
+    {
+      "path": "include/circt/Dialect/Moore/MooreTypes.td",
+      "reason": "StringType definition"
+    },
+    {
+      "path": "include/circt/Dialect/HW/HWTypes.td",
+      "reason": "Target types for conversion"
+    }
+  ],
+  "reproduction_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw source.sv",
+  "tool_info": {
+    "tool": "circt-verilog",
+    "version": "1.139.0",
+    "flags": ["--ir-hw"]
+  }
+}

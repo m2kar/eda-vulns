@@ -1,0 +1,28 @@
+{
+  "crash_id": "circt-bassertion_c08d2779cec5_20260125_234204",
+  "status": "processing",
+  "phase": "phase2_completed",
+  "created_at": "2026-01-28T12:39:20+00:00",
+  "updated_at": "2026-01-28T12:52:56+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed",
+      "reproduce_reproduced": true,
+      "root_cause_dialect": "Moore"
+    },
+    "phase2": {
+      "status": "completed",
+      "reduction_percent": 81.8,
+      "validation_result": "report",
+      "dup_recommendation": "review_existing",
+      "dup_top_issue": "#8930",
+      "dup_top_score": 10.5
+    },
+    "phase3": {"status": "in_progress"}
+  }
+}

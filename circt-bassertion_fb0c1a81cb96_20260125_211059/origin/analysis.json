@@ -1,0 +1,73 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCore",
+  "crash_type": "assertion",
+  "assertion_message": "decltype(auto) llvm::dyn_cast(From &) [To = circt::hw::InOutType, From = mlir::Type]: Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"' failed.",
+  "crash_location": {
+    "file": "include/circt/Dialect/HW/PortImplementation.h",
+    "function": "sanitizeInOut",
+    "line": 177
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "always_ff",
+      "always_comb",
+      "string type output port"
+    ],
+    "problematic_patterns": [
+      "output string type in Moore module"
+    ]
+  },
+  "hypotheses": [
+    {
+      "description": "sanitizeInOut() does not guard against non-HW dialect types, causing assertion failure when ports have types from other dialects (like sim::DynamicStringType)",
+      "confidence": "high",
+      "evidence": [
+        "Test case has output string status_str which is moore::StringType",
+        "StringType is converted to sim::DynamicStringType (line 2278 of MooreToCore.cpp)",
+        "sanitizeInOut() performs dyn_cast<hw::InOutType>(p.type) without checking if p.type is a valid HW type",
+        "Crash occurs at line 177 of PortImplementation.h when trying to cast non-HW type"
+      ]
+    },
+    {
+      "description": "There may be a missing type conversion or legality check that should prevent StringType ports from being used in contexts that assume only hardware types",
+      "confidence": "medium",
+      "evidence": [
+        "StringType is a SystemVerilog feature, but not all CIRCT passes may support it",
+        "The crash happens during conversion to core dialects, suggesting string support may be incomplete"
+      ]
+    }
+  ],
+  "keywords": [
+    "string",
+    "StringType",
+    "DynamicStringType",
+    "sanitizeInOut",
+    "InOutType",
+    "MooreToCore",
+    "SVModuleOp",
+    "port",
+    "dyn_cast"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Type conversion logic including StringType to DynamicStringType"
+    },
+    {
+      "path": "include/circt/Dialect/HW/PortImplementation.h",
+      "reason": "Port info sanitization that fails on non-HW types"
+    },
+    {
+      "path": "include/circt/Dialect/Moore/MooreTypes.td",
+      "reason": "StringType definition"
+    },
+    {
+      "path": "include/circt/Dialect/Sim/SimTypes.td",
+      "reason": "DynamicStringType definition"
+    }
+  ]
+}

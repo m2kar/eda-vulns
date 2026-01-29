@@ -1,0 +1,144 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCore",
+  "crash_type": "assertion",
+  "assertion_message": "detail::isPresent(Val) && \"dyn_cast on a non-existent value\"",
+  "crash_location": {
+    "file": "MooreToCore.cpp",
+    "function": "getModulePortInfo",
+    "line": 259
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "packed union type",
+      "typedef union",
+      "module ports with user-defined types"
+    ],
+    "problematic_patterns": [
+      "using packed union as module port type",
+      "missing type conversion for UnionType"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": "h1",
+      "description": "MooreToCore conversion pass lacks type conversion rule for packed union types (UnionType), causing assertion failure when union-typed ports are processed",
+      "confidence": "high",
+      "evidence": [
+        "Test case explicitly uses 'typedef union packed' as module port type",
+        "Stack trace shows crash in getModulePortInfo during port processing at line 259",
+        "Assertion message indicates 'dyn_cast<InOutType>' failed on non-existent value",
+        "No conversion rule for UnionType exists in populateTypeConversion function (lines 2268-2409)",
+        "Similar types like StructType have conversion rules, but UnionType does not",
+        "Both UnionType and StructType implement DestructurableTypeInterface, suggesting they should be handled similarly"
+      ],
+      "mechanism": "The MooreToCore type converter iterates over module port types and calls convertType() for each. When it encounters a UnionType, no conversion rule is found, resulting in null or invalid type. This invalid type is then used to construct hw::PortInfo. When port info is processed (e.g., in fnToMod function that calls dyn_cast<InOutType>), assertion fails because the type is null or invalid."
+    },
+    {
+      "id": "h2",
+      "description": "The type conversion may be returning a partially converted or malformed type instead of null, bypassing the null check at line 245-248",
+      "confidence": "medium",
+      "evidence": [
+        "Line 245-248 checks 'if (!portTy)' and emits error",
+        "However, crash still occurs, suggesting either the check is not being reached or the type is non-null but invalid",
+        "The assertion occurs in a different code path that may not be covered by the initial null check"
+      ],
+      "mechanism": "If typeConverter returns a non-null type with incorrect MLIR type ID or metadata, the null check at line 245 passes. Port info is constructed with the invalid type, and later operations try to use the type and fail with dyn_cast assertion."
+    },
+    {
+      "id": "h3",
+      "description": "Packed unions may require special handling in HW dialect that's not implemented, causing type incompatibility even if conversion succeeds",
+      "confidence": "low",
+      "evidence": [
+        "HW dialect has hw::StructType but no explicit hw::UnionType",
+        "Packed unions in SystemVerilog have special semantics (overlapping storage)",
+        "May need to be represented differently in HW dialect as arrays or struct types"
+      ],
+      "mechanism": "If union types should be lowered to struct types or other representation, missing conversion rule leaves them unconverted. This creates a type mismatch when HW dialect operations expecting struct types encounter union types."
+    }
+  ],
+  "keywords": [
+    "packed union",
+    "union type",
+    "module port",
+    "MooreToCore",
+    "type conversion",
+    "dyn_cast",
+    "InOutType",
+    "SVModuleOp",
+    "UnionType"
+  ],
+  "suggested_fixes": [
+    {
+      "direction": "Add Type Conversion Rule for Packed Unions",
+      "priority": "high",
+      "description": "Add conversion rule for UnionType in populateTypeConversion function, similar to StructType conversion. Convert union to hw::StructType with same members or to packed array.",
+      "code_reference": "lib/Conversion/MooreToCore/MooreToCore.cpp:2268-2409"
+    },
+    {
+      "direction": "Add Unpacked Union Conversion",
+      "priority": "high",
+      "description": "Similarly add conversion rule for UnpackedUnionType to ensure both packed and unpacked unions are supported.",
+      "code_reference": "lib/Conversion/MooreToCore/MooreToCore.cpp:2268-2409"
+    },
+    {
+      "direction": "Enhance Null Type Validation",
+      "priority": "medium",
+      "description": "Enhance the null check at line 245 to catch more error cases including invalid types with checks like !portTy || portTy.isa<NoneType>().",
+      "code_reference": "lib/Conversion/MooreToCore/MooreToCore.cpp:245-248"
+    },
+    {
+      "direction": "Add Runtime Type Validation",
+      "priority": "medium",
+      "description": "Add validation before port info construction in hw::ModulePortInfo or related functions to catch invalid types earlier and provide better error messages.",
+      "code_reference": "lib/Dialect/HW/HWInstanceImplementation.cpp:375"
+    }
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Main conversion logic, missing UnionType conversion rule in populateTypeConversion function"
+    },
+    {
+      "path": "lib/Dialect/HW/HWTypes.cpp",
+      "reason": "HW dialect type definitions, InOutType handling where dyn_cast assertion fails (lines 1066, 1073)"
+    },
+    {
+      "path": "lib/Dialect/HW/HWInstanceImplementation.cpp",
+      "reason": "Port info processing code, uses dyn_cast<InOutType> at line 375 which triggers assertion"
+    },
+    {
+      "path": "include/circt/Dialect/Moore/MooreTypes.td",
+      "reason": "UnionType TableGen definition for understanding type structure and interfaces"
+    },
+    {
+      "path": "include/circt/Dialect/Moore/MooreOps.td",
+      "reason": "SVModuleOp definition to understand module port type handling"
+    }
+  ],
+  "test_case_summary": {
+    "valid_syntax": true,
+    "ieee_compliant": true,
+    "ieee_section": "7.3 (Packed structures and unions)",
+    "key_features": [
+      "typedef union packed",
+      "module with union ports",
+      "instantiation with union types"
+    ],
+    "minimization_preserve": [
+      "typedef union packed declaration",
+      "module ports with union type",
+      "at least one module using union ports"
+    ]
+  },
+  "impact": {
+    "severity": "medium",
+    "affected_components": ["circt-verilog", "MooreToCore conversion"],
+    "affected_patterns": ["packed union types as module ports", "unpacked union types as module ports"],
+    "workaround": "Avoid using union types as module ports, or use struct types instead"
+  },
+  "crash_category": "Null/Invalid Value Access"
+}

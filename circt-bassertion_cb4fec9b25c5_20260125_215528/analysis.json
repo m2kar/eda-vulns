@@ -1,0 +1,52 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCore",
+  "crash_type": "assertion",
+  "crash_location": {
+    "file": "MooreToCore.cpp",
+    "function": "getModulePortInfo",
+    "line": 259
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": ["string type", "module port", "dynamic type"],
+    "problematic_patterns": ["string type used as module port"]
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "String type ports cannot be converted to HW dialect types during Moore to Core lowering",
+      "confidence": "high",
+      "evidence": [
+        "Test uses 'input string msg' as a module port",
+        "String is a SystemVerilog dynamic class type, not a hardware type",
+        "TypeConverter returns null/invalid type for string",
+        "sanitizeInOut() in PortImplementation.h:177 calls dyn_cast on invalid type",
+        "Assertion fails because Val is not present (type conversion failed)"
+      ]
+    },
+    {
+      "id": 2,
+      "description": "Moore dialect type converter missing handler for StringType",
+      "confidence": "medium",
+      "evidence": [
+        "StringType is a valid Moore dialect type",
+        "No conversion rule exists for string -> hw type",
+        "Type conversion silently returns null instead of emitting error"
+      ]
+    }
+  ],
+  "keywords": ["string", "port", "MooreToCore", "type conversion", "dynamic type", "StringType", "InOutType"],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Contains getModulePortInfo and type conversion logic"
+    },
+    {
+      "path": "include/circt/Dialect/HW/PortImplementation.h",
+      "reason": "Contains sanitizeInOut() where assertion fails"
+    }
+  ]
+}

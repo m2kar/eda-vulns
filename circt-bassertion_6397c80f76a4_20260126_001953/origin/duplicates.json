@@ -1,0 +1,143 @@
+{
+  "version": "1.0",
+  "search_timestamp": "2026-01-28T00:00:00Z",
+  "search_queries": [
+    "string port MooreToCore",
+    "dyn_cast non-existent value",
+    "moore string type",
+    "DynamicStringType",
+    "sanitizeInOut",
+    "string module port",
+    "getModulePortInfo"
+  ],
+  "target_keywords": [
+    "string",
+    "port",
+    "DynamicStringType",
+    "isHWValueType",
+    "MooreToCore",
+    "ModulePortInfo",
+    "sanitizeInOut",
+    "dyn_cast",
+    "assertion"
+  ],
+  "target_assertion": "dyn_cast on a non-existent value",
+  "target_dialect": "Moore",
+  "target_crash_location": "MooreToCore.cpp",
+  "scoring_weights": {
+    "title_keyword_match": 2.0,
+    "body_keyword_match": 1.0,
+    "assertion_match": 3.0,
+    "dialect_label_match": 1.5,
+    "crash_location_match": 2.5
+  },
+  "results": [
+    {
+      "number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8930",
+      "labels": ["Moore"],
+      "score": 7.5,
+      "match_reasons": [
+        "Title contains 'MooreToCore' (+2.0)",
+        "Body contains 'dyn_cast on a non-existent value' (+3.0)",
+        "Dialect label 'Moore' matches (+1.5)",
+        "Body contains 'MooreToCore' (+1.0)"
+      ],
+      "is_duplicate": false,
+      "notes": "Same assertion message but different crash cause (sqrt/floor vs string port)"
+    },
+    {
+      "number": 8332,
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8332",
+      "labels": [],
+      "score": 7.0,
+      "match_reasons": [
+        "Title contains 'MooreToCore' (+2.0)",
+        "Title contains 'StringType' (+2.0)",
+        "Body contains 'string' keyword (+1.0)",
+        "Body mentions Moore dialect (+1.0)",
+        "Body mentions sim types (+1.0)"
+      ],
+      "is_duplicate": false,
+      "notes": "Feature request for StringType support, related but not a duplicate - this is about string ports causing crash, not string lowering"
+    },
+    {
+      "number": 8219,
+      "title": "[ESI]Assersion: dyn_cast on a non-existent value",
+      "state": "closed",
+      "url": "https://github.com/llvm/circt/issues/8219",
+      "labels": ["ESI"],
+      "score": 6.0,
+      "match_reasons": [
+        "Title contains 'dyn_cast' (+2.0)",
+        "Title contains 'assertion' (+2.0)",
+        "Body contains same assertion message (+3.0)"
+      ],
+      "is_duplicate": false,
+      "notes": "Same assertion message but different dialect (ESI vs Moore) and different crash context"
+    },
+    {
+      "number": 9315,
+      "title": "[FIRRTL] ModuleInliner removes NLA referred by circt.tracker",
+      "state": "closed",
+      "url": "https://github.com/llvm/circt/issues/9315",
+      "labels": [],
+      "score": 4.0,
+      "match_reasons": [
+        "Body contains same assertion message (+3.0)",
+        "Body contains 'dyn_cast' (+1.0)"
+      ],
+      "is_duplicate": false,
+      "notes": "Different dialect (FIRRTL), different crash context"
+    },
+    {
+      "number": 8173,
+      "title": "[ImportVerilog] Crash on ordering-methods-reverse test",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8173",
+      "labels": ["bug", "ImportVerilog"],
+      "score": 3.0,
+      "match_reasons": [
+        "Body mentions string type (+1.0)",
+        "Body mentions moore.string (+1.0)",
+        "Related to string handling (+1.0)"
+      ],
+      "is_duplicate": false,
+      "notes": "Related to string handling in Moore but different crash mechanism (cast to simple bit vector vs port type)"
+    },
+    {
+      "number": 7471,
+      "title": "Crash in circt-verilog: Assertion succeeded(result)",
+      "state": "closed",
+      "url": "https://github.com/llvm/circt/issues/7471",
+      "labels": [],
+      "score": 2.0,
+      "match_reasons": [
+        "Title contains 'assertion' (+2.0)"
+      ],
+      "is_duplicate": false,
+      "notes": "Different assertion message, different crash"
+    }
+  ],
+  "recommendation": "likely_new",
+  "top_score": 7.5,
+  "top_issue": 8930,
+  "threshold_review": 10.0,
+  "threshold_duplicate": 15.0,
+  "analysis": {
+    "exact_duplicate_found": false,
+    "related_issues_count": 6,
+    "closest_match": {
+      "number": 8930,
+      "reason": "Same assertion message and MooreToCore pass but different triggering code (sqrt/floor vs string port)"
+    },
+    "feature_request_related": {
+      "number": 8332,
+      "reason": "Discusses StringType support in Moore, our crash is a specific case where string ports cause assertion failure"
+    }
+  }
+}

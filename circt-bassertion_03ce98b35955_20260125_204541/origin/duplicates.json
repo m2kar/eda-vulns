@@ -1,0 +1,107 @@
+{
+  "version": "1.0",
+  "crash_id": "circt-bassertion_03ce98b35955_20260125_204541",
+  "search_keywords": [
+    "UnionType",
+    "packed union",
+    "MooreToCore",
+    "type conversion",
+    "module port",
+    "dyn_cast on a non-existent value"
+  ],
+  "search_queries": [
+    "union",
+    "MooreToCore",
+    "packed union"
+  ],
+  "total_issues_found": 25,
+  "analyzed_issues": 12,
+  "potential_duplicates": [
+    {
+      "number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "url": "https://github.com/llvm/circt/issues/8930",
+      "state": "open",
+      "labels": ["Moore"],
+      "similarity_score": 0.72,
+      "matching_factors": {
+        "same_pass": true,
+        "same_assertion": true,
+        "same_crash_location": false,
+        "keyword_matches": ["MooreToCore", "dyn_cast", "type conversion"]
+      },
+      "analysis": "Same assertion message 'dyn_cast on a non-existent value' in MooreToCore pass, but triggered by ConversionOp (real type) not SVModuleOp (union port type). Different root cause.",
+      "is_duplicate": false
+    },
+    {
+      "number": 8471,
+      "title": "[ImportVerilog] Union type in call",
+      "url": "https://github.com/llvm/circt/issues/8471",
+      "state": "open",
+      "labels": [],
+      "similarity_score": 0.45,
+      "matching_factors": {
+        "same_pass": false,
+        "same_assertion": false,
+        "same_crash_location": false,
+        "keyword_matches": ["union"]
+      },
+      "analysis": "Related to union type but different error (operand type mismatch in func.call), not a type conversion crash.",
+      "is_duplicate": false
+    },
+    {
+      "number": 7378,
+      "title": "[HW] Roundtrip test fail for !hw.union",
+      "url": "https://github.com/llvm/circt/issues/7378",
+      "state": "open",
+      "labels": ["bug", "HW"],
+      "similarity_score": 0.35,
+      "matching_factors": {
+        "same_pass": false,
+        "same_assertion": false,
+        "same_crash_location": false,
+        "keyword_matches": ["union"]
+      },
+      "analysis": "HW dialect union parsing issue, unrelated to MooreToCore conversion.",
+      "is_duplicate": false
+    },
+    {
+      "number": 967,
+      "title": "Union type",
+      "url": "https://github.com/llvm/circt/issues/967",
+      "state": "closed",
+      "labels": ["HW", "Verilog/SystemVerilog"],
+      "similarity_score": 0.30,
+      "matching_factors": {
+        "same_pass": false,
+        "same_assertion": false,
+        "same_crash_location": false,
+        "keyword_matches": ["union"]
+      },
+      "analysis": "Feature discussion about adding union type to HW dialect, historical context only.",
+      "is_duplicate": false
+    },
+    {
+      "number": 7535,
+      "title": "[MooreToCore] VariableOp lowered failed",
+      "url": "https://github.com/llvm/circt/issues/7535",
+      "state": "open",
+      "labels": [],
+      "similarity_score": 0.40,
+      "matching_factors": {
+        "same_pass": true,
+        "same_assertion": false,
+        "same_crash_location": false,
+        "keyword_matches": ["MooreToCore", "type conversion"]
+      },
+      "analysis": "MooreToCore struct type conversion issue, related pattern but different type (struct vs union).",
+      "is_duplicate": false
+    }
+  ],
+  "recommendation": "new_issue",
+  "recommendation_reason": "No existing issue reports missing UnionType converter in MooreToCore. Issue #8930 has same assertion but different trigger (real type vs union type). This is a distinct missing feature.",
+  "top_score": 0.72,
+  "top_issue": 8930,
+  "related_issues": [8930, 8471, 7535],
+  "search_timestamp": "2026-01-28T00:00:00Z"
+}
