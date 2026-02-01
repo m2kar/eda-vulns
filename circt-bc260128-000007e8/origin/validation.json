@@ -1,0 +1,25 @@
+{
+  "crash_id": "260128-000007e8",
+  "classification": {
+    "result": "report",
+    "reason": "Minimal SystemVerilog module with an output string port triggers a CIRCT crash during Moore-to-Core conversion; tool should emit a diagnostic instead of asserting.",
+    "supported_dialect": "Moore/SystemVerilog",
+    "confidence": "high"
+  },
+  "syntax_valid": true,
+  "reproduces": true,
+  "cross_tool_check": {
+    "verilator": {
+      "attempted": true,
+      "command": "verilator -sv --lint-only bug.sv",
+      "success": true,
+      "output": ""
+    },
+    "slang": {
+      "attempted": true,
+      "command": "slang --lint-only bug.sv",
+      "success": true,
+      "output": "Build succeeded: 0 errors, 0 warnings"
+    }
+  }
+}

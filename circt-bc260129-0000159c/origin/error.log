@@ -1,0 +1,11 @@
+<unknown>:0: error: state type must have a known bit width; got '!llhd.ref<i1>'
+arcilator: /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/IR/StorageUniquerSupport.h:180: static ConcreteT mlir::detail::StorageUserBase<circt::arc::StateType, mlir::Type, circt::arc::detail::StateTypeStorage, mlir::detail::TypeUniquer>::get(MLIRContext *, Args &&...) [ConcreteT = circt::arc::StateType, BaseT = mlir::Type, StorageT = circt::arc::detail::StateTypeStorage, UniquerT = mlir::detail::TypeUniquer, Traits = <>, Args = <mlir::Type &>]: Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed.
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace and instructions to reproduce the bug.
+Stack dump:
+0.	Program arguments: /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator
+ #0 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) llvm/llvm/lib/Support/Unix/Signals.inc:842:13
+ #1 llvm::sys::RunSignalHandlers() llvm/llvm/lib/Support/Signals.cpp:109:18
+ #2 SignalHandler(int, siginfo_t*, void*) llvm/llvm/lib/Support/Unix/Signals.inc:412:3
+#11 circt::arc::StateType::get(mlir::Type) build/tools/circt/include/circt/Dialect/Arc/ArcTypes.cpp.inc:108:3
+#12 (anonymous namespace)::ModuleLowering::run() lib/Dialect/Arc/Transforms/LowerState.cpp:219:66
+#13 (anonymous namespace)::LowerStatePass::runOnOperation() lib/Dialect/Arc/Transforms/LowerState.cpp:1198:41

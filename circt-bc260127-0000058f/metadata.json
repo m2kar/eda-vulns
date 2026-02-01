@@ -1,0 +1,10 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "crash_signature": "circt-verilog: Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"' failed in llvm::dyn_cast at Casting.h:650",
+    "toolchain_path": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin",
+    "timestamp": "2026-01-31T00:00:00Z"
+  },
+  "original_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_57431fc83cb1.sv",
+  "modified_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw origin/source.sv"
+}

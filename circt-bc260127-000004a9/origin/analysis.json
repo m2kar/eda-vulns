@@ -1,0 +1,65 @@
+{
+  "testcase_id": "260127-000004a9",
+  "crash_type": "assertion",
+  "dialect": ["arc", "llhd", "hw"],
+  "tool": "arcilator",
+  "severity": "high",
+  
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "assertion": "succeeded(ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))",
+  
+  "crash_location": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "line": 219,
+    "function": "ModuleLowering::run()"
+  },
+  
+  "stack_frames": [
+    {
+      "frame": 12,
+      "function": "circt::arc::StateType::get(mlir::Type)",
+      "file": "ArcTypes.cpp.inc",
+      "line": 108
+    },
+    {
+      "frame": 13,
+      "function": "ModuleLowering::run()",
+      "file": "LowerState.cpp",
+      "line": 219
+    },
+    {
+      "frame": 14,
+      "function": "LowerStatePass::runOnOperation()",
+      "file": "LowerState.cpp",
+      "line": 1198
+    }
+  ],
+  
+  "root_cause": {
+    "category": "unsupported_type",
+    "description": "LowerState pass attempts to create arc::StateType from llhd::RefType (inout port), but StateType::verify() fails because computeLLVMBitWidth() cannot compute bit width for RefType",
+    "trigger_construct": "inout port in SystemVerilog",
+    "ir_type": "!llhd.ref<i1>"
+  },
+  
+  "source_analysis": {
+    "problematic_code": "assign io_sig = (out_val[0]) ? 1'b1 : 1'bz;",
+    "port_declaration": "inout logic io_sig",
+    "key_feature": "tristate/inout port with conditional high-impedance assignment"
+  },
+  
+  "affected_files": [
+    "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "lib/Dialect/Arc/ArcTypes.cpp"
+  ],
+  
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv | arcilator",
+    "minimal_trigger": "module with inout port"
+  },
+  
+  "suggested_fix": {
+    "approach": "Add type validation before StateType::get() call or emit diagnostic for unsupported types",
+    "location": "LowerState.cpp:219"
+  }
+}

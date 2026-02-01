@@ -1,0 +1,34 @@
+{
+  "testcase_id": "260128-00001199",
+  "crash_type": "assertion",
+  "reproduction": {
+    "reproduced": false,
+    "reason": "Current CIRCT toolchain does not reproduce the crash with given test case",
+    "command_used": "circt-verilog --ir-hw source.sv | arcilator | opt -O0",
+    "crash_signature_expected": "assertion failure in PatternMatch.cpp:156 during extractConcatToConcatExtract canonicalization",
+    "crash_signature_actual": "No crash - pipeline completed successfully with exit code 0"
+  },
+  "environment": {
+    "toolchain": "llvm-22",
+    "circt_verilog_path": "/opt/firtool/bin/circt-verilog",
+    "arcilator_path": "/opt/firtool/bin/arcilator",
+    "opt_path": "/opt/llvm-22/bin/opt",
+    "date": "2026-02-01"
+  },
+  "original_error": {
+    "assertion_location": "PatternMatch.cpp:156",
+    "assertion_message": "op->use_empty() && \"expected 'op' to have no uses\"",
+    "triggered_in": "extractConcatToConcatExtract canonicalization (CombFolds.cpp:548)",
+    "error_code": "SIGABRT"
+  },
+  "test_case": {
+    "file": "source.sv",
+    "description": "Simple Verilog module with array indexing and logic assignments"
+  },
+  "status": "NOT_REPRODUCED",
+  "notes": [
+    "The provided test case runs without crashing in the current toolchain",
+    "This could indicate the bug has been fixed in a newer CIRCT version",
+    "Or the specific trigger conditions are not present in this simplified test case"
+  ]
+}

@@ -1,0 +1,67 @@
+=== CIRCT Bug Reproduction Test ===
+Crash ID: 260128-00000dd1
+
+Original Command:
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_f6087b8d5da1.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_xfhtv50x/test_f6087b8d5da1.o
+
+Reproduction Command (with current toolchain):
+circt-verilog --ir-hw /tmp/test_reproduce.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o /tmp/test_reproduce.o
+
+=== IR Output from circt-verilog ===
+module {
+  hw.module @MixPorts(in %clk : i1, in %wide_input : i64, out out_val : i32, in %io_sig : !llhd.ref<i1>) {
+    %c0_i32768 = hw.constant 0 : i32768
+    %c-1_i10 = hw.constant -1 : i10
+    %0 = hw.bitcast %c0_i32768 : (i32768) -> !hw.array<1024xi32>
+    %1 = comb.extract %wide_input from 0 : (i64) -> i10
+    %2 = comb.sub %c-1_i10, %1 : i10
+    %3 = hw.array_get %0[%2] : !hw.array<1024xi32>, i10
+    %4 = seq.to_clock %clk
+    %out_val = seq.firreg %3 clock %4 : i32
+    hw.output %out_val : i32
+  }
+}
+
+=== arcilator Output ===
+; ModuleID = 'LLVMDialectModule'
+source_filename = "LLVMDialectModule"
+
+@_aggregate_const_global = internal constant [1024 x i32] zeroinitializer
+
+declare void @exit(i32)
+
+define void @MixPorts_eval(ptr %0) {
+  %2 = load i1, ptr %0, align 1
+  %3 = getelementptr i8, ptr %0, i32 18
+  %4 = load i1, ptr %3, align 1
+  store i1 %2, ptr %3, align 1
+  %5 = xor i1 %4, %2
+  %6 = and i1 %5, %2
+  br i1 %6, label %7, label %16
+
+7:                                                ; preds = %1
+  %8 = getelementptr i8, ptr %0, i32 8
+  %9 = load i64, ptr %8, align 4
+  %10 = trunc i64 %9 to i10
+  %11 = sub i10 -1, %10
+  %12 = zext i10 %11 to i11
+  %13 = getelementptr [1024 x i32], ptr @_aggregate_const_global, i32 0, i11 %12
+  %14 = load i32, ptr %13, align 4
+  %15 = getelementptr i8, ptr %0, i32 20
+  store i32 %14, ptr %15, align 4
+  br label %16
+
+16:                                               ; preds = %7, %1
+  %17 = getelementptr i8, ptr %0, i32 20
+  %18 = load i32, ptr %17, align 4
+  %19 = getelementptr i8, ptr %0, i32 24
+  store i32 %18, ptr %19, align 4
+  ret void
+}
+
+!llvm.module.flags = !{!0}
+
+!0 = !{i32 2, !"Debug Info Version", i32 3}
+
+=== Full Pipeline Execution ===
+Exit code: 0

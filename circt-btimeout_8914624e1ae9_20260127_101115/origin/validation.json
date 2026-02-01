@@ -1,0 +1,56 @@
+{
+  "validation": {
+    "timestamp": "2026-01-31T16:55:00Z",
+    "bug_hash": "8914624e1ae9",
+    "test_file": "bug.sv",
+    "test_file_lines": 14
+  },
+  "syntax_check": {
+    "valid": true,
+    "tool": "circt-verilog",
+    "version": "firtool-1.139.0",
+    "output": "Parsed successfully to HW IR"
+  },
+  "language_features": {
+    "language": "SystemVerilog",
+    "features_used": [
+      "module declaration",
+      "input/output ports",
+      "logic type",
+      "always_ff procedural block",
+      "posedge clock sensitivity",
+      "non-blocking assignment (<=)",
+      "continuous assignment (assign)",
+      "bitwise NOT operator (~)"
+    ],
+    "complexity": "minimal",
+    "circuit_type": "sequential"
+  },
+  "classification": {
+    "result": "fixed_bug",
+    "bug_type": "timeout",
+    "original_behavior": "Compilation timed out after 60s",
+    "current_behavior": "Compilation completes successfully in < 5s",
+    "reproducible": false,
+    "reason": "Bug has been fixed in current CIRCT toolchain"
+  },
+  "pipeline_test": {
+    "circt_verilog": {
+      "status": "pass",
+      "output": "Valid HW module IR"
+    },
+    "arcilator": {
+      "status": "pass",
+      "output": "Valid LLVM IR"
+    },
+    "full_pipeline": {
+      "status": "pass",
+      "exit_code": 0,
+      "execution_time": "< 5s"
+    }
+  },
+  "recommendation": {
+    "action": "archive_as_fixed",
+    "notes": "Test case is valid and minimal. Original timeout bug has been fixed. Preserve for regression testing or bisection to identify fixing commit."
+  }
+}

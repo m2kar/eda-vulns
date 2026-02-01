@@ -1,0 +1,46 @@
+Crash Type: assertion
+Testcase ID: 260128-000006ab
+
+--- Compilation Command ---
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_555e78a91b84.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_xfhtv50x/test_555e78a91b84.o
+
+--- Error Message ---
+<unknown>:0: error: state type must have a known bit width; got '!llhd.ref<i1>'
+arcilator: /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/IR/StorageUniquerSupport.h:180: static ConcreteT mlir::detail::StorageUserBase<circt::arc::StateType, mlir::Type, circt::arc::detail::StateTypeStorage, mlir::detail::TypeUniquer>::get(MLIRContext *, Args &&...) [ConcreteT = circt::arc::StateType, BaseT = mlir::Type, StorageT = circt::arc::detail::StateTypeStorage, UniquerT = mlir::detail::TypeUniquer, Traits = <>, Args = <mlir::Type &>]: Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed.
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace and instructions to reproduce the bug.
+Stack dump:
+0.	Program arguments: /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator
+ #0 0x000055996ab5a23f llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/lib/Support/Unix/Signals.inc:842:13
+ #1 0x000055996ab5b379 llvm::sys::RunSignalHandlers() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/lib/Support/Signals.cpp:109:18
+ #2 0x000055996ab5b379 SignalHandler(int, siginfo_t*, void*) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/lib/Support/Unix/Signals.inc:412:3
+ #3 0x00007fe206e96330 (/lib/x86_64-linux-gnu/libc.so.6+0x45330)
+ #4 0x00007fe206eefb2c __pthread_kill_implementation ./nptl/pthread_kill.c:44:76
+ #5 0x00007fe206eefb2c __pthread_kill_internal ./nptl/pthread_kill.c:78:10
+ #6 0x00007fe206eefb2c pthread_kill ./nptl/pthread_kill.c:89:10
+ #7 0x00007fe206e9627e raise ./signal/../sysdeps/posix/raise.c:27:6
+ #8 0x00007fe206e798ff abort ./stdlib/abort.c:81:7
+ #9 0x00007fe206e7981b _nl_load_domain ./intl/loadmsgcat.c:1177:9
+#10 0x00007fe206e8c517 (/lib/x86_64-linux-gnu/libc.so.6+0x3b517)
+#11 0x000055996b2abbbc (/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator+0x7dd5bbc)
+#12 0x000055996b2abae9 circt::arc::StateType::get(mlir::Type) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/build/tools/circt/include/circt/Dialect/Arc/ArcTypes.cpp.inc:108:3
+#13 0x000055996b316f5c (anonymous namespace)::ModuleLowering::run() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Dialect/Arc/Transforms/LowerState.cpp:219:66
+#14 0x000055996b316f5c (anonymous namespace)::LowerStatePass::runOnOperation() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Dialect/Arc/Transforms/LowerState.cpp:1198:41
+#15 0x000055996ecad782 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int)::$_3::operator()() const /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Pass/Pass.cpp:0:19
+#16 0x000055996ecad782 void llvm::function_ref<void ()>::callback_fn<mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int)::$_3>(long) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/ADT/STLFunctionalExtras.h:46:12
+#17 0x000055996ec9f7b1 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Pass/Pass.cpp:619:17
+#18 0x000055996eca077f llvm::failed(llvm::LogicalResult) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/LogicalResult.h:0:0
+#19 0x000055996eca077f mlir::detail::OpToOpPassAdaptor::runPipeline(mlir::OpPassManager&, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int, mlir::PassInstrumentor*, mlir::PassInstrumentation::PipelineParentInfo const*) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Pass/Pass.cpp:688:9
+#20 0x000055996ecaa1e9 mlir::PassManager::runPasses(mlir::Operation*, mlir::AnalysisManager) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Pass/Pass.cpp:1123:3
+#21 0x000055996eca9431 mlir::PassManager::run(mlir::Operation*) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Pass/Pass.cpp:1097:0
+#22 0x000055996aa832d3 processBuffer(mlir::MLIRContext&, mlir::TimingScope&, llvm::SourceMgr&, std::optional<std::unique_ptr<llvm::ToolOutputFile, std::default_delete<llvm::ToolOutputFile>>>&) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/tools/arcilator/arcilator.cpp:330:7
+#23 0x000055996aa82395 processInputSplit(mlir::MLIRContext&, mlir::TimingScope&, std::unique_ptr<llvm::MemoryBuffer, std::default_delete<llvm::MemoryBuffer>>, std::optional<std::unique_ptr<llvm::ToolOutputFile, std::default_delete<llvm::ToolOutputFile>>>&) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/tools/arcilator/arcilator.cpp:546:12
+#24 0x000055996aa7f7b4 processInput(mlir::MLIRContext&, mlir::TimingScope&, std::unique_ptr<llvm::MemoryBuffer, std::default_delete<llvm::MemoryBuffer>>, std::optional<std::unique_ptr<llvm::ToolOutputFile, std::default_delete<llvm::ToolOutputFile>>>&) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/tools/arcilator/arcilator.cpp:562:12
+#25 0x000055996aa7f7b4 executeArcilator(mlir::MLIRContext&) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/tools/arcilator/arcilator.cpp:629:14
+#26 0x000055996aa7ee0e llvm::LogicalResult::failed() const /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/LogicalResult.h:43:42
+#27 0x000055996aa7ee0e llvm::failed(llvm::LogicalResult) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/LogicalResult.h:71:58
+#28 0x000055996aa7ee0e main /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/tools/arcilator/arcilator.cpp:697:8
+#29 0x00007fe206e7b1ca __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:74:3
+#30 0x00007fe206e7b28b call_init ./csu/../csu/libc-start.c:128:20
+#31 0x00007fe206e7b28b __libc_start_main ./csu/../csu/libc-start.c:347:5
+#32 0x000055996aa7e165 _start (/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator+0x75a8165)
+Aborted (core dumped)

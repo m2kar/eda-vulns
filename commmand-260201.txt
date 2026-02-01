@@ -1,0 +1,1 @@
+./analyze_circt_bug.py -j1 /edazz/crash-202060127/timeout_* $(cat /edazz/FeatureFuzz-SV/output-260127-archive/crashes.txt) $(cat /edazz/FeatureFuzz-SV/output-260131-archive/crashes.txt)

@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T12:00:00Z",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "circt_verilog_version": "1.140.0",
+    "arcilator_version": "1.140.0",
+    "opt_version": "22.0.0",
+    "llc_version": "22.0.0",
+    "llvm_toolchain": "LLVM 22"
+  },
+  "reproduction": {
+    "reproduced": true,
+    "command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv | /opt/firtool/bin/arcilator | /opt/llvm-22/bin/opt -O0 | /opt/llvm-22/bin/llc -O0 --filetype=obj -o /tmp/test_output.o",
+    "exit_code": 1,
+    "signature": "concurrent assertion statements with action blocks are not supported yet"
+  },
+  "crash_signature": {
+    "original": "concurrent assertion statements with action blocks are not supported yet",
+    "reproduced": "concurrent assertion statements with action blocks are not supported yet",
+    "match_result": "exact_match"
+  },
+  "files": {
+    "reproduce_log": "reproduce.log",
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  }
+}

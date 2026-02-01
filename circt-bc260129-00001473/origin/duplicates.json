@@ -1,0 +1,123 @@
+{
+  "search_timestamp": "2026-02-01T08:05:10.203484",
+  "keywords": [
+    "string port",
+    "InOutType",
+    "MooreToCore",
+    "SVModuleOp",
+    "dyn_cast",
+    "DynamicStringType"
+  ],
+  "recommendation": "review_existing",
+  "total_issues_found": 76,
+  "top_score": 15,
+  "top_issue": 9572,
+  "top_issue_title": "[Moore] Assertion failure when module has string type output port",
+  "issues": [
+    {
+      "number": 9572,
+      "title": "[Moore] Assertion failure when module has string type output port",
+      "body": "## Bug Description\n\n`circt-verilog` crashes with an assertion failure when processing a SystemVerilog module that has a `string` type output port. The crash occurs during the MooreToCore conversion pass when the `getModulePortInfo()` function fails to properly handle cases where type conversion returns an invalid/empty type, causing a `dyn_cast` assertion failure in `ModulePortInfo::sanitizeInOut()`.\n\nThis is a valid SystemVerilog construct per IEEE 1800-2017 Section 6.16 (String data type). Bot",
+      "state": "OPEN",
+      "updatedAt": "2026-02-01T03:00:12Z",
+      "matched_keywords": [
+        "string port",
+        "InOutType",
+        "MooreToCore",
+        "SVModuleOp",
+        "dyn_cast"
+      ],
+      "similarity_score": 15
+    },
+    {
+      "number": 9570,
+      "title": "[Moore] Assertion in MooreToCore when module uses packed union type as port",
+      "body": "## Description\n\nCIRCT crashes with assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"` when compiling SystemVerilog modules that use packed union types as module ports.\n\n**Likely cause**: MooreToCore conversion pass lacks a type conversion rule for packed union types (`UnionType`). When processing module ports, the type converter fails to convert `UnionType`, resulting in an invalid/null type that causes assertion failures in downstream port processing code (`getModulePortIn",
+      "state": "OPEN",
+      "updatedAt": "2026-02-01T02:29:25Z",
+      "matched_keywords": [
+        "InOutType",
+        "MooreToCore",
+        "SVModuleOp",
+        "dyn_cast"
+      ],
+      "similarity_score": 12
+    },
+    {
+      "number": 9542,
+      "title": "[Moore] to_builtin_bool should be replaced with to_builtin_int",
+      "body": "Making this issue for tracking as I gradually replace all the uses of to_builtin_bool with to_builtin_int (not totally trivial since we now have to explicitly cast to int type), as I'll split it across PRs to keep the diffs small and make sure I'm not missing anything\n\nPlaces to change:\n- [x] Assertion builtin handling\n- [ ] AssertionExpr.cpp convertToI1 function\n- [ ] Statements.cpp conditions\n- [ ] MooreToCore",
+      "state": "OPEN",
+      "updatedAt": "2026-01-30T11:17:58Z",
+      "matched_keywords": [
+        "MooreToCore"
+      ],
+      "similarity_score": 4
+    },
+    {
+      "number": 9538,
+      "title": "`hlstool` crashes on handshake input",
+      "body": "Running\n```\nhlstool --dynamic-hw --buffering-strategy=all --verilog --lowering-options=disallowLocalVariables --verbose-pass-executions\n```\ncrashes on the following handshake function\n```\nhandshake.func @top(%v0: i32, %v1: i32, %mem.src.load0.data: i32, %mem.src.load0.done: none, %mem.dst.store0.done: none) -> (none, index, i32, index) attributes {argNames = [\"in0\", \"in1\", \"mem.src.load0.data\", \"mem.src.load0.done\", \"mem.dst.store0.done\"], resNames = [\"out0\", \"mem.src.load0.addr\", \"mem.dst.store",
+      "state": "OPEN",
+      "updatedAt": "2026-01-29T08:43:20Z",
+      "matched_keywords": [],
+      "similarity_score": 4
+    },
+    {
+      "number": 9395,
+      "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+      "body": "Hi, all! Let's look at this example on _Verilog_:\n\n```\nmodule comb_assert(\n    input wire clk,\n    input wire resetn\n);\n    always @* begin\n        if (resetn) begin\n            assert (0);\n        end\n    end\nendmodule\n```\nWhen we process this using _circt-verilog_ and _arcilator_:\n\n`circt-verilog test.v | arcilator`\n\nwe get the following internal _MLIR_ assertion failure: \n\n```\narcilator: /home/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:2230: void mlir::ConversionPatternRewrite",
+      "state": "CLOSED",
+      "updatedAt": "2026-01-19T11:24:22Z",
+      "matched_keywords": [],
+      "similarity_score": 4
+    },
+    {
+      "number": 9376,
+      "title": "Memory leak in HW to SystemC conversion",
+      "body": "**Test commit**\n[417a5112947d9889cad54cb5b2110b37978b86b8](https://github.com/llvm/circt/commit/417a5112947d9889cad54cb5b2110b37978b86b8)\n\n**Description**\nThe pass leaks memory when it fails to legalize nested operations (like `sv.reg`): it allocates `systemc.module` and `systemc.ctor` operations but fails to deallocate them when the conversion is aborted due to incorrect/illegal IR.\n\n**Steps to reproduce**\n- Minimal MLIR program (test.mlir)\n```\n\"builtin.module\"() ({\n  \"hw.module\"() <{module_typ",
+      "state": "OPEN",
+      "updatedAt": "2025-12-19T21:38:48Z",
+      "matched_keywords": [],
+      "similarity_score": 4
+    },
+    {
+      "number": 9371,
+      "title": "Folding rollback error during HW to LLVM conversion",
+      "body": "**Test commit**\n[417a5112947d9889cad54cb5b2110b37978b86b8](https://github.com/llvm/circt/commit/417a5112947d9889cad54cb5b2110b37978b86b8)\n\n**Description**\nThe `--convert-hw-to-llvm` pass triggers a fatal error when the dialect conversion framework attempts to roll back IR modifications during the legalization of arith operations.\n\n**Steps to reproduce**\n- Minimal MLIR program (test.mlir)\n```\n\"builtin.module\"() ({\n  \"func.func\"() <{function_type = () -> index, sym_name = \"main\"}> ({\n    %0 = \"ari",
+      "state": "CLOSED",
+      "updatedAt": "2026-01-05T21:26:48Z",
+      "matched_keywords": [],
+      "similarity_score": 4
+    },
+    {
+      "number": 9315,
+      "title": "[FIRRTL] ModuleInliner removes NLA referred by circt.tracker",
+      "body": "```bash\n\n$ cat test.fir\nFIRRTL version 4.0.0\ncircuit Foo: %[[\n  {\n    \"class\": \"sifive.enterprise.firrtl.MarkDUTAnnotation\",\n    \"target\": \"~Foo|Bar\"\n  }\n]]\n  module Baz:\n    wire a: UInt<1>\n    invalidate a\n  module Bar:\n    inst baz of Baz\n  public module Foo:\n    inst bar of Bar\n\n$ firtool test.fir  -ir-fir  | grep \"dutNLA\" -a1\n  firrtl.circuit \"Foo\" {\n    hw.hierpath private @dutNLA [@Foo::@sym]\n    firrtl.module @Bar() attributes {annotations = [{class = \"sifive.enterprise.firrtl.MarkDUTAnn",
+      "state": "CLOSED",
+      "updatedAt": "2025-12-10T22:49:54Z",
+      "matched_keywords": [
+        "dyn_cast"
+      ],
+      "similarity_score": 4
+    },
+    {
+      "number": 9258,
+      "title": "FlattenMemRefPass crashes on memref.global",
+      "body": "`FlattenMemRefPass` crashes deterministically on valid MLIR containing a `memref.global` without a constant dense initializer. The crash occurs both inside `hlstool` and when running the pass directly via `circt-opt`, so the issue is isolated to the pass itself.\n\nReproducer: [pass_pipeline.mlir](https://github.com/RCoeurjoly/circt-flatten-memref-crash/blob/main/pass_pipeline.mlir). It is too big to attach.\n\n`circt-opt --version`\n\n> LLVM (http://llvm.org/):\n>   LLVM version 22.0.0git\n>   Optimize",
+      "state": "OPEN",
+      "updatedAt": "2025-12-28T22:12:11Z",
+      "matched_keywords": [],
+      "similarity_score": 4
+    },
+    {
+      "number": 9563,
+      "title": "[FIRRTL][circt-reduce] extmodule-instance-remover crash w/ properties",
+      "body": "Consider the following:\n\n``` mlir\nfirrtl.circuit \"Foo\" {\n  firrtl.extmodule @Bar(out a: !firrtl.string)\n  firrtl.module @Baz() {\n    %a = firrtl.instance Bar @Bar(out a: !firrtl.string)\n    %wire = firrtl.wire : !firrtl.string\n    firrtl.propassign %wire, %a : !firrtl.string\n  }\n  firrtl.extmodule @Foo()\n}\n```\n\nThis will crash with the following command:\n\n``` console\n# circt-reduce -skip-initial -test='exit 0' extmodule-instance-remover.mlir -include extmodule-instance-remover -o /dev/null\nReadi",
+      "state": "OPEN",
+      "updatedAt": "2026-01-31T16:09:19Z",
+      "matched_keywords": [],
+      "similarity_score": 3
+    }
+  ]
+}

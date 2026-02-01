@@ -1,0 +1,20 @@
+{
+  "validation": {
+    "syntax_check": "pass",
+    "reproduces_bug": true,
+    "minimization_ratio": 0.59,
+    "cross_tool_verification": {
+      "verilator": "pass",
+      "slang": "pass"
+    },
+    "crash_signature_match": {
+      "error_message": "integer bitwidth is limited to 16777215 bits",
+      "crash_location": "Mem2Reg.cpp:1742",
+      "function": "Promoter::insertBlockArgs"
+    },
+    "classification": {
+      "result": "report",
+      "reason": "Valid SystemVerilog code (verified by Verilator and Slang) triggers assertion failure in LLHD Mem2Reg pass due to improper handling of class handle types. The bug is a missing input validation in the compiler, not an invalid testcase."
+    }
+  }
+}

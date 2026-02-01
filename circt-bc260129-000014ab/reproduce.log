@@ -1,0 +1,7 @@
+source.sv:3:9: remark: Class builtin functions (needed for randomization, constraints, and covergroups) are not yet supported and will be dropped during lowering.
+  class my_class;
+        ^
+source.sv:8:12: error: 'hw.bitcast' op result #0 must be Type wherein the bitwidth in hardware is known, but got '!llvm.ptr'
+  my_class mc_handle;
+           ^
+source.sv:8:12: note: see current operation: %11 = "hw.bitcast"(%10) : (i1073741823) -> !llvm.ptr

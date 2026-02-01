@@ -1,0 +1,80 @@
+{
+  "testcase_id": "circt-bc260129-0000159c",
+  "validation_date": "2025-01-27",
+  "minimized_file": "bug.sv",
+  "original_file": "source.sv",
+  
+  "syntax_validation": {
+    "valid": true,
+    "tools_checked": ["circt-verilog", "verilator", "slang"],
+    "results": {
+      "circt_verilog": {
+        "status": "pass",
+        "output": "Parsed successfully, generated IR with !llhd.ref<i1> type"
+      },
+      "verilator": {
+        "status": "pass",
+        "version": "5.022 2024-02-24",
+        "output": "No errors or warnings"
+      },
+      "slang": {
+        "status": "pass",
+        "version": "10.0.6",
+        "output": "Build succeeded: 0 errors, 0 warnings"
+      }
+    }
+  },
+  
+  "crash_validation": {
+    "reproducible": true,
+    "crash_type": "assertion",
+    "error_signature": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "crash_location": {
+      "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "line": 219,
+      "function": "ModuleLowering::run"
+    },
+    "matches_original": true
+  },
+  
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reasoning": [
+      "Valid SystemVerilog syntax accepted by Verilator and Slang",
+      "Inout port is a standard language feature",
+      "Crash occurs in arcilator compiler, not user error",
+      "Assertion failure indicates internal invariant violation",
+      "Clear error message shows type system incompatibility between Arc and LLHD dialects"
+    ]
+  },
+  
+  "minimization_stats": {
+    "original_bytes": 313,
+    "minimized_bytes": 32,
+    "original_lines": 20,
+    "minimized_lines": 2,
+    "reduction_percent": 89.8
+  },
+  
+  "essential_construct": {
+    "construct": "inout port",
+    "code": "inout c",
+    "reason": "Generates llhd.ref<T> type which Arc StateType doesn't support"
+  },
+  
+  "removed_constructs": [
+    "temp_reg variable",
+    "for loop",
+    "always_ff sequential block",
+    "tri-state assignment",
+    "input ports (clk, a)",
+    "output port (b)"
+  ],
+  
+  "notes": [
+    "Sequential logic (always_ff) was NOT required to trigger the crash",
+    "Any module with inout port will crash arcilator",
+    "This is a legitimate bug - arcilator should either support inout or give a user-friendly error"
+  ]
+}

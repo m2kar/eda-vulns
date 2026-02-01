@@ -1,0 +1,26 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "testcase_id": "260127-000004a9",
+    "crash_type": "assertion",
+    "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "assertion": "succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))",
+    "failing_function": "circt::arc::StateType::get(mlir::Type)",
+    "tool_chain": {
+      "circt_version": "firtool-1.139.0",
+      "llvm_version": "22.0.0git",
+      "circt_path": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin"
+    },
+    "stack_frames": [
+      "circt::arc::StateType::get(mlir::Type)",
+      "(anonymous namespace)::ModuleLowering::run()",
+      "(anonymous namespace)::LowerStatePass::runOnOperation()"
+    ],
+    "signature_consistency": {
+      "error_message": true,
+      "assertion": true,
+      "stack_frames": true,
+      "overall": true
+    }
+  }
+}

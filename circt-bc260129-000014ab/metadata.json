@@ -1,0 +1,26 @@
+{
+  "crash_id": "bc260129-000014ab",
+  "crash_type": "assertion",
+  "original_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_08g_yrpv/test_a1c64cace317.sv",
+  "current_command": "/opt/firtool/bin/circt-verilog --ir-hw /home/zhiqing/edazz/eda-vulns/circt-bc260129-000014ab/source.sv",
+  "reproduction": {
+    "reproduced": false,
+    "crash_signature": "Assertion failure in mlir::IntegerType::get() due to integer bitwidth exceeding 16777215 bits",
+    "original_error": "integer bitwidth is limited to 16777215 bits",
+    "current_error": "hw.bitcast op result #0 must be Type wherein the bitwidth in hardware is known, but got '!llvm.ptr'",
+    "error_context": "Assertion in StorageUniquerSupport.h:180 during IntegerType creation in Promoter::insertBlockArgs() in Mem2Reg.cpp",
+    "root_cause": "Class instantiation causes type promotion in memory-to-register transformation that attempts to create an integer type with excessive bitwidth",
+    "notes": "The crash signature differs between the original execution and current execution. The original crash was an assertion failure during IntegerType creation. The current version shows a different error path in hw.bitcast operation validation, suggesting the code has been modified or the version differs."
+  },
+  "testcase": {
+    "source_file": "source.sv",
+    "lines": 24,
+    "key_construct": "Class declaration inside module with memory-to-register optimization triggering type creation with invalid bitwidth"
+  },
+  "environment": {
+    "original_circt": "circt-1.139.0",
+    "current_circt": "/opt/firtool/bin/circt-verilog",
+    "llvm_path": "/opt/llvm-22/bin",
+    "reproducible": "Partial - Different error path but same root cause (class instantiation + type bitwidth issue)"
+  }
+}

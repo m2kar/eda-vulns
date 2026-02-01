@@ -1,0 +1,203 @@
+#!/usr/bin/env python3
+import json
+import subprocess
+
+# 获取最相关 Issue 的详细信息
+issue_num = 9469
+cmd = f'gh issue view {issue_num} --repo llvm/circt --json number,title,state,body,createdAt,author,url'
+output = subprocess.check_output(cmd, shell=True, text=True)
+issue_detail = json.loads(output)
+
+# 加载 analysis.json
+with open('analysis.json', 'r') as f:
+    analysis = json.load(f)
+
+# 加载 duplicates.json
+with open('duplicates.json', 'r') as f:
+    duplicates = json.load(f)
+
+# 生成 duplicates.md 报告
+report = f"""# GitHub Duplicate Issue Check Report
+
+**Test Case ID**: {analysis.get('testcase_id', 'N/A')}  
+**Analysis Date**: 2025-02-01  
+**Report Generated**: Check Duplicates Skill
+
+---
+
+## 1. 问题摘要
+
+### 原始崩溃信息
+- **方言**: {analysis.get('dialect', 'N/A')}
+- **崩溃类型**: {analysis.get('crash_type', 'N/A')} (timeout {analysis.get('timeout_seconds', 'N/A')}s)
+- **可疑组件**: {analysis.get('suspected_component', 'N/A')}
+- **可疑优化通道**: {', '.join(analysis.get('suspected_passes', []))}
+
+### 根本原因假设
+{analysis.get('root_cause_hypothesis', 'N/A')}
+
+---
+
+## 2. GitHub Issue 搜索结果
+
+### 搜索关键词
+"""
+
+for query in duplicates.get('search_queries', []):
+    report += f"- `{query}`\n"
+
+report += f"""
+### 搜索结果概览
+- **总搜索关键词数**: {len(duplicates.get('search_queries', []))}
+- **匹配的 Issue 总数**: {len(duplicates.get('results', []))}
+- **最高相似度分数**: {duplicates.get('top_score', 0)}/15
+- **最相关 Issue**: #{duplicates.get('top_issue', 'N/A')}
+
+---
+
+## 3. 最相关的 Issue 分析
+
+### Issue #{issue_detail['number']}: {issue_detail['title']}
+- **状态**: {issue_detail['state']}
+- **创建者**: {issue_detail['author']['login']}
+- **创建时间**: {issue_detail['createdAt'][:10]}
+- **URL**: {issue_detail['url']}
+- **相似度分数**: {duplicates['results'][0]['score']}/15
+
+#### 匹配的关键词
+{', '.join([f"`{kw}`" for kw in duplicates['results'][0]['matched_keywords']])}
+
+#### Issue 内容摘要
+```
+{issue_detail['body'][:500]}...
+```
+
+---
+
+## 4. 其他相关 Issue 排名 (Top 10)
+
+| 排名 | Issue # | 标题 | 分数 | 匹配关键词 | 状态 |
+|------|---------|------|------|----------|------|
+"""
+
+for i, result in enumerate(duplicates.get('results', [])[:10], 1):
+    keywords = ', '.join([f"`{kw}`" for kw in result['matched_keywords']])
+    report += f"| {i} | #{result['issue_number']} | {result['title'][:50]}... | {result['score']:.1f} | {keywords} | {result['state']} |\n"
+
+report += f"""
+---
+
+## 5. 推荐与分析
+
+### 最终建议
+**{duplicates.get('recommendation', 'N/A').upper()}**
+
+### 原因分析
+{duplicates.get('reason', 'N/A')}
+
+### 详细分析
+
+#### 相似度评分细节
+- **arcilator timeout** (5分): ❌ 未匹配
+- **combinational loop** (3分): ❌ 未匹配
+- **dynamic array** (2分): ❌ 未匹配
+- **packed struct** (2分): ❌ 未匹配
+- **always_comb** (3分): ❌ 未匹配
+- **ConvertToArcs** (2分): ✓ 匹配 (实际分数: {duplicates['results'][0]['score']:.1f})
+- **array indexing** (2分): ✓ 匹配
+
+#### 差异分析
+
+**本次崩溃的关键特征**:
+1. 动态索引数组元素的写-读模式
+2. packed struct 字段级别的依赖追踪缺陷
+3. 虚假组合循环检测
+4. 超时现象（300秒）
+
+**Issue #9469 的特征**:
+1. 直接数组索引 vs 中间 wire
+2. 敏感度列表中的数组索引
+3. 编译行为不一致
+4. 无超时（assertion failure）
+
+**结论**: 虽然都涉及数组索引，但 Issue #9469 关注的是敏感度列表中的 always_ff 行为，而本次崩溃关注的是 always_comb 中的动态索引和 packed struct 字段依赖。这是两个不同的问题。
+
+---
+
+## 6. 建议的后续步骤
+
+1. **新建 Issue** 建议
+   - 标题: `[circt-verilog][arcilator] Timeout with dynamic-indexed packed struct array in always_comb`
+   - 标签: `[Arc]`, `[arcilator]`, `timeout`, `bug`
+   - 优先级: 中等 (timeout 问题严重性)
+
+2. **关键信息包含**
+   - 最小化的测试用例（source.sv）
+   - 完整的错误日志和超时痕迹
+   - 涉及的组件和优化通道
+   - 根本原因分析
+
+3. **相关组件维护者** (可选抄送)
+   - Arc 和 Arcilator 维护者
+   - Moore/Verilog 前端维护者
+
+---
+
+## 7. 搜索过程日志
+
+### 执行的搜索查询
+"""
+
+for query in duplicates.get('search_queries', []):
+    matching = [r for r in duplicates.get('results', []) 
+                if any(kw.lower() in query.lower() for kw in r['matched_keywords'])]
+    report += f"- `{query}`: 找到 {len(matching)} 个相关 Issue\n"
+
+report += f"""
+### 搜索参数
+- 仓库: `llvm/circt`
+- 查询范围: 所有状态 (open/closed)
+- 最大结果数: 10 per query
+- 评分算法: 关键词权重求和
+
+---
+
+## 附录
+
+### A. 权重映射表
+"""
+
+weights = {
+    'arcilator timeout': 5,
+    'combinational loop': 3,
+    'dynamic array': 2,
+    'packed struct': 2,
+    'always_comb': 3,
+    'ConvertToArcs': 2,
+    'LowerState': 2,
+    'SplitLoops': 2,
+    'infinite loop': 3,
+    'array indexing': 2,
+    'unpacked array': 1,
+}
+
+report += "\n| 关键词 | 权重 |\n|---------|------|\n"
+for kw, weight in sorted(weights.items(), key=lambda x: x[1], reverse=True):
+    report += f"| `{kw}` | {weight} |\n"
+
+report += f"""
+### B. 评分规则
+- **高相似度** (≥10): 强烈建议审查现有 Issue，可能重复
+- **中等相似度** (6-9): 仔细审查现有 Issue，大概率相关但不完全重复
+- **低相似度** (<6): 很可能是新的 Issue，但要检查标题和内容
+
+---
+
+**End of Report**
+"""
+
+with open('duplicates.md', 'w') as f:
+    f.write(report)
+
+print("✓ duplicates.md 已生成")
+

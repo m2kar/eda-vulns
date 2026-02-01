@@ -1,0 +1,63 @@
+========================================
+CIRCT Bug Reproduction Log
+========================================
+Testcase ID: 260129-0000180b
+Date: 2025-02-01T12:02:04Z
+========================================
+
+INPUT FILES:
+- error.txt (original crash log)
+- source.sv (SystemVerilog test case)
+
+ORIGINAL COMMAND:
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_08g_yrpv/test_cf032a556d41.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_08g_yrpv/test_cf032a556d41.o
+
+ORIGINAL CRASH SIGNATURE:
+Assertion `numBits >= 0' failed at HoistSignals.cpp:510
+Stack trace indicates crash in LLHD dialect HoistSignals pass
+
+TOOL VERSIONS:
+- circt-verilog: CIRCT firtool-1.139.0, LLVM 22.0.0git
+- arcilator: LLVM 22.0.0git
+- opt: LLVM 22.0.0git
+- llc: LLVM 22.0.0git
+
+REPRODUCTION ATTEMPTS:
+
+1. Full pipeline:
+Command: circt-verilog --ir-hw ./origin/source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o /tmp/test.o
+Result: Different error type
+
+2. With absolute paths:
+Command: circt-verilog --ir-hw /home/zhiqing/edazz/eda-vulns/circt-bc260129-0000180b/origin/source.sv
+Result: Different error type
+
+3. With --ir-llhd option:
+Command: circt-verilog --ir-llhd source.sv
+Result: Different error type
+
+CURRENT ERROR:
+origin/source.sv:6:9: remark: Class builtin functions (needed for randomization, constraints, and covergroups) are not yet supported and will be dropped during lowering.
+  class my_class;
+        ^
+origin/source.sv:28:3: error: 'hw.bitcast' op result #0 must be Type wherein the bitwidth in hardware is known, but got '!llvm.ptr'
+  initial begin
+  ^
+origin/source.sv:28:3: note: see current operation: %20 = "hw.bitcast"(%19) : (i1073741823) -> !llvm.ptr
+
+ANALYSIS:
+- Original crash was an assertion failure in HoistSignals.cpp (LLHD pipeline stage)
+- Current behavior is a semantic error in the circt-verilog stage (earlier in pipeline)
+- The error shows i1073741823 (1+ billion bits) which indicates size calculation overflow
+- Related to self-referential typedef: typedef container#(pkg::my_class) my_type;
+- Current version may have added earlier validation, preventing the assertion in HoistSignals
+
+REPRODUCTION STATUS: PARTIAL
+- Bug is not exactly reproduced (different error type)
+- Underlying issue appears related (recursive type causing invalid bit width)
+- May be same root cause manifesting differently in current version
+
+RECOMMENDATIONS:
+- Proceed with root cause analysis on the self-referential typedef issue
+- Current error still indicates a bug in recursive type handling
+- The i1073741823 bit width is clearly invalid and indicates overflow/infinite recursion

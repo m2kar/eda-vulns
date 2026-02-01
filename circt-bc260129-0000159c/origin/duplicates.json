@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "check_timestamp": "2024-12-20",
+    "search_keywords": [
+      "inout port state",
+      "StateType RefType",
+      "LowerState arc",
+      "arcilator inout",
+      "known bit width",
+      "llhd ref type arc"
+    ],
+    "search_scope": "llvm/circt repository, last 2 years"
+  },
+  "issues": [
+    {
+      "issue_id": 9574,
+      "title": "[Arc] Assertion failure when lowering inout ports in sequential logic",
+      "state": "OPEN",
+      "url": "https://github.com/llvm/circt/issues/9574",
+      "similarity_score": 10.0,
+      "matching_criteria": {
+        "error_message": "exact_match",
+        "error_detail": "state type must have a known bit width; got '!llhd.ref<i1>'",
+        "stack_trace": "StateType::get, ModuleLowering::run, LowerState.cpp:219",
+        "trigger_constructs": "inout port + always_ff block",
+        "dialect": "arc + llhd"
+      },
+      "analysis": {
+        "error_msg_match": true,
+        "construct_match": true,
+        "stack_trace_match": true,
+        "certainty": "PERFECT MATCH - Identical error message, call site, and trigger conditions"
+      }
+    },
+    {
+      "issue_id": 4036,
+      "title": "[PrepareForEmission] Crash when inout operations are passed to instance ports",
+      "state": "OPEN",
+      "url": "https://github.com/llvm/circt/issues/4036",
+      "similarity_score": 1.0,
+      "matching_criteria": {
+        "error_message": "related_but_different",
+        "error_detail": "InOutType assertion failure",
+        "trigger_constructs": "inout port",
+        "dialect": "hw/sv"
+      },
+      "analysis": {
+        "error_msg_match": false,
+        "construct_match": true,
+        "stack_trace_match": false,
+        "certainty": "DIFFERENT BUG - Different dialect, different crash location, different error message"
+      }
+    }
+  ],
+  "recommendation": "review_existing",
+  "top_score": 10.0,
+  "top_issue": 9574,
+  "confidence_level": "VERY_HIGH",
+  "duplicate_status": "DUPLICATE",
+  "rationale": "This crash is a DUPLICATE of Issue #9574. The error message, stack trace, and trigger conditions are identical. Issue #9574 is already reported and OPEN on GitHub, tracking the exact same bug."
+}

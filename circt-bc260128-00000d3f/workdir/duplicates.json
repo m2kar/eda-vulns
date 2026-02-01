@@ -1,0 +1,42 @@
+{
+  "issues": [
+    {
+      "number": 8219,
+      "title": "[ESI] Assertion: dyn_cast on a non-existent value",
+      "score": 38
+    },
+    {
+      "number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "score": 36
+    },
+    {
+      "number": 9315,
+      "title": "[FIRRTL] ModuleInliner removes NLA",
+      "score": 32
+    },
+    {
+      "number": 7535,
+      "title": "[MooreToCore] VariableOp lowered failed",
+      "score": 4
+    },
+    {
+      "number": 8276,
+      "title": "[MooreToCore] Support for UnpackedArrayType emission",
+      "score": 4
+    }
+  ],
+  "top_score": 38,
+  "top_issue": "#8219",
+  "recommendation": "review_existing",
+  "analysis_timestamp": "2026-02-01T00:00:00Z",
+  "search_keywords": [
+    "packed union",
+    "InOutType",
+    "sanitizeInOut",
+    "MooreToCore",
+    "assertion",
+    "dyn_cast"
+  ],
+  "total_issues_checked": 24
+}

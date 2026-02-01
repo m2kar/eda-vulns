@@ -1,0 +1,27 @@
+{
+  "dialect": "sim",
+  "crash_type": "legalization_failure",
+  "operation": "sim.fmt.literal",
+  "root_cause": "Missing conversion pattern for standalone sim.fmt.literal in ArcToLLVM pass. The format literal operation is generated from $error system task in assertion but lacks proper lowering when not consumed by sim.proc.print",
+  "location": "lib/Conversion/ArcToLLVM/LowerArcToLLVM.cpp",
+  "keywords": [
+    "sim.fmt.literal",
+    "FormatLiteralOp",
+    "arcilator",
+    "legalization",
+    "ArcToLLVM",
+    "assertion",
+    "$error",
+    "format string",
+    "combinational always",
+    "SimDialect"
+  ],
+  "trigger_construct": "assert with $error in combinational always block",
+  "source_pattern": "always @(*) begin ... assert (...) else $error(...); end",
+  "affected_passes": [
+    "ImportVerilog",
+    "ArcToLLVM"
+  ],
+  "severity": "error",
+  "reproducible": true
+}

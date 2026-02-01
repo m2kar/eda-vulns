@@ -1,0 +1,20 @@
+{
+  "crash_id": "bc260127-0000058f",
+  "crash_type": "assertion",
+  "assertion": "detail::isPresent(Val) && \"dyn_cast on a non-existent value\"",
+  "location": {
+    "file": "include/circt/Dialect/HW/PortImplementation.h",
+    "line": 177,
+    "function": "circt::hw::ModulePortInfo::sanitizeInOut"
+  },
+  "dialect": "moore",
+  "pass": "MooreToCore",
+  "trigger_pattern": "Module with packed union type as port type (input or output). The MooreToCore type converter lacks conversion for PackedUnionType, causing typeConverter.convertType() to return null. This null type is passed to hw::ModulePortInfo which calls sanitizeInOut(), where dyn_cast on the null type triggers the assertion.",
+  "root_cause": "Missing type conversion for PackedUnionType in MooreToCore pass. The type converter (MooreToCore.cpp:2256-2381) handles IntType, ArrayType, StructType, UnpackedStructType, but NOT PackedUnionType. When convertType() is called on PackedUnionType, it returns null. The getModulePortInfo() function (line 243) does not check for null before creating hw::PortInfo. The null type propagates to ModulePortInfo constructor which calls sanitizeInOut(), where dyn_cast<hw::InOutType>(p.type) fails on the null type.",
+  "affected_components": [
+    "lib/Conversion/MooreToCore/MooreToCore.cpp:getModulePortInfo",
+    "lib/Conversion/MooreToCore/MooreToCore.cpp:populateTypeConversion",
+    "include/circt/Dialect/HW/PortImplementation.h:sanitizeInOut"
+  ],
+  "key_construction": "typedef union packed { logic [7:0] byte_data; logic [3:0][1:0] nibble_pairs; } my_union; module m(input my_union data_in, output my_union data_out);"
+}

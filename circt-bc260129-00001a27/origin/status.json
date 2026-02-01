@@ -1,0 +1,23 @@
+{
+  "crash_id": "circt-bc260129-00001a27",
+  "status": "processing",
+  "phase": "phase1_parallel",
+  "created_at": "2025-01-29T19:26:00+08:00",
+  "updated_at": "2025-01-29T19:30:00+08:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "running",
+      "workers": {
+        "reproduce": {"task_id": "bg_5f371103", "status": "running"},
+        "root_cause": {"task_id": "bg_02c7eb38", "status": "running"}
+      }
+    },
+    "phase2": {"status": "pending"},
+    "phase3": {"status": "pending"}
+  }
+}

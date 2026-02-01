@@ -1,0 +1,18 @@
+{
+  "crash_type": "assertion",
+  "dialect": ["arc", "hw", "seq"],
+  "tool": "arcilator",
+  "pass": "InferStateProperties",
+  "error_message": "Assertion `isa<To>(Val) && \"cast<Ty>() argument of incompatible type!\"' failed.",
+  "stack_trace_top": [
+    "circt::hw::ConstantOp::create",
+    "applyEnableTransformation",
+    "InferStatePropertiesPass::runOnStateOp"
+  ],
+  "suspected_root_cause": "InferStateProperties assumes IntegerType when creating constants; testcase yields aggregate hw.array/struct type, causing invalid cast",
+  "reproduction": {
+    "original_crash": true,
+    "current_toolchain": "verifier error in arc.state operand type mismatch",
+    "reproduced": false
+  }
+}

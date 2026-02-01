@@ -1,0 +1,46 @@
+{
+  "testcase_id": "260128-00000bf1",
+  "validation": {
+    "syntax_valid": true,
+    "syntax_check": {
+      "command": "circt-verilog --ir-llhd bug.sv",
+      "result": "success",
+      "produces_valid_llhd": true
+    },
+    "cross_tool_validation": {
+      "slang": {
+        "command": "slang --parse-only bug.sv",
+        "version": "10.0.6+3d7e6cd2e",
+        "result": "success",
+        "exit_code": 0
+      },
+      "verilator": {
+        "command": "verilator --lint-only bug.sv",
+        "version": "5.022",
+        "result": "success",
+        "exit_code": 0
+      }
+    },
+    "bug_reproduction": {
+      "command": "timeout 60s circt-verilog --ir-hw bug.sv",
+      "result": "timeout",
+      "exit_code": 124,
+      "expected_exit_code": 124,
+      "match": true
+    }
+  },
+  "classification": {
+    "type": "bug",
+    "category": "performance/infinite-loop",
+    "valid_testcase": true,
+    "is_feature_request": false,
+    "is_invalid_input": false
+  },
+  "minimization": {
+    "original_size_bytes": 500,
+    "minimized_size_bytes": 150,
+    "reduction_percent": 70
+  },
+  "result": "report",
+  "ready_for_issue": true
+}

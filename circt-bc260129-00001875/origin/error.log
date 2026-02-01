@@ -1,0 +1,26 @@
+Original Error (from CIRCT 1.139.0):
+=====================================
+
+Error Message:
+<unknown>:0: error: state type must have a known bit width; got '!llhd.ref<i1>'
+
+Assertion Failure:
+arcilator: StorageUniquerSupport.h:180: static ConcreteT mlir::detail::StorageUserBase<circt::arc::StateType, ...>::get(...): 
+Assertion `succeeded(ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed.
+
+Stack Trace Key Points:
+- circt::arc::StateType::get() fails verification
+- ModuleLowering::run() at LowerState.cpp:219 triggers the issue
+- LowerStatePass::runOnOperation() in the arcilator pipeline
+
+Root Cause Analysis:
+- The arcilator's LowerState pass creates StateType for module input arguments
+- computeLLVMBitWidth() in ArcTypes.cpp does not handle llhd::RefType
+- Inout ports are represented as !llhd.ref<i1> in IR
+- StateType::verify() fails when it cannot compute bit width for RefType
+
+Problematic Construct:
+- SystemVerilog: inout wire c
+- IR Type: !llhd.ref<i1>
+
+NOTE: This bug no longer reproduces with the current CIRCT version (likely fixed).

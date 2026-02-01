@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T00:00:00Z",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "circt-verilog",
+    "version": "firtool-1.139.0",
+    "path": "/opt/firtool/bin/circt-verilog",
+    "llvm_version": "22.0.0git"
+  },
+  "reproduction": {
+    "command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv",
+    "exit_code": 139,
+    "reproduced": true,
+    "match_result": "similar_crash"
+  },
+  "crash_signature": {
+    "original": "Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"' failed",
+    "reproduced": "Segmentation fault in SVModuleOpConversion::matchAndRewrite at MooreToCore.cpp"
+  },
+  "analysis": {
+    "notes": "Original crash: assertion failure in llvm::dyn_cast at Casting.h:650. Current crash: segfault at the same conversion pass (SVModuleOpConversion) at MooreToCore.cpp. Stack trace shows same path: MooreToCorePass::runOnOperation calling DialectConversion. The crash location is identical but assertion mechanism differs (likely due to toolchain version).",
+    "same_root_cause": true
+  },
+  "files": {
+    "reproduce_log": "reproduce.log"
+  }
+}

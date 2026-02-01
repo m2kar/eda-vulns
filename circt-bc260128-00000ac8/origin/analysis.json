@@ -1,0 +1,89 @@
+{
+  "testcase_id": "260128-00000ac8",
+  "dialect": "arc",
+  "crash_type": "assertion",
+  "tool": "arcilator",
+  "pass": "InferStateProperties",
+  "confidence": 0.90,
+  "crash_location": {
+    "file": "lib/Dialect/Arc/Transforms/InferStateProperties.cpp",
+    "line": 211,
+    "column": 55,
+    "function": "applyEnableTransformation"
+  },
+  "assertion_details": {
+    "message": "cast<Ty>() argument of incompatible type!",
+    "expected_type": "mlir::IntegerType",
+    "actual_type": "hw::StructType (packed struct)",
+    "cast_location": "llvm/include/llvm/Support/Casting.h:566"
+  },
+  "root_cause": {
+    "summary": "hw::ConstantOp::create called with non-integer type (packed struct) during enable transformation",
+    "category": "type_assumption_violation",
+    "trigger_pattern": "packed struct in sequential logic with self-feedback (enable pattern)",
+    "problematic_code": "hw::ConstantOp::create(builder, stateOp.getLoc(), enableInfos[i].selfArg.getType(), 0)"
+  },
+  "triggering_constructs": {
+    "sv_features": [
+      "packed_struct",
+      "struct_array",
+      "sequential_shift_register",
+      "posedge_clock"
+    ],
+    "pattern": "shift_reg[i] <= shift_reg[i-1] with pkt_t being a packed struct"
+  },
+  "stack_trace_summary": [
+    {
+      "frame": 11,
+      "location": "arcilator+0x87d5f42",
+      "description": "Internal assertion in cast<>"
+    },
+    {
+      "frame": 12,
+      "location": "hw::ConstantOp::create",
+      "file": "HW.cpp.inc:2591",
+      "description": "Creates constant with incompatible type"
+    },
+    {
+      "frame": 17,
+      "location": "applyEnableTransformation",
+      "file": "InferStateProperties.cpp:211:55",
+      "description": "Attempts to create zero constant for non-integer state type"
+    },
+    {
+      "frame": 18,
+      "location": "runOnStateOp",
+      "file": "InferStateProperties.cpp:454",
+      "description": "Processes state operation with enable pattern"
+    }
+  ],
+  "related_operations": [
+    "hw::ConstantOp",
+    "arc::StateOp",
+    "arc::DefineOp",
+    "comb::MuxOp"
+  ],
+  "severity": "medium-high",
+  "impact": {
+    "description": "Compiler crashes on valid SystemVerilog input using packed structs in sequential logic",
+    "workaround": "None at user level",
+    "affected_users": "Any user with packed struct state elements and enable-like patterns"
+  },
+  "suggested_fixes": [
+    {
+      "type": "type_guard",
+      "location": "InferStateProperties.cpp:211",
+      "description": "Add type check before creating hw::ConstantOp with integer value"
+    },
+    {
+      "type": "early_rejection",
+      "location": "checkOperandsForEnable",
+      "description": "Filter out non-integer types in pattern detection"
+    },
+    {
+      "type": "aggregate_support",
+      "description": "Use hw::AggregateConstantOp for struct types"
+    }
+  ],
+  "reproduction_command": "circt-verilog --ir-hw source.sv | arcilator"
+}

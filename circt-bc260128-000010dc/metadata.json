@@ -1,0 +1,43 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv | /opt/firtool/bin/arcilator",
+    "crash_signature": "assertion failure in llvm::cast<mlir::IntegerType>() at llvm/include/llvm/Support/Casting.h:566",
+    "crash_tool": "arcilator",
+    "crash_location": "InferStateProperties.cpp:211 in applyEnableTransformation()",
+    "error_details": {
+      "assertion": "isa<To>(Val) && \"cast<Ty>() argument of incompatible type!\"",
+      "type_being_cast": "mlir::IntegerType",
+      "source_file": "llvm/include/llvm/Support/Casting.h:566"
+    },
+    "stack_trace_match": {
+      "key_functions": [
+        "circt::hw::ConstantOp::create",
+        "applyEnableTransformation",
+        "InferStatePropertiesPass::runOnStateOp",
+        "InferStatePropertiesPass::runOnOperation"
+      ],
+      "match_status": "EXACT MATCH - All key functions present in identical order"
+    },
+    "root_cause_location": {
+      "file": "InferStateProperties.cpp",
+      "function": "applyEnableTransformation",
+      "line": 211,
+      "description": "Type casting assertion failure when creating hw::ConstantOp during enable transformation on state operations with array types"
+    },
+    "input_characteristics": {
+      "source_file": "source.sv",
+      "circuit_features": [
+        "Array declarations (logic [7:0] packed_arr [0:7], logic [7:0] unpacked_arr [0:7])",
+        "Sequential logic (always_ff block)",
+        "State variables with array types",
+        "For loop with array indexing"
+      ],
+      "triggering_pattern": "Unpacked array assignment in FF block with conditional logic"
+    },
+    "differences_from_original": "None - exact replication of original assertion failure",
+    "note": "Bug successfully reproduced using original CIRCT toolchain (/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator). The crash occurs during InferStateProperties pass when processing array-typed state operations with enable signals."
+  },
+  "timestamp": "2026-02-01T04:31:04Z",
+  "verification_status": "REPRODUCED"
+}

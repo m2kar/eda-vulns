@@ -1,0 +1,6 @@
+module {
+  hw.module @MixPorts(in %wide_input : i64, out out_val : i32, in %io_sig : !llhd.ref<i1>) {
+    %0 = comb.extract %wide_input from 0 : (i64) -> i32
+    hw.output %0 : i32
+  }
+}

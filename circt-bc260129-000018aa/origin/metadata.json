@@ -1,0 +1,49 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "crash_type": "timeout",
+    "timeout_stage": "circt-verilog",
+    "stage_timeout_seconds": 60,
+    "original_timeout_seconds": 300,
+    "elapsed_time_seconds": 60
+  },
+  "testcase": {
+    "id": "260129-000018aa",
+    "source_file": "source.sv",
+    "language": "systemverilog"
+  },
+  "tool_chain": {
+    "circt_verilog": "/opt/firtool/bin/circt-verilog",
+    "arcilator": "/opt/firtool/bin/arcilator",
+    "opt": "/opt/llvm-22/bin/opt",
+    "llc": "/opt/llvm-22/bin/llc",
+    "llvm_path": "/opt/llvm-22/bin"
+  },
+  "command": {
+    "original": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_ziz5l5ni/test_c2a66131a8ad.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_ziz5l5ni/test_c2a66131a8ad.o",
+    "reproduced_with": "/opt/firtool/bin/circt-verilog --ir-hw /tmp/test_crash_c2a66131a8ad.sv"
+  },
+  "reproduction_phases": {
+    "phase1_circt_verilog": {
+      "status": "timeout",
+      "exit_code": 124,
+      "elapsed_seconds": 60,
+      "timeout_seconds": 60
+    },
+    "phase2_arcilator": {
+      "status": "not_reached"
+    },
+    "phase3_opt": {
+      "status": "not_reached"
+    },
+    "phase4_llc": {
+      "status": "not_reached"
+    }
+  },
+  "reproduction_details": {
+    "confirmed": true,
+    "confidence": "high",
+    "root_cause_stage": "circt-verilog",
+    "description": "The circt-verilog tool hangs when processing the SystemVerilog test case with nested modules and recursive function calls within nested modules. The tool does not complete within 60 seconds, matching the original 300-second timeout behavior."
+  }
+}

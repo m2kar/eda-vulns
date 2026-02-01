@@ -1,0 +1,43 @@
+{
+  "testcase_id": "260128-00000ed6",
+  "dialect": "arc",
+  "crash_type": "assertion",
+  "tool": "arcilator",
+  "affected_components": [
+    "arc::StateType",
+    "arc::LowerStatePass",
+    "llhd::RefType"
+  ],
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "assertion": "succeeded(ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))",
+  "stack_trace": {
+    "crash_function": "circt::arc::StateType::get",
+    "crash_file": "ArcTypes.cpp.inc",
+    "crash_line": 108,
+    "call_chain": [
+      "LowerStatePass::runOnOperation (LowerState.cpp:1198)",
+      "ModuleLowering::run (LowerState.cpp:219)",
+      "StateType::get (ArcTypes.cpp.inc:108)",
+      "verifyInvariants (StorageUniquerSupport.h:180)"
+    ]
+  },
+  "root_cause": {
+    "summary": "LLHD reference type passed to Arc StateType which requires known bit width",
+    "trigger_construct": "inout wire with tri-state assignment",
+    "problematic_type": "!llhd.ref<i1>",
+    "missing_handler": "computeLLVMBitWidth() does not handle llhd::RefType",
+    "fix_location": "lib/Dialect/Arc/ArcTypes.cpp or lib/Dialect/Arc/Transforms/LowerState.cpp"
+  },
+  "test_constructs": {
+    "inout_port": true,
+    "tristate_assignment": true,
+    "sequential_logic": true,
+    "bit_select": true
+  },
+  "severity": "medium",
+  "reproducible": true,
+  "suggested_fixes": [
+    "Add validation in LowerState.cpp to reject LLHD reference types with proper diagnostic",
+    "Extend computeLLVMBitWidth() to handle llhd::RefType by unwrapping"
+  ]
+}

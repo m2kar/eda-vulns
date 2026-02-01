@@ -1,0 +1,42 @@
+{
+  "crash_hash": "e9a5b794d7e3",
+  "reproduced": true,
+  "crash_type": "timeout",
+  "tool_info": {
+    "name": "circt-verilog",
+    "version": "firtool-1.139.0",
+    "llvm_version": "22.0.0git",
+    "binary_path": "/opt/firtool/bin/circt-verilog"
+  },
+  "test_case": {
+    "filename": "source.sv",
+    "lines": 41,
+    "module": "test_module",
+    "features": [
+      "packed_struct",
+      "always_ff",
+      "struct_field_assignment",
+      "combinational_logic"
+    ]
+  },
+  "reproduction_command": "timeout 60s circt-verilog --ir-hw source.sv 2>&1 | arcilator 2>&1 | opt -O0 2>&1 | llc -O0 --filetype=obj 2>&1",
+  "execution": {
+    "exit_code": 124,
+    "timeout_seconds": 60,
+    "actual_duration_seconds": 60.0,
+    "wall_clock_time": "~60.00s",
+    "cpu_time_user": "0.00s",
+    "cpu_time_system": "0.00s"
+  },
+  "failure_stage": "circt-verilog --ir-hw",
+  "original_error": "Compilation timed out after 60s",
+  "reproduced_error": "timeout exit code 124 after 60 seconds",
+  "match_result": "timeout",
+  "key_findings": [
+    "Crash is reliably reproducible with the provided test case",
+    "Timeout occurs in the circt-verilog stage before IR conversion completes",
+    "No output generated before timeout triggers",
+    "Issue likely related to packed struct handling or combinational logic in struct field assignment"
+  ],
+  "difference_from_original": "None - timeout reproduced exactly as in original crash"
+}

@@ -1,0 +1,77 @@
+{
+  "crash_id": "circt-bc260128-000010dc",
+  "crash_type": "assertion",
+  "assertion_message": "isa<To>(Val) && \"cast<Ty>() argument of incompatible type!\"",
+  "type_conversion_error": {
+    "from": "mlir::Type",
+    "to": "mlir::IntegerType",
+    "actual_type": "hw::ArrayType",
+    "location": "InferStateProperties.cpp:211:55"
+  },
+  "dialect": "arc/hw",
+  "key_functions": [
+    "applyEnableTransformation",
+    "hw::ConstantOp::create",
+    "InferStatePropertiesPass::runOnStateOp"
+  ],
+  "root_cause_hypothesis": "The applyEnableTransformation function attempts to create hw::ConstantOp with a non-integer type (likely hw::ArrayType from the packed_arr/unpacked_arr declarations). hw::ConstantOp::create returns TypeVariant<IntegerType, hw::IntType>, which requires the type to be castable to IntegerType. When the type is an array type, this cast fails, triggering the assertion. The code does not validate that enableInfos[i].selfArg.getType() is an integer type before creating the constant.",
+  "trigger_condition": "Array-typed state variables (logic [7:0][0:7]) are detected as enable candidates in the pattern matching phase, but the transformation code assumes all enable candidates are integer types.",
+  "source_patterns": [
+    "Array declarations: packed_arr and unpacked_arr (logic [7:0][0:7])",
+    "always_ff sequential logic block",
+    "For loops with array assignments",
+    "Parameterized array indexing (int idx)"
+  ],
+  "minimization_hints": [
+    "Keep array declaration: logic [7:0] arr [0:7];",
+    "Keep sequential logic that infers state: always_ff @(posedge clk)",
+    "Remove unused ports and parameters",
+    "Simplify loop logic to minimum needed for crash"
+  ],
+  "analysis_details": {
+    "error_context": {
+      "tool": "arcilator",
+      "phase": "enable transformation pass",
+      "operation": "creating constant zero for enable pattern"
+    },
+    "code_path": [
+      "circt-verilog converts source.sv to MLIR",
+      "arcilator runs InferStatePropertiesPass",
+      "Pass detects enable patterns in state operations",
+      "applyEnableTransformation attempts to replace state args with constants",
+      "ConstantOp::create fails for array type"
+    ],
+    "type_system_issue": {
+      "expected": "IntegerType or hw::IntType",
+      "actual": "hw::ArrayType (from logic [7:0][0:7])",
+      "mismatch_reason": "Arrays are valid MLIR types but not compatible with hw::ConstantOp"
+    }
+  },
+  "proposed_fixes": [
+    {
+      "option": 1,
+      "description": "Add type guard before creating constants",
+      "location": "InferStateProperties.cpp:211",
+      "code_snippet": "if (isa<IntegerType>(type) || isa<hw::IntType>(type)) { ... }"
+    },
+    {
+      "option": 2,
+      "description": "Early exit with failure for non-integer types",
+      "location": "InferStateProperties.cpp:164",
+      "code_snippet": "if (!isa<IntegerType>(info.selfArg.getType())) return failure();"
+    },
+    {
+      "option": 3,
+      "description": "Filter arrays in pattern detection (recommended)",
+      "location": "InferStateProperties.cpp:298",
+      "code_snippet": "if (!isa<IntegerType>(selfArg.getType())) return {};"
+    }
+  ],
+  "classification": {
+    "bug_type": "Type Safety / Validation Bug",
+    "severity": "High",
+    "reproducibility": "Deterministic",
+    "affected_component": "Arc Dialect - State Property Inference"
+  },
+  "timestamp": "2026-02-01T04:30:00Z"
+}

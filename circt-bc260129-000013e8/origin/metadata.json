@@ -1,0 +1,36 @@
+{
+  "testcase_id": "260129-000013e8",
+  "original_crash": {
+    "type": "assertion",
+    "assertion_message": "succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))",
+    "error_message": "state type must have a known bit width; got '!llhd.ref<i8>'",
+    "command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw test.sv | arcilator | opt -O0 | llc -O0",
+    "toolchain_version": "CIRCT 1.139.0",
+    "llvm_version": "llvm-git"
+  },
+  "reproduction_attempt": {
+    "date": "2026-02-01T07:20:12.880494",
+    "toolchain_path": "/opt/firtool/bin",
+    "toolchain_version": "CIRCT firtool-1.139.0",
+    "llvm_version": "22.0.0git",
+    "command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv | /opt/firtool/bin/arcilator",
+    "reproduced": false,
+    "crash_detected": false,
+    "exit_code": 0,
+    "output_status": "SUCCESS"
+  },
+  "analysis": {
+    "original_error": "state type must have a known bit width; got '!llhd.ref<i8>'",
+    "original_crash_location": "circt::arc::StateType::get() in LowerState.cpp",
+    "issue_category": "arc dialect type validation",
+    "affected_component": "arcilator LowerState pass",
+    "root_cause": "StateType validation failed for !llhd.ref<i8> type",
+    "status": "BUG APPEARS TO BE FIXED IN CURRENT TOOLCHAIN"
+  },
+  "signature_comparison": {
+    "original_crash_type": "assertion",
+    "current_crash_type": "none",
+    "signatures_match": false,
+    "reason": "Bug appears fixed - no crash in current version"
+  }
+}

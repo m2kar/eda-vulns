@@ -1,0 +1,17 @@
+{
+  "reproduction": {
+    "reproduced": false,
+    "command": "circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o /tmp/test.o",
+    "crash_signature": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "result": "CRASH FIXED",
+    "details": {
+      "original_toolchain": "circt-1.139.0",
+      "current_toolchain": "firtool-1.139.0 (LLVM 22.0.0git)",
+      "original_error": "Assertion `succeeded( ConcreteT::verifyInvariants(...))' failed in StateType::get(mlir::Type)",
+      "current_result": "Successfully compiled without errors or assertion failures",
+      "test_case": "source.sv - Module with inout ports and bidirectional signal assignments",
+      "status": "Not reproducible with current toolchain"
+    }
+  }
+}

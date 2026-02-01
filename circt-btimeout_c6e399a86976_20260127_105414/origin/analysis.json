@@ -1,0 +1,63 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "crash_id": "c6e399a86976",
+  "dialect": "Moore",
+  "tool_pipeline": ["circt-verilog", "arcilator", "opt", "llc"],
+  "failing_pass": null,
+  "crash_type": "timeout",
+  "assertion_message": null,
+  "crash_location": null,
+  "test_case": {
+    "language": "systemverilog",
+    "file": "source.sv",
+    "key_constructs": ["always_ff", "posedge clk", "bitwise NOT"],
+    "problematic_patterns": [],
+    "complexity": "trivial"
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "Environmental factors during original fuzzing run caused timeout",
+      "confidence": "high",
+      "evidence": [
+        "Current reproduction completes in 126ms",
+        "Test case is trivially simple",
+        "Same CIRCT version produces correct output",
+        "No infinite loops or memory issues detected"
+      ]
+    },
+    {
+      "id": 2,
+      "description": "Transient system issue (NFS, swap, kernel scheduling)",
+      "confidence": "medium",
+      "evidence": [
+        "Fuzzing runs many parallel processes",
+        "Large tool binaries (arcilator ~1.5GB)",
+        "Pipeline requires multiple process spawns"
+      ]
+    },
+    {
+      "id": 3,
+      "description": "Flaky test infrastructure timeout mechanism",
+      "confidence": "low",
+      "evidence": [
+        "Would require fuzzer code examination"
+      ]
+    }
+  ],
+  "reproduction": {
+    "reproducible": false,
+    "current_execution_time_ms": 126,
+    "original_timeout_s": 60,
+    "verification_tool_version": "firtool-1.139.0"
+  },
+  "classification": {
+    "is_bug": false,
+    "bug_type": "false_positive",
+    "severity": null,
+    "recommendation": "close"
+  },
+  "keywords": ["timeout", "arcilator", "performance", "compilation time", "non-reproducible"],
+  "suggested_sources": []
+}

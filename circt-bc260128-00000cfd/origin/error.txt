@@ -1,0 +1,11 @@
+Crash Type: assertion
+Testcase ID: 260128-00000cfd
+
+--- Compilation Command ---
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_f32cdb6737ab.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_xfhtv50x/test_f32cdb6737ab.o
+
+--- Error Message ---
+<stdin>:6:10: error: failed to legalize operation 'sim.fmt.literal'
+    %0 = sim.fmt.literal "Error: Assertion failed: arr["
+         ^
+<stdin>:6:10: note: see current operation: %56 = "sim.fmt.literal"() <{literal = "Error: Assertion failed: arr["}> : () -> !sim.fstring

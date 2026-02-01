@@ -1,0 +1,33 @@
+{
+  "crash_type": "assertion",
+  "dialect": "arc",
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "stack_trace": [
+    "llvm::sys::PrintStackTrace(llvm::raw_ostream&, int)",
+    "llvm::sys::RunSignalHandlers()",
+    "SignalHandler(int, siginfo_t*, void*)",
+    "pthread_kill",
+    "raise",
+    "abort",
+    "circt::arc::StateType::get(mlir::Type) - ArcTypes.cpp.inc:108",
+    "(anonymous namespace)::ModuleLowering::run() - LowerState.cpp:219",
+    "(anonymous namespace)::LowerStatePass::runOnOperation() - LowerState.cpp:1198",
+    "mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int)",
+    "mlir::PassManager::runPasses(mlir::Operation*, mlir::AnalysisManager)",
+    "mlir::PassManager::run(mlir::Operation*)",
+    "processBuffer - arcilator.cpp:330",
+    "processInputSplit - arcilator.cpp:546",
+    "executeArcilator - arcilator.cpp:629",
+    "main - arcilator.cpp:697"
+  ],
+  "root_cause": "The LowerStatePass in arcilator attempts to create StateType for all module inputs including bidirectional (inout) ports. The inout port is represented as LLHD reference type (!llhd.ref<i1>), which is not handled by computeLLVMBitWidth() in StateType verification. This causes the assertion failure when StateType::get() is called with an unsupported type that has no known bit width.",
+  "relevant_code": "module MixPorts(\n  input logic clk,\n  input logic rst,\n  input logic a,\n  output logic b,\n  inout wire c  // <-- Problematic: bidirectional port\n);\n  // ...\n  assign c = a ? 1'bz : 1'b0;  // Tristate assignment\nendmodule",
+  "suggested_fix": "Add early validation in LowerStatePass to detect and reject LLHD reference types (bidirectional ports) with a meaningful error message before attempting to create StateType. Alternatively, extend computeLLVMBitWidth() to handle llhd::RefType by extracting the underlying type's bit width.",
+  "affected_component": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+  "verification_function": "StateType::verify() in lib/Dialect/Arc/ArcTypes.cpp",
+  "trigger_construct": "inout wire port with tristate assignment",
+  "severity": "medium",
+  "reproducible": true,
+  "minimal_reproduction": "module Test(inout wire c); assign c = 1'bz; endmodule",
+  "reproduction_command": "circt-verilog --ir-hw test.sv | arcilator"
+}

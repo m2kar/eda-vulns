@@ -1,0 +1,15 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "crash_signature": "SVModuleOpConversion::matchAndRewrite - dyn_cast on non-existent InOutType",
+    "tool_version": "CIRCT firtool-1.139.0 with LLVM 22.0.0git",
+    "timestamp": "2026-01-31T00:00:00Z",
+    "command": "circt-verilog --ir-hw source.sv",
+    "description": "Crash in MooreToCore conversion pass when processing SystemVerilog module with inout type casting",
+    "reproducibility": "consistent",
+    "original_crash_component": "llvm::dyn_cast<circt::hw::InOutType> in ModulePortInfo::sanitizeInOut()",
+    "current_crash_component": "SVModuleOpConversion::matchAndRewrite during dialect conversion",
+    "same_bug": true,
+    "notes": "Both crashes occur in the same MooreToCore conversion pass, same function chain in the call stack"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T14:37:28Z",
+  "search_terms": {
+    "dialect": "LLHD",
+    "failing_pass": "Mem2Reg",
+    "crash_type": "assertion",
+    "keywords": [
+      "real type",
+      "floating point",
+      "Mem2Reg",
+      "LLHD",
+      "bitwidth",
+      "IntegerType",
+      "f64",
+      "Float64Type",
+      "RefType",
+      "getBitWidth",
+      "assertion",
+      "16777215"
+    ],
+    "assertion_message": "<unknown>:0: error: integer bitwidth is limited to 16777215 bits\n circt-verilog: /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/include/mlir/IR/StorageUniquerSupport.h:180: \n  Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed."
+  },
+  "results": {
+    "total_found": 0,
+    "top_score": 0,
+    "issues": []
+  },
+  "recommendation": {
+    "action": "new_issue",
+    "confidence": "high",
+    "reason": "No similar issues were found. While there are related issues about real type support and bitwidth handling, none mention the specific assertion failure or Mem2Reg pass crash with floating-point types in sequential logic."
+  }
+}

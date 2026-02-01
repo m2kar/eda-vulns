@@ -1,0 +1,48 @@
+{
+  "version": "1.0",
+  "timestamp": "2025-01-31T21:35:00Z",
+  "testcase_id": "260128-00000a65",
+  "crash_type": "assertion",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "CIRCT (circt-verilog + arcilator)",
+    "version": "firtool-1.139.0",
+    "llvm_version": "22.0.0git",
+    "paths": {
+      "circt_verilog": "/opt/firtool/bin/circt-verilog",
+      "arcilator": "/opt/firtool/bin/arcilator"
+    }
+  },
+  "original_crash": {
+    "command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_c92c8c0a5897.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_xfhtv50x/test_c92c8c0a5897.o",
+    "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "assertion": "Assertion `succeeded(ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed.",
+    "exit_code": -1
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o /tmp/test.o",
+    "exit_code": 0,
+    "reproduced": false,
+    "match_result": "no_crash"
+  },
+  "analysis": {
+    "status": "bug_not_reproduced",
+    "reason": "The current toolchain (firtool-1.139.0) successfully processed the test case without crashing. Exit code was 0 and no assertion errors were encountered.",
+    "possible_causes": [
+      "Bug was fixed in a patch version",
+      "Build configuration or compilation flags differ",
+      "LLVM version differences (22.0.0git vs original)",
+      "Platform-specific behavior"
+    ],
+    "source_mlir": "module { hw.module @MixedPorts(in %clk : i1, in %a : i1, out b : i1, in %c : !llhd.ref<i1>) { ... } }",
+    "notes": "The MLIR output contains !llhd.ref<i1> which relates to the original error, but arcilator did not fail to create StateType."
+  },
+  "files": {
+    "reproduce_log": "reproduce.log",
+    "source_code": "source.sv",
+    "original_error": "error.txt"
+  }
+}

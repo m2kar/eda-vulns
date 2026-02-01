@@ -1,0 +1,98 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "crash_id": "260128-0000098a",
+  "dialect": "comb",
+  "tool": "circt-verilog",
+  "failing_pass": "canonicalize",
+  "crash_type": "assertion",
+  "assertion_message": "op->use_empty() && \"expected 'op' to have no uses\"",
+  "crash_location": {
+    "file": "lib/Dialect/Comb/CombFolds.cpp",
+    "function": "extractConcatToConcatExtract",
+    "line": 548
+  },
+  "mlir_location": {
+    "file": "llvm/mlir/lib/IR/PatternMatch.cpp",
+    "function": "mlir::RewriterBase::eraseOp",
+    "line": 156
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "source_file": "source.sv",
+    "key_constructs": [
+      "dynamic array indexing (arr[idx])",
+      "combinational always_comb block",
+      "self-referential assignment pattern"
+    ],
+    "problematic_patterns": [
+      "combinational loop through dynamic index",
+      "cyclic dataflow in always_comb",
+      "result_out used before assigned in same block"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "extractConcatToConcatExtract creates replacement with transitive dependency on original ExtractOp, causing cycle that prevents complete RAUW",
+      "confidence": "high",
+      "evidence": [
+        "Assertion 'op->use_empty()' failed after replaceOp",
+        "Test case creates combinational cycle through dynamic indexing",
+        "Pattern unconditionally replaces without cycle check"
+      ],
+      "mechanism": "Pattern replaces ExtractOp with value that transitively depends on ExtractOp itself"
+    },
+    {
+      "id": 2,
+      "description": "Greedy pattern rewriter visits cyclic IR in order that exposes pattern correctness bug",
+      "confidence": "medium",
+      "evidence": [
+        "Crash in GreedyPatternRewriteDriver::processWorklist()",
+        "Test has combinational cycles"
+      ]
+    },
+    {
+      "id": 3,
+      "description": "Moore-to-HW lowering creates cyclic IR that canonicalization cannot handle",
+      "confidence": "low",
+      "evidence": [
+        "Combinational loops valid in SystemVerilog",
+        "Crash after lowering during canonicalization"
+      ]
+    }
+  ],
+  "stack_trace_summary": [
+    "mlir::RewriterBase::eraseOp",
+    "circt::replaceOpAndCopyNamehint",
+    "extractConcatToConcatExtract",
+    "circt::comb::ExtractOp::canonicalize",
+    "GreedyPatternRewriteDriver::processWorklist",
+    "Canonicalizer::runOnOperation"
+  ],
+  "keywords": [
+    "extractConcatToConcatExtract",
+    "ExtractOp::canonicalize",
+    "use_empty",
+    "replaceOp",
+    "CombFolds",
+    "combinational loop",
+    "cycle",
+    "canonicalize assertion",
+    "eraseOp",
+    "comb.extract",
+    "comb.concat"
+  ],
+  "suggested_sources": [
+    {"path": "lib/Dialect/Comb/CombFolds.cpp", "reason": "Contains failing canonicalization pattern"},
+    {"path": "lib/Support/Naming.cpp", "reason": "Contains replaceOpAndCopyNamehint helper"},
+    {"path": "lib/Conversion/MooreToCore/MooreToCore.cpp", "reason": "Creates the IR that triggers bug"}
+  ],
+  "fix_suggestions": [
+    "Add cycle detection before replacement in extractConcatToConcatExtract",
+    "Extend isOpTriviallyRecursive check to cover transitive dependencies",
+    "Use conditional replaceOpWithIf to handle cycle cases gracefully"
+  ],
+  "severity": "high",
+  "reproducibility": "deterministic"
+}

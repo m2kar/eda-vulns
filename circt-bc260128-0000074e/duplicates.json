@@ -1,0 +1,60 @@
+{
+  "testcase_id": "260128-0000074e",
+  "search_timestamp": "2026-01-31T19:34:00+00:00",
+  "search_queries": [
+    "hang circt-verilog",
+    "infinite loop",
+    "timeout",
+    "packed struct",
+    "combinational loop",
+    "always_comb",
+    "struct output hang",
+    "ImportVerilog hang"
+  ],
+  "related_issues": [
+    {
+      "number": 3403,
+      "title": "Circular logic not detected",
+      "state": "open",
+      "relevance": "low",
+      "similarity_score": 3.0,
+      "reason": "About circular logic detection at MLIR level, not SystemVerilog import"
+    },
+    {
+      "number": 4269,
+      "title": "PrettifyVerilog: infinite loop + growing memory consumption on self-loop unary op",
+      "state": "open",
+      "relevance": "low",
+      "similarity_score": 2.5,
+      "reason": "Infinite loop in PrettifyVerilog, different stage"
+    },
+    {
+      "number": 8022,
+      "title": "[Comb] Infinite loop in OrOp folder",
+      "state": "open",
+      "relevance": "low",
+      "similarity_score": 2.0,
+      "reason": "Infinite loop in Comb dialect folder, different root cause"
+    },
+    {
+      "number": 9560,
+      "title": "[FIRRTL] Canonicalize infinite loop",
+      "state": "open",
+      "relevance": "low",
+      "similarity_score": 2.0,
+      "reason": "FIRRTL canonicalization issue, different dialect"
+    },
+    {
+      "number": 9057,
+      "title": "[MooreToCore] Unexpected topological cycle after importing generated verilog",
+      "state": "closed",
+      "relevance": "medium",
+      "similarity_score": 5.0,
+      "reason": "Related to verilog import creating cycles, but different symptom (creates invalid IR vs hang)"
+    }
+  ],
+  "recommendation": "new_issue",
+  "top_score": 5.0,
+  "confidence": "high",
+  "analysis": "No existing issues match this specific pattern: circt-verilog hanging on always_comb with self-referential packed struct output. Related issues exist for various infinite loops in CIRCT, but none with this specific trigger pattern."
+}

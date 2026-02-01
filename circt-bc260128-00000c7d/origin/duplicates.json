@@ -1,0 +1,124 @@
+{
+  "version": "1.0",
+  "search_date": "2026-02-01T00:00:33.225944",
+  "original_issue": {
+    "dialect": "Moore",
+    "failing_pass": "MooreToCore",
+    "crash_type": "assertion_failure",
+    "assertion_message": "dyn_cast on a non-existent value",
+    "crash_location": {
+      "file": "PortImplementation.h",
+      "function": "ModulePortInfo::sanitizeInOut",
+      "line": 177
+    },
+    "problematic_pattern": "string as module output port"
+  },
+  "results": [
+    {
+      "issue_number": 8332,
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "state": "open",
+      "created_at": "2025-03-20T02:40:38Z",
+      "comments_count": 0,
+      "similarity_score": 5,
+      "matching_criteria": [
+        "same_dialect (Moore): +3分",
+        "same_pass (MooreToCore): +3分",
+        "related_to_string_type: +2分"
+      ],
+      "description": "关于从 Moore 到 LLVM 方言的 StringType 支持的讨论。当前缺少 StringType 转换，导致无法将 string 类型编译为硬件类型。"
+    },
+    {
+      "issue_number": 8283,
+      "title": "[ImportVerilog] Cannot compile forward decleared string type",
+      "state": "open",
+      "created_at": "2025-03-04T11:15:57Z",
+      "comments_count": 3,
+      "similarity_score": 4,
+      "matching_criteria": [
+        "related_to_string_type: +2分",
+        "related_to_string_port: +1分",
+        "circt-verilog context: +1分"
+      ],
+      "description": "关于前向声明 string 类型无法编译的问题。MooreToCore 缺少字符串类型转换。"
+    },
+    {
+      "issue_number": 8382,
+      "title": "[FIRRTL] Crash with fstring type on port",
+      "state": "open",
+      "created_at": "2025-04-02T12:20:45Z",
+      "comments_count": 0,
+      "similarity_score": 2,
+      "matching_criteria": [
+        "type_on_port: +1分",
+        "assertion_failure: +1分"
+      ],
+      "description": "fstring 类型在端口上导致 LowerToHW 崩溃。原始问题也是关于 port type 的 assertion failure。"
+    },
+    {
+      "issue_number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "state": "open",
+      "created_at": "2025-09-09T17:34:30Z",
+      "comments_count": 1,
+      "similarity_score": 2,
+      "matching_criteria": [
+        "same_dialect (Moore): +3分",
+        "same_pass (MooreToCore): +3分",
+        "crash_in_MooreToCore: +1分"
+      ],
+      "description": "MooreToCore 转换在处理 sqrt/floor 时的崩溃。虽然不是字符串相关的，但都是 MooreToCore 的问题。"
+    },
+    {
+      "issue_number": 8770,
+      "title": "(f)printf parsing assertion failure",
+      "state": "open",
+      "created_at": "2025-07-23T19:27:17Z",
+      "comments_count": 0,
+      "similarity_score": 1,
+      "matching_criteria": [
+        "assertion_failure: +1分"
+      ],
+      "description": "printf 解析时的断言失败。与原始问题的 assertion failure 概念相关，但属于不同功能。"
+    },
+    {
+      "issue_number": 2123,
+      "title": "ModulePortInfo should return VerilogNames",
+      "state": "open",
+      "created_at": "2021-11-09T20:38:29Z",
+      "comments_count": 0,
+      "similarity_score": 0,
+      "matching_criteria": [],
+      "description": "ModulePortInfo 应该返回 VerilogNames。这是一个设计问题，不是崩溃问题。"
+    },
+    {
+      "issue_number": 977,
+      "title": "[FIRRTL] when (core dump)",
+      "state": "closed",
+      "created_at": "2021-05-19T21:51:42Z",
+      "comments_count": 0,
+      "similarity_score": 0,
+      "matching_criteria": [],
+      "description": "通用核心转储问题，没有具体细节。"
+    },
+    {
+      "issue_number": 7224,
+      "title": "[FIRRTL] LowerLayers creates empty port names, preventing round-trip",
+      "state": "closed",
+      "created_at": "2024-10-09T23:15:19Z",
+      "comments_count": 0,
+      "similarity_score": 0,
+      "matching_criteria": [
+        "related_to_ports: +1分"
+      ],
+      "description": "LowerLayers 产生空端口名的问题。与 port 相关，但不是字符串问题。"
+    }
+  ],
+  "analysis_summary": {
+    "total_issues_reviewed": 8,
+    "issues_with_string_related_keywords": 3,
+    "issues_with_same_dialect": 2,
+    "issues_with_same_pass": 2,
+    "issues_with_crash_pattern": 2
+  }
+}

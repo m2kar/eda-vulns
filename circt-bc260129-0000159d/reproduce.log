@@ -1,0 +1,4 @@
+test_ref.mlir:3:5: error: 'hw.output' op must have same number of operands as region results.
+    hw.output %a : i1
+    ^
+test_ref.mlir:3:5: note: see current operation: "hw.output"(%arg1) : (i1) -> ()

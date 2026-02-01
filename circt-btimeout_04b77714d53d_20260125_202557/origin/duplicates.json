@@ -1,0 +1,106 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T16:20:10.689581",
+  "search_terms": {
+    "dialect": "Moore/HW/Arc",
+    "failing_pass": "arcilator (suspected)",
+    "crash_type": "timeout",
+    "timeout_seconds": 60,
+    "keywords": [
+      "arcilator",
+      "struct",
+      "timeout",
+      "packed",
+      "type conversion",
+      "bitcast",
+      "moore",
+      "hw",
+      "non-terminating",
+      "port",
+      "module instantiation",
+      "packed struct",
+      "type coercion"
+    ]
+  },
+  "results": {
+    "total_found": 24,
+    "top_score": 9.0,
+    "issues": [
+      {
+        "body": "When i run `arcilator` with `$ ./arcilator a.mlir --state-file=a.json` i get the following error:\r\n```\r\na.mlir:9:23: error: 'arc.tap' op operand #0 must be signless integer, but got '!hw.struct<valid: i1, bits: i1>'\r\n    %_registers_0_T = hw.wire %2 sym @sym_0  : !hw.struct<valid: i1, bits: i1>\r\n                      ^\r\na.mlir:9:23: note: see current operation: \"arc.tap\"(%5) {name = \"_registers_0_T\"} : (!hw.struct<valid: i1, bits: i1>) -> ()\r\n```\r\n\r\n`a.mlir`:\r\n```\r\nmodule {\r\n  hw.module @Barrier(in %clock : !seq.clock, in %reset : i1, in %io_input : !hw.array<1xstruct<valid: i1, bits: i1>>, out io_output : !hw.array<1xstruct<valid: i1, bits: i1>>) {\r\n    %false = hw.constant false\r\n    %0 = hw.array_get %io_input[%false] : !hw.array<1xstruct<valid: i1, bits: i1>>, i1\r\n    %valid = hw.struct_extract %0[\"valid\"] : !hw.struct<valid: i1, bits: i1>\r\n    %registers = seq.firreg %3 clock %clock sym @sym {firrtl.random_init_start = 0 : ui64} : !hw.array<1xstruct<valid: i1, bits: i1>>\r\n    %1 = hw.array_get %registers[%false] : !hw.array<1xstruct<valid: i1, bits: i1>>, i1\r\n    %2 = comb.mux bin %valid, %0, %1 : !hw.struct<valid: i1, bits: i1>\r\n    %_registers_0_T = hw.wire %2 sym @sym_0  : !hw.struct<valid: i1, bits: i1>\r\n    %3 = hw.array_create %_registers_0_T : !hw.struct<valid: i1, bits: i1>\r\n    hw.output %registers : !hw.array<1xstruct<valid: i1, bits: i1>>\r\n  }\r\n}\r\n```\r\n\r\n",
+        "createdAt": "2023-11-02T15:55:35Z",
+        "labels": [
+          {
+            "id": "LA_kwDODpuCgs8AAAABNapjiA",
+            "name": "Arc",
+            "description": "Involving the `arc` dialect",
+            "color": "bfd4f2"
+          }
+        ],
+        "number": 6373,
+        "state": "OPEN",
+        "title": "[Arc] Support hw.wires of aggregate types",
+        "url": "https://github.com/llvm/circt/issues/6373",
+        "similarity_score": 9.0
+      },
+      {
+        "body": "If there are large structs in ports, we might get long lines. For example(from FPU.fir), \r\n```mlir\r\n; circt-opt %s -export-verilog\r\nhw.module @Long(%clock: i1, %io_cp_req_bits: !hw.struct<cmd: i5, ldst: i1, wen: i1, ren1: i1, ren2: i1, ren3: i1, \r\n                               swap12: i1, swap23: i1, single: i1, fromint: i1, toint: i1, fastpipe: i1, fma: i1, div: i1, sqrt: i1, \r\n                               wflags: i1, rm: i3, typ: i2, in1: i65, in2: i65, in3: i65>)  {\r\n}\r\n```\r\nwill generate\r\n```verilog\r\nmodule Long(     // foo.mlir:1:1\r\n  input                                                                                                                                                                                                                                                                                                                           clock,\r\n  input struct packed {logic [4:0] cmd; logic ldst; logic wen; logic ren1; logic ren2; logic ren3; logic swap12; logic swap23; logic single; logic fromint; logic toint; logic fastpipe; logic fma; logic div; logic sqrt; logic wflags; logic [2:0] rm; logic [1:0] typ; logic [64:0] in1; logic [64:0] in2; logic [64:0] in3; } io_cp_req_bits);\r\n\r\nendmodule\r\n```\r\n\r\nThis looks not good so we may consider to use type decl at module scope.  \r\n",
+        "createdAt": "2021-12-12T22:45:06Z",
+        "labels": [
+          {
+            "id": "MDU6TGFiZWwxODg4ODczNzIw",
+            "name": "enhancement",
+            "description": "New feature or request",
+            "color": "a2eeef"
+          },
+          {
+            "id": "MDU6TGFiZWwyNjM1MzI5MzE1",
+            "name": "ExportVerilog",
+            "description": "",
+            "color": "1d76db"
+          }
+        ],
+        "number": 2329,
+        "state": "OPEN",
+        "title": "[LowerToHW] Use type decl for Bundle type lowering",
+        "url": "https://github.com/llvm/circt/issues/2329",
+        "similarity_score": 7.5
+      },
+      {
+        "body": "Dear @maerhart @fabianschuiki ,\r\n When lowering `SV` to `Hw` Dialect, there is a stack dump. \r\nDriver: circt-verilog %s\r\n```\r\nmodule top();\r\n  typedef struct {\r\n    int a;\r\n    int b;\r\n  } ms_t;\r\n\r\n  ms_t ms;\r\n\r\n  initial begin\r\n    ms = '{ 0, 1};\r\n\r\n    ms = '{ default:1, int:1};\r\n\r\n    ms = '{ int:0, int:1};\r\n  end\r\n\r\nendmodule\r\n```\r\nIt can be converted to `moore` Dialect like this\r\nDriver:  circt-verilog --ir-moore %s\r\n```\r\nmodule {\r\n  moore.module @top() {\r\n    %0 = moore.constant 1 : i32\r\n    %1 = moore.constant 0 : i32\r\n    %ms = moore.variable : <ustruct<{a: i32, b: i32}>>\r\n    moore.procedure initial {\r\n      %2 = moore.struct_create %1, %0 : !moore.i32, !moore.i32 -> ustruct<{a: i32, b: i32}>\r\n      moore.blocking_assign %ms, %2 : ustruct<{a: i32, b: i32}>\r\n      %3 = moore.struct_create %0, %0 : !moore.i32, !moore.i32 -> ustruct<{a: i32, b: i32}>\r\n      moore.blocking_assign %ms, %3 : ustruct<{a: i32, b: i32}>\r\n      moore.blocking_assign %ms, %3 : ustruct<{a: i32, b: i32}>\r\n      moore.return\r\n    }\r\n    moore.output\r\n  }\r\n}\r\n```\r\nBut it got stack dump when casting `hw::InOutType`. Maybe `structType` should be converted somehow.\r\nThis is part of error codes.\r\n```\r\n#19 0x00005f9660f42af4 (anonymous namespace)::OperationLegalizer::legalizeWithPattern(mlir::Operation*, mlir::ConversionPatternRewriter&) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:1958:21\r\n#20 0x00005f9660f3b100 (anonymous namespace)::OperationLegalizer::legalize(mlir::Operation*, mlir::ConversionPatternRewriter&) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:1850:17\r\n#21 0x00005f9660f3aa73 mlir::OperationConverter::convert(mlir::ConversionPatternRewriter&, mlir::Operation*) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:2384:26\r\n#22 0x00005f9660f3b41f mlir::OperationConverter::convertOperations(llvm::ArrayRef<mlir::Operation*>) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:2436:16\r\n#23 0x00005f9660f3fdfc mlir::applyFullConversion(llvm::ArrayRef<mlir::Operation*>, mlir::ConversionTarget const&, mlir::FrozenRewritePatternSet const&, mlir::ConversionConfig) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:3447:22\r\n#24 0x00005f9660f3fe9d mlir::applyFullConversion(mlir::Operation*, mlir::ConversionTarget const&, mlir::FrozenRewritePatternSet const&, mlir::ConversionConfig) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:3453:10\r\n#25 0x00005f965faed60d (anonymous namespace)::MooreToCorePass::runOnOperation() /home/pluto/Documents/circt/circt/lib/Conversion/MooreToCore/MooreToCore.cpp:1398:14\r\n```",
+        "createdAt": "2024-08-20T01:51:29Z",
+        "labels": [],
+        "number": 7535,
+        "state": "OPEN",
+        "title": "[MooreToCore] VariableOp lowered failed",
+        "url": "https://github.com/llvm/circt/issues/7535",
+        "similarity_score": 7.0
+      },
+      {
+        "body": "I want to support this [sv-tests-results/string_concat_op](https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+11.4.12.2+string_concat_op) feature, but not sure how to fix it properly.\n\n``` sv\nmodule top();\n\nstring str;\n\ninitial begin\n    str = \"Hello\";\nend\n\nendmodule\n```\n\n`circt-verilog`  has the following complaints when compiling the string.sv file:\n```s.sv:3:8: error: failed to legalize operation 'moore.variable'\nstring str;\n       ^\ns.sv:3:8: note: see current operation: %0 = \"moore.variable\"() <{name = \"str\"}> : () -> !moore.ref<string>\n```\n\nThis error is due to MooreToCore's lack of string-type conversion. It only has `StringConstantOpConv` and `Format*OpConversion`; none of these conversions can handle the `string` type.\n",
+        "createdAt": "2025-02-28T08:51:12Z",
+        "labels": [],
+        "number": 8283,
+        "state": "OPEN",
+        "title": "[ImportVerilog] Cannot compile forward decleared string type",
+        "url": "https://github.com/llvm/circt/issues/8283",
+        "similarity_score": 7.0
+      },
+      {
+        "body": "# Background\r\nWe would like generated RTL to be as invariant to bind statements as possible[^1].\r\n\r\nFor example, given the following original IR:\r\n```mlir\r\nhw.module @Bottom(%I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>) {\r\n    hw.output %I : !hw.struct<x: i1, y: i1>\r\n}\r\nhw.module @Middle(%I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>) {\r\n    %0 = hw.instance \"bottom\" @Bottom(I: %I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>)\r\n    hw.output %0 : !hw.struct<x: i1, y: i1>\r\n}\r\nhw.module @Top(%I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>) {\r\n    %0 = hw.instance \"middle\" @Middle(I: %I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>)\r\n    hw.output %0 : !hw.struct<x: i1, y: i1>\r\n}\r\n```\r\nif we add a few lines to do a bind (including some XMR statements):\r\n```mlir\r\nhw.module @TopXMRAsserts(%I: !hw.struct<x: i1, y: i1>, %O: !hw.struct<x: i1, y: i1>, %a: !hw.struct<x: i1, y: i1>, %b: i1) -> () {\r\n    %0 = hw.struct_extract %I[\"x\"] : !hw.struct<x: i1, y: i1>\r\n    %1 = hw.struct_extract %I[\"y\"] : !hw.struct<x: i1, y: i1>\r\n    %2 = hw.struct_extract %O[\"x\"] : !hw.struct<x: i1, y: i1>\r\n    %3 = hw.struct_extract %O[\"y\"] : !hw.struct<x: i1, y: i1>\r\n    %4 = hw.struct_extract %a[\"x\"] : !hw.struct<x: i1, y: i1>\r\n    %5 = hw.struct_extract %a[\"y\"] : !hw.struct<x: i1, y: i1>\r\n}\r\nhw.module @Bottom(%I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>) {\r\n    hw.output %I : !hw.struct<x: i1, y: i1>\r\n}\r\nhw.module @Middle(%I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>) {\r\n    %0 = hw.instance \"bottom\" @Bottom(I: %I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>)\r\n    hw.output %0 : !hw.struct<x: i1, y: i1>\r\n}\r\nhw.module @Top(%I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>) {\r\n    %0 = hw.instance \"middle\" @Middle(I: %I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>)\r\n    %2 = sv.xmr \"middle\", \"bottom\", \"O\" : !hw.inout<!hw.struct<x: i1, y: i1>>\r\n    %1 = sv.read_inout %2 : !hw.inout<!hw.struct<x: i1, y: i1>>\r\n    %4 = sv.xmr \"middle\", \"bottom\", \"I.x\" : !hw.inout<i1>\r\n    %3 = sv.read_inout %4 : !hw.inout<i1>\r\n    hw.instance \"TopXMRAsserts_inst0\" sym @Top.TopXMRAsserts_inst0 @TopXMRAsserts(I: %I: !hw.struct<x: i1, y: i1>, O: %0: !hw.struct<x: i1, y: i1>, a: %1: !hw.struct<x: i1, y: i1>, b: %3: i1) -> () {doNotPrint = 1}\r\n    hw.output %0 : !hw.struct<x: i1, y: i1>\r\n}\r\nsv.bind #hw.innerNameRef<@Top::@Top.TopXMRAsserts_inst0>\r\n```\r\n\r\nthen we would *ideally* like the generated Verilog to go from\r\n```verilog\r\n// Generated by CIRCT circtorg-0.0.0-658-g0d82b4bb2\r\nmodule Bottom(\r\n  input  struct packed {logic x; logic y; } I,\r\n  output struct packed {logic x; logic y; } O);\r\n\r\n  assign O = I;\r\nendmodule\r\n\r\nmodule Middle(\r\n  input  struct packed {logic x; logic y; } I,\r\n  output struct packed {logic x; logic y; } O);\r\n\r\n  Bottom bottom (\r\n    .I (I),\r\n    .O (O)\r\n  );\r\nendmodule\r\n\r\nmodule Top(\r\n  input  struct packed {logic x; logic y; } I,\r\n  output struct packed {logic x; logic y; } O);\r\n\r\n  Middle middle (\r\n    .I (I),\r\n    .O (O)\r\n  );\r\nendmodule\r\n```\r\nto\r\n```verilog\r\n// Generated by CIRCT circtorg-0.0.0-658-g0d82b4bb2\r\nmodule Bottom(\r\n  input  struct packed {logic x; logic y; } I,\r\n  output struct packed {logic x; logic y; } O);\r\n\r\n  assign O = I;\r\nendmodule\r\n\r\nmodule Middle(\r\n  input  struct packed {logic x; logic y; } I,\r\n  output struct packed {logic x; logic y; } O);\r\n\r\n  Bottom bottom (\r\n    .I (I),\r\n    .O (O)\r\n  );\r\nendmodule\r\n\r\nmodule TopXMRAsserts(\r\n  input struct packed {logic x; logic y; } I,\r\n                                           O,\r\n                                           a,\r\n  input                                    b);\r\n\r\nendmodule\r\n\r\nmodule Top(\r\n  input  struct packed {logic x; logic y; } I,\r\n  output struct packed {logic x; logic y; } O);\r\n\r\n  Middle middle (\r\n    .I (I),\r\n    .O (O)\r\n  );\r\nendmodule\r\n\r\n\r\n// ----- 8< ----- FILE \"bindfile\" ----- 8< -----\r\n\r\nbind Top TopXMRAsserts TopXMRAsserts_inst0 (\r\n  .I (I),\r\n  .O (O),\r\n  .a (middle.bottom.O),\r\n  .b (middle.bottom.I.x)\r\n);\r\n```\r\n\r\nNote that the only diff between the two Verilog's is the inclusion of the new `module TopXMRAsserts` and the `bind` statement at the end of the file. The internals of all other modules are unchanged.\r\n\r\n[^1]: The motivation for this is that often production flows have the notion of \"frozen\" RTL, where functional/logical RTL is not allowed to change, but verification collateral (such as bound assertions) are allowed to be added. When the Verilog (incl. assertions) is generated from higher level tools (e.g. magma, Chisel), we need to ensure that the RTL does not change.\r\n\r\n# Assumptions\r\nWe certainly can't guarantee that any arbitrary bind statement does not change the generated Verilog. Take the simple example of passing a newly created value (not otherwise used) into a bound instance:\r\n```mlir\r\n%new_value = comb.add %x, %y : i8\r\nhw.instance ... (%new_value) ...\r\n```\r\nTherefore we first consider the following assumptions:\r\n* Bound instances only have input ports, i.e. they have neither have output ports nor inout ports (this may already be an assumption...)\r\n* All drivers of bound instance input ports are either:\r\n  * Ports of the containing module[^2]\r\n  * Ports of other (hw) instances contained in the contained module (footnote 2 also applies here)\r\n  * Reads of XMR values\r\n\r\n[^2]: When we say that all drivers are a port, we may also want to additionally allow derivations of said port, e.g. `hw.array_select`, `hw.struct_extract`, or `comb.extract`. This may make this change harder, in which case we may want to reconsider the assumptions. For example, we may convert all such cases into XMR reads so as to avoid this case.\r\n\r\n# Proposal\r\nGiven the above assumptions I propose we do the following:\r\n1. Avoid spilling any wires for XMR reads inside of bound instances\r\n2. Directly emit the XMR path for XMR's driving instance input ports (perhaps this can be regardless of whether or not the instance is bound -- or we can do it only for bound instances)\r\n3. If a bound instance port driver refers to a port of the containing module, or a port of an instance in the containing module, then we\r\n  (a) avoid spilling a wire (unless otherwise already spilled)\r\n  (b) emit the port name directly in the bind statement\r\n\r\n# Extras\r\nPer the original motivation, we would also like the following minor changes\r\n* Add an option to not emit the `This instance is elsewhere emitted...` comment (or skip it altogether).\r\n  \r\ncc @uenoku ",
+        "createdAt": "2022-09-09T16:20:20Z",
+        "labels": [],
+        "number": 3853,
+        "state": "OPEN",
+        "title": "[ExportVerilog] Try to make bind change the generated RTL as little as possible",
+        "url": "https://github.com/llvm/circt/issues/3853",
+        "similarity_score": 6.5
+      }
+    ]
+  },
+  "recommendation": {
+    "action": "likely_new",
+    "confidence": "medium",
+    "reason": "Related issues found but differences suggest new bug"
+  }
+}

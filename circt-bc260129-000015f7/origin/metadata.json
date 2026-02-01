@@ -1,0 +1,30 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "crash_signature": "error: 'hw.bitcast' op result #0 must be Type wherein the bitwidth in hardware is known, but got '!llvm.ptr'",
+    "original_signature": "error: integer bitwidth is limited to 16777215 bits",
+    "bitwidth_value": 1073741823,
+    "bitwidth_hex": "0x3FFFFFFF",
+    "bitwidth_binary": "2^30 - 1",
+    "issue_type": "assertion_failure",
+    "root_cause": "Integer bitwidth exceeds MLIR limits during Mem2Reg pass",
+    "manifestation": "Different error handling between versions - original has assertion failure, newer has type validation error",
+    "status": "reproduced_with_different_error_handling"
+  },
+  "environment": {
+    "circt_version": "firtool-1.139.0",
+    "llvm_version": "22.0.0git",
+    "toolchain": "/opt/firtool/bin/circt-verilog",
+    "build": "Optimized"
+  },
+  "test_case": {
+    "file": "source.sv",
+    "type": "SystemVerilog with class definitions",
+    "size_bytes": 1024
+  },
+  "error_details": {
+    "phase": "Mem2Reg pass (llhd-mem2reg)",
+    "operation": "hw.bitcast",
+    "context": "Class object to pointer conversion in sequential logic"
+  }
+}

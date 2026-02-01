@@ -1,0 +1,12 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "timestamp": "2026-01-31T21:44:39+00:00",
+    "command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw source.sv",
+    "stdout_stderr": "reproduce.log"
+  },
+  "toolchain": {
+    "circt_bin": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin",
+    "llvm_version_requirement": "llvm-22"
+  }
+}

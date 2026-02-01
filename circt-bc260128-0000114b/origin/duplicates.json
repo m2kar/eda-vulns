@@ -1,0 +1,94 @@
+{
+  "search_results": [
+    {
+      "issue_number": 6373,
+      "title": "[Arc] Support hw.wires of aggregate types",
+      "url": "https://github.com/llvm/circt/issues/6373",
+      "similarity_score": 8.5,
+      "matches": {
+        "crash_location": false,
+        "error_message": false,
+        "dialect": true,
+        "key_constructs": [
+          "struct",
+          "array"
+        ]
+      },
+      "analysis": "Directly involves arc dialect and hw.struct type handling. Error occurs when trying to use struct types in arc operations (arc.tap), similar to the InferStateProperties issue attempting to use struct types in hw.ConstantOp."
+    },
+    {
+      "issue_number": 9417,
+      "title": "[Arc][arcilator] hw.bitcast Data Corruption for Aggregate Types with Non-Power-of-2 Element Widths in Arc",
+      "url": "https://github.com/llvm/circt/issues/9417",
+      "similarity_score": 7.5,
+      "matches": {
+        "crash_location": false,
+        "error_message": false,
+        "dialect": true,
+        "key_constructs": [
+          "struct",
+          "array"
+        ]
+      },
+      "analysis": "Directly addresses arc/arcilator issues with aggregate types (struct and array). Problem involves type casting and struct handling, related to InferStateProperties attempting struct type operations."
+    },
+    {
+      "issue_number": 8065,
+      "title": "[LLHD][Arc] Indexing and slicing lowering from Verilog to LLVM IR",
+      "url": "https://github.com/llvm/circt/issues/8065",
+      "similarity_score": 6.0,
+      "matches": {
+        "crash_location": false,
+        "error_message": false,
+        "dialect": true,
+        "key_constructs": [
+          "always_ff"
+        ]
+      },
+      "analysis": "Involves arcilator and always_ff construct. Error related to type handling in arc compilation pipeline, though not specifically about struct constant operations."
+    },
+    {
+      "issue_number": 8012,
+      "title": "[Moore][Arc][LLHD] Moore to LLVM lowering issues",
+      "url": "https://github.com/llvm/circt/issues/8012",
+      "similarity_score": 5.0,
+      "matches": {
+        "crash_location": false,
+        "error_message": false,
+        "dialect": true,
+        "key_constructs": []
+      },
+      "analysis": "Related to arc dialect and type handling in lowering, but not directly about struct constant operations."
+    },
+    {
+      "issue_number": 9395,
+      "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+      "url": "https://github.com/llvm/circt/issues/9395",
+      "similarity_score": 4.5,
+      "matches": {
+        "crash_location": false,
+        "error_message": false,
+        "dialect": true,
+        "key_constructs": []
+      },
+      "analysis": "Involves arcilator assertion failure, but lacks specific details about the crash location or error type."
+    },
+    {
+      "issue_number": 8232,
+      "title": "[Arc] Flatten public modules",
+      "url": "https://github.com/llvm/circt/issues/8232",
+      "similarity_score": 2.0,
+      "matches": {
+        "crash_location": false,
+        "error_message": false,
+        "dialect": true,
+        "key_constructs": []
+      },
+      "analysis": "Arc dialect issue but focused on module flattening, not related to type handling or constant operations."
+    }
+  ],
+  "recommendation": "likely_new",
+  "top_score": 8.5,
+  "top_issue": 6373,
+  "summary": "The crash appears to be a new/undiscovered issue specific to InferStateProperties.cpp:211. Issue #6373 is the most similar (handling struct types in arc), but it focuses on arc.tap and hw.wire, not on hw.ConstantOp creation with struct types. The root cause (attempting to create hw.ConstantOp with struct type) appears to be a new scenario not covered by existing issues. Recommended action: file as new issue with strong reference to #6373 as related."
+}

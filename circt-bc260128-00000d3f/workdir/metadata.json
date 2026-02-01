@@ -1,0 +1,14 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "crash_signature": "Assertion in llvm::dyn_cast [To = circt::hw::InOutType, From = mlir::Type] in circt::hw::ModulePortInfo::sanitizeInOut()",
+    "crash_location": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+    "function": "SVModuleOpConversion::matchAndRewrite",
+    "testcase_id": "260128-00000d3f",
+    "original_command": "circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_d80f2bc4b554.sv",
+    "current_command": "circt-verilog --ir-hw testcase.sv",
+    "toolchain": "LLVM 22",
+    "crash_type": "assertion",
+    "root_cause": "dyn_cast on a non-existent InOutType value in port sanitization"
+  }
+}

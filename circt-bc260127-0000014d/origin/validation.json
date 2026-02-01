@@ -1,0 +1,27 @@
+{
+  "result": "report",
+  "confidence": 95,
+  "issues": [],
+  "validation_details": {
+    "syntax_valid": true,
+    "crash_reproduced": true,
+    "cross_tool_results": {
+      "verilator": {
+        "accepts": true,
+        "errors": []
+      },
+      "slang": {
+        "accepts": true,
+        "errors": []
+      }
+    },
+    "reduction": {
+      "original_bytes": 204,
+      "minimized_bytes": 39,
+      "reduction_percent": 80.9
+    }
+  },
+  "testcase": "module test(input string a);\nendmodule",
+  "crash_signature": "SVModuleOpConversion::matchAndRewrite crash on string type port",
+  "root_cause": "MooreToCore type conversion fails to handle SystemVerilog string type, returning null, which causes dyn_cast assertion failure in ModulePortInfo::sanitizeInOut()"
+}

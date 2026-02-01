@@ -1,0 +1,87 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "arc",
+  "failing_pass": "unknown_timeout",
+  "crash_type": "timeout",
+  "assertion_message": "Compilation timed out after 60s",
+  "crash_location": {
+    "file": null,
+    "function": null,
+    "line": null
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "packed struct",
+      "always_ff",
+      "always_comb",
+      "member access"
+    ],
+    "problematic_patterns": [
+      "partial aggregate update",
+      "aggregate insert on self",
+      "mixed procedural/continuous usage"
+    ]
+  },
+  "hypotheses": [
+    {
+      "description": "Arcilator scheduling/dependency resolution loops or fails to converge on partial packed-struct updates, causing non-terminating fixpoint behavior.",
+      "confidence": "high",
+      "evidence": [
+        "Timeout on tiny test indicates algorithmic loop",
+        "Partial struct field assignment commonly triggers aggregate insert/extract and scheduling complexity",
+        "LLVM opt/llc at -O0 is unlikely to hang on small IR"
+      ]
+    },
+    {
+      "description": "circt-verilog lowering produces pathological aggregate reconstruction patterns that subsequent passes repeatedly canonicalize without termination.",
+      "confidence": "medium",
+      "evidence": [
+        "Packed-struct partial update requires reconstruction",
+        "Potential for redundant nested inserts leading to expansion or repeated rewrites"
+      ]
+    },
+    {
+      "description": "LLVM opt/llc hangs due to malformed or massive IR emitted upstream.",
+      "confidence": "low",
+      "evidence": [
+        "Only plausible if earlier stage explodes IR size"
+      ]
+    }
+  ],
+  "keywords": [
+    "arcilator",
+    "packed struct",
+    "partial assignment",
+    "aggregate insert",
+    "always_comb",
+    "scheduling fixpoint",
+    "timeout",
+    "hw.struct",
+    "arc",
+    "circt-verilog"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Arc/Transforms",
+      "reason": "Arc scheduling and dependency analysis"
+    },
+    {
+      "path": "lib/Conversion/SeqToArc",
+      "reason": "Lowering sequential logic to Arc"
+    },
+    {
+      "path": "lib/Conversion/MooreToCore",
+      "reason": "SV lowering for packed structs and procedural assignments"
+    },
+    {
+      "path": "lib/Dialect/HW/Transforms",
+      "reason": "Aggregate canonicalization and potential rewrite loops"
+    }
+  ],
+  "notes": [
+    "CIRCT source directory not found at ../circt-src; no direct code inspection performed.",
+    "metadata.json not available; reproduction metadata unavailable."
+  ]
+}

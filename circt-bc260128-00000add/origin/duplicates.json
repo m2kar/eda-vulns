@@ -1,0 +1,125 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T22:32:43+00:00",
+  "search_terms": {
+    "dialect": "Arc",
+    "failing_pass": "arc::LowerStatePass",
+    "crash_type": "assertion",
+    "keywords": [
+  "arcilator",
+  "inout",
+  "llhd.ref",
+  "StateType",
+  "LowerStatePass",
+  "bit width",
+  "bidirectional",
+  "tristate",
+  "computeLLVMBitWidth"
+],
+    "assertion_message": "state type must have a known bit width; got '!llhd.ref<i1>'"
+  },
+  "results": {
+    "total_found": 78,
+    "top_score": 4.5,
+    "top_issue_number": "8212",
+    "top_5_issues": [
+  {
+    "body": "The arcilator-runtime.h and python script are not installed and thus not included in pre-built releases.\n\nFor more information:\nhttps://discourse.llvm.org/t/proper-way-to-obtain-arcilator-runtime-h-for-c-integration/84553",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs8AAAABNapjiA",
+        "name": "Arc",
+        "description": "Involving the `arc` dialect",
+        "color": "bfd4f2"
+      }
+    ],
+    "number": 8212,
+    "state": "OPEN",
+    "title": "[arcilator] Install configuration missing for arcilator-runtime.h",
+    "url": "https://github.com/llvm/circt/issues/8212",
+    "similarity_score": 4.5
+  },
+  {
+    "body": "There are a bunch of features we might want to support for arcilator simulations that are a pain to implement in MLIR / LLVM IR directly and should preferably made available by a runtime library. Off the top of my head, this could include:\n- Advanced formatted printing (arbitrary width integers, binary formatting, padding, X/Z values)\n- Everything involving the file system\n- Parsing memory initialization files\n- Managing dynamic buffers and containers\n- PRNG algorithms and seeding for reproducible random initialization\n- Multi-threading (enqueue a series of simulation runs and dispatch them to a thread pool)\n\nWe also want these features to be available in JITed runs, so we need to make sure the compiled functions are visible to the execution engine. Depending on the host platform [this can get a little messy](https://github.com/llvm/llvm-project/blob/c6c2e21028cadef854cf22f6ecaa5eb9d224b76d/llvm/cmake/modules/AddLLVM.cmake#L1344). The `arc-jit-env` library (#8483) was an attempt to compile the current header-only implementation in `arcilator-runtime.h` to a shared library. \n\nI've also experimented with a Rust implementation of a runtime library. Admittedly, more out of personal curiosity rather than for technical reasons. Having the Rust Standard Library and cargo available to pull in crates like `num_bigint` certainly is nice to get things done quickly. On the other hand we inevitably have to do a fair amount of unsafe pointer ping-pong between the IR model and the runtime, potentially defeating the whole memory safety aspect of Rust. _If_ we were to go for a Rust implementation we'd also have to figure out to what extent we want to isolate it from the rest. Should we keep the sources in-tree or in a separate project? Should it be integrated in the CMake build process?\n\nBut first of all, we need a lowering pipeline that can make use of such a library. 😅",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs8AAAABNapjiA",
+        "name": "Arc",
+        "description": "Involving the `arc` dialect",
+        "color": "bfd4f2"
+      }
+    ],
+    "number": 8484,
+    "state": "OPEN",
+    "title": "[arcilator] Add functionality to the arcilator runtime library",
+    "url": "https://github.com/llvm/circt/issues/8484",
+    "similarity_score": 4.5
+  },
+  {
+    "body": "It looks like there are two configs of the Upload Release Artifacts CI job where check-circt fails on three arcilator tests:\n\nhttps://github.com/llvm/circt/actions/runs/19579832326/job/56099287786\n\nNot sure what changed since the last run of this CI action that causes the crash. @jpienaar could this be related to the additional arguments that are now getting passed to the simulation if run in JIT mode?",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzE3",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDODpuCgs8AAAABNapjiA",
+        "name": "Arc",
+        "description": "Involving the `arc` dialect",
+        "color": "bfd4f2"
+      }
+    ],
+    "number": 9260,
+    "state": "OPEN",
+    "title": "Arcilator crashes in Upload Release Artifacts CI",
+    "url": "https://github.com/llvm/circt/issues/9260",
+    "similarity_score": 4.5
+  },
+  {
+    "body": "## Title\n[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)\n\n## Summary\nI ran into a failure in the arcilator flow with a minimal SystemVerilog module using a single `#1` delay. The same design runs under Verilator, but arcilator reports `llhd.constant_time` as illegal during conversion to `arcs` and stops. I did a preliminary source-level analysis (below) and would like to discuss with maintainers whether this behavior is expected or should be treated as a bug.\n\n## Details\n\nThe SV design is intentionally minimal and only uses an `initial` block with a\nsingle `#1` delay. There are no clocks, resets, or inputs. The only signals are\ntwo outputs (`q` and `ok`) to indicate observable state and a success message.\n\nBehavior:\n- At time 0, both `q` and `ok` are set to `0`.\n- After `#1`, `q` is set to `1`, `ok` is set to `1`, and a `$display` message is\n  printed.\n\nObserved issue:\n- `circt-verilog --ir-hw` converts the `#1` delay into `llhd.constant_time`.\n- The arcilator pipeline then fails when lowering to `arcs`, reporting that\n  `llhd.constant_time` is illegal and the conversion fails.\n- The same SV code runs successfully under Verilator, so the issue appears\n  specific to the arcilator lowering path.\n\n\n## Reproduction\n### arcilator\nCreate `top.sv`:\n```systemverilog\nmodule top(output logic q, output logic ok);\n  initial begin\n    q = 1'b0;\n    ok = 1'b0;\n    #1 q = 1'b1;\n    ok = 1'b1;\n    $display(\"OK: arcilator run completed\");\n  end\nendmodule\n```\n\nRun:\n```bash\ncirct-verilog --ir-hw top.sv -o top.mlir\narcilator top.mlir --state-file=top.json | opt -O3 --strip-debug -S | llc -O3 --filetype=obj -o top.o\ncc top.o -o top\n./top\n```\n\n### verilator\nUse the same `top.sv` content as above.\n\nRun:\n```bash\nverilator -Wall --cc top.sv --exe sim_main.cpp\nmake -C obj_dir -f Vtop.mk Vtop\n./obj_dir/Vtop\n```\n\n## Actual Result (arcilator)\n```\ntop.mlir:4:10: error: failed to legalize operation 'llhd.constant_time' that was explicitly marked illegal\n    %0 = llhd.constant_time <1000000fs, 0d, 0e>\n         ^\ntop.mlir:1:1: error: conversion to arcs failed\nmodule {\n^\n```\n\n## Expected Result\nThe minimal delay should either:\n- be supported by arcilator, or\n- be lowered to something legal for `arcs` without failing.\n\n### Question:\nHow to solve this problem and simulate this sv problem?\n\n## Analysis of Failure Cause\nBased on the current sources, my preliminary analysis is that the failure stems from a missing legalization pattern in the `ConvertToArcs` pass:\n- `llhd.constant_time` is a valid LLHD op produced by `circt-verilog --ir-hw` for `#1` delays.\n- The arcilator pipeline runs `ConvertToArcs`, which marks the entire LLHD dialect illegal and only provides conversions for `llhd.combinational` and `llhd.yield`.\n\nhttps://github.com/llvm/circt/blob/3c58046f1d8fc6f5355a7f2c2b73b43ffb37ba4d/lib/Conversion/ConvertToArcs/ConvertToArcs.cpp#L567-L585\n\n- As a result, `llhd.constant_time` remains illegal with no rewrite available, and the dialect conversion reports a legalization failure.\n\n\n## Environment\n- OS: Linux 5.15.0-164-generic\n- CIRCT: firtool-1.139.0\n- LLVM: 22.0.0git\n- Verilator: 5.022 2024-02-24 (rev v5.020-157-g2b4852048)\n- Git commit: 2e2f4775452d1e0bb2c8075d845808f781268049\n\n## Notes\nThe failure appears at the `llhd.constant_time` op introduced during `circt-verilog --ir-hw`, before `arcilator` lowers to `arcs`.\n\n## Relevant Source References\n- `llhd.constant_time` is a core LLHD op that materializes a time constant. It is defined as `llhd.constant_time` in the LLHD value ops definition file. See `include/circt/Dialect/LLHD/IR/LLHDValueOps.td`.\n- The `ConvertToArcs` pass marks the entire LLHD dialect as illegal and only provides conversion patterns for `llhd.combinational` and `llhd.yield`. This means any other LLHD ops (including `llhd.constant_time`) remain illegal and will trigger a legalization failure. See `lib/Conversion/ConvertToArcs/ConvertToArcs.cpp`.\n- The arcilator pipeline explicitly runs `ConvertToArcs` as part of its arc conversion pipeline. See `lib/Tools/arcilator/pipelines.cpp`.\n",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwyMTY1NDc5NTk1",
+        "name": "LLHD",
+        "description": "",
+        "color": "e07b00"
+      },
+      {
+        "id": "LA_kwDODpuCgs8AAAABNapjiA",
+        "name": "Arc",
+        "description": "Involving the `arc` dialect",
+        "color": "bfd4f2"
+      }
+    ],
+    "number": 9467,
+    "state": "OPEN",
+    "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+    "url": "https://github.com/llvm/circt/issues/9467",
+    "similarity_score": 4.5
+  },
+  {
+    "body": "A while ago, we have switched the LLHD dialect from a custom `!llhd.sig` wrapper type to `!hw.inout` in order to represent a reference to a signal slot that can be probed and driven. To support Verilog's `time` values, we have to be able to store an `!llhd.time` value in a variable and read and write that variable. Variables are effectively signals, and Verilog variables get mapped to `llhd.sig` allocation operations. These return a reference type. This prevents us from creating `time` variables today, since `!hw.inout` forces `isHWValueType` on the inner type, which `llhd::TimeType` is not.\n\nIdeally, we'd create something like an `!llhd.ref<T>` type to represent a reference to a signal. In the future, we might want to add additional types for multi-driver nets.",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwyMTY1NDc5NTk1",
+        "name": "LLHD",
+        "description": "",
+        "color": "e07b00"
+      }
+    ],
+    "number": 8825,
+    "state": "OPEN",
+    "title": "[LLHD] Switch from hw.inout to a custom signal reference type",
+    "url": "https://github.com/llvm/circt/issues/8825",
+    "similarity_score": 4.0
+  }
+]
+  },
+  "recommendation": {
+    "action": "likely_new",
+    "confidence": "medium",
+    "reason": "Related issues found but differences suggest new bug"
+  }
+}

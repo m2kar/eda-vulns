@@ -1,0 +1,33 @@
+# Historical Crash Log (CIRCT 1.139.0)
+# Note: Bug NOT reproducible with current LLVM 22 tools - appears FIXED
+
+## Original Crash Information (circt-1.139.0)
+
+Assertion failed:
+  op->use_empty() && "expected 'op' to have no uses"
+  at llvm/mlir/lib/IR/PatternMatch.cpp:156
+
+## Stack Trace Summary
+
+#0  llvm::sys::PrintStackTrace
+#11 mlir::RewriterBase::eraseOp(Operation*)
+#12 circt::replaceOpAndCopyNamehint (lib/Support/Naming.cpp:82)
+#13 extractConcatToConcatExtract (lib/Dialect/Comb/CombFolds.cpp:548)
+#14 circt::comb::ExtractOp::canonicalize (lib/Dialect/Comb/CombFolds.cpp:615)
+#19 GreedyPatternRewriteDriver::processWorklist
+#28 (anonymous namespace)::Canonicalizer::runOnOperation()
+
+## Root Cause Analysis
+
+The crash occurred during ExtractOp canonicalization:
+- extractConcatToConcatExtract creates new ExtractOps as replacement
+- The original ExtractOp still had uses not updated by the rewriter
+- eraseOp assertion failed because op->use_empty() was false
+
+## Reproduction Status (LLVM 22)
+
+Command: circt-verilog --ir-hw bug.sv
+Exit code: 0
+Status: NO CRASH - Bug appears to be FIXED
+
+This test case is preserved as a regression test to ensure the bug does not reappear.

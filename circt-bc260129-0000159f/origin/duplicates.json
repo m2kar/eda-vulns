@@ -1,0 +1,181 @@
+{
+  "task": "Check for duplicate CIRCT GitHub Issues",
+  "timestamp": "2024-02-01T10:35:00Z",
+  "test_case_id": "260129-0000159f",
+  "search_summary": {
+    "total_searches_performed": 8,
+    "total_issues_found": 1,
+    "exact_match_found": true,
+    "repository": "llvm/circt"
+  },
+  "crash_signature": {
+    "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "tool": "arcilator",
+    "dialect": "Arc",
+    "pass": "LowerStatePass",
+    "source_file": "LowerState.cpp",
+    "line": 219,
+    "assertion_file": "StorageUniquerSupport.h",
+    "assertion_line": 180,
+    "key_symptom": "assertion failure when lowering inout ports with Arc dialect",
+    "root_cause": "StateType::get() called with !llhd.ref type which doesn't have known bit width"
+  },
+  "search_queries_used": [
+    "StateType",
+    "bit width inout",
+    "arcilator",
+    "LowerState",
+    "state type must have a known bit width",
+    "llhd.ref",
+    "assertion failure Arc",
+    "inout sequential"
+  ],
+  "potential_duplicates": [
+    {
+      "issue_number": 9574,
+      "title": "[Arc] Assertion failure when lowering inout ports in sequential logic",
+      "status": "OPEN",
+      "created_date": "2026-02-01T05:48:51Z",
+      "url": "https://github.com/llvm/circt/issues/9574",
+      "similarity_score": 0.95,
+      "similarity_reasoning": [
+        "✓ Identical error location: Arc dialect LowerState pass",
+        "✓ Identical crash trigger: inout ports with sequential logic",
+        "✓ Identical tool: arcilator",
+        "✓ Identical assertion failure (StateType)",
+        "✓ Both involve LLHD reference types",
+        "✓ Created very recently (Feb 1, 2026)"
+      ],
+      "match_type": "EXACT_DUPLICATE",
+      "confidence_level": "VERY_HIGH"
+    }
+  ],
+  "related_issues": [
+    {
+      "issue_number": 9467,
+      "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "status": "OPEN",
+      "created_date": "2026-01-20T17:10:39Z",
+      "labels": ["LLHD", "Arc"],
+      "url": "https://github.com/llvm/circt/issues/9467",
+      "similarity_score": 0.60,
+      "relationship": "Related arcilator failure with LLHD types, but different error (constant_time, not StateType)",
+      "relevance": "MEDIUM"
+    },
+    {
+      "issue_number": 4916,
+      "title": "[Arc] LowerState: nested arc.state get pulled in wrong clock tree",
+      "status": "OPEN",
+      "created_date": "2023-04-01T09:09:05Z",
+      "labels": ["Arc"],
+      "url": "https://github.com/llvm/circt/issues/4916",
+      "similarity_score": 0.50,
+      "relationship": "Also about LowerState pass, but different issue (clock tree, not type validation)",
+      "relevance": "LOW-MEDIUM"
+    },
+    {
+      "issue_number": 8825,
+      "title": "[LLHD] Switch from hw.inout to a custom signal reference type",
+      "status": "OPEN",
+      "created_date": "2025-08-06T04:38:33Z",
+      "labels": ["LLHD"],
+      "url": "https://github.com/llvm/circt/issues/8825",
+      "similarity_score": 0.45,
+      "relationship": "Related to LLHD reference type handling, potential architectural solution",
+      "relevance": "LOW"
+    }
+  ],
+  "analysis_results": {
+    "duplicate_status": "YES - EXACT DUPLICATE FOUND",
+    "primary_duplicate": "Issue #9574",
+    "duplicate_confidence": "VERY_HIGH (95%)",
+    "recommendation": "DO NOT report - Issue #9574 already covers this exact bug",
+    "additional_context": "Issue #9574 was created on Feb 1, 2026 (same date as this test case ID was generated), indicating this is either the same bug report or a concurrent discovery",
+    "severity": "HIGH - Assertion failure in core lowering pass",
+    "impact": "Blocks compilation of Verilog with inout ports through Arc dialect"
+  },
+  "detailed_findings": {
+    "search_1_StateType": {
+      "query": "StateType",
+      "results_count": 3,
+      "findings": ["Issue #9574 - EXACT MATCH"],
+      "notes": "All relevant results point to issue #9574"
+    },
+    "search_2_bit_width_inout": {
+      "query": "bit width inout",
+      "results_count": 1,
+      "findings": ["Issue #9574 - EXACT MATCH"],
+      "notes": "Only one result found for this specific combination"
+    },
+    "search_3_arcilator": {
+      "query": "arcilator",
+      "results_count": 6,
+      "findings": [
+        "Issue #9574 - PRIMARY MATCH",
+        "Issue #9467 - Related (LLHD lowering)",
+        "Issue #9337 - Related (passthrough calling)",
+        "Issue #9260 - Related (CI crash)",
+        "Issue #8484 - Related (runtime)",
+        "Issue #8212 - Related (installation)"
+      ],
+      "notes": "Multiple arcilator-related issues, but #9574 is most relevant"
+    },
+    "search_4_LowerState": {
+      "query": "LowerState",
+      "results_count": 2,
+      "findings": [
+        "Issue #9574 - PRIMARY MATCH",
+        "Issue #4916 - Related (clock tree issue)"
+      ],
+      "notes": "Issue #9574 is most recent and most relevant"
+    },
+    "search_5_exact_error_message": {
+      "query": "state type must have a known bit width",
+      "results_count": 1,
+      "findings": ["Issue #9574 - EXACT ERROR MESSAGE MATCH"],
+      "notes": "This is the most specific search query and confirms exact match"
+    },
+    "search_6_llhd_ref": {
+      "query": "llhd.ref",
+      "results_count": 2,
+      "findings": [
+        "Issue #9574 - PRIMARY MATCH",
+        "Issue #8825 - Related (reference type design)"
+      ],
+      "notes": "Issue #9574 directly addresses LLHD reference type validation"
+    },
+    "search_7_assertion_arc": {
+      "query": "assertion failure Arc",
+      "results_count": 2,
+      "findings": [
+        "Issue #9574 - PRIMARY MATCH",
+        "Issue #6810 - Unrelated (assertion support feature)"
+      ],
+      "notes": "Issue #9574 is the only Arc assertion failure in recent issues"
+    },
+    "search_8_inout_sequential": {
+      "query": "inout sequential",
+      "results_count": 1,
+      "findings": ["Issue #9574 - EXACT MATCH"],
+      "notes": "Perfect keyword match for this specific bug"
+    }
+  },
+  "conclusion": {
+    "verdict": "DUPLICATE CONFIRMED",
+    "issue_to_reference": "#9574",
+    "action_recommended": "DO NOT CREATE NEW ISSUE",
+    "next_steps": [
+      "Reference issue #9574 in any bug report documentation",
+      "Subscribe to issue #9574 for updates",
+      "Check if issue #9574 has proposed solutions or workarounds"
+    ],
+    "confidence_metrics": {
+      "error_message_match": "100%",
+      "tool_match": "100%",
+      "dialect_match": "100%",
+      "pass_match": "100%",
+      "trigger_pattern_match": "100%",
+      "overall_similarity": "95%"
+    }
+  }
+}

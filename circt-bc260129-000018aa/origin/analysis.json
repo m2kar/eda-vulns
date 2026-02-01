@@ -1,0 +1,87 @@
+{
+  "testcase_id": "260129-000018aa",
+  "dialect": "moore",
+  "crash_type": "timeout",
+  "timeout_duration_seconds": 300,
+  "compilation_pipeline": [
+    "circt-verilog --ir-hw",
+    "arcilator",
+    "opt -O0",
+    "llc -O0"
+  ],
+  "suspected_location": {
+    "primary": "lib/Conversion/ConvertToArcs/ConvertToArcs.cpp",
+    "secondary": [
+      "lib/Conversion/ImportVerilog/Structure.cpp",
+      "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "lib/Dialect/Arc/Transforms/SplitLoops.cpp"
+    ],
+    "suspected_functions": [
+      "Converter::analyzeFanIn",
+      "Context::convertModuleHeader",
+      "Context::convertModuleBody",
+      "ProcedureOpConversion::matchAndRewrite",
+      "SplitLoopsPass::ensureNoLoops"
+    ]
+  },
+  "analysis_summary": "Compilation timeout triggered by complex nested module structure (3 levels: NestedA → NestedB → NestedC) combined with function call chain (func1 → func2) inside always_comb block. The combination of nested modules, function inlining requirements, and combinational logic dependency analysis likely causes exponential algorithm complexity in one or more compilation passes.",
+  "key_constructs": [
+    {
+      "type": "nested_modules",
+      "description": "Three-level nested module structure: NestedA contains NestedB which contains NestedC",
+      "depth": 3,
+      "modules": ["NestedA", "NestedB", "NestedC"]
+    },
+    {
+      "type": "function_call_chain",
+      "description": "Function call chain within always_comb: func1 calls func2",
+      "functions": ["func1", "func2"],
+      "storage_class": "automatic"
+    },
+    {
+      "type": "always_comb_dependency",
+      "description": "Combinational logic with bit-level dependency: data[0] depends on data[7]",
+      "expression": "data[0] = func1(data[7])",
+      "signal": "data",
+      "width": 8
+    }
+  ],
+  "root_cause_hypotheses": [
+    {
+      "rank": 1,
+      "hypothesis": "ConvertToArcs analyzeFanIn complexity",
+      "description": "The fan-in mask computation uses bit masks and worklist algorithm that may have exponential complexity with nested structures",
+      "confidence": "medium"
+    },
+    {
+      "rank": 2,
+      "hypothesis": "Nested module expansion complexity",
+      "description": "ImportVerilog module header/body conversion may create duplicate definitions or complex symbol resolution",
+      "confidence": "medium"
+    },
+    {
+      "rank": 3,
+      "hypothesis": "SplitLoops zero-latency loop detection",
+      "description": "The DFS-based loop detection in SplitLoops pass may iterate extensively on complex structures",
+      "confidence": "low"
+    },
+    {
+      "rank": 4,
+      "hypothesis": "MooreToCore always_comb value observation",
+      "description": "The getValuesToObserve function may collect too many values when nested modules are expanded",
+      "confidence": "low"
+    }
+  ],
+  "minimization_suggestions": [
+    "Remove one level of nested modules to test if timeout persists",
+    "Replace function call chain with direct expression",
+    "Simplify always_comb to use direct assignment without function call",
+    "Test each nested module separately"
+  ],
+  "related_circt_code": {
+    "combinational_loop_detection": "lib/Conversion/ConvertToArcs/ConvertToArcs.cpp:181",
+    "arc_split_loops": "lib/Dialect/Arc/Transforms/SplitLoops.cpp:384-425",
+    "always_comb_handling": "lib/Conversion/MooreToCore/MooreToCore.cpp:380-450",
+    "module_conversion": "lib/Conversion/ImportVerilog/Structure.cpp:737-904"
+  }
+}

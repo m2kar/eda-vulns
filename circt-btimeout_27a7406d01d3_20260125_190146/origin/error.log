@@ -1,0 +1,8 @@
+Compilation timed out after 60s
+Exit code: 124
+
+Command: /opt/firtool/bin/circt-verilog --ir-hw bug.sv | /opt/firtool/bin/arcilator | /opt/firtool/bin/opt -O0 | /opt/firtool/bin/llc -O0 --filetype=obj
+
+This minimal test case demonstrates a timeout/infinite loop in the CIRCT arcilator pipeline when processing partial packed struct field assignments in always_comb blocks.
+
+Root cause: Partial assignment to packed struct field in always_comb creates a false combinational loop when converted to hw.struct_inject operations. The arcilator LowerState pass enters an infinite loop processing the cyclic dependency.

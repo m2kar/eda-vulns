@@ -1,0 +1,78 @@
+========================================
+CIRCT Bug Reproduction
+========================================
+Date: 2026-02-01T02:40:00+00:00
+Testcase ID: 260128-00000ee6
+Tool: circt-verilog
+Version: LLVM 22.0.0git
+Command: /home/zhiqing/edazz/circt/build/bin/circt-verilog --ir-hw source.sv
+
+========================================
+Crash Signature
+========================================
+Assertion: op->use_empty() && "expected 'op' to have no uses"' failed
+Location: /root/circt/llvm/mlir/lib/IR/PatternMatch.cpp:156
+Function: virtual void mlir::RewriterBase::eraseOp(Operation *)
+Exit Code: 134 (SIGABRT)
+
+========================================
+Call Stack
+========================================
+#0  llvm::sys::PrintStackTrace
+#1  llvm::sys::RunSignalHandlers
+#2  SignalHandler
+#3  (libc)
+#4  __pthread_kill_implementation
+#5  __pthread_kill_internal
+#6  pthread_kill
+#7  raise
+#8  abort
+#9  mlir::RewriterBase::eraseOp
+#10 mlir::RewriterBase::replaceOp
+#11 circt::replaceOpAndCopyNamehint
+    Location: /root/circt/lib/Support/Naming.cpp:82
+#12 extractConcatToConcatExtract
+    Location: /root/circt/lib/Dialect/Comb/CombFolds.cpp:548
+#13 circt::comb::ExtractOp::canonicalize
+    Location: /root/circt/lib/Dialect/Comb/CombFolds.cpp:615
+#14 mlir::PatternApplicator::matchAndRewrite
+#15 (anonymous namespace)::GreedyPatternRewriteDriver::processWorklist
+#16 (anonymous namespace)::RegionPatternRewriteDriver::simplify
+#17 mlir::applyPatternsGreedily
+#18 (anonymous namespace)::Canonicalizer::runOnOperation
+#19 mlir::detail::OpToOpPassAdaptor::run
+#20 mlir::PassManager::run
+
+========================================
+Root Cause Analysis
+========================================
+The crash occurs in the Comb dialect canonicalization pass, specifically in the
+extractConcatToConcatExtract pattern which attempts to optimize ExtractOp + ConcatOp
+combinations.
+
+The pattern calls circt::replaceOpAndCopyNamehint() to replace an operation, which
+then calls mlir::RewriterBase::replaceOp(). This function eventually calls eraseOp()
+on the old operation, but the assertion fails because the operation still has uses.
+
+This suggests a use-after-replace bug: the pattern attempts to erase an operation
+that is still being used by other operations in the IR.
+
+========================================
+Testcase
+========================================
+module my_module(
+  input logic in_signal,
+  output logic result,
+  output logic [3:0] result_array
+);
+
+  logic internal_wire;
+
+  assign internal_wire = in_signal;
+
+  always_comb begin
+    result_array[0] = internal_wire;
+    result = internal_wire;
+  end
+
+endmodule

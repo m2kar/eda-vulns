@@ -1,0 +1,75 @@
+{
+  "crash_id": "27a7406d01d3",
+  "dialect": "SystemVerilog",
+  "crash_type": "timeout",
+  "timeout_seconds": 60,
+  "tool_chain": [
+    "circt-verilog",
+    "arcilator",
+    "opt",
+    "llc"
+  ],
+  "circt_version": "1.139.0",
+  "suspected_cause": "Combinational loop in partial packed struct field assignment",
+  "suspected_component": "arcilator/LowerState",
+  "suspected_pass": "LowerState",
+  "confidence": "high",
+  "analysis": {
+    "problem_constructs": [
+      "packed struct typedef",
+      "partial struct field assignment in always_comb",
+      "struct field read without explicit assignment",
+      "conditional logic dependent on unassigned field"
+    ],
+    "root_cause_summary": "Partial assignment to packed struct field creates a false combinational loop when converted to hw.struct_inject operations. The arcilator LowerState pass enters infinite loop processing the cyclic dependency.",
+    "technical_details": {
+      "pattern": "my_struct.field2 = value; read my_struct.field1;",
+      "ir_construct": "hw.struct_inject creates cyclic dependency",
+      "failure_mode": "Worklist-based traversal does not terminate due to cyclic struct inject operations"
+    }
+  },
+  "test_case": {
+    "file": "source.sv",
+    "language": "SystemVerilog",
+    "key_features": [
+      "packed struct with 2 fields",
+      "partial field assignment (only field2)",
+      "field1 read but never assigned",
+      "always_comb blocks",
+      "conditional output assignment"
+    ],
+    "lines_of_code": 34
+  },
+  "related_issues": [
+    {
+      "number": 6373,
+      "title": "[Arc] Support hw.wires of aggregate types",
+      "relevance": "Documents arcilator's incomplete support for aggregate types"
+    },
+    {
+      "number": 8286,
+      "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+      "relevance": "Documents known issues with combinational logic lowering"
+    },
+    {
+      "number": 8860,
+      "title": "[LLHD] Assigning array elements individually creates a combinational loop",
+      "relevance": "Same root cause pattern - partial aggregate assignment creates false combinational loop"
+    }
+  ],
+  "severity": {
+    "level": "medium",
+    "reproducibility": "high",
+    "impact": "Blocks compilation of valid SystemVerilog code with partial struct assignments"
+  },
+  "workaround": {
+    "available": true,
+    "description": "Explicitly initialize all struct fields to break the false combinational loop",
+    "example": "Initialize field1 in the same always_comb block as field2"
+  },
+  "recommendations": [
+    "Enhance hw.struct_inject canonicalizer to handle partial struct assignments",
+    "Add iteration limit or timeout detection in LowerState worklist processing",
+    "Improve cycle detection to identify false combinational loops from partial struct updates"
+  ]
+}

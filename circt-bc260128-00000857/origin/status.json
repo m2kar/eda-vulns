@@ -1,0 +1,23 @@
+{
+  "crash_id": "circt-bc260128-00000857",
+  "status": "report_ready",
+  "phase": "completed",
+  "created_at": "$(date -Iseconds)",
+  "updated_at": "2026-01-31T20:31:41+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed"
+    },
+    "phase2": {
+      "status": "completed"
+    },
+    "phase3": {
+      "status": "completed"
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "dialect": "comb",
+  "crash_type": "assertion",
+  "crash_location": {
+    "file": "lib/Dialect/Comb/CombFolds.cpp",
+    "line": 548,
+    "function": "extractConcatToConcatExtract"
+  },
+  "suspected_cause": "The extractConcatToConcatExtract canonicalization pattern fails to properly handle cases where the replacement value transitively depends on the operation being replaced. In circular dataflow patterns (e.g., packed arrays with feedback loops), the newly created ExtractOp may use a value that references the original ExtractOp being erased, causing the 'op has uses' assertion to fail when replaceOp attempts to erase the original operation.",
+  "affected_operations": [
+    "comb.extract",
+    "comb.concat",
+    "hw.wire",
+    "hw.constant",
+    "comb.icmp"
+  ],
+  "keywords": [
+    "extractConcatToConcatExtract",
+    "ExtractOp",
+    "ConcatOp",
+    "canonicalize",
+    "replaceOpAndCopyNamehint",
+    "eraseOp",
+    "use_empty",
+    "assertion",
+    "packed array",
+    "circular reference",
+    "comb dialect",
+    "CombFolds"
+  ],
+  "triggering_pattern": {
+    "description": "2D packed array with circular dataflow through module ports",
+    "sv_features": [
+      "packed multi-dimensional array",
+      "enum declaration",
+      "always_comb blocks",
+      "continuous assignment with concatenation",
+      "bit selection feedback loop"
+    ]
+  },
+  "stack_trace_summary": {
+    "entry_point": "Canonicalizer::runOnOperation",
+    "crash_point": "mlir::RewriterBase::eraseOp",
+    "intermediate_frames": [
+      "replaceOpAndCopyNamehint",
+      "extractConcatToConcatExtract",
+      "ExtractOp::canonicalize",
+      "PatternApplicator::matchAndRewrite",
+      "GreedyPatternRewriteDriver::processWorklist"
+    ]
+  },
+  "mlir_assertion": {
+    "condition": "op->use_empty()",
+    "message": "expected 'op' to have no uses",
+    "source_file": "llvm/mlir/lib/IR/PatternMatch.cpp",
+    "source_line": 156
+  }
+}

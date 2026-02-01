@@ -1,0 +1,16 @@
+Crash Type: timeout
+Testcase: bug.sv
+
+--- Compilation Command ---
+circt-verilog --ir-hw bug.sv
+
+--- Error Message ---
+Compilation timed out after 30 seconds
+
+--- Reproduction ---
+timeout 30s circt-verilog --ir-hw bug.sv
+# Expected: Exit code 124 (timeout)
+
+--- Environment ---
+Tool: circt-verilog (firtool-1.139.0)
+Tool path: /opt/firtool-1.139.0/bin/circt-verilog

@@ -1,0 +1,13 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "type": "partial",
+    "crash_signature": "arc.state op operand type mismatch - Type becomes corrupted (i149695352 instead of correct struct type)",
+    "root_cause": "InferStateProperties pass generates invalid type when processing arc.state operands",
+    "original_error_location": "applyEnableTransformation in InferStateProperties.cpp:211 - llvm::cast<mlir::IntegerType> assertion",
+    "current_error_type": "Validation error - shows symptom of the underlying bug",
+    "command_used": "circt-verilog --ir-hw source.sv | arcilator --mlir-print-ir-before-all",
+    "affected_version": "CIRCT 1.139.0",
+    "status": "Bug root cause confirmed: InferStateProperties creates corrupted types during arc.state processing"
+  }
+}

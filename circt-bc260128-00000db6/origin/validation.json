@@ -1,0 +1,44 @@
+{
+  "classification": {
+    "result": "report",
+    "reason": "Historical bug - cannot reproduce but root cause is clear. Assertion failure in extractConcatToConcatExtract during ExtractOp canonicalization."
+  },
+  "syntax_check": {
+    "valid": true,
+    "tool": "slang",
+    "version": "10.0.6+3d7e6cd2e",
+    "output": "Build succeeded: 0 errors, 0 warnings"
+  },
+  "feature_check": {
+    "features": [
+      "packed_array",
+      "partial_bit_assignment",
+      "continuous_assignment",
+      "always_comb"
+    ],
+    "status": "supported",
+    "notes": "All features are standard SystemVerilog (IEEE 1800-2017)"
+  },
+  "cross_tool_validation": {
+    "slang": {
+      "valid": true,
+      "errors": 0,
+      "warnings": 0
+    },
+    "verilator": {
+      "valid": true,
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "minimization": {
+    "original_size": 129,
+    "minimized_size": 82,
+    "reduction_percent": 36.4
+  },
+  "reproducibility": {
+    "status": "historical",
+    "circt_version": "1.139.0",
+    "note": "Bug may be fixed in current CIRCT version"
+  }
+}

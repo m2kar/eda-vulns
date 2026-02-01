@@ -1,0 +1,23 @@
+{
+  "reproduced": true,
+  "testcase_id": "bc260129-00001473",
+  "crash_type": "assertion_abort",
+  "key_function": "SVModuleOpConversion::matchAndRewrite",
+  "component": "MooreToCore",
+  "root_cause": "dyn_cast on a non-existent value in InOutType casting",
+  "matched_features": [
+    "SVModuleOpConversion::matchAndRewrite",
+    "MooreToCore.cpp",
+    "MooreToCorePass::runOnOperation"
+  ],
+  "similarity_checks": {
+    "svmodule_conversion": true,
+    "moore_to_core": true,
+    "pattern_rewriter": true,
+    "moore_op": true,
+    "crash_signal": true
+  },
+  "feature_match_ratio": "3/5",
+  "source_file": "origin/source.sv",
+  "command": "circt-verilog --ir-hw origin/source.sv"
+}

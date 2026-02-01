@@ -1,0 +1,4 @@
+<stdin>:4:10: error: failed to legalize operation 'sim.fmt.literal'
+    %0 = sim.fmt.literal "Error: Assertion failed: arr["
+         ^
+<stdin>:4:10: note: see current operation: %28 = "sim.fmt.literal"() <{literal = "Error: Assertion failed: arr["}> : () -> !sim.fstring

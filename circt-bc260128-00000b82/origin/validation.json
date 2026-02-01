@@ -1,0 +1,26 @@
+{
+  "result": "report",
+  "reproduced": true,
+  "crash_signature_match": true,
+  "root_cause": "Moore-to-Core port type conversion yields empty mlir::Type for unpacked array of string port",
+  "minimized_testcase": "bug.sv",
+  "reproduction_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw bug.sv",
+  "tools": {
+    "circt_verilog": {
+      "crashed": true,
+      "signature": "dyn_cast on a non-existent value (Casting.h:650)",
+      "log": "error.log"
+    },
+    "verilator": {
+      "available": true,
+      "command": "verilator --lint-only bug.sv",
+      "status": "pass"
+    },
+    "slang": {
+      "available": true,
+      "command": "slang --parse bug.sv",
+      "status": "failed",
+      "error": "unknown command line argument '--parse'"
+    }
+  }
+}

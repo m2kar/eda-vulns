@@ -1,0 +1,37 @@
+{
+  "reproduction": {
+    "reproduced": false,
+    "reason": "Current toolchain completes successfully without timeout. Original error reported timeout after 60s.",
+    "match_result": "no_match"
+  },
+  "original_error": {
+    "type": "timeout",
+    "message": "Compilation timed out after 60s",
+    "hash": "8914624e1ae9"
+  },
+  "reproduction_result": {
+    "exit_code": 0,
+    "status": "completed successfully",
+    "execution_time_seconds": "< 5",
+    "output_file": "test.o (840 bytes)"
+  },
+  "tools": {
+    "circt_verilog": {
+      "version": "firtool-1.139.0",
+      "llvm_version": "22.0.0git"
+    },
+    "arcilator": {
+      "version": "firtool-1.139.0",
+      "llvm_version": "22.0.0git"
+    },
+    "opt": {
+      "version": "22.0.0git"
+    },
+    "llc": {
+      "version": "22.0.0git"
+    }
+  },
+  "reproduction_command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv | /opt/firtool/bin/arcilator | /opt/llvm-22/bin/opt -O0 | /opt/llvm-22/bin/llc -O0 --filetype=obj -o test.o",
+  "test_file": "source.sv",
+  "timestamp": "2026-01-31T16:52:00Z"
+}

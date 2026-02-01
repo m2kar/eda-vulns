@@ -1,0 +1,18 @@
+=== CIRCT Bug Reproduction Report ===
+Testcase ID: 260128-00000959
+Bug Type: failed to legalize operation 'sim.fmt.literal'
+
+=== Reproduction Command ===
+cd /home/zhiqing/edazz/eda-vulns/circt-bc260128-00000959/origin
+export PATH=/opt/llvm-22/bin:$PATH
+/opt/firtool/bin/circt-verilog --ir-hw source.sv 2>&1 | /opt/firtool/bin/arcilator 2>&1
+
+=== Crash Output ===
+<stdin>:3:10: error: failed to legalize operation 'sim.fmt.literal'
+    %0 = sim.fmt.literal "Error: Assertion failed: q != 0"
+         ^
+<stdin>:3:10: note: see current operation: %3 = "sim.fmt.literal"() <{literal = "Error: Assertion failed: q != 0"}> : () -> !sim.fstring
+
+=== Result ===
+Status: REPRODUCED
+Signature Match: TRUE

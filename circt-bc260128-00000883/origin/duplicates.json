@@ -1,0 +1,73 @@
+{
+  "testcase_id": "260128-00000883",
+  "search_queries": [
+    "packed union MooreToCore",
+    "sanitizeInOut InOutType",
+    "dyn_cast assertion",
+    "MooreToCore type conversion null",
+    "getModulePortInfo port conversion",
+    "packed type InOutType",
+    "module port type",
+    "sanitizeInOut"
+  ],
+  "found_issues": [
+    {
+      "number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "state": "OPEN",
+      "crash_signature": "dyn_cast on a non-existent value",
+      "crash_location": "MooreToCore.cpp, function ConversionOpConversion::matchAndRewrite",
+      "root_cause_keywords": ["dyn_cast", "MooreToCore", "type conversion", "assertion"],
+      "similarity_score": 0.85,
+      "reason": "Same dyn_cast assertion failure in MooreToCore pass. Same error signature and conversion-related failure, but triggers via ConversionOp rather than module port types. Both involve failed type conversions returning null/unsupported types."
+    },
+    {
+      "number": 8266,
+      "title": "[FIRRTL] Integer Property folders assert in getAPSInt",
+      "state": "OPEN",
+      "crash_signature": "assertion in getAPSInt about signless integers",
+      "crash_location": "BuiltinAttributes.cpp",
+      "root_cause_keywords": ["assertion", "type checking", "attribute"],
+      "similarity_score": 0.35,
+      "reason": "Different dialect (FIRRTL vs Moore/HW). Different assertion and type system. Not similar enough."
+    },
+    {
+      "number": 8382,
+      "title": "[FIRRTL] Crash with fstring type on port",
+      "state": "OPEN",
+      "crash_signature": "dyn_cast assertion on non-existent value",
+      "crash_location": "LowerToHW.cpp, getBaseType function",
+      "root_cause_keywords": ["dyn_cast", "type conversion", "assertion", "port"],
+      "similarity_score": 0.65,
+      "reason": "Same dyn_cast assertion pattern on non-existent values during type conversion. Involves port lowering but in FIRRTL dialect. Similar type validation failure pattern."
+    },
+    {
+      "number": 7535,
+      "title": "[MooreToCore] VariableOp lowered failed",
+      "state": "OPEN",
+      "crash_signature": "stack dump during MooreToCore conversion with InOutType",
+      "crash_location": "MooreToCore.cpp:1398, InOutType casting",
+      "root_cause_keywords": ["MooreToCore", "InOutType", "type conversion", "struct", "port"],
+      "similarity_score": 0.78,
+      "reason": "Same MooreToCore pass. Involves InOutType casting failures. Different trigger (struct vs union port type) but same fundamental issue: InOutType casting during port/type conversion."
+    }
+  ],
+  "search_coverage": {
+    "total_queries": 8,
+    "successful_queries": 6,
+    "no_results_queries": 2,
+    "total_issues_found": 4
+  },
+  "duplicate_assessment": {
+    "likely_duplicates": [7535],
+    "similar_issues": [8930, 8382],
+    "unrelated_issues": [8266]
+  },
+  "analysis_summary": {
+    "highest_score": 0.85,
+    "highest_score_issue": 8930,
+    "second_highest": 0.78,
+    "second_highest_issue": 7535,
+    "notes": "Issue #8930 (sqrt/floor) has same exact assertion signature but different triggering construct. Issue #7535 (VariableOp) is likely a duplicate - same MooreToCore pass, same InOutType issue, different type construct. No exact duplicates found, but strong pattern correlation suggests this is a class of related type conversion failures in MooreToCore."
+  }
+}

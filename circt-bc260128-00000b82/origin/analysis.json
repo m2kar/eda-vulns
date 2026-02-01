@@ -1,0 +1,37 @@
+{
+  "dialect": "moore",
+  "crash_type": "assertion",
+  "location": {
+    "file": "include/circt/Dialect/HW/PortImplementation.h",
+    "line": 177,
+    "function": "circt::hw::ModulePortInfo::sanitizeInOut"
+  },
+  "root_cause": "Moore-to-Core port type conversion yields an empty mlir::Type for an unpacked array of string port, and sanitizeInOut() blindly dyn_casts that null type, triggering an assertion.",
+  "testcase_pattern": {
+    "construct": "output string s[1:0] (unpacked array of strings)",
+    "description": "Module port is an unpacked array of SystemVerilog string, assigned in procedural blocks; this type is likely unsupported in HW port lowering and causes a null type during conversion."
+  },
+  "stack_trace_analysis": {
+    "key_frames": [
+      {
+        "frame": 17,
+        "function": "circt::hw::ModulePortInfo::sanitizeInOut",
+        "file": "include/circt/Dialect/HW/PortImplementation.h",
+        "line": 177
+      },
+      {
+        "frame": 21,
+        "function": "(anonymous namespace)::getModulePortInfo",
+        "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+        "line": 259
+      },
+      {
+        "frame": 22,
+        "function": "(anonymous namespace)::SVModuleOpConversion::matchAndRewrite",
+        "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+        "line": 276
+      }
+    ]
+  },
+  "timestamp": "2026-01-31T22:50:30+00:00"
+}

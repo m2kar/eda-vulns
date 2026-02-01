@@ -1,0 +1,111 @@
+{
+  "search_queries": [
+    {
+      "query": "Mem2Reg",
+      "results_count": 2,
+      "issues": [
+        {
+          "number": 8693,
+          "title": "[Mem2Reg] Local signal does not dominate final drive",
+          "similarity_score": 7.5,
+          "matched_keywords": [
+            "Mem2Reg",
+            "signal",
+            "dominate",
+            "LLHD"
+          ],
+          "analysis": "Related to Mem2Reg pass but focuses on dominance issues rather than bitwidth. Both involve LLHD signal handling in Mem2Reg transformations."
+        },
+        {
+          "number": 8286,
+          "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+          "similarity_score": 4.2,
+          "matched_keywords": [
+            "LLHD",
+            "arcilator",
+            "circt-verilog"
+          ],
+          "analysis": "Discusses general LLHD lowering pipeline issues but not specifically about bitwidth assertions."
+        }
+      ]
+    },
+    {
+      "query": "LLHD bitwidth",
+      "results_count": 0,
+      "issues": []
+    },
+    {
+      "query": "integer assertion",
+      "results_count": 5,
+      "issues": [
+        {
+          "number": 8266,
+          "title": "[FIRRTL] Integer Property folders assert in getAPSInt",
+          "similarity_score": 2.1,
+          "matched_keywords": [
+            "assertion",
+            "integer"
+          ],
+          "analysis": "About FIRRTL integer properties, not LLHD. Different crash mechanism (APSInt vs IntegerType)."
+        },
+        {
+          "number": 6405,
+          "title": "[FIRRTL] Property flow checking should ensure we can't assign an output to an output",
+          "similarity_score": 1.8,
+          "matched_keywords": [
+            "assertion"
+          ],
+          "analysis": "FIRRTL-specific property flow checking assertion, unrelated to bitwidth."
+        },
+        {
+          "number": 3235,
+          "title": "[Calyx] SCF and StaticLogic to Calyx passes should clear state.",
+          "similarity_score": 1.5,
+          "matched_keywords": [
+            "assertion",
+            "bitwidth"
+          ],
+          "analysis": "Assertion in StaticLogicToCalyx pass, not Mem2Reg. Different root cause."
+        },
+        {
+          "number": 3289,
+          "title": "[PyCDE] ConcatOp of arrays causes crash",
+          "similarity_score": 1.2,
+          "matched_keywords": [
+            "assertion",
+            "cast"
+          ],
+          "analysis": "Type casting assertion in Python bindings, completely different context."
+        }
+      ]
+    }
+  ],
+  "detailed_analysis": {
+    "most_similar_issue": 8693,
+    "reasoning": "Issue #8693 is the most relevant because it also involves LLHD Mem2Reg pass failures with signal handling. However, the crash mechanism differs: #8693 involves dominance violations in signal references, while our crash involves integer bitwidth limits during type creation. Both affect LLHD signal-to-register promotion but through different code paths.",
+    "key_differences": [
+      "Issue #8693: dominance of operands in llhd.drv",
+      "Current crash: IntegerType creation with excessive bitwidth in insertBlockArgs()",
+      "Issue #8693: focuses on signal reference lifetime",
+      "Current crash: focuses on type validation constraints"
+    ]
+  },
+  "recommendation": "new_issue",
+  "confidence_level": "high",
+  "reasoning": "While there is a related issue (#8693) in the Mem2Reg pass for LLHD, the current crash is distinct:\n1. Different root cause: bitwidth limit (2^24-1 bits) vs dominance violation\n2. Different crash location: Mem2Reg.cpp:1742 (insertBlockArgs) vs Mem2Reg.cpp:1654 (insertBlockArgs parent)\n3. Different trigger: class/handle types with invalid bitwidth vs signal reference ordering\n4. The error message explicitly states 'integer bitwidth is limited to 16777215 bits' which is unique to this issue\n5. The problem occurs when processing class handle types, which is a specific type that lacks proper validation",
+  "top_issue": {
+    "number": 8693,
+    "title": "[Mem2Reg] Local signal does not dominate final drive",
+    "similarity_score": 7.5
+  },
+  "crash_signature": "mlir::IntegerType::get() assertion in Mem2Reg::insertBlockArgs(BlockEntry*) when processing class handle types",
+  "trigger_pattern": "Class definition + class handle variable + assignment in always block + Mem2Reg pass execution",
+  "related_keywords": [
+    "LLHD",
+    "Mem2Reg",
+    "bitwidth",
+    "IntegerType",
+    "class handle",
+    "assertion"
+  ]
+}

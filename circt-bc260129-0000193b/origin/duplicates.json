@@ -1,0 +1,54 @@
+{
+  "duplicates": {
+    "search_performed": true,
+    "total_issues_found": 15,
+    "searched_keywords": [
+      "LLHD Mem2Reg assertion",
+      "LLHD real type",
+      "Mem2Reg",
+      "IntegerType bitwidth",
+      "LLHD assertion",
+      "floating point real",
+      "llhd-mem2reg",
+      "LLHD crash",
+      "getBitWidth"
+    ],
+    "top_candidates": [
+      {
+        "issue_number": 9287,
+        "title": "[HW] Make `hw::getBitWidth` use std::optional vs -1",
+        "similarity_score": 0.75,
+        "reasoning": "Directly addresses getBitWidth returning -1 for unsupported types, which is the root cause of the reported crash"
+      },
+      {
+        "issue_number": 8693,
+        "title": "[Mem2Reg] Local signal does not dominate final drive",
+        "similarity_score": 0.65,
+        "reasoning": "Mem2Reg pass issues but different problem (dominance violation)"
+      },
+      {
+        "issue_number": 8286,
+        "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+        "similarity_score": 0.60,
+        "reasoning": "Related to Mem2Reg and LLHD transforms but broader scope"
+      },
+      {
+        "issue_number": 8930,
+        "title": "[MooreToCore] Crash with sqrt/floor",
+        "similarity_score": 0.50,
+        "reasoning": "Involves getBitWidth returning -1 for floating-point types (real)"
+      },
+      {
+        "issue_number": 9013,
+        "title": "[circt-opt] Segmentation fault during XOR op building",
+        "similarity_score": 0.45,
+        "reasoning": "LLHD related crash but different root cause"
+      }
+    ],
+    "top_similarity": 0.75,
+    "top_issue": 9287,
+    "recommendation": "review_existing",
+    "confidence": 0.85,
+    "notes": "While a very similar issue exists (9287) that addresses getBitWidth returning -1, the specific scenario with LLHD Mem2Reg pass and real type variables in clocked assignments does not appear to be explicitly reported. The crash is unique because: 1) It occurs specifically in Mem2Reg pass insertBlockArgs, 2) It involves real types with clocked assignments, 3) The -1 bitwidth propagates through hw::getBitWidth. Issue 9287 may address the root cause but should review this specific manifestation."
+  }
+}

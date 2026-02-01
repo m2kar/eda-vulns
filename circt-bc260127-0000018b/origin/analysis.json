@@ -1,0 +1,48 @@
+{
+  "dialect": "comb",
+  "crash_type": "assertion",
+  "crash_location": "lib/Dialect/Comb/CombFolds.cpp:548",
+  "mlir_crash_location": "mlir/lib/IR/PatternMatch.cpp:156",
+  "function": "extractConcatToConcatExtract",
+  "caller_function": "ExtractOp::canonicalize",
+  "assertion": "op->use_empty() && \"expected 'op' to have no uses\"",
+  "trigger_pattern": "indexed array assignment in always_comb",
+  "trigger_description": "Dynamic array index (arr[idx] = value) in combinational block creates complex IR with interdependent ExtractOp and ConcatOp operations",
+  "root_cause": "Pattern rewriter in extractConcatToConcatExtract calls replaceOpAndCopyNamehint without ensuring all uses of the operation are properly replaced, causing eraseOp assertion failure",
+  "root_cause_detailed": "The extractConcatToConcatExtract function transforms extract(lo, cat(a,b,c)) into cat(extract(...), ...). When the IR has complex dependencies from dynamic indexing, the replacement value may not capture all uses of the original ExtractOp, leaving dangling uses when eraseOp is called.",
+  "suggested_fix": "Add use_empty() check before eraseOp or use replaceAllUsesWith explicitly to ensure all uses are replaced before erasing the operation",
+  "affected_files": [
+    "lib/Dialect/Comb/CombFolds.cpp",
+    "lib/Support/Naming.cpp"
+  ],
+  "stack_frames": [
+    {
+      "frame": 12,
+      "function": "circt::replaceOpAndCopyNamehint",
+      "file": "lib/Support/Naming.cpp",
+      "line": 82
+    },
+    {
+      "frame": 13,
+      "function": "extractConcatToConcatExtract",
+      "file": "lib/Dialect/Comb/CombFolds.cpp",
+      "line": 548
+    },
+    {
+      "frame": 14,
+      "function": "circt::comb::ExtractOp::canonicalize",
+      "file": "lib/Dialect/Comb/CombFolds.cpp",
+      "line": 615
+    }
+  ],
+  "source_analysis": {
+    "module": "test_module",
+    "array": "logic [7:0] arr = 8'h0",
+    "index": "int idx = 0",
+    "problematic_construct": "always_comb begin arr[idx] = 1'b1; end",
+    "ir_pattern": "Dynamic indexed assignment generates ExtractOp with ConcatOp input"
+  },
+  "confidence": "high",
+  "severity": "crash",
+  "reproducible": true
+}

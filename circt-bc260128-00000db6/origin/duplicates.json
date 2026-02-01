@@ -1,0 +1,44 @@
+{
+  "search_terms": [
+    "ExtractOp",
+    "assertion_failure",
+    "canonicalization",
+    "comb",
+    "eraseOp",
+    "expected 'op' to have no uses",
+    "extractConcatToConcatExtract",
+    "replaceOpAndCopyNamehint",
+    "use_empty"
+  ],
+  "search_date": "2026-02-01T01:45:09.234787Z",
+  "results": [
+    {
+      "issue_number": 8863,
+      "title": "[Comb] Concat/extract canonicalizer crashes on loop",
+      "state": "OPEN",
+      "similarity_score": 13.5,
+      "matched_terms": [
+        "eraseop",
+        "use_empty",
+        "canonicalize",
+        "extractop",
+        "comb",
+        "expected 'op' to have no uses",
+        "assertion",
+        "replaceop"
+      ],
+      "reason": "Matched 8 key terms in OPEN issue"
+    },
+    {
+      "issue_number": 8973,
+      "title": "[MooreToCore] Lowering to math.ipow?",
+      "state": "OPEN",
+      "similarity_score": 0.0,
+      "matched_terms": [],
+      "reason": "Matched 0 key terms in OPEN issue"
+    }
+  ],
+  "recommendation": "review_existing",
+  "top_score": 13.5,
+  "top_issue": 8863
+}

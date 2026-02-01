@@ -1,0 +1,43 @@
+{
+  "testcase_id": "260128-00000bf1",
+  "dialect": "SystemVerilog",
+  "crash_type": "timeout",
+  "pipeline_stage": "circt-verilog --ir-hw",
+  "timeout_pass": "canonicalize (after llhd-sig2reg)",
+  "root_cause_hypothesis": "The llhd-sig2reg pass generates circular SSA definitions (violating SSA form) when handling partial struct field assignments in always_comb blocks. When a packed struct has only some fields assigned combinationally and other fields are read elsewhere, the pass creates a cyclic dependency: %7 = hw.struct_inject %5[...], where %5 = hw.bitcast %4 and %4 = hw.bitcast %7. The canonicalize pass enters an infinite loop attempting to simplify these cyclic operations.",
+  "constructs_involved": [
+    "packed struct type (typedef struct packed)",
+    "partial struct field assignment (pkt.data = arr[0])",
+    "always_comb block with struct field assignment",
+    "always_ff block reading different struct field (pkt.valid)",
+    "unpacked array (logic [7:0] arr [0:3])"
+  ],
+  "related_passes": [
+    "llhd-sig2reg",
+    "canonicalize",
+    "cse"
+  ],
+  "related_dialects": [
+    "Moore",
+    "LLHD",
+    "HW",
+    "Seq",
+    "Comb"
+  ],
+  "related_operations": [
+    "llhd.sig",
+    "llhd.drv",
+    "llhd.prb",
+    "hw.struct_inject",
+    "hw.struct_extract",
+    "hw.bitcast"
+  ],
+  "bug_mechanism": {
+    "trigger": "Partial struct field assignment in always_comb where other fields are read elsewhere",
+    "intermediate_state": "llhd-sig2reg creates read-modify-write pattern with circular reference",
+    "failure_mode": "canonicalize pass enters infinite loop on cyclic SSA definitions"
+  },
+  "severity": "high",
+  "workaround": "Assign all struct fields in always_comb, or use separate signals instead of struct fields",
+  "reproduction_command": "circt-verilog --ir-llhd source.sv | circt-opt --pass-pipeline='builtin.module(hw.module(llhd-sig2reg,cse,canonicalize))'"
+}

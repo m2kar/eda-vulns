@@ -1,0 +1,38 @@
+{
+  "testcase_id": "260129-0000193c",
+  "reproduction": {
+    "reproduced": true,
+    "status": "issue_still_present_with_improved_error_handling",
+    "timestamp": "2026-02-01T14:00:00Z",
+    "toolchain": "llvm-22/firtool-1.139.0",
+    "command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv",
+    "exit_code": 1
+  },
+  "original_crash": {
+    "type": "assertion",
+    "message": "integer bitwidth is limited to 16777215 bits",
+    "location": "mlir/IR/StorageUniquerSupport.h:180",
+    "signal": "SIGABRT",
+    "core_dump": true
+  },
+  "current_behavior": {
+    "error_type": "validation_error",
+    "error_message": "'hw.bitcast' op result #0 must be Type wherein the bitwidth in hardware is known, but got 'f64'",
+    "problematic_operation": "%15 = \"hw.bitcast\"(%14) : (i1073741823) -> f64",
+    "invalid_bitwidth": 1073741823,
+    "max_allowed_bitwidth": 16777215
+  },
+  "analysis": {
+    "root_cause": "Verilog type conversion creates intermediate MLIR type with bitwidth exceeding 24-bit limit",
+    "source_issue": "real type in hardware conversion",
+    "progress": "Current toolchain improved error handling by catching the issue earlier in validation phase",
+    "original_phase": "Mem2Reg optimization pass",
+    "current_phase": "bitcast operation validation"
+  },
+  "reproducibility": {
+    "easy_to_reproduce": true,
+    "consistent": true,
+    "requires_specific_version": false,
+    "test_source": "source.sv"
+  }
+}

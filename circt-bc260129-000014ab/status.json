@@ -1,0 +1,17 @@
+{
+  "crash_id": "bc260129-000014ab",
+  "status": "processing",
+  "phase": "initializing",
+  "created_at": "2026-02-01T08:12:30+00:00",
+  "updated_at": "2026-02-01T08:12:30+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "origin/source.sv",
+    "error_file": "origin/error.txt"
+  },
+  "phases": {
+    "phase1": {"status": "pending"},
+    "phase2": {"status": "pending"},
+    "phase3": {"status": "pending"}
+  }
+}

@@ -1,0 +1,43 @@
+============================================================
+CIRCT CRASH REPRODUCTION REPORT - Test Case 260128-00000b82
+============================================================
+
+REPRODUCTION STATUS: ✓ SUCCESSFUL
+
+Input File:
+  - Source: /home/zhiqing/edazz/eda-vulns/circt-bc260128-00000b82/origin/source.sv
+  - Error Log: /home/zhiqing/edazz/eda-vulns/circt-bc260128-00000b82/origin/error.txt
+
+Reproduction Command:
+  /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw source.sv
+
+Exit Code: 134 (SIGABRT - Aborted)
+
+Crash Signature:
+  Type: Assertion Failure
+  Location: llvm/Support/Casting.h:650
+  Message: Assertion `detail::isPresent(Val) && "dyn_cast on a non-existent value"' failed.
+
+Root Cause Analysis Location:
+  Function: circt::hw::ModulePortInfo::sanitizeInOut()
+  File: circt/Dialect/HW/PortImplementation.h:177:24
+  
+  The crash occurs in the MooreToCore conversion pass when attempting to convert
+  an SVModuleOp. The issue happens when dyn_cast is called on a type that doesn't
+  exist or has been invalidated.
+
+Signature Match: EXACT MATCH
+  - Original assertion message: ✓ Matches
+  - Stack trace pattern: ✓ Matches
+  - Error location: ✓ Matches
+
+Output Files Generated:
+  1. reproduce.log (62 lines) - Full reproduction output with stack trace
+  2. metadata.json - Structured metadata for automation
+
+Output Directory:
+  /home/zhiqing/edazz/eda-vulns/circt-bc260128-00000b82/origin/
+
+============================================================
+END OF REPORT
+============================================================

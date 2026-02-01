@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T20:02:19.940066",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "arcilator",
+    "version": "circt-1.139.0",
+    "path": "/home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator"
+  },
+  "reproduction": {
+    "command": "/home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw source.sv | /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator",
+    "exit_code": 134,
+    "reproduced": true,
+    "match_result": "exact_match"
+  },
+  "crash_signature": {
+    "original": "Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed.",
+    "reproduced": "Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed."
+  },
+  "error_context": {
+    "error_message": "<unknown>:0: error: state type must have a known bit width; got '!llhd.ref<i1>'",
+    "assertion_function": "circt::arc::StateType::get(mlir::Type)",
+    "assertion_file": "/home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/IR/StorageUniquerSupport.h",
+    "assertion_line": 180
+  },
+  "files": {
+    "reproduce_log": "reproduce.log",
+    "source_file": "source.sv"
+  }
+}

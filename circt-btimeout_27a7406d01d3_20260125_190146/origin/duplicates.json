@@ -1,0 +1,126 @@
+{
+  "crash_id": "27a7406d01d3",
+  "analysis_date": "2026-01-31",
+  "total_issues_searched": 150,
+  "search_queries": [
+    "arcilator timeout struct",
+    "packed struct combinational loop",
+    "struct_inject",
+    "arcilator",
+    "combinational loop",
+    "LowerState",
+    "packed struct"
+  ],
+  "known_related_issues_status": {
+    "6373": {
+      "number": 6373,
+      "title": "[Arc] Support hw.wires of aggregate types",
+      "state": "OPEN",
+      "relevance": "Documents arcilator's incomplete support for aggregate types (hw.struct, hw.array)",
+      "similarity_score": 10,
+      "matching_keywords": ["arcilator", "aggregate types", "hw.struct"],
+      "notes": "Still open - related to broader aggregate type support in Arc"
+    },
+    "8286": {
+      "number": 8286,
+      "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+      "state": "OPEN",
+      "relevance": "Documents known issues with combinational logic lowering and arcilator",
+      "similarity_score": 8,
+      "matching_keywords": ["arcilator", "combinational logic", "llhd"],
+      "notes": "Still open - broader issue tracking verilog-to-llvm lowering pipeline problems"
+    },
+    "8860": {
+      "number": 8860,
+      "title": "[LLHD] Assigning array elements individually creates a combinational loop",
+      "state": "CLOSED",
+      "relevance": "Same root cause pattern - partial aggregate assignment creates false combinational loop",
+      "similarity_score": 13,
+      "matching_keywords": ["combinational loop", "hw.array_inject", "partial assignment", "false loop"],
+      "notes": "CLOSED issue - fixed for hw.array_inject with canonicalizers. Current crash is struct variant."
+    }
+  },
+  "additional_related_issues": [
+    {
+      "number": 5053,
+      "title": "[Arc] LowerState: combinatorial cycle reported in cases where there is none",
+      "state": "CLOSED",
+      "similarity_score": 11,
+      "matching_keywords": ["LowerState", "combinatorial cycle", "false cycle detection", "Arc"],
+      "pattern": "False combinatorial cycle detection in LowerState pass",
+      "relevance": "Directly related to LowerState pass behavior with false cycle detection"
+    },
+    {
+      "number": 4916,
+      "title": "[Arc] LowerState: nested arc.state get pulled in wrong clock tree",
+      "state": "OPEN",
+      "similarity_score": 7,
+      "matching_keywords": ["LowerState", "Arc state handling"],
+      "pattern": "LowerState pass issues with nested state operations",
+      "relevance": "Related to LowerState pass edge cases"
+    },
+    {
+      "number": 9395,
+      "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+      "state": "CLOSED",
+      "similarity_score": 6,
+      "matching_keywords": ["arcilator", "assertion failure"],
+      "pattern": "Generic arcilator lowering issue",
+      "relevance": "Generic arcilator failure category"
+    }
+  ],
+  "similarity_analysis": {
+    "top_match": {
+      "issue_number": 8860,
+      "title": "[LLHD] Assigning array elements individually creates a combinational loop",
+      "similarity_score": 13,
+      "score_breakdown": {
+        "same_crash_type": 3,
+        "same_component_arcilator": 3,
+        "same_construct_partial_assignment": 3,
+        "same_root_cause_inject_cycle": 4,
+        "partial_overlap_llhd_arc": 0
+      },
+      "analysis": "Issue #8860 is HIGHLY similar but for hw.array_inject. Current crash is for hw.struct_inject with similar mechanism: partial assignment creates false combinational loop via inject operations.",
+      "key_difference": "Array vs. Struct: #8860 fixed via canonicalizers for hw.struct_create but current crash suggests struct_inject canonicalization may be incomplete or missing."
+    },
+    "secondary_matches": [
+      {
+        "issue_number": 6373,
+        "similarity_score": 10,
+        "reason": "Aggregate type support in arcilator - broad category that includes struct handling"
+      },
+      {
+        "issue_number": 5053,
+        "similarity_score": 11,
+        "reason": "False cycle detection in LowerState pass - exact component and pattern match"
+      }
+    ]
+  },
+  "recommendation": {
+    "classification": "likely_new",
+    "confidence": "high",
+    "rationale": [
+      "No exact duplicate found for hw.struct_inject + timeout combination",
+      "Issue #8860 is very similar (similarity=13) but was for hw.array_inject and marked CLOSED",
+      "Current issue involves hw.struct_inject in packed struct partial assignment context",
+      "Suggests struct_inject canonicalizers may have gap compared to array_inject fixes",
+      "Known related issues (#6373, #8286) are open but track broader problems",
+      "Root cause: LowerState pass infinite loop during struct_inject processing due to cyclic dependency"
+    ],
+    "next_steps": [
+      "File as new issue: timeout in arcilator LowerState with packed struct partial assignment",
+      "Reference issue #8860 as related/precedent fix for array_inject",
+      "Request similar canonicalizer enhancement for hw.struct_inject",
+      "Suggest workaround: fully initialize packed struct fields to avoid partial assignment patterns"
+    ]
+  },
+  "summary": {
+    "total_related_issues": 6,
+    "open_related_issues": 4,
+    "closed_related_issues": 2,
+    "highest_similarity_score": 13,
+    "recommendation_action": "new_issue",
+    "reason": "While #8860 is highly similar (score 13), it was fixed for arrays and marked CLOSED. This is a new manifestation for packed structs, suggesting incomplete canonicalizer coverage."
+  }
+}

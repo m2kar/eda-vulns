@@ -1,0 +1,6 @@
+<unknown>:0: warning: no top-level modules found in design [-Wmissing-top]
+minimal1.sv:6:9: remark: Class builtin functions (needed for randomization, constraints, and covergroups) are not yet supported and will be dropped during lowering.
+  class my_class;
+        ^
+module {
+}

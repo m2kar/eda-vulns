@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T14:37:28Z",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "circt-verilog",
+    "version": "LLVM version 22.0.0git",
+    "path": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog"
+  },
+  "reproduction": {
+    "command": "circt-verilog source.sv --ir-hw",
+    "exit_code": 134,
+    "reproduced": true,
+    "match_result": "exact_match"
+  },
+  "crash_signature": {
+    "original": "<unknown>:0: error: integer bitwidth is limited to 16777215 bits",
+    "reproduced": "<unknown>:0: error: integer bitwidth is limited to 16777215 bits"
+  },
+  "files": {
+    "reproduce_log": "reproduce.log"
+  }
+}

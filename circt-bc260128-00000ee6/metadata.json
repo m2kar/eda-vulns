@@ -1,0 +1,40 @@
+{
+  "testcase_id": "260128-00000ee6",
+  "crash_type": "assertion",
+  "reproduced": true,
+  "reproduction_date": "2026-02-01T02:40:00+00:00",
+  "tool": {
+    "name": "circt-verilog",
+    "version": "LLVM 22.0.0git",
+    "path": "/home/zhiqing/edazz/circt/build/bin/circt-verilog"
+  },
+  "command": "/home/zhiqing/edazz/circt/build/bin/circt-verilog --ir-hw source.sv",
+  "exit_code": 134,
+  "assertion": {
+    "message": "op->use_empty() && \"expected 'op' to have no uses\"'",
+    "file": "/root/circt/llvm/mlir/lib/IR/PatternMatch.cpp",
+    "line": 156,
+    "function": "virtual void mlir::RewriterBase::eraseOp(Operation *)"
+  },
+  "crash_location": {
+    "dialect": "comb",
+    "pattern": "extractConcatToConcatExtract",
+    "function": "circt::comb::ExtractOp::canonicalize",
+    "file": "/root/circt/lib/Dialect/Comb/CombFolds.cpp",
+    "line": 615
+  },
+  "root_cause_summary": "Use-after-replace bug in extractConcatToConcatExtract canonicalization pattern. The pattern attempts to erase an operation that still has uses in the IR.",
+  "source_files": {
+    "source.sv": {
+      "language": "SystemVerilog",
+      "lines": 16,
+      "description": "Module with input signal, internal wire, and always_comb block"
+    }
+  },
+  "key_functions": [
+    "extractConcatToConcatExtract",
+    "circt::replaceOpAndCopyNamehint",
+    "mlir::RewriterBase::replaceOp",
+    "mlir::RewriterBase::eraseOp"
+  ]
+}

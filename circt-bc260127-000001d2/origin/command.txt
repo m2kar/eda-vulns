@@ -1,0 +1,1 @@
+/opt/firtool/bin/circt-verilog --ir-hw bug.sv 2>&1 | /opt/firtool/bin/arcilator 2>&1

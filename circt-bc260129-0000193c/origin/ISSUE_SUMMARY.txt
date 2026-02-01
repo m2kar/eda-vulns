@@ -1,0 +1,109 @@
+================================================================================
+CIRCT BUG REPORT - FINAL ISSUE GENERATED
+================================================================================
+
+Crash ID: 260129-0000193c
+Generated: 2026-02-01
+Status: COMPLETE
+
+================================================================================
+ISSUE TITLE
+================================================================================
+[LLHD] Crash when using `real` type in sequential logic blocks
+
+================================================================================
+KEY INFORMATION
+================================================================================
+
+Classification: Valid Bug Report (Not duplicate, but related to #8930 and #8269)
+Similarity Score to Related Issues: 8/10 (below 10.0 duplicate threshold)
+Severity: High (Compiler crash)
+Reproducibility: Deterministic
+
+Test Case Status:
+✓ Syntactically valid (passes Verilator and Slang)
+✓ Bug reproducible on CIRCT
+✓ Recognized as valid bug by other tools
+
+================================================================================
+ROOT CAUSE SUMMARY
+================================================================================
+
+Component: LLHD Mem2Reg Pass
+File: lib/Dialect/LLHD/Transforms/Mem2Reg.cpp:1742
+Function: Promoter::insertBlockArgs()
+
+Issue: The Mem2Reg pass fails to handle floating-point types (Float64Type from 
+SystemVerilog 'real') during memory-to-register promotion. This causes:
+
+1. hw::getBitWidth() returns -1 for Float64Type
+2. Invalid IntegerType creation with bitwidth 1073741823 (2^30 - 1)
+3. Assertion failure or validation error (exceeds max 16777215 bits)
+
+Related Issues:
+- #8930: [MooreToCore] Crash with sqrt/floor (Similarity: 8/10)
+- #8269: [MooreToCore] Support `real` constants (Similarity: 8/10)
+
+================================================================================
+REPRODUCTION COMMAND
+================================================================================
+
+cat > test.sv << 'VERILOG'
+module test(input logic clk);
+  real r;
+  always_ff @(posedge clk) r <= 1.0;
+endmodule
+VERILOG
+
+circt-verilog --ir-hw test.sv
+
+Expected Error:
+error: 'hw.bitcast' op result #0 must be Type wherein the bitwidth in 
+hardware is known, but got 'f64'
+
+================================================================================
+FILES GENERATED
+================================================================================
+
+Output File: issue.md
+Format: GitHub Issue markdown format
+Size: 7.4 KB
+Sections:
+  - Title and Description
+  - Steps to Reproduce
+  - Expected vs Actual Behavior
+  - Root Cause Analysis (Technical Details)
+  - Environment Information
+  - Validation Results
+  - Related Issues Analysis
+  - Suggested Fixes (Short-term and Long-term)
+  - Additional Context
+
+================================================================================
+VALIDATION STATUS
+================================================================================
+
+Validation Report: ✓ PASS
+- Bug Reproducibility: CONFIRMED
+- Cross-Tool Validation: PASSED
+- Duplicate Check: NOT EXACT DUPLICATE (8/10 similarity, but distinct manifestation)
+- Classification: Valid Bug Report
+
+================================================================================
+READY FOR GITHUB SUBMISSION
+================================================================================
+
+The issue.md file is ready to be submitted as a GitHub issue to:
+https://github.com/llvm/circt/issues/new
+
+Copy the contents of issue.md and paste into the GitHub issue body.
+
+Key Points to Highlight:
+1. This is a specific manifestation in sequential logic (always_ff)
+2. Distinct from but related to #8930 and #8269
+3. Represents a deterministic compiler crash on valid SystemVerilog
+4. Includes minimal reproducible example
+5. Includes detailed technical root cause analysis
+6. Includes suggested fixes for both short-term and long-term
+
+================================================================================

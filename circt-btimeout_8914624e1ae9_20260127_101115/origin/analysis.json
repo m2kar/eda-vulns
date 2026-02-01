@@ -1,0 +1,67 @@
+{
+  "dialect": "HW",
+  "failing_pass": "unknown (timeout during arcilator/LLVM pipeline)",
+  "crash_type": "timeout",
+  "assertion_message": "Compilation timed out after 60s",
+  "crash_location": {
+    "file": null,
+    "function": null,
+    "line": null
+  },
+  "test_case": {
+    "language": "SystemVerilog",
+    "module": "test_module",
+    "constructs": [
+      "always_ff @(posedge clk)",
+      "non-blocking assignment",
+      "self-inverting register feedback",
+      "continuous assign"
+    ],
+    "patterns": [
+      "register feedback without reset",
+      "bitwise NOT of same register"
+    ]
+  },
+  "hypotheses": [
+    {
+      "description": "Arcilator lowering or dependency analysis fails to converge on register feedback and hangs.",
+      "confidence": 0.45,
+      "evidence": [
+        "Timeout occurs on a minimal design, suggesting non-termination rather than heavy computation.",
+        "Self-referential register feedback could be misclassified as combinational cycle."
+      ]
+    },
+    {
+      "description": "Arcilator emits pathological LLVM IR that causes opt/llc to take excessively long.",
+      "confidence": 0.35,
+      "evidence": [
+        "Pipeline includes opt/llc, which can be slow if IR explodes.",
+        "Input is tiny, so long time likely indicates IR growth or recursion."
+      ]
+    },
+    {
+      "description": "Pipeline deadlock due to pipe/IO backpressure between stages.",
+      "confidence": 0.2,
+      "evidence": [
+        "Tools are connected via Unix pipes; a blocked stage can stall the pipeline.",
+        "No stack trace or assertion was produced."
+      ]
+    }
+  ],
+  "keywords": [
+    "arcilator",
+    "HW dialect",
+    "always_ff",
+    "self-inverting register",
+    "timeout",
+    "cycle detection",
+    "fixpoint",
+    "llvm opt hang",
+    "circt-verilog --ir-hw"
+  ],
+  "suggested_sources": [
+    "Arcilator register/latch analysis and scheduling",
+    "HW dialect to LLVM lowering paths",
+    "LLVM opt/llc compile-time hotspots"
+  ]
+}

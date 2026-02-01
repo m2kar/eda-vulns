@@ -1,0 +1,43 @@
+{
+  "testcase_id": "260128-00000ac8",
+  "validation_result": "report",
+  "is_valid_bug": true,
+  "syntax_validation": {
+    "slang": {
+      "version": "10.0.6+3d7e6cd2e",
+      "result": "pass",
+      "errors": 0,
+      "warnings": 0
+    },
+    "verilator": {
+      "version": "5.022",
+      "result": "pass",
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "crash_validation": {
+    "tool": "arcilator",
+    "version": "CIRCT 1.139.0",
+    "crash_reproduced": true,
+    "crash_signature": "cast<Ty>() argument of incompatible type!",
+    "crash_location": "InferStateProperties.cpp:211"
+  },
+  "minimization": {
+    "original_lines": 27,
+    "minimized_lines": 14,
+    "reduction_percent": "48%"
+  },
+  "classification": {
+    "category": "report",
+    "reason": "Valid SystemVerilog code causes internal assertion failure in arcilator",
+    "severity": "medium-high",
+    "is_feature_request": false,
+    "is_user_error": false
+  },
+  "files": {
+    "testcase": "bug.sv",
+    "error_log": "error.log",
+    "command": "command.txt"
+  }
+}

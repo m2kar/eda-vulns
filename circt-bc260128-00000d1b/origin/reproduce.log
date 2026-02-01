@@ -1,0 +1,7 @@
+module {
+  hw.module @example_module(in %a : i1, out b : i6) {
+    %c0_i5 = hw.constant 0 : i5
+    %0 = comb.concat %c0_i5, %a : i5, i1
+    hw.output %0 : i6
+  }
+}

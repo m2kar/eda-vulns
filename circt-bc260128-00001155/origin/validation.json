@@ -1,0 +1,32 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T00:00:00Z",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": ""
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "slang": "pass",
+    "verilator": "pass",
+    "icarus": "error"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid IEEE 1800-2017 SystemVerilog accepted by slang and verilator causes crash in CIRCT. String type as module port is valid SV, CIRCT should either support it or emit diagnostic."
+  },
+  "minimization": {
+    "original_lines": 9,
+    "minimized_lines": 2,
+    "reduction_percent": 77.8
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "status": "SUCCESS",
+    "version_match": true,
+    "toolchain_version": "CIRCT firtool-1.139.0",
+    "original_version": "circt-1.139.0",
+    "llvm_version": "22.0.0git",
+    "tool_path": "/opt/firtool/bin/circt-verilog"
+  },
+  "crash": {
+    "type": "Assertion Failure",
+    "signature": "dyn_cast on a non-existent value",
+    "location": "MooreToCore.cpp:177:24",
+    "function": "circt::hw::ModulePortInfo::sanitizeInOut()",
+    "assertion": "detail::isPresent(Val) && \"dyn_cast on a non-existent value\""
+  },
+  "testcase": {
+    "id": "260128-00000c7d",
+    "source_file": "/home/zhiqing/edazz/eda-vulns/circt-bc260128-00000c7d/origin/source.sv",
+    "module": "test_module"
+  },
+  "execution": {
+    "command": "circt-verilog --ir-hw /home/zhiqing/edazz/eda-vulns/circt-bc260128-00000c7d/origin/source.sv",
+    "exit_code": 134,
+    "signal": "Aborted (core dumped)",
+    "timestamp": "2026-01-31T23:33:00Z"
+  },
+  "analysis": {
+    "crash_consistency": "100% match with original crash",
+    "root_cause": "TypeStorage not properly initialized before dyn_cast",
+    "affected_component": "Moore-to-Core dialect conversion",
+    "stack_trace": "matches original exactly"
+  }
+}

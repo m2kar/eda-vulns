@@ -1,0 +1,78 @@
+{
+  "search_queries": [
+    "sanitizeInOut string array",
+    "InOutType assertion",
+    "MooreToCore crash",
+    "unpacked array",
+    "dyn_cast"
+  ],
+  "results": [
+    {
+      "issue_number": 8219,
+      "title": "[ESI]Assersion: dyn_cast on a non-existent value",
+      "state": "CLOSED",
+      "similarity_score": 8.5,
+      "matched_keywords": [
+        "dyn_cast",
+        "assertion"
+      ],
+      "notes": "CLOSED issue with exact same error message pattern 'dyn_cast on a non-existent value'. Different subsystem (ESI) but same root cause pattern of unsafe dyn_cast on potentially null/non-existent values."
+    },
+    {
+      "issue_number": 7627,
+      "title": "[MooreToCore] Unpacked array causes crash",
+      "state": "CLOSED",
+      "similarity_score": 8.0,
+      "matched_keywords": [
+        "MooreToCore",
+        "unpacked array",
+        "crash"
+      ],
+      "notes": "CLOSED issue - MooreToCore conversion crash with unpacked arrays. Similar domain (MooreToCore, unpacked arrays) but CLOSED. Likely related to port conversion issues."
+    },
+    {
+      "issue_number": 4036,
+      "title": "[PrepareForEmission] Crash when inout operations are passed to instance ports",
+      "state": "OPEN",
+      "similarity_score": 7.5,
+      "matched_keywords": [
+        "InOutType",
+        "assertion",
+        "port"
+      ],
+      "notes": "OPEN issue - InOutType assertion failure during port processing. Different phase (PrepareForEmission vs MooreToCore) but same underlying issue: unsafe port type handling with InOutType."
+    },
+    {
+      "issue_number": 8276,
+      "title": "[MooreToCore] Support for UnpackedArrayType emission",
+      "state": "OPEN",
+      "similarity_score": 7.0,
+      "matched_keywords": [
+        "MooreToCore",
+        "unpacked array",
+        "UnpackedArrayType"
+      ],
+      "notes": "OPEN feature request - UnpackedArrayType emission in MooreToCore. Directly related to our crash (unpacked arrays of strings as ports). This is an enhancement tracking the exact feature needed to fix the crash."
+    },
+    {
+      "issue_number": 8215,
+      "title": "[MooreToCore] OOB array slices of unpacked arrays lowered like packed arrays",
+      "state": "OPEN",
+      "similarity_score": 6.5,
+      "matched_keywords": [
+        "MooreToCore",
+        "unpacked array"
+      ],
+      "notes": "OPEN issue - Unpacked array handling in MooreToCore. Related to the same subsystem and type handling issues."
+    }
+  ],
+  "top_match": {
+    "issue_number": 8219,
+    "similarity_score": 8.5,
+    "title": "[ESI]Assersion: dyn_cast on a non-existent value"
+  },
+  "recommendation": "review_existing",
+  "recommendation_confidence": "high",
+  "analysis": "The crash signature 'dyn_cast on a non-existent value' matches issue #8219 exactly. However, that issue is CLOSED and in a different subsystem (ESI). The current crash occurs in MooreToCore/PortImplementation.h, and the root cause is unpacked array of strings not being properly handled during port conversion, yielding a null type. While #8219 has the same error message, it's in a different context. Issue #8276 is the most relevant OPEN issue as it directly addresses the missing UnpackedArrayType support in MooreToCore. The current crash is likely a variant or duplicate of #8276's scope. Recommendation: Review #8276 and consider this a related bug in the same feature gap.",
+  "timestamp": "2026-01-31T22:55:00Z"
+}

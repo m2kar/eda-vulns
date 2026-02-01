@@ -1,0 +1,67 @@
+{
+  "dialect": "arc",
+  "secondary_dialect": "llhd",
+  "crash_type": "assertion",
+  "assertion_message": "succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed",
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "root_cause": {
+    "summary": "Arc StateType does not support LLHD RefType - type system incompatibility when processing inout ports",
+    "detailed": "The LowerState pass in arcilator attempts to create arc.state storage for all module arguments including inout ports. Inout ports are represented as llhd.ref<T> types. The StateType::verify() function checks that the inner type has a known bit width via computeLLVMBitWidth(), which does not handle RefType, causing the verification to fail with an assertion.",
+    "category": "cross_dialect_type_incompatibility"
+  },
+  "trigger_constructs": [
+    {
+      "construct": "inout port",
+      "code": "inout logic c",
+      "role": "primary - generates llhd.ref<i1> type"
+    },
+    {
+      "construct": "sequential logic",
+      "code": "always_ff @(posedge clk)",
+      "role": "secondary - creates state that triggers LowerState pass"
+    },
+    {
+      "construct": "tri-state assignment",
+      "code": "assign c = (a) ? temp_reg[0] : 1'bz",
+      "role": "context - typical usage of inout port"
+    }
+  ],
+  "source_location": {
+    "crash_site": {
+      "file": "lib/Dialect/Arc/ArcTypes.cpp",
+      "function": "StateType::verify",
+      "line_range": "80-87"
+    },
+    "call_site": {
+      "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "function": "ModuleLowering::run",
+      "line": "219"
+    },
+    "type_check": {
+      "file": "lib/Dialect/Arc/ArcTypes.cpp",
+      "function": "computeLLVMBitWidth",
+      "line_range": "29-76"
+    }
+  },
+  "stack_trace_summary": {
+    "frames": [
+      "StateType::get(mlir::Type)",
+      "ModuleLowering::run() [LowerState.cpp:219]",
+      "LowerStatePass::runOnOperation() [LowerState.cpp:1198]"
+    ]
+  },
+  "affected_tools": ["arcilator"],
+  "compilation_pipeline": "circt-verilog --ir-hw | arcilator",
+  "severity": "medium",
+  "reproducibility": "deterministic",
+  "fix_suggestions": [
+    "Add early detection of RefType arguments in LowerState with user-friendly error",
+    "Extend computeLLVMBitWidth() to handle llhd::RefType by extracting nested type width",
+    "Add dialect conversion pass to transform RefType before Arc lowering",
+    "Document that arcilator does not support inout ports"
+  ],
+  "related_code": {
+    "verification_check": "lib/Dialect/Arc/ArcOps.cpp:338-339 - ModelOp::verify() also checks for inout ports",
+    "ref_type_definition": "include/circt/Dialect/LLHD/LLHDTypes.td:34-48"
+  }
+}

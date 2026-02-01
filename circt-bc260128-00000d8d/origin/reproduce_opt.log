@@ -1,0 +1,2 @@
+circt-opt: Unknown command line argument '-O0'.  Try: 'circt-opt --help'
+circt-opt: Did you mean '-o'?

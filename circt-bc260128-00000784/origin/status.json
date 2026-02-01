@@ -1,0 +1,26 @@
+{
+  "testcase_id": "260128-00000784",
+  "crash_type": "assertion",
+  "phase": "reproduce",
+  "reproduce": {
+    "status": "completed",
+    "crash_signature": "failed to legalize operation 'sim.fmt.literal'",
+    "reproducible": true,
+    "error_message": "<stdin>:5:10: error: failed to legalize operation 'sim.fmt.literal'\n    %0 = sim.fmt.literal \"Error: Assertion failed: arr[\"\n         ^\n<stdin>:5:10: note: see current operation: %30 = \"sim.fmt.literal\"() <{literal = \"Error: Assertion failed: arr[\"}> : () -> !sim.fstring"
+  },
+  "root_cause": {
+    "status": "pending"
+  },
+  "minimize": {
+    "status": "pending"
+  },
+  "validate": {
+    "status": "pending"
+  },
+  "check_duplicates": {
+    "status": "pending"
+  },
+  "generate_issue": {
+    "status": "pending"
+  }
+}

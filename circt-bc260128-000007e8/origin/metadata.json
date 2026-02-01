@@ -1,0 +1,9 @@
+{
+  "crash_id": "260128-000007e8",
+  "reproduction": {
+    "reproduced": true,
+    "crash_signature": "SVModuleOpConversion::matchAndRewrite -> MooreToCorePass::runOnOperation -> Assertion failure in dyn_cast",
+    "crash_location": "circt::hw::ModulePortInfo::sanitizeInOut() / llvm::dyn_cast<circt::hw::InOutType>",
+    "command": "circt-verilog --ir-hw source.sv"
+  }
+}

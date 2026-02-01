@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "crash_id": "260128-00000d1b",
+  "timestamp": "2026-02-01T00:00:00Z",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "original_tool": {
+    "name": "circt-verilog",
+    "version": "circt-1.139.0",
+    "path": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog"
+  },
+  "reproduction": {
+    "tool": {
+      "name": "circt-verilog",
+      "version": "LLVM 22 tools",
+      "path": "/opt/llvm-22/bin/circt-verilog"
+    },
+    "command": "circt-verilog source.sv",
+    "exit_code": 0,
+    "reproduced": false,
+    "match_result": "no_crash_newer_version",
+    "reason": "Bug may be fixed in current CIRCT version or different tool version behavior"
+  },
+  "crash_signature": {
+    "original_assertion": "op->use_empty() && \"expected 'op' to have no uses\"",
+    "original_file": "/home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/IR/PatternMatch.cpp:156",
+    "original_function": "mlir::RewriterBase::eraseOp(Operation *)",
+    "reproduced_assertion": "none - program completed successfully",
+    "reproduced_file": "N/A"
+  },
+  "files": {
+    "reproduce_log": "reproduce.log",
+    "metadata": "metadata.json"
+  },
+  "notes": [
+    "Original crash occurred during ExtractOp canonicalization in CombFolds.cpp:548",
+    "Error was in pattern matching and rewriting of extract-concat patterns",
+    "Current LLVM 22 tools show successful compilation without assertion failure",
+    "This may indicate the bug was fixed between circt-1.139.0 and current version"
+  ]
+}

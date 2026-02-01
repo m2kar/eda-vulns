@@ -1,0 +1,99 @@
+================================================================================
+CRASH SIGNATURE ANALYSIS
+Test Case: 260129-0000159f
+================================================================================
+
+ORIGINAL CRASH SIGNATURE (from error.txt)
+================================================================================
+
+1. ERROR MESSAGE
+   - Primary: "state type must have a known bit width; got '!llhd.ref<i1>'"
+   - Location: <unknown>:0
+   - Assertion Failure: ConcreteT::verifyInvariants() in StorageUniquerSupport.h:180
+
+2. CRASH LOCATION (Stack Frame #12)
+   Function: circt::arc::StateType::get(mlir::Type)
+   Address: 0x000055ce132b2ae9
+   
+3. ROOT CAUSE (Stack Frame #13-14)
+   Pass: LowerStatePass
+   File: LowerState.cpp
+   Functions:
+     - ModuleLowering::run() @ line 219
+     - LowerStatePass::runOnOperation() @ line 1198
+
+4. FULL STACK TRACE SUMMARY
+   
+   Key frames:
+     #8  Assertion failure point
+     #9  Assertion handling in libc
+     #10 Assertion implementation
+     #11 Arc dialect StateType creation (unnamed namespace)
+     #12 StateType::get() - THE CRASH POINT
+     #13 ModuleLowering::run() @ LowerState.cpp:219
+     #14 LowerStatePass::runOnOperation() @ LowerState.cpp:1198
+     #15-#32 MLIR pipeline infrastructure
+
+5. DIAGNOSTIC SUMMARY
+   Program: arcilator
+   Tool: CIRCT Arc Dialect Lowering Pass
+   Dialect: Arc
+   Pass Name: LowerStatePass
+   Target: LLVM Conversion
+
+CRASH TRIGGER ANALYSIS
+================================================================================
+
+Input Type: !llhd.ref<i1>
+  - LLHD reference type
+  - References a single-bit (i1) value
+  - Does NOT have a "known bit width" (references are opaque pointers)
+
+Expected Type: Any type with bitwidth > 0
+  - i1, i8, i16, i32, i64, etc.
+  - Array types with known sizes
+  - NOT reference types or opaque types
+
+VERIFICATION STATUS
+================================================================================
+
+The crash signature was EXTRACTED and VERIFIED against the error log:
+
+✅ Error message matches exactly
+✅ Assertion location verified (StorageUniquerSupport.h:180)
+✅ Stack frames identified and categorized
+✅ Root cause function chain established:
+   StateType::get() -> ModuleLowering::run() -> LowerStatePass
+
+REPRODUCTION ATTEMPT
+================================================================================
+
+Command Executed:
+  circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj
+
+Environment:
+  - CIRCT Version: firtool-1.139.0
+  - LLVM Version: 22.0.0git
+  - Platform: Linux x86_64
+
+Result: NOT REPRODUCED
+  The test case compiled successfully without assertion failures
+  This suggests the bug has been fixed in the current toolchain version
+
+CONCLUSION
+================================================================================
+
+Original Crash Signature Successfully Extracted:
+  ✅ Primary error message: "state type must have a known bit width; got '!llhd.ref<i1>'"
+  ✅ Assertion location: StorageUniquerSupport.h:180
+  ✅ Stack trace signature verified
+  ✅ Root cause function identified: circt::arc::StateType::get()
+  
+Crash Details:
+  - Type: Assertion Failure
+  - Trigger: Invalid LLHD reference type passed to StateType::get()
+  - Location: Arc dialect LowerState pass
+  - Severity: Crash/Abort
+
+The signature extraction is COMPLETE and VERIFIED.
+

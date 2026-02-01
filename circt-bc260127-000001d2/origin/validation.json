@@ -1,0 +1,25 @@
+{
+  "classification": {
+    "result": "report",
+    "reason": "The testcase uses valid SystemVerilog syntax (immediate assertion with $error) that is accepted by both Verilator and Slang. The crash occurs in arcilator's LowerArcToLLVM pass which fails to legalize sim.fmt.literal operations. This is a genuine bug - the format literal is correctly generated and used by sim.proc.print in the IR, but the legalization pass incorrectly marks it as illegal.",
+    "syntax_valid": true,
+    "cross_tool_results": {
+      "verilator": "lint-only passed with no errors",
+      "slang": "Build succeeded: 0 errors, 0 warnings",
+      "circt-verilog": "Parses correctly, generates valid MLIR with sim.fmt.literal linked to sim.proc.print"
+    }
+  },
+  "testcase": {
+    "file": "bug.sv",
+    "lines": 3,
+    "construct": "immediate assertion with $error()",
+    "context": "always_comb procedural block"
+  },
+  "crash_info": {
+    "tool": "arcilator",
+    "pass": "LowerArcToLLVM",
+    "operation": "sim.fmt.literal",
+    "error": "failed to legalize operation 'sim.fmt.literal'"
+  },
+  "recommendation": "Submit bug report to CIRCT. The sim.fmt.literal operation from $error() in immediate assertions should be properly lowered by LowerArcToLLVM. The operation is correctly linked to sim.proc.print in the MLIR but the legalization pattern is missing or incorrectly applied."
+}

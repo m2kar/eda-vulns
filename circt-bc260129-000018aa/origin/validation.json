@@ -1,0 +1,77 @@
+{
+  "testcase_id": "260129-000018aa",
+  "validation_timestamp": "2025-01-25T12:00:00Z",
+  "minimized_file": "bug.sv",
+  "validation_result": "report",
+  
+  "syntax_validation": {
+    "verilator": {
+      "command": "verilator --lint-only bug.sv",
+      "result": "pass",
+      "exit_code": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "slang": {
+      "command": "slang --lint-only bug.sv",
+      "result": "pass",
+      "exit_code": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  },
+  
+  "circt_validation": {
+    "parse_only": {
+      "command": "circt-verilog --parse-only bug.sv",
+      "result": "pass",
+      "exit_code": 0,
+      "output_type": "moore_ir"
+    },
+    "ir_moore": {
+      "command": "circt-verilog --ir-moore bug.sv",
+      "result": "pass",
+      "exit_code": 0,
+      "output_type": "moore_ir"
+    },
+    "ir_hw": {
+      "command": "circt-verilog --ir-hw bug.sv",
+      "result": "timeout",
+      "exit_code": 124,
+      "timeout_seconds": 30
+    }
+  },
+  
+  "bug_classification": {
+    "is_valid_bug": true,
+    "bug_type": "infinite_loop_or_exponential_complexity",
+    "affected_stage": "MooreToCore conversion (--ir-hw)",
+    "severity": "high",
+    "reportable": true
+  },
+  
+  "cross_tool_comparison": {
+    "verilator": "accepts",
+    "slang": "accepts",
+    "circt_parse": "accepts",
+    "circt_ir_hw": "hangs"
+  },
+  
+  "reduction_metrics": {
+    "original_size_bytes": 451,
+    "minimized_size_bytes": 200,
+    "reduction_percent": 55.7,
+    "original_constructs": ["nested_modules", "function_chain", "bit_select"],
+    "minimized_constructs": ["bit_select"],
+    "key_finding": "Bug triggered by simple bit-select in always_comb, not by nested structures"
+  },
+  
+  "additional_bugs_found": [
+    {
+      "description": "XorOp::canonicalize crash with smaller bit widths",
+      "trigger": "logic [1:0] data; always_comb data[0] = ~data[1];",
+      "crash_location": "circt::comb::XorOp::canonicalize",
+      "exit_code": 139
+    }
+  ]
+}

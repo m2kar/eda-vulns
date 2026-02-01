@@ -1,0 +1,103 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "testcase_id": "260129-00001374",
+  "dialect": "Sim",
+  "target_dialect": "Arc",
+  "tool": "arcilator",
+  "failing_pass": "legalization",
+  "crash_type": "legalization_failure",
+  "error_message": "failed to legalize operation 'sim.fmt.literal'",
+  "crash_location": {
+    "file": "unknown",
+    "function": "legalization pass",
+    "line": null,
+    "note": "Error occurs in arcilator's MLIR conversion framework, not in CIRCT source directly"
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "file": "source.sv",
+    "key_constructs": [
+      "always_comb",
+      "concurrent assertion",
+      "$error system task",
+      "format string",
+      "array indexing"
+    ],
+    "problematic_patterns": [
+      "assert ... else $error() in always_comb",
+      "formatted error message with runtime value"
+    ],
+    "minimal_trigger": "assert (condition) else $error(\"message\", arg);"
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "Arcilator lacks lowering support for Sim dialect assertion and formatting operations (sim.fmt.literal, sim.fmt.concat, etc.)",
+      "confidence": "high",
+      "evidence": [
+        "GitHub Issue #6810 '[Arc] Add basic assertion support' is open",
+        "No SimToArc conversion exists in lib/Conversion/",
+        "SimToSV exists but only handles SV output path",
+        "sim.fmt.literal produces !sim.fstring type with no Arc lowering"
+      ],
+      "mechanism": "$error() system task lowered to sim.fmt.* ops, arcilator has no conversion patterns for these"
+    },
+    {
+      "id": 2,
+      "description": "Assertion support is a known missing feature in arcilator, not a bug",
+      "confidence": "medium",
+      "evidence": [
+        "Issue #6810 marked 'good first issue'",
+        "Arcilator focuses on combinational/sequential logic simulation",
+        "Assertion runtime support requires additional infrastructure"
+      ],
+      "mechanism": "Feature not yet implemented/prioritized"
+    }
+  ],
+  "keywords": [
+    "sim.fmt.literal",
+    "arcilator",
+    "assertion",
+    "legalize",
+    "sim dialect",
+    "$error",
+    "fstring",
+    "Arc",
+    "lowering"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/SimToSV/SimToSV.cpp",
+      "reason": "Reference implementation for Sim dialect lowering to SV"
+    },
+    {
+      "path": "tools/arcilator/arcilator.cpp",
+      "reason": "Arcilator tool main implementation"
+    },
+    {
+      "path": "lib/Dialect/Sim/SimOps.cpp",
+      "reason": "Sim dialect operation implementations"
+    },
+    {
+      "path": "include/circt/Dialect/Sim/SimOps.td",
+      "reason": "Sim dialect TableGen definitions"
+    }
+  ],
+  "related_issues": [
+    {
+      "number": 6810,
+      "title": "[Arc] Add basic assertion support",
+      "status": "open",
+      "relevance": "Directly describes the missing feature causing this crash"
+    }
+  ],
+  "classification": {
+    "is_bug": false,
+    "is_missing_feature": true,
+    "severity": "medium",
+    "workaround_available": false,
+    "workaround_description": null
+  },
+  "summary": "Arcilator fails to process SystemVerilog assertions with $error() because it lacks conversion patterns for Sim dialect formatting operations. This is a known feature gap tracked in Issue #6810."
+}

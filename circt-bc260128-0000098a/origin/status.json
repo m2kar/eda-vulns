@@ -1,0 +1,23 @@
+{
+  "crash_id": "260128-0000098a",
+  "status": "duplicate",
+  "phase": "completed",
+  "created_at": "2026-01-31T21:14:32Z",
+  "updated_at": "2026-01-31T21:35:00Z",
+  "parallel_mode": true,
+  "duplicate_issue": {
+    "issue_number": 8863,
+    "title": "[Comb] Concat/extract canonicalizer crashes on loop",
+    "url": "https://github.com/llvm/circt/issues/8863",
+    "similarity_score": 13.0
+  },
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {"status": "completed"},
+    "phase2": {"status": "completed"},
+    "phase3": {"status": "skipped"}
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "crash_id": "circt-bc260128-00000857",
+  "crash_type": "legalization",
+  "crash_operation": "sim.fmt.literal",
+  "dialect": "sim",
+  "error_message": "failed to legalize operation 'sim.fmt.literal'",
+  "testcase_analysis": {
+    "language_features": [
+      "packed struct",
+      "combinational logic (always_comb)",
+      "immediate assertion (assert ... else)",
+      "$error system task",
+      "procedural block (always @(*))"
+    ],
+    "constructs": [
+      "typedef struct packed",
+      "always_comb block",
+      "continuous assignment",
+      "immediate assertion with else clause"
+    ],
+    "trigger": "Immediate assertion with $error() message - the string literal in $error() generates a sim.fmt.literal operation that has no lowering path in arcilator"
+  },
+  "root_cause": {
+    "hypothesis": "The arcilator pipeline marks sim::FormatLiteralOp as 'legal' expecting it to be consumed by PrintFormattedOp lowering. However, immediate assertions with $error() produce orphaned sim.fmt.literal operations that have no consumer in the arcilator flow, causing legalization failure.",
+    "category": "missing_impl",
+    "evidence": [
+      "Error message explicitly states 'failed to legalize operation sim.fmt.literal'",
+      "LowerArcToLLVM.cpp marks sim::FormatLiteralOp as legal with comment explaining they should be consumed by PrintFormattedOp",
+      "The test case uses 'assert ... else $error()' which generates sim.fmt.literal for the error message",
+      "StripSV pass does not handle sim dialect assertion operations"
+    ]
+  },
+  "source_code_refs": {
+    "file": "lib/Conversion/ArcToLLVM/LowerArcToLLVM.cpp",
+    "line": "1234-1238",
+    "function": "LowerArcToLLVMPass::runOnOperation"
+  },
+  "timestamp": "2026-01-31T00:00:00Z"
+}

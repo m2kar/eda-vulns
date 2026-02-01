@@ -1,0 +1,68 @@
+{
+  "search_queries": [
+    "sim.fmt.literal legalization",
+    "arcilator failed to legalize",
+    "sim dialect",
+    "format string",
+    "arcilator lowering"
+  ],
+  "results": [
+    {
+      "number": 9467,
+      "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "url": "https://github.com/llvm/circt/issues/9467",
+      "score": 7.5,
+      "reason": "Same error type (legalization failure), same tool (arcilator), different operation (llhd.constant_time vs sim.fmt.literal)"
+    },
+    {
+      "number": 8286,
+      "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+      "url": "https://github.com/llvm/circt/issues/8286",
+      "score": 6.5,
+      "reason": "Same tool (arcilator) and related lowering/legalization, but broader scope (general Verilog-to-LLVM)"
+    },
+    {
+      "number": 8012,
+      "title": "[Moore][Arc][LLHD] Moore to LLVM lowering issues",
+      "url": "https://github.com/llvm/circt/issues/8012",
+      "score": 5.0,
+      "reason": "Related lowering issues but different toolchain (Moore/Arc vs arcilator), different dialects"
+    },
+    {
+      "number": 7692,
+      "title": "[Sim] Combine integer formatting ops into one op",
+      "url": "https://github.com/llvm/circt/issues/7692",
+      "score": 5.5,
+      "reason": "Related to sim dialect and formatting operations, but focuses on optimization rather than legalization failure"
+    },
+    {
+      "number": 6810,
+      "title": "[Arc] Add basic assertion support",
+      "url": "https://github.com/llvm/circt/issues/6810",
+      "score": 4.0,
+      "reason": "Related to assertions and error handling, but different dialect (Arc vs sim)"
+    },
+    {
+      "number": 8817,
+      "title": "[FIRRTL] Support special substitutions in assert intrinsics",
+      "url": "https://github.com/llvm/circt/issues/8817",
+      "score": 3.5,
+      "reason": "Related to assertions and format strings, but FIRRTL dialect not sim"
+    }
+  ],
+  "top_issue": {
+    "number": 9467,
+    "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+    "url": "https://github.com/llvm/circt/issues/9467",
+    "score": 7.5
+  },
+  "top_score": 7.5,
+  "recommendation": "likely_new",
+  "analysis": {
+    "exact_match": false,
+    "reason": "No existing issue matches the exact combination of sim.fmt.literal + arcilator legalization failure. Issue #9467 is the closest match (same tool, same error type, different operation). The specific sim.fmt.literal legalization failure appears to be a new, previously unreported bug.",
+    "similar_issues_found": 6,
+    "highest_similarity": "Issue #9467 shares the same legalization failure pattern with arcilator, but targets a different operation (llhd.constant_time). The underlying issue is likely part of broader arcilator legalization gaps being tracked.",
+    "next_steps": "This should be reported as a new issue unless there is evidence that #9467 was intended to cover sim.fmt.literal operations as well."
+  }
+}

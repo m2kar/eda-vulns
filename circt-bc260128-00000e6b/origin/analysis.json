@@ -1,0 +1,114 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "crash_id": "260128-00000e6b",
+  "dialect": "Moore",
+  "target_dialect": "HW",
+  "failing_pass": "MooreToCorePass",
+  "crash_type": "assertion",
+  "assertion_message": "detail::isPresent(Val) && \"dyn_cast on a non-existent value\"",
+  "crash_location": {
+    "file": "include/circt/Dialect/HW/PortImplementation.h",
+    "function": "ModulePortInfo::sanitizeInOut",
+    "line": 177
+  },
+  "call_chain": [
+    "MooreToCorePass::runOnOperation",
+    "SVModuleOpConversion::matchAndRewrite",
+    "getModulePortInfo",
+    "hw::ModulePortInfo::ModulePortInfo (constructor)",
+    "hw::ModulePortInfo::sanitizeInOut"
+  ],
+  "test_case": {
+    "language": "systemverilog",
+    "file": "source.sv",
+    "key_constructs": [
+      "string type port",
+      "string.len() method"
+    ],
+    "problematic_patterns": [
+      "string type used as module input port"
+    ],
+    "minimal_trigger": "input string a"
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "sim::DynamicStringType is not a valid HW port type; sanitizeInOut() dyn_cast fails on invalid type",
+      "confidence": "high",
+      "evidence": [
+        "Stack trace points to sanitizeInOut() dyn_cast<hw::InOutType> call",
+        "Type converter converts StringType to sim::DynamicStringType",
+        "HW port system expects integer, array, struct, or InOut wrapper types",
+        "sim::DynamicStringType is from sim dialect, not HW dialect"
+      ],
+      "mechanism": "Type conversion produces sim::DynamicStringType which cannot be safely cast-checked in HW dialect context"
+    },
+    {
+      "id": 2,
+      "description": "getModulePortInfo() lacks validation for converted port types",
+      "confidence": "medium",
+      "evidence": [
+        "Function directly uses typeConverter.convertType() result without validation",
+        "No check for nullptr or incompatible types",
+        "String port type silently passes through conversion"
+      ]
+    },
+    {
+      "id": 3,
+      "description": "Incomplete MLIR type registration for sim::DynamicStringType in HW context",
+      "confidence": "low",
+      "evidence": [
+        "Assertion says 'dyn_cast on a non-existent value' suggesting storage issue",
+        "May be a dialect interoperability boundary issue"
+      ]
+    }
+  ],
+  "root_cause_summary": "When converting a Moore module with string-type ports to HW dialect, the type converter produces sim::DynamicStringType. The hw::ModulePortInfo constructor calls sanitizeInOut() which performs dyn_cast<hw::InOutType> on all port types. This dyn_cast fails with an assertion when encountering the incompatible sim::DynamicStringType.",
+  "suggested_fixes": [
+    {
+      "approach": "Add type validation in getModulePortInfo()",
+      "description": "Check if converted type is a valid HW port type before creating PortInfo",
+      "files": ["lib/Conversion/MooreToCore/MooreToCore.cpp"]
+    },
+    {
+      "approach": "Report error for string ports in Moore dialect",
+      "description": "Add validation in Moore dialect to reject string type in port positions early",
+      "files": ["lib/Dialect/Moore/MooreOps.cpp"]
+    },
+    {
+      "approach": "Defensive sanitizeInOut()",
+      "description": "Use dyn_cast_if_present or add null check before dyn_cast",
+      "files": ["include/circt/Dialect/HW/PortImplementation.h"]
+    }
+  ],
+  "keywords": [
+    "string",
+    "StringType",
+    "DynamicStringType",
+    "ModulePortInfo",
+    "sanitizeInOut",
+    "MooreToCore",
+    "dyn_cast",
+    "port type",
+    "type conversion",
+    "InOutType"
+  ],
+  "related_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Contains type conversion rules and module conversion logic"
+    },
+    {
+      "path": "include/circt/Dialect/HW/PortImplementation.h",
+      "reason": "Contains crash site in sanitizeInOut()"
+    },
+    {
+      "path": "include/circt/Dialect/Sim/SimTypes.td",
+      "reason": "Defines sim::DynamicStringType"
+    }
+  ],
+  "severity": "medium",
+  "reproducibility": "deterministic",
+  "tool_version": "circt-1.139.0"
+}

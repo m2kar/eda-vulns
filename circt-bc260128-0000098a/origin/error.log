@@ -1,0 +1,26 @@
+PLEASE submit a bug report to https://github.com/llvm/circt and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /opt/firtool/bin/circt-verilog --ir-hw bug.sv
+ #0 0x00007fed48ff88a8 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/opt/firtool-1.139.0/bin/../lib/libLLVMSupport.so+0x2008a8)
+ #1 0x00007fed48ff62f5 llvm::sys::RunSignalHandlers() (/opt/firtool-1.139.0/bin/../lib/libLLVMSupport.so+0x1fe2f5)
+ #2 0x00007fed48ff9631 SignalHandler(int, siginfo_t*, void*) Signals.cpp:0:0
+ #3 0x00007fed48b06330 (/lib/x86_64-linux-gnu/libc.so.6+0x45330)
+ #4 0x00007fed4b8930dd canonicalizeLogicalCstWithConcat(mlir::Operation*, unsigned long, llvm::APInt const&, mlir::PatternRewriter&) CombFolds.cpp:0:0
+ #5 0x00007fed4b8947b7 circt::comb::OrOp::canonicalize(circt::comb::OrOp, mlir::PatternRewriter&) (/opt/firtool-1.139.0/bin/../lib/libCIRCTComb.so+0x477b7)
+ #6 0x00007fed4b4f68ed void llvm::function_ref<void ()>::callback_fn<mlir::PatternApplicator::matchAndRewrite(mlir::Operation*, mlir::PatternRewriter&, llvm::function_ref<bool (mlir::Pattern const&)>, llvm::function_ref<void (mlir::Pattern const&)>, llvm::function_ref<llvm::LogicalResult (mlir::Pattern const&)>)::$_0>(long) PatternApplicator.cpp:0:0
+ #7 0x00007fed4b4f3774 mlir::PatternApplicator::matchAndRewrite(mlir::Operation*, mlir::PatternRewriter&, llvm::function_ref<bool (mlir::Pattern const&)>, llvm::function_ref<void (mlir::Pattern const&)>, llvm::function_ref<llvm::LogicalResult (mlir::Pattern const&)>) (/opt/firtool-1.139.0/bin/../lib/libMLIRRewrite.so+0x7774)
+ #8 0x00007fed4b54b4a7 (anonymous namespace)::GreedyPatternRewriteDriver::processWorklist() GreedyPatternRewriteDriver.cpp:0:0
+ #9 0x00007fed4b548fd9 mlir::applyPatternsGreedily(mlir::Region&, mlir::FrozenRewritePatternSet const&, mlir::GreedyRewriteConfig, bool*) (/opt/firtool-1.139.0/bin/../lib/libMLIRTransformUtils.so+0x46fd9)
+#10 0x00007fed4b58ed35 (anonymous namespace)::Canonicalizer::runOnOperation() Canonicalizer.cpp:0:0
+#11 0x00007fed4b2e82a5 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int) (/opt/firtool-1.139.0/bin/../lib/libMLIRPass.so+0x172a5)
+#12 0x00007fed4b2e8f48 mlir::detail::OpToOpPassAdaptor::runPipeline(mlir::OpPassManager&, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int, mlir::PassInstrumentor*, mlir::PassInstrumentation::PipelineParentInfo const*) (/opt/firtool-1.139.0/bin/../lib/libMLIRPass.so+0x17f48)
+#13 0x00007fed4b2ea663 mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool) (/opt/firtool-1.139.0/bin/../lib/libMLIRPass.so+0x19663)
+#14 0x00007fed4b2e87e5 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int) (/opt/firtool-1.139.0/bin/../lib/libMLIRPass.so+0x177e5)
+#15 0x00007fed4b2eb7a9 mlir::PassManager::run(mlir::Operation*) (/opt/firtool-1.139.0/bin/../lib/libMLIRPass.so+0x1a7a9)
+#16 0x00005597f12755d0 executeWithSources(mlir::MLIRContext*, llvm::SourceMgr&) circt-verilog.cpp:0:0
+#17 0x00005597f1270dd5 execute(mlir::MLIRContext*) circt-verilog.cpp:0:0
+#18 0x00005597f12704b8 main (/opt/firtool/bin/circt-verilog+0x84b8)
+#19 0x00007fed48aeb1ca __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:74:3
+#20 0x00007fed48aeb28b call_init ./csu/../csu/libc-start.c:128:20
+#21 0x00007fed48aeb28b __libc_start_main ./csu/../csu/libc-start.c:347:5
+#22 0x00005597f126fb05 _start (/opt/firtool/bin/circt-verilog+0x7b05)

@@ -1,0 +1,22 @@
+=== Reproduction Test ===
+Testcase ID: 260128-00001199
+Date: Sun Feb  1 05:25:13 UTC 2026
+
+=== Command Executed ===
+circt-verilog --ir-hw source.sv | arcilator | opt -O0
+
+=== Environment ===
+PATH: /opt/llvm-22/bin:/root/.nix-profile/bin:/opt/firtool/bin:/root/.nix-profile/bin:/opt/firtool/bin:/root/.nix-profile/bin:/opt/firtool/bin:/home/zhiqing/edazz/FeatureFuzz-SV/.venv/bin:/opt/llvm-22/bin:/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin:/root/.bun/bin:/root/.opencode/bin:/root/.local/bin:/root/.nix-profile/bin:/opt/firtool/bin:/root/.nix-profile/bin:/opt/firtool/bin:/root/.nix-profile/bin:/opt/firtool/bin:/root/.bun/bin:/root/.opencode/bin:/root/.nvm/versions/node/v20.20.0/bin:/root/.local/bin:/root/.nix-profile/bin:/opt/firtool/bin:/root/.nix-profile/bin:/nix/var/nix/profiles/default/bin:/root/.nix-profile/bin:/opt/firtool/bin:/root/.cargo/bin:/root/.nix-profile/bin:/opt/firtool/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+/opt/firtool/bin/circt-verilog
+/opt/firtool/bin/arcilator
+/opt/llvm-22/bin/opt
+
+=== Execution Result ===
+Exit status: 0 (SUCCESS - No crash detected)
+
+=== CIRCT-Verilog Output ===
+module {
+  hw.module @test_module() {
+    hw.output
+  }
+}

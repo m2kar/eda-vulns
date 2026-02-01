@@ -1,0 +1,56 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCore",
+  "crash_type": "assertion",
+  "assertion_message": "dyn_cast on a non-existent value",
+  "crash_location": {
+    "file": "include/circt/Dialect/HW/PortImplementation.h",
+    "function": "circt::hw::ModulePortInfo::sanitizeInOut",
+    "line": 177
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "string type module port",
+      "string.len() call"
+    ],
+    "problematic_patterns": [
+      "string port type in MooreToCore lowering"
+    ]
+  },
+  "hypotheses": [
+    {
+      "description": "TypeConverter in MooreToCore returns a null/invalid type for string ports; getModulePortInfo() passes it into hw::ModulePortInfo without validation, and sanitizeInOut() dyn_casts the invalid type, triggering the assertion.",
+      "confidence": "high",
+      "evidence": [
+        "Stack trace in error.txt points to ModulePortInfo::sanitizeInOut()",
+        "getModulePortInfo() converts port types without null checks before constructing ModulePortInfo",
+        "sanitizeInOut() performs dyn_cast<hw::InOutType>(p.type) without checking for empty types"
+      ]
+    }
+  ],
+  "keywords": [
+    "string",
+    "StringType",
+    "MooreToCore",
+    "getModulePortInfo",
+    "sanitizeInOut",
+    "dyn_cast",
+    "InOutType",
+    "port type",
+    "type conversion"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "getModulePortInfo() converts SVModuleOp port types and constructs ModulePortInfo"
+    },
+    {
+      "path": "include/circt/Dialect/HW/PortImplementation.h",
+      "reason": "ModulePortInfo::sanitizeInOut() dyn_casts port types and asserts on invalid types"
+    }
+  ],
+  "root_cause_summary": "When lowering a Moore SV module that has a string-typed port, the MooreToCore type conversion produces an invalid/empty HW port type. getModulePortInfo() does not validate the converted type before constructing hw::ModulePortInfo, whose sanitizeInOut() unconditionally dyn_casts the port type to hw::InOutType. The dyn_cast assertion fires on the invalid type, causing the crash."
+}

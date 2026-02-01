@@ -1,0 +1,24 @@
+{
+  "crash_type": "assertion",
+  "dialect": "moore/hw",
+  "crash_location": "include/circt/Dialect/HW/PortImplementation.h:177 (ModulePortInfo::sanitizeInOut), called from lib/Conversion/MooreToCore/MooreToCore.cpp:259",
+  "failed_assertion": "detail::isPresent(Val) && \"dyn_cast on a non-existent value\"",
+  "root_cause_hypothesis": "Moore-to-Core type conversion produced a null mlir::Type for the SV string input port (unsupported moore string type). getModulePortInfo propagated the null type into PortInfo, and ModulePortInfo::sanitizeInOut then called dyn_cast<InOutType> on the null value, triggering the assertion. This points to a missing type conversion or missing diagnostic/validation for string ports.",
+  "affected_code_components": [
+    "lib/Conversion/MooreToCore/MooreToCore.cpp:getModulePortInfo",
+    "lib/Conversion/MooreToCore/MooreToCore.cpp:SVModuleOpConversion::matchAndRewrite",
+    "include/circt/Dialect/HW/PortImplementation.h:ModulePortInfo::sanitizeInOut",
+    "Moore-to-Core TypeConverter (string type handling)"
+  ],
+  "keywords_for_search": [
+    "dyn_cast on a non-existent value",
+    "ModulePortInfo::sanitizeInOut",
+    "MooreToCore.cpp:259",
+    "SVModuleOpConversion",
+    "string port",
+    "moore string type",
+    "InOutType",
+    "circt-verilog --ir-hw",
+    "MooreToCorePass"
+  ]
+}

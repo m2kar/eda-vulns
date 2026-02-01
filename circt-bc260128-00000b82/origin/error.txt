@@ -1,0 +1,69 @@
+Crash Type: assertion
+Testcase ID: 260128-00000b82
+
+--- Compilation Command ---
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_5ff618ffca36.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_xfhtv50x/test_5ff618ffca36.o
+
+--- Error Message ---
+circt-verilog: /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/Casting.h:650: decltype(auto) llvm::dyn_cast(From &) [To = circt::hw::InOutType, From = mlir::Type]: Assertion `detail::isPresent(Val) && "dyn_cast on a non-existent value"' failed.
+PLEASE submit a bug report to https://github.com/llvm/circt and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_5ff618ffca36.sv
+ #0 0x000055cbf432b32f llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/lib/Support/Unix/Signals.inc:842:13
+ #1 0x000055cbf432c2e9 llvm::sys::RunSignalHandlers() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/lib/Support/Signals.cpp:109:18
+ #2 0x000055cbf432c2e9 SignalHandler(int, siginfo_t*, void*) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/lib/Support/Unix/Signals.inc:412:3
+ #3 0x00007fca2dda2330 (/lib/x86_64-linux-gnu/libc.so.6+0x45330)
+ #4 0x00007fca2ddfbb2c __pthread_kill_implementation ./nptl/pthread_kill.c:44:76
+ #5 0x00007fca2ddfbb2c __pthread_kill_internal ./nptl/pthread_kill.c:78:10
+ #6 0x00007fca2ddfbb2c pthread_kill ./nptl/pthread_kill.c:89:10
+ #7 0x00007fca2dda227e raise ./signal/../sysdeps/posix/raise.c:27:6
+ #8 0x00007fca2dd858ff abort ./stdlib/abort.c:81:7
+ #9 0x00007fca2dd8581b _nl_load_domain ./intl/loadmsgcat.c:1177:9
+#10 0x00007fca2dd98517 (/lib/x86_64-linux-gnu/libc.so.6+0x3b517)
+#11 0x000055cbf2aa6874 mlir::TypeStorage::getAbstractType() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/IR/TypeSupport.h:173:5
+#12 0x000055cbf2aa6874 mlir::Type::getTypeID() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/IR/Types.h:101:37
+#13 0x000055cbf2aa6874 bool mlir::detail::StorageUserBase<circt::hw::InOutType, mlir::Type, circt::hw::detail::InOutTypeStorage, mlir::detail::TypeUniquer>::classof<mlir::Type>(mlir::Type) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/IR/StorageUniquerSupport.h:113:16
+#14 0x000055cbf2aa6874 llvm::CastInfo<circt::hw::InOutType, mlir::Type, void>::isPossible(mlir::Type) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/IR/Types.h:374:14
+#15 0x000055cbf2aa6874 llvm::DefaultDoCastIfPossible<circt::hw::InOutType, mlir::Type, llvm::CastInfo<circt::hw::InOutType, mlir::Type, void>>::doCastIfPossible(mlir::Type) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/Casting.h:311:10
+#16 0x000055cbf2aa6874 decltype(auto) llvm::dyn_cast<circt::hw::InOutType, mlir::Type>(mlir::Type&) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/Casting.h:651:10
+#17 0x000055cbf2aa6874 circt::hw::ModulePortInfo::sanitizeInOut() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/include/circt/Dialect/HW/PortImplementation.h:177:24
+#18 0x000055cbf2d9e753 llvm::SmallVectorTemplateCommon<circt::hw::PortInfo, void>::begin() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/ADT/SmallVector.h:271:45
+#19 0x000055cbf2d9e753 llvm::SmallVectorTemplateCommon<circt::hw::PortInfo, void>::end() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/ADT/SmallVector.h:273:27
+#20 0x000055cbf2d9e753 llvm::SmallVector<circt::hw::PortInfo, 1u>::~SmallVector() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/ADT/SmallVector.h:1209:46
+#21 0x000055cbf2d9e753 (anonymous namespace)::getModulePortInfo(mlir::TypeConverter const&, circt::moore::SVModuleOp) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Conversion/MooreToCore/MooreToCore.cpp:259:1
+#22 0x000055cbf2d9e753 (anonymous namespace)::SVModuleOpConversion::matchAndRewrite(circt::moore::SVModuleOp, circt::moore::SVModuleOpAdaptor, mlir::ConversionPatternRewriter&) const /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Conversion/MooreToCore/MooreToCore.cpp:276:32
+#23 0x000055cbf2d9ea81 llvm::LogicalResult mlir::ConversionPattern::dispatchTo1To1<mlir::OpConversionPattern<circt::moore::SVModuleOp>, circt::moore::SVModuleOp>(mlir::OpConversionPattern<circt::moore::SVModuleOp> const&, circt::moore::SVModuleOp, circt::moore::SVModuleOp::GenericAdaptor<llvm::ArrayRef<mlir::ValueRange>>, mlir::ConversionPatternRewriter&) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/Transforms/DialectConversion.h:0:15
+#24 0x000055cbf2d9e515 mlir::OpConversionPattern<circt::moore::SVModuleOp>::matchAndRewrite(mlir::Operation*, llvm::ArrayRef<mlir::ValueRange>, mlir::ConversionPatternRewriter&) const /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/Transforms/DialectConversion.h:715:3
+#25 0x000055cbf3dbb8ac llvm::SmallVector<mlir::ValueRange, 3u>::~SmallVector() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/ADT/SmallVector.h:0:0
+#26 0x000055cbf3dbb8ac mlir::ConversionPattern::matchAndRewrite(mlir::Operation*, mlir::PatternRewriter&) const /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:2404:1
+#27 0x000055cbf3e1a1f4 mlir::PatternApplicator::matchAndRewrite(mlir::Operation*, mlir::PatternRewriter&, llvm::function_ref<bool (mlir::Pattern const&)>, llvm::function_ref<void (mlir::Pattern const&)>, llvm::function_ref<llvm::LogicalResult (mlir::Pattern const&)>)::$_0::operator()() const /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Rewrite/PatternApplicator.cpp:223:13
+#28 0x000055cbf3e1a1f4 void llvm::function_ref<void ()>::callback_fn<mlir::PatternApplicator::matchAndRewrite(mlir::Operation*, mlir::PatternRewriter&, llvm::function_ref<bool (mlir::Pattern const&)>, llvm::function_ref<void (mlir::Pattern const&)>, llvm::function_ref<llvm::LogicalResult (mlir::Pattern const&)>)::$_0>(long) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/ADT/STLFunctionalExtras.h:46:12
+#29 0x000055cbf3e146c5 mlir::PatternApplicator::matchAndRewrite(mlir::Operation*, mlir::PatternRewriter&, llvm::function_ref<bool (mlir::Pattern const&)>, llvm::function_ref<void (mlir::Pattern const&)>, llvm::function_ref<llvm::LogicalResult (mlir::Pattern const&)>) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Rewrite/PatternApplicator.cpp:242:9
+#30 0x000055cbf3dbc74d llvm::succeeded(llvm::LogicalResult) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/LogicalResult.h:0:0
+#31 0x000055cbf3dbc74d (anonymous namespace)::OperationLegalizer::legalize(mlir::Operation*) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:2602:7
+#32 0x000055cbf3dbba30 llvm::failed(llvm::LogicalResult) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/LogicalResult.h:0:0
+#33 0x000055cbf3dbba30 mlir::OperationConverter::convert(mlir::Operation*, bool) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:3300:7
+#34 0x000055cbf3dbcafa llvm::failed(llvm::LogicalResult) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/LogicalResult.h:0:0
+#35 0x000055cbf3dbcafa llvm::LogicalResult mlir::OperationConverter::legalizeOperations<mlir::OperationConverter::applyConversion(llvm::ArrayRef<mlir::Operation*>)::$_0>(llvm::ArrayRef<mlir::Operation*>, mlir::OperationConverter::applyConversion(llvm::ArrayRef<mlir::Operation*>)::$_0, bool) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:3401:9
+#36 0x000055cbf3dbcafa mlir::OperationConverter::applyConversion(llvm::ArrayRef<mlir::Operation*>) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:3447:26
+#37 0x000055cbf3dd3206 applyConversion(llvm::ArrayRef<mlir::Operation*>, mlir::ConversionTarget const&, mlir::FrozenRewritePatternSet const&, mlir::ConversionConfig, (anonymous namespace)::OpConversionMode)::$_0::operator()() const /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:4170:9
+#38 0x000055cbf3dd3206 void llvm::function_ref<void ()>::callback_fn<applyConversion(llvm::ArrayRef<mlir::Operation*>, mlir::ConversionTarget const&, mlir::FrozenRewritePatternSet const&, mlir::ConversionConfig, (anonymous namespace)::OpConversionMode)::$_0>(long) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/ADT/STLFunctionalExtras.h:46:12
+#39 0x000055cbf3dc345e llvm::SmallVector<mlir::IRUnit, 6u>::~SmallVector() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/ADT/SmallVector.h:0:0
+#40 0x000055cbf3dc345e applyConversion(llvm::ArrayRef<mlir::Operation*>, mlir::ConversionTarget const&, mlir::FrozenRewritePatternSet const&, mlir::ConversionConfig, (anonymous namespace)::OpConversionMode) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:4174:1
+#41 0x000055cbf3dc35f3 mlir::applyFullConversion(mlir::Operation*, mlir::ConversionTarget const&, mlir::FrozenRewritePatternSet const&, mlir::ConversionConfig) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:4207:3
+#42 0x000055cbf2d68832 (anonymous namespace)::MooreToCorePass::runOnOperation() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Conversion/MooreToCore/MooreToCore.cpp:2571:14
+#43 0x000055cbf3fb95a2 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int)::$_3::operator()() const /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Pass/Pass.cpp:0:19
+#44 0x000055cbf3fb95a2 void llvm::function_ref<void ()>::callback_fn<mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int)::$_3>(long) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/ADT/STLFunctionalExtras.h:46:12
+#45 0x000055cbf3fab2b1 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Pass/Pass.cpp:619:17
+#46 0x000055cbf3fac27f llvm::failed(llvm::LogicalResult) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/LogicalResult.h:0:0
+#47 0x000055cbf3fac27f mlir::detail::OpToOpPassAdaptor::runPipeline(mlir::OpPassManager&, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int, mlir::PassInstrumentor*, mlir::PassInstrumentation::PipelineParentInfo const*) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Pass/Pass.cpp:688:9
+#48 0x000055cbf3fb5ce9 mlir::PassManager::runPasses(mlir::Operation*, mlir::AnalysisManager) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Pass/Pass.cpp:1123:3
+#49 0x000055cbf3fb4f31 mlir::PassManager::run(mlir::Operation*) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Pass/Pass.cpp:1097:0
+#50 0x000055cbf29f9401 executeWithSources(mlir::MLIRContext*, llvm::SourceMgr&) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/tools/circt-verilog/circt-verilog.cpp:398:9
+#51 0x000055cbf29f5ed1 execute(mlir::MLIRContext*) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/tools/circt-verilog/circt-verilog.cpp:475:10
+#52 0x000055cbf29f532f main /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/tools/circt-verilog/circt-verilog.cpp:528:15
+#53 0x00007fca2dd871ca __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:74:3
+#54 0x00007fca2dd8728b call_init ./csu/../csu/libc-start.c:128:20
+#55 0x00007fca2dd8728b __libc_start_main ./csu/../csu/libc-start.c:347:5
+#56 0x000055cbf29f4795 _start (/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog+0x1627795)
+Aborted (core dumped)

@@ -1,0 +1,10 @@
+# Reproduction Command
+# Bug: arcilator timeout on dynamic-indexed packed struct array
+
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw bug.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator
+
+# With timeout (recommended for testing):
+timeout 60s bash -c '/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw bug.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator'
+
+# Alternative with system CIRCT:
+/opt/firtool/bin/circt-verilog --ir-hw bug.sv | /opt/firtool/bin/arcilator

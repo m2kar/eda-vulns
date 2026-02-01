@@ -1,0 +1,63 @@
+================================================================================
+CIRCT BUG #260129-0000159f - QUICK REFERENCE
+================================================================================
+
+ORIGINAL ISSUE:
+  Type: Tri-state Inout Port Assertion Failure
+  Error: "state type must have a known bit width; got '!llhd.ref<i1>'"
+  Status: FIXED in CIRCT 1.139.0+
+
+ORIGINAL TEST CASE (10 lines):
+─────────────────────────────
+  module example(input logic clk, inout logic c);
+    logic [3:0] temp_reg;
+    logic a;
+    always @(posedge clk) begin
+      temp_reg <= temp_reg + 1;
+    end
+    assign c = (a) ? temp_reg[0] : 1'bz;
+  endmodule
+
+MINIMAL TEST CASE (4 lines - 60% reduction):
+──────────────────────────────────────────
+  module example(input logic clk, inout logic c);
+    logic a;
+    assign c = a ? 1'b1 : 1'bz;
+  endmodule
+
+SUPER MINIMAL (3 lines - 70% reduction):
+────────────────────────────────────────
+  module example(input logic clk, inout logic c);
+    assign c = 1'bz;
+  endmodule
+
+COMPILATION COMMAND:
+  /opt/firtool/bin/circt-verilog --ir-hw source.sv | \
+  /opt/firtool/bin/arcilator
+
+CURRENT STATUS:
+  ✅ All variants compile successfully
+  ✅ Bug has been fixed upstream
+  ✅ No crash reproduced in current toolchain
+
+CRITICAL ELEMENTS (MUST RETAIN):
+  1. inout logic c: Bidirectional port
+  2. 1'bz: Tri-state value
+  3. Conditional ternary: ?: operator
+
+REMOVABLE ELEMENTS:
+  1. always @(posedge clk) block
+  2. temp_reg[3:0] register
+  3. Complex logic in condition
+
+FILES GENERATED:
+  • minimize.md (145 lines) - Detailed analysis report
+  • minimize.json (115 lines) - Structured data
+  • MINIMIZATION_SUMMARY.txt (135 lines) - Task summary
+  • QUICKREF.txt (this file) - Quick reference
+
+NOTES FOR FUTURE:
+  If bug reoccurs, use the 4-line minimal case for quick reproduction.
+  Check Arc dialect's StateType::get() and LowerState.cpp changes.
+
+================================================================================

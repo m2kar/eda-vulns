@@ -1,0 +1,8 @@
+Crash Type: timeout
+Command: circt-verilog --ir-hw bug.sv
+Exit Code: 124 (timeout)
+Description: Compilation does not complete within 15 seconds
+
+The compilation hangs during MooreToHW conversion when:
+- An always_comb block assigns to one struct field
+- Another struct field is read and used in output

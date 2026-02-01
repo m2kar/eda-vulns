@@ -1,0 +1,124 @@
+{
+  "crash_analysis": {
+    "dialect": "arc",
+    "crash_type": "assertion_failure",
+    "pass": "LowerState",
+    "location": {
+      "file": "LowerState.cpp",
+      "line": 219,
+      "function": "ModuleLowering::run"
+    },
+    "assertion": "verifyInvariants on StateType::get"
+  },
+  "root_cause": {
+    "summary": "arcilator fails to handle llhd.ref types from inout ports",
+    "trigger_construct": "inout port with tri-state assignment",
+    "problematic_type": "!llhd.ref<i1>",
+    "expected_behavior": "Should reject unsupported constructs gracefully or support them",
+    "type_mismatch": "StateType requires primitive bit-width types, but inout ports generate reference types"
+  },
+  "call_chain": [
+    {
+      "step": 1,
+      "component": "circt-verilog",
+      "action": "Converts inout port with tri-state to llhd.ref<i1> type",
+      "reason": "LLHD dialect uses reference types for multi-driver handling"
+    },
+    {
+      "step": 2,
+      "component": "arcilator",
+      "action": "Calls StateType::get(arg.getType()) at LowerState.cpp:219",
+      "reason": "Creating StateType for module input arguments"
+    },
+    {
+      "step": 3,
+      "component": "StateType::get()",
+      "action": "Calls StateType::verify() which calls computeLLVMBitWidth()",
+      "reason": "Validation ensures types have known bit widths"
+    },
+    {
+      "step": 4,
+      "component": "computeLLVMBitWidth()",
+      "action": "Returns {} (none) for !llhd.ref<i1> because not in supported type list",
+      "reason": "Function only handles: seq::ClockType, IntegerType, hw::ArrayType, hw::StructType"
+    },
+    {
+      "step": 5,
+      "component": "StateType::verify()",
+      "action": "Fails verification: 'state type must have a known bit width'",
+      "reason": "computeLLVMBitWidth() returned {} (empty optional)"
+    },
+    {
+      "step": 6,
+      "component": "StateType::get()",
+      "action": "Assertion fails: sate type must have a known bit width",
+      "reason": "verifyInvariants() check failed"
+    }
+  ],
+  "affected_code": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "function": "ModuleLowering::run()",
+    "relevant_lines": [
+      215-221,
+      1198
+    ],
+    "snippet": "for (auto arg : moduleOp.getBodyBlock()->getArguments()) {\n  auto name = moduleOp.getArgName(arg.getArgNumber());\n  auto state = RootInputOp::create(allocBuilder, arg.getLoc(),\n      StateType::get(arg.getType()), name, storageArg);"
+  },
+  "validation_implementation": {
+    "file": "lib/Dialect/Arc/ArcTypes.cpp",
+    "function": "StateType::verify()",
+    "lines": [80-87],
+    "snippet": "LogicalResult StateType::verify(...) {\n  if (!computeLLVMBitWidth(innerType))\n    return emitError() << \"state type must have a known bit width; got \" << innerType;\n  return success();\n}",
+    "type_check_function": "computeLLVMBitWidth()",
+    "lines": [29-76],
+    "supported_types": [
+      "seq::ClockType",
+      "IntegerType",
+      "hw::ArrayType",
+      "hw::StructType"
+    ],
+    "unsupported_types": [
+      "!llhd.ref<i1>"
+    ]
+  },
+  "test_case": {
+    "file": "source.sv",
+    "module": "test_module",
+    "trigger": "inout logic io_port with assign io_port = (out_port[0]) ? 1'bz : 1'b0;",
+    "ports": [
+      {"name": "signed_port", "direction": "input", "type": "logic signed [7:0]"},
+      {"name": "unsigned_port", "direction": "input", "type": "logic [7:0]"},
+      {"name": "out_port", "direction": "output", "type": "logic [7:0]"},
+      {"name": "io_port", "direction": "inout", "type": "logic"}
+    ],
+    "key_behavior": "Tri-state assignment on inout port creates multi-driver scenario"
+  },
+  "compilation_pipeline": [
+    "SystemVerilog source (source.sv)",
+    "circt-verilog --ir-hw",
+    "arcilator",
+    "opt -O0",
+    "llc -O0 --filetype=obj"
+  ],
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "severity": "crash",
+  "component": "arcilator",
+  "keywords": [
+    "arcilator",
+    "inout",
+    "llhd.ref",
+    "StateType",
+    "LowerState",
+    "tri-state",
+    "assertion_failure",
+    "circt-verilog"
+  ],
+  "platform": {
+    "os": "linux",
+    "architecture": "x86_64"
+  },
+  "toolchain": {
+    "circt_version": "1.139.0",
+    "build_type": "debug"
+  }
+}

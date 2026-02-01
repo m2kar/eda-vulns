@@ -1,0 +1,122 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "comb",
+  "failing_pass": "Canonicalizer",
+  "crash_type": "assertion",
+  "assertion_message": "op->use_empty() && \"expected 'op' to have no uses\"'",
+  "assertion_location": {
+    "file": "/root/circt/llvm/mlir/lib/IR/PatternMatch.cpp",
+    "function": "virtual void mlir::RewriterBase::eraseOp(Operation *)",
+    "line": 156
+  },
+  "crash_location": {
+    "file": "/root/circt/lib/Dialect/Comb/CombFolds.cpp",
+    "function": "extractConcatToConcatExtract",
+    "line": 548
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "file": "source.sv",
+    "lines": 16,
+    "key_constructs": [
+      "always_comb procedural block",
+      "wire assignment",
+      "array assignment",
+      "multiple assignments from same source"
+    ],
+    "problematic_patterns": [
+      "Multiple assignments from same wire in always_comb",
+      "Fan-out structure creating multiple uses of ConcatOp",
+      "ExtractOp canonicalization without use checking"
+    ],
+    "summary": "Module with input signal, internal wire, and always_comb block with multiple assignments"
+  },
+  "hypotheses": [
+    {
+      "id": "h1",
+      "description": "extractConcatToConcatExtract pattern doesn't check for remaining uses before replacement",
+      "confidence": "high",
+      "evidence": [
+        "Assertion occurs when replaceOpAndCopyNamehint tries to erase an operation with active uses",
+        "Pattern at line 547 calls replaceOp without checking op->use_empty() or innerCat->use_empty()",
+        "Testcase has multiple assignments from same wire, suggesting multiple IR operations depend on same ConcatOp",
+        "Stack trace shows crash in eraseOp() called from replaceOpAndCopyNamehint"
+      ],
+      "mechanism": "Multiple ExtractOp instances from always_comb block depend on same ConcatOp. Pattern tries to replace one ExtractOp, but ConcatOp still has other uses, causing assertion failure."
+    },
+    {
+      "id": "h2",
+      "description": "Cycle or unexpected dependency in IR from always_comb lowering",
+      "confidence": "medium",
+      "evidence": [
+        "always_comb has complex combinatorial semantics",
+        "Multiple assignments from same wire could create fan-out structure",
+        "Pattern assumes simple ExtractOp -> ConcatOp structure but actual IR may be more complex"
+      ],
+      "mechanism": "IR operations may reference ExtractOp or ConcatOp in ways pattern doesn't account for, creating use-after-replace scenario."
+    },
+    {
+      "id": "h3",
+      "description": "Race condition in GreedyPatternRewriteDriver",
+      "confidence": "low",
+      "evidence": [
+        "Stack trace shows GreedyPatternRewriteDriver::processWorklist",
+        "Multiple ExtractOp instances from same always_comb block may be processed concurrently"
+      ],
+      "mechanism": "Pattern may be modifying an operation that another pattern iteration is also using, causing inconsistent state."
+    }
+  ],
+  "root_cause_summary": "Use-after-replace bug in extractConcatToConcatExtract canonicalization pattern. The pattern attempts to erase an operation that still has uses in the IR, specifically when processing multiple ExtractOp instances from an always_comb block that share the same ConcatOp input.",
+  "keywords": [
+    "extractConcatToConcatExtract",
+    "ReplaceOp",
+    "use_empty",
+    "canonicalization",
+    "ExtractOp",
+    "ConcatOp",
+    "always_comb",
+    "multiple assignments",
+    "CombFolds",
+    "assertion failure"
+  ],
+  "suggested_fixes": [
+    "Add use checks before replacement (check op->use_empty() or innerCat->use_empty())",
+    "Use replaceAllOpUsesWith instead of replaceOp to avoid erasing operations with active uses",
+    "Validate dependencies before applying optimization using isOpTriviallyDead()",
+    "Add defensive programming with explicit use list checking"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Comb/CombFolds.cpp",
+      "reason": "Contains the extractConcatToConcatExtract pattern that triggers the crash",
+      "function": "extractConcatToConcatExtract",
+      "line": 475-553
+    },
+    {
+      "path": "lib/Support/Naming.cpp",
+      "reason": "Contains replaceOpAndCopyNamehint function that calls eraseOp()",
+      "function": "replaceOpAndCopyNamehint",
+      "line": 73-82
+    },
+    {
+      "path": "llvm/mlir/lib/IR/PatternMatch.cpp",
+      "reason": "Base implementation of eraseOp() with the failing assertion",
+      "function": "RewriterBase::eraseOp",
+      "line": 156
+    },
+    {
+      "path": "lib/Transforms/Utils/GreedyPatternRewriteDriver.cpp",
+      "reason": "Pattern application logic that may process multiple operations concurrently",
+      "function": "GreedyPatternRewriteDriver::processWorklist"
+    },
+    {
+      "path": "tools/circt-verilog/circt-verilog.cpp",
+      "reason": "Main entry point and pipeline setup",
+      "function": "execute",
+      "line": 475-534
+    }
+  ],
+  "related_issues": [],
+  "analysis_timestamp": "2026-02-01T02:45:00+00:00"
+}

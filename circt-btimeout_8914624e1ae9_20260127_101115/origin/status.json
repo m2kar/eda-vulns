@@ -1,0 +1,23 @@
+{
+  "crash_id": "origin",
+  "status": "processing",
+  "phase": "phase3_final",
+  "created_at": "$TIMESTAMP",
+  "updated_at": "2026-01-31T17:01:05+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed"
+    },
+    "phase2": {
+      "status": "completed"
+    },
+    "phase3": {
+      "status": "pending"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "search_queries": [
+    "llhd.ref StateType",
+    "arcilator LowerState",
+    "RefType inout",
+    "bit width state type",
+    "bidirectional port",
+    "known bit width"
+  ],
+  "results": [
+    {
+      "issue_number": 9574,
+      "title": "[Arc] Assertion failure when lowering inout ports in sequential logic",
+      "state": "OPEN",
+      "similarity_score": 7.0,
+      "matching_keywords": [
+        "LowerState",
+        "Arc",
+        "StateType",
+        "inout",
+        "assertion failure"
+      ],
+      "reason": "Matches 5 keywords and affects Arc dialect"
+    },
+    {
+      "issue_number": 9417,
+      "title": "[Arc][arcilator] `hw.bitcast` Data Corruption for Aggregate Types with Non-Power-of-2 Element Widths in Arc",
+      "state": "CLOSED",
+      "similarity_score": 4.0,
+      "matching_keywords": [
+        "arcilator",
+        "Arc"
+      ],
+      "reason": "Matches 2 keywords and affects Arc dialect"
+    }
+  ],
+  "top_score": 7.0,
+  "top_issue": 9574,
+  "recommendation": "likely_duplicate"
+}

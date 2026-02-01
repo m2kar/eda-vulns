@@ -1,0 +1,27 @@
+{
+  "crash_id": "e9a5b794d7e3",
+  "status": "report_ready",
+  "phase": "completed",
+  "created_at": "2026-01-31T17:05:22Z",
+  "updated_at": "2026-01-31T17:20:00Z",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {"status": "completed"},
+    "phase2": {"status": "completed"},
+    "phase3": {"status": "completed"}
+  },
+  "outputs": {
+    "reproduce": ["reproduce.log", "metadata.json"],
+    "analysis": ["root_cause.md", "analysis.json"],
+    "minimize": ["bug.sv", "error.log", "command.txt", "minimize_report.md"],
+    "validate": ["validation.json", "validation.md"],
+    "duplicates": ["duplicates.json", "duplicates.md"],
+    "issue": ["issue.md"]
+  },
+  "final_recommendation": "issue_report_generated",
+  "note": "Issue report generated but NOT submitted to GitHub per user instructions"
+}

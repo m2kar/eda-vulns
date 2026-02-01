@@ -1,0 +1,23 @@
+{
+  "crash_type": "assertion",
+  "dialect": "LLHD",
+  "error_location": {
+    "file": "lib/Dialect/LLHD/Transforms/Mem2Reg.cpp",
+    "function": "Promoter::insertBlockArgs(BlockEntry*)",
+    "line": "1753"
+  },
+  "root_cause": "The Mem2Reg pass calls hw::getBitWidth() on a slot's stored type and passes the result directly to builder.getIntegerType() without validating that the bitwidth is valid. When processing signed arithmetic expressions like (-a <= a) where a is a signed wire, the type resolution fails to produce a valid bitwidth, causing getBitWidth() to return -1 or an invalid large value. This invalid value is then passed to IntegerType::get() which triggers an assertion because MLIR limits integer bitwidth to 16,777,215 bits.",
+  "trigger_pattern": "Signed wire with unary negation in comparison expression: wire signed [N:0] a = ...; followed by (-a <= a) or similar signed arithmetic comparison patterns",
+  "suggested_fix": "Add validation for the return value of hw::getBitWidth() before passing to getIntegerType(). Check if bitWidth < 0 or bitWidth > MAX_INT_WIDTH and handle the error case appropriately, either by emitting a diagnostic or investigating why the stored type has an invalid bitwidth for this particular arithmetic pattern.",
+  "error_message": "integer bitwidth is limited to 16777215 bits",
+  "assertion_message": "succeeded(ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))",
+  "test_case_features": {
+    "signed_wire": true,
+    "unary_negation": true,
+    "comparison_operator": "<=",
+    "bitwidth": 2
+  },
+  "affected_pass": "Mem2RegPass",
+  "mlir_type_involved": "IntegerType",
+  "stack_depth_to_crash": 13
+}

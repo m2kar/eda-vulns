@@ -1,0 +1,33 @@
+{
+  "crash_id": "origin",
+  "status": "reproduce_failed",
+  "phase": "phase1_completed",
+  "created_at": "2026-01-31T18:15:44Z",
+  "updated_at": "2026-01-31T18:23:00Z",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed",
+      "reproduce": {
+        "reproduced": false,
+        "result": "bug_already_fixed"
+      },
+      "root_cause_analysis": {
+        "status": "completed",
+        "dialect": "SV → HW → Arc",
+        "crash_type": "assertion"
+      }
+    },
+    "phase2": {"status": "skipped"},
+    "phase3": {"status": "skipped"}
+  },
+  "conclusion": {
+    "bug_status": "FIXED",
+    "description": "The arcilator crash on inout ports is already fixed in current CIRCT version (LLVM 22.0.0git). Original crash was in circt-1.139.0",
+    "action": "no_issue_needed"
+  }
+}

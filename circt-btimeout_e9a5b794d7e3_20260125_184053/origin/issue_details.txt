@@ -1,0 +1,153 @@
+Issue #2439:
+For the following fir,
+```scala
+ module Bar:
+    input a: {clock: Clock, reset: UInt<1>},
+    output b: {clock: Clock, reset: UInt<1>}
+    b <= a
+```
+In aggregate preservation mode, we currently emit this:
+```verilog
+module Bar(	// foo.fir:2:10
+  input  struct packed {logic clock; logic reset; } a,
+  output struct packed {logic clock; logic reset; } b);
+
+  wire struct packed {logic clock; logic reset; } _b_output;
+
+
+Issue #6614:
+_**Edit:** I initially noticed this behavior using a version of CIRCT that was a few months old but already included the changes from #6138. On commit 649ee55, this fails in complete silence._
+
+This issue seems related to #6136 and #6138. Did #6138 take enums into account?
+
+Input:
+```
+circuit c:
+  type t  = {| a: Clock, b: UInt<8> |}
+  module c:
+    input  in : t
+    output out: t
+    out <= in
+```
+
+Output (`firtool enum_with_clock.fir`):
+
+Issue #3853:
+# Background
+We would like generated RTL to be as invariant to bind statements as possible[^1].
+
+For example, given the following original IR:
+```mlir
+hw.module @Bottom(%I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>) {
+    hw.output %I : !hw.struct<x: i1, y: i1>
+}
+hw.module @Middle(%I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>) {
+    %0 = hw.instance "bottom" @Bottom(I: %I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>)
+    hw.output %0 : !hw.struct<x: i1, y: i1>
+}
+hw.module @Top(%I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>) {
+    %0 = hw.instance "middle" @Middle(I: %I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>)
+    hw.output %0 : !hw.struct<x: i1, y: i1>
+
+Issue #5138:
+Currently, the following:
+```mlir
+%16 = hw.aggregate_constant [0 : i32, 0 : i32, 0 : i32] : !hw.struct<field0: i32, field1: i32, field2: i32>
+```
+
+emits as
+```sv
+wire struct packed {logic [31:0] field0; logic [31:0] field1; logic [31:0] field2; }
+    _GEN_1 = '{field0: 32'h0, field1: 32'h0, field2: 32'h0};
+```
+
+that is, emits a packed struct assignment, which should be disallowed when setting the `disallowPackedStructAssignments` flag.
+Issue #9076:
+Currently a data type of a memory is flattened to an integer. However combined with unused field removal https://github.com/llvm/circt/blob/11ad8a882fbcacb75c40fbf9c946eb35e2e43c89/lib/Dialect/FIRRTL/FIRRTLFolds.cpp#L2812, sometimes it makes difficult to verify LEC between two versions. 
+
+Example:
+```scala
+FIRRTL version 5.0.0
+circuit Dut_DV:
+  extmodule unknown_val:
+    output out: UInt<1>
+  public module Dut_DV :
+    input clock : Clock
+    input reset : UInt<1>
+    output io : { flip addr : UInt<3>, flip dataIn : {a: UInt<8>, b: UInt<8>}, flip wen : UInt<1>, dataOut : {a: UInt<8>,  b: UInt<8>}}
+    
+    inst inst of unknown_val
+
+
+Issue #2504:
+We are emitting zero bit width array/struct as one bit element. This is problem when we use bitcast for them.
+
+```mlir
+hw.module @top(%source: i1) -> (b: !hw.struct<zero: !hw.array<1xi0>, c: i1>) {
+    %cast = hw.bitcast %source: (i1) -> !hw.struct<zero: !hw.array<1xi0>, c: i1>
+    hw.output %cast : !hw.struct<zero: !hw.array<1xi0>, c: i1>
+ }
+```
+
+```sv
+module top(	// out.mlir:2:3
+  input                                                            source,
+  output struct packed {logic [0:0]/*Zero Width*/ zero; logic c; } b);
+ 
+  assign b = source;	// out.mlir:3:12, :4:5
+
+Issue #2567:
+As noted in https://github.com/llvm/circt/blob/main/docs/RationaleComb.md#bitcasts, we are using following endians for aggregate types:
+* Arrays: The high index of array starts at the MSB. Array's 0th element's LSB located at array LSB.
+* Structs: The first listed member's MSB corresponds to the struct's MSB. The last member in the list shares its LSB with the struct.
+
+For example,
+```
+| MSB     [1]     LSB | MSB    [0]    LSB | 2 element array of 7 bit integer vectors (!hw.array<2xi7>)
+-------------------------------------------
+| MSB a LSB | MSB b[1] LSB | MSB b[0] LSB | struct (!hw.struct<a:i4, b:array<2xi5>>)
+-------------------------------------------  a: 4 bit integral
+                                             b: 2 element array of 5 bit integer vectors
+```
+I think this is following spec of struct and arrays in System Verilog directly.
+But this representation is causing some weirdness especially in FIRRTL dialect. In FIRRTL dialect, 
+fieldID is widely used as an abstraction to handle aggregates.  However, considering endians, 
+
+Issue #2329:
+If there are large structs in ports, we might get long lines. For example(from FPU.fir), 
+```mlir
+; circt-opt %s -export-verilog
+hw.module @Long(%clock: i1, %io_cp_req_bits: !hw.struct<cmd: i5, ldst: i1, wen: i1, ren1: i1, ren2: i1, ren3: i1, 
+                               swap12: i1, swap23: i1, single: i1, fromint: i1, toint: i1, fastpipe: i1, fma: i1, div: i1, sqrt: i1, 
+                               wflags: i1, rm: i3, typ: i2, in1: i65, in2: i65, in3: i65>)  {
+}
+```
+will generate
+```verilog
+module Long(     // foo.mlir:1:1
+  input                                                                                                                                                                                                                                                                                                                           clock,
+  input struct packed {logic [4:0] cmd; logic ldst; logic wen; logic ren1; logic ren2; logic ren3; logic swap12; logic swap23; logic single; logic fromint; logic toint; logic fastpipe; logic fma; logic div; logic sqrt; logic wflags; logic [2:0] rm; logic [1:0] typ; logic [64:0] in1; logic [64:0] in2; logic [64:0] in3; } io_cp_req_bits);
+
+endmodule
+
+Issue #7535:
+Dear @maerhart @fabianschuiki ,
+ When lowering `SV` to `Hw` Dialect, there is a stack dump. 
+Driver: circt-verilog %s
+```
+module top();
+  typedef struct {
+    int a;
+    int b;
+  } ms_t;
+
+  ms_t ms;
+
+  initial begin
+    ms = '{ 0, 1};
+
+
+Issue #536:
+Support for lowering bundles to RTL structs was added in https://github.com/llvm/circt/pull/533. Structs cannot support bi-directional bundles, but SV interfaces can. Lowering bundles in this way was discussed a while back on Discourse: https://llvm.discourse.group/t/firrtl-aggregate-types-discussion/1806/17.
+
+I propose to separate the lowering such that passive bundles always use structs, and use interfaces otherwise. It seems like the pieces for this are mostly in place already, and I'll start to take a look.

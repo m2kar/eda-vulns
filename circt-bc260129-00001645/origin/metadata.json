@@ -1,0 +1,32 @@
+{
+  "reproduction": {
+    "reproduced": false,
+    "reason": "Bug appears to be fixed in current CIRCT version (firtool-1.139.0 with LLVM 22.0.0git)",
+    "original_crash": {
+      "type": "assertion",
+      "component": "arcilator - LowerState pass",
+      "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+      "crash_location": "circt::arc::StateType::get(mlir::Type) at ArcTypes.cpp.inc:108",
+      "signal": "SIGABRT"
+    },
+    "reproduction_results": {
+      "circt_verilog": "SUCCESS - Generated valid IR",
+      "arcilator": "SUCCESS - No crash observed",
+      "opt_pass": "SUCCESS - No errors",
+      "llc_pass": "SUCCESS - No errors",
+      "exit_code": 0
+    },
+    "environment": {
+      "circt_version": "firtool-1.139.0",
+      "llvm_version": "22.0.0git",
+      "build_type": "Optimized",
+      "toolchain_path": "/opt/firtool/bin"
+    },
+    "test_case": {
+      "id": "260129-00001645",
+      "file": "source.sv",
+      "description": "MixedPorts module with signed/unsigned ports, inout signals, and sequential logic"
+    },
+    "conclusion": "The bug reported in issue 260129-00001645 is NOT reproducible with the current CIRCT toolchain. The issue appears to have been fixed in a later version or the specific conditions triggering the bug no longer exist."
+  }
+}

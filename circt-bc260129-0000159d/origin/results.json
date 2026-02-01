@@ -1,0 +1,62 @@
+[
+  {
+    "number": 4532,
+    "state": "OPEN",
+    "title": "[ExportVerilog] always_comb ordering issue"
+  },
+  {
+    "number": 4916,
+    "state": "OPEN",
+    "title": "[Arc] LowerState: nested arc.state get pulled in wrong clock tree"
+  },
+  {
+    "number": 8013,
+    "state": "OPEN",
+    "title": "[LLHD] Canonicalizer for processes produced by always @(*)"
+  },
+  {
+    "number": 8232,
+    "state": "OPEN",
+    "title": "[Arc] Flatten public modules"
+  },
+  {
+    "number": 8484,
+    "state": "OPEN",
+    "title": "[arcilator] Add functionality to the arcilator runtime library"
+  },
+  {
+    "number": 8693,
+    "state": "OPEN",
+    "title": "[Mem2Reg] Local signal does not dominate final drive"
+  },
+  {
+    "number": 8825,
+    "state": "OPEN",
+    "title": "[LLHD] Switch from hw.inout to a custom signal reference type"
+  },
+  {
+    "number": 9191,
+    "state": "OPEN",
+    "title": "MLIR pattern checks failing"
+  },
+  {
+    "number": 9260,
+    "state": "OPEN",
+    "title": "Arcilator crashes in Upload Release Artifacts CI"
+  },
+  {
+    "number": 9337,
+    "state": "OPEN",
+    "title": "[arcilator] The position of the passthrough calling"
+  },
+  {
+    "number": 9467,
+    "state": "OPEN",
+    "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)"
+  },
+  {
+    "number": 9574,
+    "state": "OPEN",
+    "title": "[Arc] Assertion failure when lowering inout ports in sequential logic"
+  }
+]

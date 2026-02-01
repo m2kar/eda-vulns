@@ -1,0 +1,68 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCore",
+  "crash_type": "assertion",
+  "assertion_message": "detail::isPresent(Val) && \"dyn_cast on a non-existent value\"",
+  "crash_location": {
+    "file": "include/circt/Dialect/HW/PortImplementation.h",
+    "function": "ModulePortInfo::sanitizeInOut()",
+    "line": 177
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "string type port",
+      "string method call (len())",
+      "string comparison"
+    ],
+    "problematic_patterns": [
+      "string type used as module port - no valid HW type mapping"
+    ]
+  },
+  "hypotheses": [
+    {
+      "description": "TypeConverter fails to convert string type to valid HW type, returning null. getModulePortInfo() does not check for null type after conversion, causing dyn_cast to fail on null type in sanitizeInOut().",
+      "confidence": "high",
+      "evidence": [
+        "string is a dynamic SystemVerilog type with no hardware representation",
+        "Stack trace shows crash in sanitizeInOut() during dyn_cast on port type",
+        "getModulePortInfo() uses convertType() result directly at line 243 without null check",
+        "dyn_cast assertion message confirms the value is non-existent/null"
+      ]
+    },
+    {
+      "description": "Missing type conversion pattern for Moore string type in MooreToCorePass type converter.",
+      "confidence": "medium",
+      "evidence": [
+        "TypeConverter patterns may not cover class-based SV types like string",
+        "No explicit string type handling visible in conversion code"
+      ]
+    }
+  ],
+  "keywords": [
+    "string port",
+    "dyn_cast non-existent",
+    "sanitizeInOut",
+    "MooreToCore",
+    "TypeConverter",
+    "string type conversion",
+    "module port type",
+    "null type"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Contains getModulePortInfo() and type conversion patterns"
+    },
+    {
+      "path": "include/circt/Dialect/HW/PortImplementation.h",
+      "reason": "Contains sanitizeInOut() crash site"
+    },
+    {
+      "path": "lib/Dialect/Moore/MooreTypes.cpp",
+      "reason": "Moore type definitions including string type"
+    }
+  ]
+}

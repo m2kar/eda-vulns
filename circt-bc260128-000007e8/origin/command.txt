@@ -1,0 +1,1 @@
+export PATH=/opt/firtool/bin:$PATH && circt-verilog --ir-hw bug.sv

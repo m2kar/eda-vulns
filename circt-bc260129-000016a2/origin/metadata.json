@@ -1,0 +1,34 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "original_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw test.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator",
+    "reproduction_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw source.sv 2>&1 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator 2>&1",
+    "crash_signature": {
+      "original": "state type must have a known bit width; got '!llhd.ref<i1>'",
+      "current": "state type must have a known bit width; got '!llhd.ref<i1>'"
+    },
+    "signature_match": true
+  },
+  "tool_versions": {
+    "circt_verilog": "CIRCT firtool-1.139.0",
+    "arcilator": "CIRCT firtool-1.139.0",
+    "llvm": "LLVM 22.0.0git",
+    "slang": "slang 9.1.0+0"
+  },
+  "crash_info": {
+    "type": "assertion_failure",
+    "tool": "arcilator",
+    "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "assertion": "Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed",
+    "crash_location": {
+      "file": "LowerState.cpp",
+      "line": 219,
+      "function": "ModuleLowering::run"
+    },
+    "stack_trace_top": [
+      "circt::arc::StateType::get(mlir::Type)",
+      "(anonymous namespace)::ModuleLowering::run()",
+      "(anonymous namespace)::LowerStatePass::runOnOperation()"
+    ]
+  }
+}

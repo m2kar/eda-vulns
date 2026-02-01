@@ -1,0 +1,61 @@
+{
+  "search_queries": [
+    "sim.fmt.literal",
+    "legalization",
+    "assertion",
+    "$error",
+    "ArcToLLVM",
+    "FormatLiteralOp",
+    "arcilator"
+  ],
+  "found_issues": [
+    {
+      "number": 8012,
+      "title": "[Moore][Arc][LLHD] Moore to LLVM lowering issues",
+      "state": "OPEN",
+      "url": "https://github.com/llvm/circt/issues/8012",
+      "similarity_score": 4.8,
+      "key_overlaps": [
+        "arcilator"
+      ],
+      "summary": "[Moore][Arc][LLHD] Moore to LLVM lowering issues - Generic LLVM lowering failures with arcilator"
+    },
+    {
+      "number": 9467,
+      "title": "[circt-verilog][arcilator] arcilator fails to lower llhd.constant_time generated from simple SV delay (#1)",
+      "state": "OPEN",
+      "url": "https://github.com/llvm/circt/issues/9467",
+      "similarity_score": 2.8,
+      "key_overlaps": [
+        "arcilator"
+      ],
+      "summary": "arcilator fails to legalize llhd.constant_time operation - Missing legalization pattern in ConvertToArcs"
+    },
+    {
+      "number": 9395,
+      "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+      "state": "CLOSED",
+      "url": "https://github.com/llvm/circt/issues/9395",
+      "similarity_score": 1.6,
+      "key_overlaps": [
+        "assertion",
+        "arcilator"
+      ],
+      "summary": "Arcilator assertion failure - Closed/resolved issue"
+    },
+    {
+      "number": 6810,
+      "title": "[Arc] Add basic assertion support",
+      "state": "OPEN",
+      "url": "https://github.com/llvm/circt/issues/6810",
+      "similarity_score": 0.8,
+      "key_overlaps": [
+        "assertion"
+      ],
+      "summary": "[Arc] Add basic assertion support - Feature request, not bug report"
+    }
+  ],
+  "recommendation": "new_issue",
+  "top_score": 4.8,
+  "top_issue": 8012
+}

@@ -1,0 +1,6 @@
+#!/bin/bash
+# Reproduce CIRCT arcilator crash with inout port
+# Exit code 134 (SIGABRT) indicates crash
+
+export PATH=/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin:$PATH
+circt-verilog --ir-hw bug.sv | arcilator

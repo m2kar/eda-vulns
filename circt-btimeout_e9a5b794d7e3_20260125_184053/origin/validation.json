@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T17:16:45+00:00",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": ""
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "verilator": "pass",
+    "icarus": "pass",
+    "slang": "pass"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "medium",
+    "reason": "Syntax valid and other tools accept the test case; CIRCT timeout not reproduced in this environment."
+  }
+}

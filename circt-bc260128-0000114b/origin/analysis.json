@@ -1,0 +1,24 @@
+{
+  "dialect": "arc",
+  "crash_type": "assertion",
+  "crash_location": "InferStateProperties.cpp:211",
+  "crash_function": "applyEnableTransformation",
+  "error_message": "cast<Ty>() argument of incompatible type - cast<IntegerType> failed on struct type",
+  "root_cause": "The InferStateProperties pass attempts to create hw::ConstantOp with a packed struct type, but hw::ConstantOp only supports IntegerType/IntType. The applyEnableTransformation() function at line 211 calls hw::ConstantOp::create() with enableInfos[i].selfArg.getType() which is a struct type (from packet_t), causing the internal cast<IntegerType> to fail.",
+  "key_constructs": [
+    "struct packed",
+    "unpacked array",
+    "for-loop",
+    "always_ff"
+  ],
+  "trigger_conditions": [
+    "Packed struct type used as state element",
+    "Enable pattern detected in arc (mux between new/old value)",
+    "InferStateProperties pass enabled (default in arcilator)"
+  ],
+  "affected_pass": "arc-infer-state-properties",
+  "affected_tool": "arcilator",
+  "suggested_fix": "Add type check in applyEnableTransformation() to verify selfArg.getType() is IntegerType or hw::IntType before calling hw::ConstantOp::create(), or use aggregate constant operations for non-integer types",
+  "severity": "high",
+  "reproducibility": "deterministic"
+}

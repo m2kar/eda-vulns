@@ -1,0 +1,17 @@
+{
+  "dialect": "SystemVerilog",
+  "crash_type": "legalization failure",
+  "operation": "sim.fmt.literal",
+  "root_cause_summary": "arcilator 对 always_comb 块中立即断言 ($error) 的格式化字符串支持不完整，导致 sim.fmt.literal 操作在 LowerArcToLLVM pass 中成为孤立操作，触发 legalization 失败",
+  "key_constructs": [
+    "立即断言 (immediate assertion)",
+    "格式化字符串 ($error)",
+    "always_comb 组合逻辑块",
+    "动态数组索引"
+  ],
+  "suspected_location": "lib/Conversion/ArcToLLVM/LowerArcToLLVM.cpp (L809-822, L1087); lib/Dialect/Sim/Transforms/ProceduralizeSim.cpp",
+  "error_message": "failed to legalize operation 'sim.fmt.literal'",
+  "pipeline": "circt-verilog → arcilator → opt → llc",
+  "trigger_code": "assert (arr[idx] == 1'b1) else $error(\"Assertion failed: arr[%0d] != 1\", idx);",
+  "timestamp": "2026-01-31T19:50:00Z"
+}

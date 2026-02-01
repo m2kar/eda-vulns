@@ -1,0 +1,36 @@
+{
+  "classification": {
+    "result": "report",
+    "reason": "Valid SystemVerilog code causes an assertion failure in CIRCT's Mem2Reg pass. The test case is syntactically correct (validated by both Verilator and Slang) but triggers a crash when processed by circt-verilog. The bug is in the LLHD Mem2Reg pass which incorrectly attempts to create an IntegerType for a real (floating-point) type, passing an invalid bitwidth to MLIR's IntegerType::get().",
+    "reduction_percent": 83.3
+  },
+  "syntax_check": {
+    "valid": true,
+    "validator": "verilator, slang"
+  },
+  "cross_tool_validation": {
+    "verilator": {
+      "available": true,
+      "version": "5.022 2024-02-24",
+      "result": "pass",
+      "details": "No errors or warnings"
+    },
+    "slang": {
+      "available": true,
+      "version": "10.0.6",
+      "result": "pass",
+      "details": "Build succeeded: 0 errors, 0 warnings"
+    }
+  },
+  "crash_signature_match": {
+    "original_error": "integer bitwidth is limited to 16777215 bits",
+    "minimized_error": "integer bitwidth is limited to 16777215 bits",
+    "assertion_match": true,
+    "location_match": "lib/Dialect/LLHD/Transforms/Mem2Reg.cpp:1742"
+  },
+  "test_case_info": {
+    "original_lines": 18,
+    "minimized_lines": 3,
+    "minimal_trigger": "Clocked assignment to real type output port"
+  }
+}

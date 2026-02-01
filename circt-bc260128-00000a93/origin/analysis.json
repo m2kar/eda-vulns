@@ -1,0 +1,28 @@
+{
+  "dialect": "moore",
+  "crash_type": "assertion",
+  "crash_signature": "dyn_cast on a non-existent value (circt::hw::InOutType)",
+  "pass": "MooreToCorePass",
+  "component": "MooreToCore conversion",
+  "location": {
+    "file": "include/circt/Dialect/HW/PortImplementation.h",
+    "line": 177,
+    "function": "circt::hw::ModulePortInfo::sanitizeInOut"
+  },
+  "stack_top": [
+    "circt::hw::ModulePortInfo::sanitizeInOut",
+    "(anonymous namespace)::getModulePortInfo",
+    "SVModuleOpConversion::matchAndRewrite",
+    "(anonymous namespace)::MooreToCorePass::runOnOperation"
+  ],
+  "testcase_features": [
+    "SystemVerilog string input port",
+    "string.len()",
+    "assign to logic [31:0]"
+  ],
+  "hypothesis": "Port legalization contains an invalid/empty type for the SV string port; sanitizeInOut performs dyn_cast without checking for a valid type, triggering assertion.",
+  "reproducer": {
+    "tool": "circt-verilog",
+    "args": ["--ir-hw", "source.sv"]
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "confidence": 0.92,
+    "status": "REPRODUCED_WITH_CHANGED_MANIFESTATION"
+  },
+  "crash_info": {
+    "original_type": "assertion",
+    "original_assertion": "cast<Ty>() argument of incompatible type!",
+    "original_location": "llvm/include/llvm/Support/Casting.h:566",
+    "current_manifestation": "type_validation_error",
+    "current_location": "arcilator InferStateProperties pass"
+  },
+  "crash_signature_comparison": {
+    "original_crash_type": "assertion",
+    "current_crash_type": "validation_error",
+    "signatures_match": true,
+    "match_details": "Both originate from InferStateProperties pass, struct array type handling, arc.state operand processing"
+  },
+  "key_functions": {
+    "original": [
+      "InferStatePropertiesPass::runOnStateOp",
+      "circt::hw::ConstantOp::create",
+      "applyEnableTransformation"
+    ],
+    "triggered_in_current": [
+      "InferStatePropertiesPass",
+      "arc.state validation"
+    ]
+  },
+  "test_case": {
+    "file": "source.sv",
+    "lines": 27,
+    "description": "Struct array shift register with XOR operations",
+    "key_pattern": "packed struct with array container in sequential logic"
+  },
+  "reproduction_steps": {
+    "step1": "circt-verilog --ir-hw source.sv",
+    "step1_status": "SUCCESS",
+    "step2": "arcilator hw.mlir",
+    "step2_status": "ERROR - InferStateProperties pass failure"
+  },
+  "toolchain": {
+    "location": "/opt/firtool",
+    "name": "CIRCT",
+    "version": "current-main"
+  },
+  "error_details": {
+    "pass_name": "InferStateProperties",
+    "operation": "arc.state",
+    "error_type": "operand type mismatch",
+    "operand_index": 2,
+    "expected_type": "!hw.array<4xstruct<valid: i1, data: i8>>",
+    "actual_type": "invalid_width_integer"
+  },
+  "timestamp": "2026-01-31T22:17:31.363892Z",
+  "phase": "reproduction_validation",
+  "root_cause_analysis": {
+    "summary": "Type casting error in struct array state variable handling",
+    "affected_component": "InferStateProperties Transform",
+    "affected_subsystem": "ARC Dialect",
+    "issue_category": "type_system_inference"
+  },
+  "verification": {
+    "same_pass_triggered": true,
+    "same_error_location": true,
+    "same_operation_type": true,
+    "reproduced": true
+  },
+  "notes": [
+    "Original crash was an assertion failure",
+    "Current toolchain validates and reports error instead",
+    "Root cause (struct array type handling) confirmed",
+    "Manifestation changed (likely newer CIRCT version with better error handling)",
+    "Bug is effectively reproducible even if error message differs"
+  ]
+}

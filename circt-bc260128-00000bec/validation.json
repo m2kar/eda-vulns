@@ -1,0 +1,9 @@
+{
+  "result": "report",
+  "status": "valid",
+  "tools": {
+    "circt_pipeline": "reproduced",
+    "verilator": "lint_pass"
+  },
+  "notes": "Minimized testcase reproduces sim.fmt.literal legalization failure; SystemVerilog syntax validated by Verilator."
+}

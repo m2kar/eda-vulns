@@ -1,0 +1,31 @@
+{
+  "testcase_id": "260129-00001312",
+  "crash_type": "assertion",
+  "source_file": "source.sv",
+  "original_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_62b4a0752f3e.sv",
+  "original_circt_version": "circt-1.139.0",
+  "current_circt_version": "CIRCT firtool-1.139.0",
+  "current_llvm_version": "LLVM version 22.0.0git",
+  "toolchain_path": "/opt/firtool/bin/circt-verilog",
+  "reproduction": {
+    "reproduced": true,
+    "crash_signature": "SVModuleOpConversion::matchAndRewrite in MooreToCore pass",
+    "related_symbols": [
+      "SVModuleOpConversion::matchAndRewrite",
+      "getModulePortInfo",
+      "ModulePortInfo::sanitizeInOut"
+    ],
+    "assertion_location": "llvm::dyn_cast assertion failure",
+    "failure_type": "Type casting failure for InOutType"
+  },
+  "original_error_analysis": {
+    "original_crash_location": "llvm::dyn_cast<circt::hw::InOutType, mlir::Type>",
+    "original_assertion": "dyn_cast on a non-existent value",
+    "root_cause_path": "InOutType conversion during port sanitization"
+  },
+  "test_input": {
+    "description": "SystemVerilog module with string array and sequential assignment",
+    "key_feature": "string type array with conditional assignment in always_ff block"
+  },
+  "notes": "Bug reproduced with current toolchain. Both original and current versions share LLVM 22.0.0git base. Crash occurs at same conversion pass (MooreToCore) with same failure mode."
+}

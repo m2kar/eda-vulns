@@ -1,0 +1,14 @@
+{
+  "reproduce_worker": {
+    "completed": true,
+    "reproduced": true,
+    "crash_signature_match": true,
+    "toolchain_version": "CIRCT firtool-1.139.0",
+    "llvm_version": "22.0.0git",
+    "original_version": "circt-1.139.0",
+    "files_generated": [
+      "reproduce.log",
+      "metadata.json"
+    ]
+  }
+}

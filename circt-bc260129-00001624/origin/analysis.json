@@ -1,0 +1,98 @@
+{
+  "testcase_id": "260129-00001624",
+  "crash_type": "assertion",
+  "tool": "circt-verilog",
+  "tool_args": ["--ir-hw"],
+  "dialect": "moore",
+  "target_dialect": "hw",
+  "pass": "MooreToCore",
+  
+  "crash_signature": {
+    "assertion_message": "dyn_cast on a non-existent value",
+    "file": "llvm/include/llvm/Support/Casting.h",
+    "line": 650,
+    "function": "llvm::dyn_cast<circt::hw::InOutType, mlir::Type>"
+  },
+  
+  "crash_location": {
+    "source_file": "include/circt/Dialect/HW/PortImplementation.h",
+    "line": 177,
+    "function": "circt::hw::ModulePortInfo::sanitizeInOut",
+    "code_context": "if (auto inout = dyn_cast<hw::InOutType>(p.type))"
+  },
+  
+  "root_cause": {
+    "type": "missing_type_conversion",
+    "description": "MooreToCore pass lacks type converter for moore::UnionType (packed union). When converting module ports, typeConverter.convertType() returns null Type for union types, causing dyn_cast to fail on null value.",
+    "missing_conversions": [
+      "moore::UnionType",
+      "moore::UnpackedUnionType"
+    ],
+    "affected_code": {
+      "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "function": "getModulePortInfo",
+      "line_range": [234, 259]
+    }
+  },
+  
+  "trigger_construct": {
+    "language": "SystemVerilog",
+    "feature": "packed union as module output port",
+    "minimal_example": "typedef union packed { logic [31:0] a; } U; module m(output U data); endmodule",
+    "keywords": ["union packed", "output port", "typedef"]
+  },
+  
+  "call_stack_summary": [
+    {
+      "frame": 17,
+      "function": "circt::hw::ModulePortInfo::sanitizeInOut",
+      "file": "PortImplementation.h:177",
+      "role": "crash_point"
+    },
+    {
+      "frame": 21,
+      "function": "getModulePortInfo",
+      "file": "MooreToCore.cpp:259",
+      "role": "null_type_introduced"
+    },
+    {
+      "frame": 22,
+      "function": "SVModuleOpConversion::matchAndRewrite",
+      "file": "MooreToCore.cpp:276",
+      "role": "conversion_entry"
+    },
+    {
+      "frame": 42,
+      "function": "MooreToCorePass::runOnOperation",
+      "file": "MooreToCore.cpp:2571",
+      "role": "pass_entry"
+    }
+  ],
+  
+  "severity": "medium",
+  "classification": "missing_feature",
+  "reproducibility": "deterministic",
+  
+  "fix_suggestions": [
+    {
+      "approach": "Add UnionType conversion to integer",
+      "difficulty": "low",
+      "description": "Convert packed union to equivalent bit-width integer type"
+    },
+    {
+      "approach": "Add UnionType conversion to struct", 
+      "difficulty": "medium",
+      "description": "Convert packed union members to hw::StructType fields"
+    },
+    {
+      "approach": "Add native union support to HW dialect",
+      "difficulty": "high",
+      "description": "Introduce hw::UnionType with full union semantics"
+    }
+  ],
+  
+  "related_types": {
+    "moore_types": ["UnionType", "UnpackedUnionType", "StructType", "UnpackedStructType"],
+    "hw_types": ["StructType", "ArrayType", "InOutType"]
+  }
+}

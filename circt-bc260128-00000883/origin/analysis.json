@@ -1,0 +1,46 @@
+{
+  "testcase_id": "260128-00000883",
+  "dialect": "moore",
+  "target_dialect": "hw",
+  "pass": "MooreToCore",
+  "crash_type": "assertion_failure",
+  "crash_signature": "dyn_cast on a non-existent value",
+  "crash_location": {
+    "file": "include/circt/Dialect/HW/PortImplementation.h",
+    "line": 177,
+    "function": "circt::hw::ModulePortInfo::sanitizeInOut()"
+  },
+  "triggering_function": {
+    "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+    "line": 259,
+    "function": "getModulePortInfo()"
+  },
+  "root_cause_summary": "Type converter returns null for packed union port type, and getModulePortInfo() does not validate the result before passing to hw::ModulePortInfo constructor, causing dyn_cast assertion failure in sanitizeInOut()",
+  "triggering_construct": {
+    "type": "packed_union_port",
+    "description": "Module input port with packed union type (data_union_t)",
+    "sv_construct": "typedef union packed { ... } data_union_t; input data_union_t in_data"
+  },
+  "stack_trace_key_frames": [
+    "#17 circt::hw::ModulePortInfo::sanitizeInOut() PortImplementation.h:177",
+    "#21 getModulePortInfo() MooreToCore.cpp:259",
+    "#22 SVModuleOpConversion::matchAndRewrite() MooreToCore.cpp:276",
+    "#42 MooreToCorePass::runOnOperation() MooreToCore.cpp:2571"
+  ],
+  "error_message": "circt-verilog: llvm/include/llvm/Support/Casting.h:650: decltype(auto) llvm::dyn_cast(From &) [To = circt::hw::InOutType, From = mlir::Type]: Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"' failed.",
+  "keywords": [
+    "packed union",
+    "typedef union packed",
+    "MooreToCore",
+    "getModulePortInfo",
+    "sanitizeInOut",
+    "dyn_cast",
+    "InOutType",
+    "type conversion",
+    "null type",
+    "assertion failure",
+    "module port"
+  ],
+  "severity": "high",
+  "fix_suggestion": "Add null type validation in getModulePortInfo() after typeConverter.convertType() call, or implement proper packed union type conversion in MooreToCore type converter"
+}

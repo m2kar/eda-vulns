@@ -1,0 +1,4 @@
+<stdin>:11:22: error: 'seq.firreg' op only synchronous resets are currently supported
+    %current_state = seq.firreg %3 clock %4 reset async %rst, %true : i1
+                     ^
+<stdin>:11:22: note: see current operation: %8 = "seq.firreg"(%6, %7, %arg1, %0) <{isAsync, name = "current_state"}> : (i1, !seq.clock, i1, i1) -> i1

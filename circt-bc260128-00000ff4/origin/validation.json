@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T04:07:21+00:00",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": ""
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "verilator": "pass",
+    "icarus": "pass",
+    "slang": "pass"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid test case with clear root cause analysis. Bug does not reproduce in current toolchain but documents a real issue that was fixed. The inout wire port pattern triggering StateType verification failure is well understood."
+  },
+  "reproduction_status": {
+    "reproduces": false,
+    "note": "Bug appears fixed in current toolchain (CIRCT firtool-1.139.0, LLVM 22.0.0git)"
+  }
+}

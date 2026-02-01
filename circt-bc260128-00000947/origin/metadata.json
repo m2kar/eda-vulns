@@ -1,0 +1,16 @@
+{
+  "reproduction": {
+    "reproduced": false,
+    "command": "export PATH=/opt/llvm-22/bin:$PATH && circt-verilog --ir-hw source.sv | arcilator",
+    "original_error_summary": "Assertion failed in circt::arc::StateType::get() - state type must have a known bit width; got '!llhd.ref<i1>'",
+    "reproduced_error_summary": "No crash observed. Command executed successfully and produced valid LLVM IR output.",
+    "match": false,
+    "notes": [
+      "The original crash used CIRCT version 1.139.0, which matches the current system version",
+      "The generated IR contains !llhd.ref<i1> which is mentioned in the original error",
+      "The arcilator pass completes successfully without assertion failure",
+      "This suggests the bug may have been fixed in a minor version update or depends on additional compilation flags",
+      "The test case source.sv contains an inout wire parameter (c) which corresponds to the llhd.ref type"
+    ]
+  }
+}

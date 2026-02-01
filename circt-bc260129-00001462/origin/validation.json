@@ -1,0 +1,47 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T00:00:00+08:00",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang",
+    "details": "Build succeeded: 0 errors, 0 warnings"
+  },
+  "feature_support": {
+    "status": "unsupported_features",
+    "unsupported_found": "concurrent assertion action block",
+    "ieee_reference": "IEEE 1800-2017 Section 16.5"
+  },
+  "known_limitations": {
+    "matched": true,
+    "description": "Concurrent assertion statements with action blocks are not supported yet in CIRCT's ImportVerilog"
+  },
+  "cross_tool_validation": {
+    "slang": {
+      "status": "pass",
+      "exit_code": 0,
+      "output": "Build succeeded: 0 errors, 0 warnings"
+    },
+    "verilator": {
+      "status": "pass",
+      "exit_code": 0,
+      "output": ""
+    },
+    "icarus": {
+      "status": "error",
+      "exit_code": 2,
+      "output": "bug.sv:3: syntax error - Error in property_spec of concurrent assertion item",
+      "note": "Icarus Verilog has limited SVA support"
+    }
+  },
+  "classification": {
+    "result": "feature_request",
+    "confidence": "high",
+    "reason": "The test case uses valid IEEE 1800-2017 SystemVerilog syntax (concurrent assertion with action block) that is not yet implemented in CIRCT. Both slang and verilator accept the syntax, confirming it is valid SV. The CIRCT error message explicitly states 'not supported yet', indicating a known limitation rather than a bug."
+  },
+  "minimization": {
+    "original_lines": 13,
+    "minimized_lines": 4,
+    "reduction_percent": 69.2
+  }
+}

@@ -1,0 +1,4 @@
+<unknown>:0: error: MLIR Textual PassPipeline Parser:1:1: error: 'comb-simplify' does not refer to a registered pass or pass pipeline
+comb-simplify
+^
+

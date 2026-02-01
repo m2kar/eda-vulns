@@ -1,0 +1,52 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T00:00:00+08:00",
+  "testcase_id": "260128-00000ed6",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang",
+    "message": "Build succeeded: 0 errors, 0 warnings"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": [],
+    "features_used": [
+      "inout wire port",
+      "tri-state assignment (1'bz)",
+      "conditional operator"
+    ]
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "verilator": {
+      "status": "pass",
+      "exit_code": 0,
+      "message": "Lint passed"
+    },
+    "icarus": {
+      "status": "pass",
+      "exit_code": 0,
+      "message": "Compilation succeeded"
+    },
+    "slang": {
+      "status": "pass",
+      "exit_code": 0,
+      "message": "Build succeeded: 0 errors, 0 warnings"
+    }
+  },
+  "circt_current": {
+    "reproduced": false,
+    "status": "fixed",
+    "version": "firtool-1.139.0",
+    "pipeline_result": "SUCCESS"
+  },
+  "classification": {
+    "result": "fixed_bug",
+    "confidence": "high",
+    "reason": "Valid test case that triggered an assertion failure in historical CIRCT version (1.139.0-src), but bug has been fixed in current release"
+  }
+}

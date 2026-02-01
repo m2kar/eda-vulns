@@ -1,0 +1,66 @@
+{
+  "testcase_id": "260128-00000d8d",
+  "crash_type": "assertion",
+  "dialect": "comb",
+  "tool": "circt-verilog",
+  "version": "1.139.0",
+  "error_signature": {
+    "assertion_message": "expected 'op' to have no uses",
+    "assertion_file": "mlir/lib/IR/PatternMatch.cpp",
+    "assertion_line": 156,
+    "assertion_function": "mlir::RewriterBase::eraseOp"
+  },
+  "crash_location": {
+    "file": "lib/Dialect/Comb/CombFolds.cpp",
+    "function": "extractConcatToConcatExtract",
+    "line": 548,
+    "operation": "ExtractOp::canonicalize"
+  },
+  "call_chain": [
+    "Canonicalizer::runOnOperation",
+    "applyPatternsGreedily",
+    "PatternApplicator::matchAndRewrite",
+    "ExtractOp::canonicalize",
+    "extractConcatToConcatExtract",
+    "replaceOpAndCopyNamehint",
+    "rewriter.replaceOp",
+    "eraseOp (ASSERTION FAIL)"
+  ],
+  "triggering_constructs": {
+    "systemverilog": [
+      "bit extraction from multi-bit signal",
+      "AND operation on extracted bits",
+      "2D array assignment"
+    ],
+    "ir_operations": [
+      "comb.extract",
+      "comb.concat",
+      "comb.and"
+    ]
+  },
+  "root_cause": {
+    "category": "use-def chain inconsistency",
+    "description": "In extractConcatToConcatExtract, when the extraction result equals a single operand of the original ConcatOp, the replacement may fail to properly handle all uses before erasing the original ExtractOp",
+    "buggy_code_pattern": "replaceOpAndCopyNamehint(rewriter, op, reverseConcatArgs[0]) where reverseConcatArgs[0] is from innerCat.getInputs()",
+    "confidence": "high"
+  },
+  "keywords": [
+    "ExtractOp",
+    "ConcatOp", 
+    "canonicalize",
+    "use_empty",
+    "eraseOp",
+    "replaceOp",
+    "greedy pattern rewrite"
+  ],
+  "severity": {
+    "reproducibility": "high",
+    "impact": "medium",
+    "scope": "bit-slicing with concat chains"
+  },
+  "related_files": [
+    "lib/Dialect/Comb/CombFolds.cpp",
+    "lib/Support/Naming.cpp"
+  ],
+  "source_code_available": true
+}

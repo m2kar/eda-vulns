@@ -1,0 +1,71 @@
+{
+  "crash_id": "origin",
+  "status": "report_ready",
+  "phase": "completed",
+  "created_at": "2026-02-01T04:56:19+00:00",
+  "updated_at": "2026-02-01T05:08:25+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {"status": "completed", "completed_at": "2026-02-01T04:59:47+00:00"},
+    "phase2": {"status": "completed", "completed_at": "2026-02-01T05:07:07+00:00"},
+    "phase3": {"status": "completed", "completed_at": "2026-02-01T05:08:25+00:00"}
+  },
+  "phase1_results": {
+    "reproduce": {
+      "reproduced": true,
+      "type": "partial"
+    },
+    "root_cause": {
+      "dialect": "arc",
+      "crash_type": "assertion",
+      "crash_location": "InferStateProperties.cpp:211"
+    }
+  },
+  "phase2_results": {
+    "minimize": {
+      "reduction_percent": 53.8,
+      "original_size": 40,
+      "minimized_size": 18
+    },
+    "validate": {
+      "result": "report",
+      "syntax": "valid",
+      "features_supported": true
+    },
+    "duplicates": {
+      "recommendation": "likely_new",
+      "top_score": 8.5,
+      "top_issue": 6373
+    }
+  },
+  "phase3_results": {
+    "issue_generated": true,
+    "issue_file": "issue.md",
+    "ready_for_submission": true
+  },
+  "output_files": {
+    "phase1": [
+      "reproduce.log",
+      "metadata.json",
+      "root_cause.md",
+      "analysis.json"
+    ],
+    "phase2": [
+      "bug.sv",
+      "error.log",
+      "command.txt",
+      "minimize_report.md",
+      "validation.json",
+      "validation.md",
+      "duplicates.json",
+      "duplicates.md"
+    ],
+    "phase3": [
+      "issue.md"
+    ]
+  }
+}

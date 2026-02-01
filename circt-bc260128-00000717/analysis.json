@@ -1,0 +1,23 @@
+{
+  "dialect": "moore",
+  "failing_pass": "SVModuleOpConversion",
+  "crash_type": "assertion",
+  "assertion_message": "dyn_cast on a non-existent value in circt::hw::ModulePortInfo::sanitizeInOut()",
+  "keywords": [
+    "union",
+    "packed union",
+    "module port",
+    "MooreToCore",
+    "sanitizeInOut",
+    "dyn_cast",
+    "assertion",
+    "ModulePortInfo",
+    "SVModuleOpConversion"
+  ],
+  "crash_location": {
+    "file": "PortImplementation.h",
+    "line": 177,
+    "function": "sanitizeInOut"
+  },
+  "testcase_id": "260128-00000717"
+}

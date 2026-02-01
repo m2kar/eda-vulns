@@ -1,0 +1,11 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "crash_signature": "failed to legalize operation 'sim.fmt.literal'",
+    "timestamp": "2026-01-31T20:22:40Z"
+  },
+  "toolchain": {
+    "circt_version": "CIRCT firtool-1.139.0",
+    "llvm_version": "LLVM version 22.0.0git"
+  }
+}

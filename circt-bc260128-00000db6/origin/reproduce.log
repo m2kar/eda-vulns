@@ -1,0 +1,65 @@
+=== CIRCT Bug Reproduction Report ===
+Testcase ID: 260128-00000db6
+Date: 2025-02-01
+
+Command Executed:
+/opt/firtool/bin/circt-verilog --ir-hw /tmp/repro_test/test.sv | \
+/opt/firtool/bin/arcilator | \
+/opt/firtool/bin/opt -O0 | \
+/opt/firtool/bin/llc -O0 --filetype=obj
+
+Source Code:
+module array_example(input logic a, input logic b);
+  logic [1:0] arr;
+  
+  assign arr[0] = a;
+  
+  always_comb arr[1] = b;
+endmodule
+
+=== Execution Results ===
+
+1. circt-verilog --ir-hw execution:
+   Status: SUCCESS
+   Output:
+   module {
+     hw.module @array_example(in %a : i1, in %b : i1) {
+       hw.output
+     }
+   }
+
+2. Full pipeline execution (verilog -> arcilator -> opt -O0 -> llc):
+   Status: SUCCESS
+   Output: Binary object file generated to /tmp/repro_test/test.o
+
+3. Canonicalize Pass Test:
+   Status: SUCCESS
+   Output: IR canonicalized without errors
+
+=== Crash Analysis ===
+
+Expected Crash Signature:
+- Type: Assertion failure
+- Location: mlir/lib/IR/PatternMatch.cpp:156
+- Message: "expected 'op' to have no uses"
+- Context: replaceOpAndCopyNamehint() -> extractConcatToConcatExtract()
+
+Actual Result: NO CRASH DETECTED
+
+=== Conclusion ===
+
+Reproduction Status: FAILED
+The bug is NOT reproducible with current CIRCT version (1.139.0 firtool).
+
+Possible Reasons:
+1. Bug may have been fixed in post-1.139.0 versions
+2. Requires specific optimization flags or configuration
+3. May need different IR generation conditions
+4. Bug might depend on specific system/environment configuration
+
+Tool Information:
+- CIRCT version: firtool-1.139.0
+- LLVM version: 22.0.0git
+- slang version: 9.1.0
+- Build type: Optimized
+

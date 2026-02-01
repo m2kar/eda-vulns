@@ -1,0 +1,122 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "timestamp": "2025-01-29T11:43:00Z",
+    "testcase_id": "260129-0000159f",
+    "input_file": "origin/source.sv",
+    "file_size_bytes": 203
+  },
+  "syntax_validation": {
+    "status": "valid",
+    "language": "SystemVerilog",
+    "ieee_standard": "1800-2005/2017",
+    "syntax_errors": 0,
+    "explicitly_unsupported_features": [],
+    "summary": "No explicit syntax errors or unsupported language features detected"
+  },
+  "features_detected": {
+    "inout_port": {
+      "present": true,
+      "location": "line 1",
+      "description": "inout logic c - bidirectional port with tri-state capability"
+    },
+    "tri_state_logic": {
+      "present": true,
+      "location": "line 9",
+      "value": "1'bz",
+      "description": "High-impedance value for tri-state output"
+    },
+    "sequential_logic": {
+      "present": true,
+      "location": "lines 5-7",
+      "type": "always @(posedge clk)",
+      "description": "Synchronous logic with clocked behavior"
+    },
+    "logic_type": {
+      "present": true,
+      "description": "SystemVerilog logic data type (4-state logic)"
+    },
+    "assign_statement": {
+      "present": true,
+      "location": "line 9",
+      "description": "Combinational logic assignment with conditional tri-state"
+    }
+  },
+  "circt_feature_support": {
+    "inout_ports": {
+      "status": "partial",
+      "hw_dialect": "supported",
+      "arc_dialect": "limited",
+      "issue": "Arc state lowering fails for inout port with tri-state"
+    },
+    "tri_state_logic": {
+      "status": "limited",
+      "description": "Tri-state (1'bz) not fully supported in Arc dialect lowering",
+      "recommendation": "Known limitation in CIRCT Arc dialect"
+    },
+    "sequential_logic": {
+      "status": "supported",
+      "description": "always @(posedge clk) is standard and well-supported"
+    },
+    "logic_type": {
+      "status": "supported",
+      "description": "logic type is standard SystemVerilog and well-supported"
+    }
+  },
+  "cross_tool_validation": {
+    "verilator": {
+      "status": "pass",
+      "command": "verilator --lint-only",
+      "result": "Code accepted without errors"
+    },
+    "iverilog": {
+      "status": "unsupported_version",
+      "command": "iverilog -g2017",
+      "note": "Tool does not support -g2017 flag, attempted with default"
+    },
+    "summary": "Code is syntactically valid - accepted by Verilator"
+  },
+  "crash_analysis": {
+    "crash_type": "assertion_failure",
+    "failing_tool": "arcilator",
+    "tool_chain": "circt-verilog → arcilator → opt → llc",
+    "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "failing_pass": "Arc LowerState transform",
+    "issue_location": "arcilator/lib/Dialect/Arc/Transforms/LowerState.cpp:219",
+    "dialect": "Arc",
+    "root_cause": {
+      "issue": "Arc StateType validation failure",
+      "description": "The arcilator tool attempts to construct an Arc StateType with a reference type (!llhd.ref<i1>) which violates the requirement that Arc state types must have known bit width",
+      "trigger": "inout port 'c' with tri-state assignment (1'bz) cannot be properly lowered to Arc state representation",
+      "technical_detail": "The StateType::verifyInvariants() check fails because the inferred type is a reference type rather than a concrete bit-width type"
+    }
+  },
+  "classification": {
+    "result": "bug_report",
+    "confidence": "high",
+    "reasoning": [
+      "Code is syntactically valid per IEEE 1800-2005/2017 standard",
+      "Code is accepted by Verilator (industry-standard tool)",
+      "Features used (inout, tri-state, sequential) are standard SystemVerilog",
+      "Crash is specific to CIRCT's arcilator → Arc dialect transformation",
+      "Crash is not due to unsupported language features but rather incomplete Arc lowering"
+    ],
+    "category": "Implementation Bug",
+    "severity": "Critical",
+    "type": "Compiler Crash"
+  },
+  "validation_details": {
+    "syntax_check_passed": true,
+    "cross_tool_verification": true,
+    "feature_support_check": "partial_support",
+    "is_minimal": true,
+    "is_reproducible": true
+  },
+  "recommendations": {
+    "next_step": "submit_as_bug_report",
+    "action": "Proceed to GitHub issue check and submission",
+    "note": "This is a valid and minimal test case that exposes a real bug in CIRCT's Arc dialect lowering of inout ports with tri-state logic",
+    "suggested_title": "Assertion failure in Arc StateType lowering for inout port with tri-state assignment",
+    "suggested_description": "CIRCT crashes when lowering a module with an inout port that has tri-state assignment (1'bz) through the Arc dialect"
+  }
+}

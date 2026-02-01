@@ -1,0 +1,15 @@
+{
+  "testcase_id": "260128-00000da7",
+  "reproduction": {
+    "reproduced": true,
+    "reproduction_type": "timeout",
+    "command_used": "circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0",
+    "timeout_seconds": 300,
+    "error_message": "Compilation timed out after 300s",
+    "notes": "The bug is confirmed by timeout - arcilator hangs indefinitely when processing the always_comb block with dynamic-indexed array writes and reads"
+  },
+  "environment": {
+    "toolchain": "CIRCT with LLVM 22",
+    "platform": "linux"
+  }
+}

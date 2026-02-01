@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T16:04:42Z",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv",
+    "crash_type": "timeout"
+  },
+  "tool": {
+    "name": "circt-verilog + arcilator + opt + llc",
+    "version": "LLVM 22.0.0git",
+    "path": "/opt/firtool/bin"
+  },
+  "original_command": "circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o test.o",
+  "reproduction": {
+    "command": "timeout 90 bash -c 'circt-verilog --ir-hw source.sv 2>&1 | arcilator 2>&1 | opt -O0 2>&1 | llc -O0 --filetype=obj -o /tmp/test.o 2>&1'",
+    "exit_code": 0,
+    "reproduced": false,
+    "match_result": "no_crash",
+    "reason": "Command completed successfully without timeout or crash in current environment"
+  },
+  "crash_signature": {
+    "original": "Compilation timed out after 60s",
+    "reproduced": "No timeout occurred"
+  },
+  "performance": {
+    "execution_time_ms": 126,
+    "timeout_threshold_s": 60
+  },
+  "files": {
+    "reproduce_log": "reproduce.log"
+  }
+}

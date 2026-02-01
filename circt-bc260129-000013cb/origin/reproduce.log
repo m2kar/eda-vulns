@@ -1,0 +1,68 @@
+=== CIRCT Bug Reproduction Attempt ===
+Testcase ID: 260129-000013cb
+Original Crash Signature: "state type must have a known bit width; got '!llhd.ref<i1>'"
+
+=== Command Execution ===
+Command: circt-verilog --ir-hw source.sv | arcilator 2>&1
+
+=== Environment ===
+CIRCT Version: firtool-1.139.0
+LLVM Version: 22.0.0git
+Toolchain: /opt/firtool/bin
+
+=== Execution Results ===
+
+**STEP 1: Verilog to MLIR IR**
+Generated successfully. IR includes:
+  - Port: io_sig with type !llhd.ref<i1> (inout logic port)
+  - Sequential logic: seq.firreg operation
+  - Combinatorial logic: comb.extract and comb.xor
+
+**STEP 2: Arcilator Processing**
+Arcilator converted the module without crashing.
+Produced LLVM IR code for TopModule_eval function.
+
+**Expected Crash Location:**
+According to error.txt, crash occurs in:
+  - File: /lib/Dialect/Arc/Transforms/LowerState.cpp:219:66
+  - Function: (anonymous namespace)::ModuleLowering::run()
+  - When creating StateType with the inout !llhd.ref<i1> parameter
+
+**Diagnosis:**
+The crash does NOT reproduce with the current CIRCT toolchain (firtool-1.139.0).
+Possible reasons:
+1. Bug has been fixed in the current version
+2. Fix was applied post 1.139.0 release used in testing
+3. Different compilation flags or environment settings needed
+
+=== Full Pipeline Output ===
+
+Input module successfully converted to LLVM IR:
+
+module {
+  hw.module @TopModule(in %clk : i1, in %wide_input : i64, out out : i8, in %io_sig : !llhd.ref<i1>) {
+    %0 = comb.extract %wide_input from 0 : (i64) -> i8
+    %1 = comb.extract %wide_input from 8 : (i64) -> i8
+    %2 = comb.xor %0, %1 : i8
+    %3 = seq.to_clock %clk
+    %out = seq.firreg %2 clock %3 : i8
+    hw.output %out : i8
+  }
+}
+
+After arcilator lowering to LLVM:
+
+define void @TopModule_eval(ptr %0) {
+  %2 = load i1, ptr %0, align 1
+  %3 = getelementptr i8, ptr %0, i32 18
+  %4 = load i1, ptr %3, align 1
+  store i1 %2, ptr %3, align 1
+  %5 = xor i1 %4, %2
+  %6 = and i1 %5, %2
+  br i1 %6, label %7, label %15
+  ...
+}
+
+=== Conclusion ===
+CRASH NOT REPRODUCED with current toolchain.
+Status: Unable to trigger the crash condition.

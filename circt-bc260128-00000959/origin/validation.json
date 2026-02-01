@@ -1,0 +1,34 @@
+{
+  "classification": {
+    "result": "report",
+    "reason": "arcilator lacks legalization pattern for sim.fmt.literal operation. Valid SystemVerilog immediate assertion with $error is accepted by Verilator, Slang, and circt-verilog frontend, but arcilator backend fails to lower it. This is a missing feature/bug in arcilator."
+  },
+  "syntax_valid": true,
+  "tool_validation": {
+    "verilator": {
+      "version": "5.022",
+      "result": "pass",
+      "notes": "No errors or warnings"
+    },
+    "slang": {
+      "version": "10.0.6",
+      "result": "pass",
+      "notes": "No errors or warnings"
+    },
+    "circt_verilog": {
+      "result": "pass",
+      "notes": "Successfully generates IR with sim.fmt.literal operation"
+    },
+    "arcilator": {
+      "result": "fail",
+      "error": "failed to legalize operation 'sim.fmt.literal'"
+    }
+  },
+  "testcase": {
+    "original_file": "source.sv",
+    "original_lines": 22,
+    "minimized_file": "bug.sv",
+    "minimized_lines": 5,
+    "reduction_percent": 77.3
+  }
+}

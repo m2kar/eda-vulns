@@ -1,0 +1,43 @@
+{
+  "result": "report",
+  "classification": "compiler_bug",
+  "checks": [
+    {
+      "name": "syntax_validity",
+      "tool": "verilator",
+      "version": "5.022",
+      "command": "verilator --lint-only bug.sv",
+      "status": "pass",
+      "output": "No errors"
+    },
+    {
+      "name": "syntax_validity",
+      "tool": "slang",
+      "version": "10.0.6",
+      "command": "slang --lint-only bug.sv",
+      "status": "pass",
+      "output": "Build succeeded: 0 errors, 0 warnings"
+    },
+    {
+      "name": "crash_reproduction",
+      "tool": "circt-verilog",
+      "version": "LLVM 22.0.0git (CIRCT 1.139.0)",
+      "command": "circt-verilog --ir-hw bug.sv",
+      "status": "crash",
+      "crash_type": "assertion_failure",
+      "crash_location": "MooreToCore.cpp - SVModuleOpConversion::matchAndRewrite()"
+    },
+    {
+      "name": "standard_compliance",
+      "standard": "IEEE 1800-2017",
+      "feature": "packed union (Section 7.3.1)",
+      "status": "valid",
+      "note": "packed union is a standard SystemVerilog feature"
+    }
+  ],
+  "summary": {
+    "is_valid_input": true,
+    "is_compiler_bug": true,
+    "reason": "Valid SystemVerilog code (verified by Verilator and Slang) causes crash in CIRCT"
+  }
+}

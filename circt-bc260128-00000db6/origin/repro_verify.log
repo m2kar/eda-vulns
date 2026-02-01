@@ -1,0 +1,5 @@
+module {
+  hw.module @array_example(in %a : i1, in %b : i1) {
+    hw.output
+  }
+}

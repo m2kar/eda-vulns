@@ -1,0 +1,57 @@
+{
+  "testcase_id": "260128-00000da7",
+  "validation_result": "report",
+  "is_valid_bug": true,
+  "syntax_validation": {
+    "verilator": {
+      "status": "pass",
+      "command": "verilator --lint-only bug.sv",
+      "errors": 0,
+      "warnings": 0
+    },
+    "slang": {
+      "status": "pass",
+      "command": "slang --lint-only bug.sv",
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "reproduction": {
+    "status": "confirmed",
+    "timeout_seconds": 60,
+    "exit_code": 124,
+    "component": "arcilator",
+    "crash_signature": "timeout"
+  },
+  "minimization": {
+    "original_lines": 24,
+    "minimized_lines": 21,
+    "reduction_percent": 12.5,
+    "preserved_constructs": [
+      "unpacked_array_of_packed_structs",
+      "dynamic_index_write",
+      "dynamic_index_read",
+      "always_comb_dependency"
+    ]
+  },
+  "cross_tool_validation": {
+    "verilator_compiles": true,
+    "slang_compiles": true,
+    "circt_crashes": true,
+    "conclusion": "Valid SystemVerilog that crashes only CIRCT arcilator"
+  },
+  "bug_classification": {
+    "type": "performance/infinite_loop",
+    "severity": "high",
+    "component": "arcilator",
+    "suspected_passes": ["ConvertToArcs", "LowerState", "SplitLoops"]
+  },
+  "generated_files": [
+    "bug.sv",
+    "minimize_report.md",
+    "error.log",
+    "command.txt",
+    "validation.json",
+    "validation.md"
+  ]
+}

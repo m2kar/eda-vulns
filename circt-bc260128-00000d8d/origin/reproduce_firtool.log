@@ -1,0 +1,7 @@
+firtool: for the -O option: may not occur within a group!
+firtool: Unknown command line argument '-O0'.  Try: 'firtool --help'
+firtool: Did you mean '-O'?
+firtool: Unknown command line argument '-e'.  Try: 'firtool --help'
+firtool: Did you mean '-o'?
+firtool: Too many positional arguments specified!
+Can specify at most 1 positional arguments: See: firtool --help

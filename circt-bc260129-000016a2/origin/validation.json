@@ -1,0 +1,49 @@
+{
+  "validation": {
+    "result": "report",
+    "confidence": "high",
+    "rationale": "The test case is valid SystemVerilog accepted by both Verilator and slang, but causes arcilator to crash"
+  },
+  "syntax_check": {
+    "verilator": {
+      "command": "verilator --lint-only bug.sv",
+      "result": "pass",
+      "exit_code": 0,
+      "errors": [],
+      "warnings": []
+    },
+    "slang": {
+      "command": "slang --lint-only bug.sv",
+      "result": "pass",
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "crash_reproduction": {
+    "command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw bug.sv 2>&1 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator 2>&1",
+    "reproduces": true,
+    "error_signature": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "crash_type": "assertion_failure"
+  },
+  "test_case": {
+    "file": "bug.sv",
+    "lines": 3,
+    "original_lines": 20,
+    "reduction_percent": 85.0,
+    "content": "module bug(inout io);\n  assign io = 1'bz;\nendmodule"
+  },
+  "classification": {
+    "is_valid_systemverilog": true,
+    "is_supported_feature": true,
+    "is_intentional_error": false,
+    "is_edge_case": true,
+    "bug_category": "missing_type_support"
+  },
+  "analysis": {
+    "trigger": "inout port with tri-state assignment",
+    "affected_component": "arcilator LowerState pass",
+    "expected_behavior": "Should either support llhd.ref types or gracefully reject unsupported constructs",
+    "actual_behavior": "Assertion failure crash"
+  }
+}

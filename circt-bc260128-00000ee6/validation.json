@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T02:52:14+00:00",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "",
+    "tool": "slang"
+  },
+  "feature_support": {
+    "status": "",
+    "unsupported_found": []
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": null
+  },
+  "cross_tool_validation": {
+    "verilator": "",
+    "icarus": "",
+    "slang": "pass (syntax check)"
+  },
+  "classification": {
+    "result": "",
+    "confidence": "high",
+    "reason": "Valid test case, unique crash in CIRCT. All cross-tools accept the testcase, only CIRCT crashes with assertion failure."
+  }
+}

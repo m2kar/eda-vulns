@@ -1,0 +1,10 @@
+{
+  "syntax": "valid",
+  "features_used": ["struct_packed", "unpacked_array", "always_ff", "for_loop"],
+  "features_supported": true,
+  "cross_tool": {
+    "verilator": "pass",
+    "slang": "pass"
+  },
+  "classification": "report"
+}

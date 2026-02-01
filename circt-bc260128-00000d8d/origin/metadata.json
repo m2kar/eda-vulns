@@ -1,0 +1,27 @@
+{
+  "testcase_id": "260128-00000d8d",
+  "crash_type": "assertion",
+  "original_toolchain": "circt-1.139.0 with LLVM 22.0.0git",
+  "current_toolchain": "circt-1.139.0 with LLVM 22.0.0git",
+  "reproduction": {
+    "reproduced": false,
+    "status": "NOT_REPRODUCED",
+    "reason": "Current toolchain appears to have fixed this bug",
+    "crash_type": "assertion",
+    "assertion_file": "PatternMatch.cpp",
+    "assertion_line": 156,
+    "assertion_text": "op->use_empty() && \"expected 'op' to have no uses\"",
+    "key_frames": [
+      "circt::replaceOpAndCopyNamehint at Naming.cpp:82",
+      "extractConcatToConcatExtract at CombFolds.cpp:548",
+      "ExtractOp::canonicalize at CombFolds.cpp:615"
+    ]
+  },
+  "test_details": {
+    "source_file": "source.sv",
+    "ir_generated": "Successfully",
+    "optimization_level": "O0",
+    "pipeline_completed": true
+  },
+  "original_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_72961b4c194b.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_xfhtv50x/test_72961b4c194b.o"
+}

@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T02:13:14.860067",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "circt-verilog",
+    "version": "LLVM 22.0.0git / firtool-1.139.0",
+    "path": "/opt/firtool/bin/circt-verilog"
+  },
+  "original_command": "circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj",
+  "reproduction": {
+    "command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv",
+    "exit_code": 1,
+    "reproduced": true,
+    "match_result": "stack_dump_match"
+  },
+  "crash_signature": {
+    "original_location": "Casting.h:650 - dyn_cast on InOutType",
+    "reproduced_location": "MooreToCore.cpp - SVModuleOpConversion::matchAndRewrite",
+    "both_crashed": true
+  },
+  "verification": {
+    "original_has_stack_dump": true,
+    "reproduced_has_stack_dump": true
+  },
+  "files": {
+    "reproduce_log": "reproduce.log",
+    "metadata": "metadata.json"
+  }
+}

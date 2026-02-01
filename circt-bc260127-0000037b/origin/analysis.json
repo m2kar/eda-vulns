@@ -1,0 +1,130 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "testcase_id": "260127-0000037b",
+  "dialect": "SV → HW → Arc",
+  "tool": "arcilator",
+  "failing_pass": "arc-lower-state",
+  "crash_type": "assertion",
+  "assertion_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "crash_location": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "function": "ModuleLowering::run()",
+    "line": 219
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "file": "source.sv",
+    "key_constructs": [
+      "inout port",
+      "mixed port directions (input, output, inout)",
+      "always_ff sequential block",
+      "assign continuous assignment"
+    ],
+    "problematic_patterns": [
+      "inout logic c - bidirectional port triggers llhd.ref<i1> type",
+      "arcilator does not support inout ports"
+    ]
+  },
+  "error_chain": {
+    "trigger": "inout port in SystemVerilog module",
+    "conversion": "MooreToCore converts inout to llhd.ref<T> type",
+    "failure_point": "LowerState.cpp:219 - StateType::get(arg.getType())",
+    "root_cause": "StateType cannot handle llhd::RefType - no known bit width"
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "Missing early validation for inout ports in LowerState pass",
+      "confidence": "high",
+      "evidence": [
+        "ModelOp::verify() already rejects inout: 'inout ports are not supported' (ArcOps.cpp:336)",
+        "LowerState.cpp iterates all block arguments without checking port direction",
+        "StateType::verify() fails for llhd.ref types due to computeLLVMBitWidth() returning {}"
+      ],
+      "mechanism": "Inout ports represented as llhd.ref<T> pass through to StateType::get() which cannot compute bit width for reference types"
+    },
+    {
+      "id": 2,
+      "description": "Missing pass to eliminate inout ports before arcilator pipeline",
+      "confidence": "medium",
+      "evidence": [
+        "HWEliminateInOutPorts pass exists in SV dialect",
+        "arcilator pipeline may not include this preprocessing",
+        "Error occurs late in lowering suggesting missing early rejection"
+      ],
+      "mechanism": "Pipeline should either transform or reject inout ports before LowerState pass"
+    },
+    {
+      "id": 3,
+      "description": "Type conversion issue in MooreToCore for inout signals",
+      "confidence": "low",
+      "evidence": [
+        "MooreToCore.cpp uses llhd::RefType for variable/signal types",
+        "Inout ports may need special handling for arcilator compatibility"
+      ],
+      "mechanism": "Frontend may need to transform inout ports differently"
+    }
+  ],
+  "keywords": [
+    "arcilator",
+    "inout",
+    "StateType",
+    "llhd.ref",
+    "LowerState",
+    "bit width",
+    "assertion",
+    "bidirectional",
+    "port",
+    "RefType"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "reason": "Crash site - needs early validation for inout ports"
+    },
+    {
+      "path": "lib/Dialect/Arc/ArcTypes.cpp",
+      "reason": "StateType verification and computeLLVMBitWidth logic"
+    },
+    {
+      "path": "lib/Dialect/Arc/ArcOps.cpp",
+      "reason": "ModelOp::verify() already rejects inout ports"
+    },
+    {
+      "path": "lib/Dialect/SV/Transforms/HWEliminateInOutPorts.cpp",
+      "reason": "Potential preprocessing pass for arcilator"
+    },
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Inout port conversion to llhd.ref type"
+    },
+    {
+      "path": "lib/Tools/arcilator/pipelines.cpp",
+      "reason": "arcilator pass pipeline configuration"
+    }
+  ],
+  "fix_suggestions": [
+    {
+      "type": "early_validation",
+      "description": "Add early validation in LowerStatePass to reject inout ports with clear error",
+      "priority": "high"
+    },
+    {
+      "type": "pipeline_change",
+      "description": "Consider adding hw-eliminate-inout-ports pass to arcilator pipeline",
+      "priority": "medium"
+    },
+    {
+      "type": "documentation",
+      "description": "Document that arcilator does not support inout/bidirectional ports",
+      "priority": "low"
+    }
+  ],
+  "classification": {
+    "is_bug": true,
+    "bug_type": "unsupported_feature_crash",
+    "severity": "medium",
+    "reproducibility": "always"
+  }
+}

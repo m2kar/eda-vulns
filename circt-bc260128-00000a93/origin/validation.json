@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-01-31T21:47:01+00:00",
+  "classification": {
+    "result": "report",
+    "reason": "circt-verilog crashes with assertion; other tools do not crash"
+  },
+  "tools": {
+    "verilator": {
+      "command": "verilator --lint-only -Wall bug.sv",
+      "status": "warning",
+      "summary": "DECLFILENAME warning (module name test vs file name bug)"
+    },
+    "slang": {
+      "command": "slang --lint-only bug.sv",
+      "status": "ok",
+      "summary": "Build succeeded: 0 errors, 0 warnings"
+    }
+  }
+}

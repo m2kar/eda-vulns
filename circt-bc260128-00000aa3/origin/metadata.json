@@ -1,0 +1,15 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "command_used": "export PATH=/opt/llvm-22/bin:/opt/firtool-1.139.0/bin:$PATH && /opt/firtool-1.139.0/bin/circt-verilog --ir-hw source.sv 2>&1 | /opt/firtool-1.139.0/bin/arcilator 2>&1",
+    "crash_signature": "arc.state op operand type mismatch - garbage type value (memory corruption)",
+    "matches_original": true,
+    "notes": "The reproduced error manifests as garbage type values (e.g., i842160528) appearing in arc.state operands instead of valid hw.array<16xi8> type. This is consistent with the original root cause in ConstantOp::create where type casting fails, likely due to type corruption or uninitialization in the HW dialect type handling during arcilator processing."
+  },
+  "timestamp": "2026-01-31T21:52:00Z",
+  "tool_versions": {
+    "circt_verilog": "firtool-1.139.0",
+    "arcilator": "firtool-1.139.0",
+    "llvm": "22.0.0git"
+  }
+}

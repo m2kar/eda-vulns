@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T23:04:55+00:00",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "circt-verilog",
+    "version": "LLVM 22.0.0git; CIRCT firtool-1.139.0; slang 9.1.0+0",
+    "path": "/opt/firtool/bin/circt-verilog"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o /tmp/circt_repro.o",
+    "exit_code": 1,
+    "reproduced": true,
+    "match_result": "exact_match"
+  },
+  "crash_signature": {
+    "original": "<stdin>:3:10: error: failed to legalize operation 'sim.fmt.literal'",
+    "reproduced": "<stdin>:3:10: error: failed to legalize operation 'sim.fmt.literal'"
+  },
+  "files": {
+    "reproduce_log": "reproduce.log"
+  }
+}

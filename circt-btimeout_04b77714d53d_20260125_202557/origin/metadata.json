@@ -1,0 +1,23 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T16:15:45+00:00",
+  "tool_version": "LLVM (http://llvm.org/):",
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "reproduction": {
+    "reproduced": true,
+    "crash_type": "timeout",
+    "timeout_seconds": 60,
+    "command": "circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj",
+    "exit_code": 124,
+    "elapsed_time_seconds": 65,
+    "note": "Timeout occurred after 65s execution (command timed out as expected). Pipeline hung during compilation without producing output."
+  },
+  "hash": "04b77714d53d",
+  "files": {
+    "reproduce_log": "reproduce.log",
+    "source": "source.sv"
+  }
+}

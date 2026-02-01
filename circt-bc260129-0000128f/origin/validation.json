@@ -1,0 +1,13 @@
+{
+  "result": "report",
+  "toolchain": {
+    "circt_verilog": "/opt/firtool/bin/circt-verilog",
+    "arcilator": "/opt/firtool/bin/arcilator",
+    "opt": "/opt/firtool/bin/opt",
+    "llc": "/opt/firtool/bin/llc"
+  },
+  "command": "circt-verilog --ir-hw bug.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o /tmp/arcilator_repro.o",
+  "exit_code": 1,
+  "diagnostic": "'arc.state' op operand type mismatch",
+  "notes": "Current toolchain rejects the IR with a verifier error; older toolchain asserts in InferStateProperties."
+}

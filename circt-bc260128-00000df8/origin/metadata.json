@@ -1,0 +1,8 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "crash_signature": "matching",
+    "command": "/opt/firtool/bin/circt-verilog --ir-hw /tmp/test_reproduce_260128.sv"
+  },
+  "timestamp": "2026-02-01T01:59:21.074575Z"
+}

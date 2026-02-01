@@ -1,0 +1,18 @@
+{
+  "dialect": "SV (SystemVerilog) -> HW/Arc lowering",
+  "crash_type": "assertion (llvm::cast<mlir::IntegerType>)",
+  "location": "lib/Dialect/Arc/Transforms/InferStateProperties.cpp:211 (applyEnableTransformation) via hw::ConstantOp::create",
+  "keywords": [
+    "arcilator",
+    "InferStateProperties",
+    "applyEnableTransformation",
+    "hw.constant",
+    "hw::ConstantOp::create",
+    "IntegerType",
+    "cast assertion",
+    "Arc dialect",
+    "enable transformation"
+  ],
+  "hypothesis": "InferStateProperties assumes enable types are mlir::IntegerType. For this SV test, the enable signal type becomes a non-IntegerType (e.g., circt::hw::IntType or aggregate), and applyEnableTransformation creates an hw.constant with that type. hw::ConstantOp::create casts the type to IntegerType and asserts, causing the crash.",
+  "evidence": "error.txt shows assertion in llvm::cast<mlir::IntegerType> and stack trace into hw::ConstantOp::create called from applyEnableTransformation (InferStateProperties.cpp:211). source.sv uses packed structs and arrays, which can lower to HW/Arc types that are not builtin IntegerType, matching the incompatible-type assertion."
+}

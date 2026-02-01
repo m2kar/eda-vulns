@@ -1,0 +1,93 @@
+{
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reasoning": "The testcase triggers a genuine assertion failure in arcilator's InferStatePropertiesPass. The code uses standard SystemVerilog constructs (unpacked arrays, always_ff, for loops) that should be supported. The crash is caused by missing type validation in applyEnableTransformation() which incorrectly assumes all enable candidates are integer types, failing when array types are encountered."
+  },
+  "syntax_check": {
+    "valid": true,
+    "errors": [],
+    "tools_verified": [
+      {
+        "tool": "slang",
+        "version": "system",
+        "result": "Build succeeded: 0 errors, 0 warnings"
+      },
+      {
+        "tool": "verilator",
+        "version": "system",
+        "result": "No errors or warnings"
+      },
+      {
+        "tool": "circt-verilog",
+        "version": "firtool-1.139.0",
+        "result": "Parse successful, valid MLIR generated"
+      }
+    ]
+  },
+  "feature_support": [
+    {
+      "feature": "unpacked_arrays",
+      "syntax": "logic [7:0] arr [0:1]",
+      "status": "supported",
+      "notes": "Standard SystemVerilog unpacked array syntax"
+    },
+    {
+      "feature": "always_ff",
+      "syntax": "always_ff @(posedge clk)",
+      "status": "supported",
+      "notes": "Standard sequential logic block"
+    },
+    {
+      "feature": "for_loop",
+      "syntax": "for (int i = 1; i < 2; i++)",
+      "status": "supported",
+      "notes": "Standard for loop with loop variable declaration"
+    },
+    {
+      "feature": "nonblocking_assignment",
+      "syntax": "arr[i] <= value",
+      "status": "supported",
+      "notes": "Standard nonblocking assignment in sequential block"
+    },
+    {
+      "feature": "conditional_assignment",
+      "syntax": "if-else with array element assignment",
+      "status": "supported",
+      "notes": "Standard conditional logic"
+    }
+  ],
+  "cross_tool_verification": {
+    "slang": {
+      "result": "pass",
+      "output": "Build succeeded: 0 errors, 0 warnings"
+    },
+    "verilator": {
+      "result": "pass",
+      "output": "No lint errors"
+    },
+    "circt_verilog_parse": {
+      "result": "pass",
+      "output": "Valid MLIR moore dialect generated"
+    },
+    "circt_verilog_hw": {
+      "result": "pass",
+      "output": "Valid MLIR hw dialect generated (before arcilator)"
+    },
+    "arcilator": {
+      "result": "crash",
+      "output": "Assertion failure in llvm::cast<mlir::IntegerType>()"
+    }
+  },
+  "bug_details": {
+    "component": "arcilator / InferStatePropertiesPass",
+    "crash_location": "InferStateProperties.cpp:211",
+    "function": "applyEnableTransformation",
+    "assertion": "isa<To>(Val) && \"cast<Ty>() argument of incompatible type!\"",
+    "type_mismatch": {
+      "expected": "mlir::IntegerType",
+      "actual": "hw::ArrayType"
+    }
+  },
+  "timestamp": "2026-02-01T04:49:34Z"
+}

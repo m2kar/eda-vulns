@@ -1,0 +1,30 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "testcase_id": "260129-0000159c",
+    "tool_name": "arcilator",
+    "error_type": "assertion",
+    "crash_tool": "arcilator",
+    "timestamp": "2026-02-01T09:34:29.799328"
+  },
+  "signature_analysis": {
+    "original_signature": "error:state_type_bitwidth:assert:StateType::get:stack:ModuleLowering::run",
+    "reproduced_signature": "error:state_type_bitwidth:assert:StateType::get:stack:ModuleLowering::run",
+    "signature_match": true
+  },
+  "error_matching": {
+    "error_message_match": true,
+    "assertion_type_match": true,
+    "stack_trace_match": true,
+    "all_match": true
+  },
+  "environment": {
+    "toolchain_path": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/",
+    "circt_version": "1.139.0"
+  },
+  "files": {
+    "testcase_path": "source.sv",
+    "reproduce_log_path": "reproduce.log",
+    "original_error_path": "error.txt"
+  }
+}

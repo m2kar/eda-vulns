@@ -1,0 +1,83 @@
+{
+  "dialect": "LLHD",
+  "frontend_dialect": "Moore",
+  "crash_type": "assertion",
+  "error_message": "integer bitwidth is limited to 16777215 bits",
+  "crash_location": {
+    "file": "Mem2Reg.cpp",
+    "line": 1742,
+    "function": "insertBlockArgs",
+    "call_chain": [
+      "Mem2RegPass::runOnOperation",
+      "Promoter::promote",
+      "Promoter::insertBlockArgs",
+      "OpBuilder::getIntegerType",
+      "IntegerType::get",
+      "IntegerType::verifyInvariants"
+    ]
+  },
+  "root_cause_hypothesis": "hw::getBitWidth() returns -1 for ClassHandleType (unsupported type). This -1 is implicitly converted to a very large unsigned value when passed to getIntegerType(), causing the IntegerType invariant check to fail because the bitwidth exceeds the 16777215 limit.",
+  "confidence": "high",
+  "affected_components": [
+    {
+      "name": "LLHD Mem2Reg Pass",
+      "file": "lib/Dialect/LLHD/Transforms/Mem2Reg.cpp",
+      "issue": "Does not validate getBitWidth() return value before creating IntegerType"
+    },
+    {
+      "name": "HW getBitWidth",
+      "file": "lib/Dialect/HW/HWTypes.cpp",
+      "issue": "Returns -1 for unsupported types like ClassHandleType"
+    },
+    {
+      "name": "Moore ClassHandleType",
+      "file": "include/circt/Dialect/Moore/MooreTypes.td",
+      "issue": "Does not implement BitWidthTypeInterface"
+    }
+  ],
+  "testcase_analysis": {
+    "has_circular_reference": true,
+    "class_definition": true,
+    "typedef_template": true,
+    "parameterized_class": true,
+    "self_referencing_typedef": true,
+    "key_constructs": [
+      {
+        "construct": "registry #(type T = int)",
+        "description": "Parameterized template class"
+      },
+      {
+        "construct": "typedef registry#(my_class) type_id",
+        "description": "Self-referencing typedef inside my_class"
+      },
+      {
+        "construct": "my_class obj; obj = new();",
+        "description": "Class object instantiation in always_ff block"
+      }
+    ],
+    "trigger_condition": "Class object (ClassHandleType) is stored in a signal that Mem2Reg attempts to promote to register"
+  },
+  "source_code_evidence": {
+    "crash_point": {
+      "file": "Mem2Reg.cpp",
+      "line": 1753,
+      "code": "auto flatType = builder.getIntegerType(hw::getBitWidth(type));"
+    },
+    "getBitWidth_implementation": {
+      "file": "HWTypes.cpp",
+      "line": 110,
+      "returns": "-1 for unsupported types"
+    }
+  },
+  "suggested_fix": {
+    "approach": "Add validation for getBitWidth() return value",
+    "location": "Mem2Reg.cpp:1752-1753",
+    "change": "Check if getBitWidth() returns a valid positive value before creating IntegerType"
+  },
+  "severity": "high",
+  "reproducibility": "deterministic",
+  "verilog_standard": "SystemVerilog",
+  "tool_chain": [
+    "circt-verilog --ir-hw"
+  ]
+}

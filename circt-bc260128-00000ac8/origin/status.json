@@ -1,0 +1,26 @@
+{
+  "crash_id": "260128-00000ac8",
+  "status": "report_ready",
+  "phase": "completed",
+  "created_at": "2026-01-31T22:14:15Z",
+  "updated_at": "2026-01-31T22:27:12+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed",
+      "reproduced": true,
+      "confidence": 0.92,
+      "error_signature_match": true
+    },
+    "phase2": {
+      "status": "completed"
+    },
+    "phase3": {
+      "status": "completed"
+    }
+  }
+}

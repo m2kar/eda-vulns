@@ -1,0 +1,500 @@
+{
+  "timestamp": "2026-01-31T22:19:32.042568",
+  "keywords": {
+    "tool": "arcilator",
+    "pass": "InferStateProperties",
+    "crash_type": "assertion",
+    "dialect": "arc",
+    "function": "applyEnableTransformation",
+    "cast_error": "cast<IntegerType>",
+    "struct_type": "packed struct",
+    "struct_array": "struct array",
+    "file": "InferStateProperties.cpp"
+  },
+  "total_results": 24,
+  "top_5": [
+    {
+      "number": 9260,
+      "title": "Arcilator crashes in Upload Release Artifacts CI",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "MDU6TGFiZWwxODg4ODczNzE3",
+          "name": "bug",
+          "description": "Something isn't working",
+          "color": "d73a4a"
+        },
+        {
+          "id": "LA_kwDODpuCgs8AAAABNapjiA",
+          "name": "Arc",
+          "description": "Involving the `arc` dialect",
+          "color": "bfd4f2"
+        }
+      ],
+      "similarity": 12.0,
+      "queries": [
+        "arcilator crash"
+      ]
+    },
+    {
+      "number": 6373,
+      "title": "[Arc] Support hw.wires of aggregate types",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "LA_kwDODpuCgs8AAAABNapjiA",
+          "name": "Arc",
+          "description": "Involving the `arc` dialect",
+          "color": "bfd4f2"
+        }
+      ],
+      "similarity": 10.0,
+      "queries": [
+        "struct array"
+      ]
+    },
+    {
+      "number": 8065,
+      "title": "[LLHD][Arc] Indexing and slicing lowering from Verilog to LLVM IR",
+      "state": "OPEN",
+      "labels": [],
+      "similarity": 10.0,
+      "queries": [
+        "struct array"
+      ]
+    },
+    {
+      "number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "LA_kwDODpuCgs7olJFv",
+          "name": "Moore",
+          "description": "",
+          "color": "04673D"
+        }
+      ],
+      "similarity": 7.0,
+      "queries": [
+        "cast<IntegerType>"
+      ]
+    },
+    {
+      "number": 3289,
+      "title": "[PyCDE] ConcatOp of arrays causes crash",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "MDU6TGFiZWwzMDUzOTI4MTAz",
+          "name": "PyCDE",
+          "description": "Python CIRCT Design Entry API",
+          "color": "c5def5"
+        }
+      ],
+      "similarity": 7.0,
+      "queries": [
+        "cast<IntegerType>"
+      ]
+    }
+  ],
+  "all_results": [
+    {
+      "number": 9260,
+      "title": "Arcilator crashes in Upload Release Artifacts CI",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "MDU6TGFiZWwxODg4ODczNzE3",
+          "name": "bug",
+          "description": "Something isn't working",
+          "color": "d73a4a"
+        },
+        {
+          "id": "LA_kwDODpuCgs8AAAABNapjiA",
+          "name": "Arc",
+          "description": "Involving the `arc` dialect",
+          "color": "bfd4f2"
+        }
+      ],
+      "similarity": 12.0,
+      "queries": [
+        "arcilator crash"
+      ]
+    },
+    {
+      "number": 6373,
+      "title": "[Arc] Support hw.wires of aggregate types",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "LA_kwDODpuCgs8AAAABNapjiA",
+          "name": "Arc",
+          "description": "Involving the `arc` dialect",
+          "color": "bfd4f2"
+        }
+      ],
+      "similarity": 10.0,
+      "queries": [
+        "struct array"
+      ]
+    },
+    {
+      "number": 8065,
+      "title": "[LLHD][Arc] Indexing and slicing lowering from Verilog to LLVM IR",
+      "state": "OPEN",
+      "labels": [],
+      "similarity": 10.0,
+      "queries": [
+        "struct array"
+      ]
+    },
+    {
+      "number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "LA_kwDODpuCgs7olJFv",
+          "name": "Moore",
+          "description": "",
+          "color": "04673D"
+        }
+      ],
+      "similarity": 7.0,
+      "queries": [
+        "cast<IntegerType>"
+      ]
+    },
+    {
+      "number": 3289,
+      "title": "[PyCDE] ConcatOp of arrays causes crash",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "MDU6TGFiZWwzMDUzOTI4MTAz",
+          "name": "PyCDE",
+          "description": "Python CIRCT Design Entry API",
+          "color": "c5def5"
+        }
+      ],
+      "similarity": 7.0,
+      "queries": [
+        "cast<IntegerType>"
+      ]
+    },
+    {
+      "number": 8292,
+      "title": "[MooreToCore] Support for Unsized Array Type",
+      "state": "OPEN",
+      "labels": [],
+      "similarity": 7.0,
+      "queries": [
+        "struct array"
+      ]
+    },
+    {
+      "number": 3853,
+      "title": "[ExportVerilog] Try to make bind change the generated RTL as little as possible",
+      "state": "OPEN",
+      "labels": [],
+      "similarity": 5.0,
+      "queries": [
+        "packed struct",
+        "struct array"
+      ]
+    },
+    {
+      "number": 5138,
+      "title": "[ExportVerilog] `disallowPackedStructAssignments` also needs to consider `hw.aggregate_constant`",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "MDU6TGFiZWwyNjM1MzI5MzE1",
+          "name": "ExportVerilog",
+          "description": "",
+          "color": "1d76db"
+        }
+      ],
+      "similarity": 3.0,
+      "queries": [
+        "packed struct"
+      ]
+    },
+    {
+      "number": 9076,
+      "title": "[FIRRTL] Preserve aggregate of memory data type to make LEC friendly",
+      "state": "OPEN",
+      "labels": [],
+      "similarity": 3.0,
+      "queries": [
+        "packed struct"
+      ]
+    },
+    {
+      "number": 2439,
+      "title": "[ExportVerilog] Remove temporary for aggregate outputs",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "MDU6TGFiZWwyNjM1MzI5MzE1",
+          "name": "ExportVerilog",
+          "description": "",
+          "color": "1d76db"
+        },
+        {
+          "id": "LA_kwDODpuCgs7f5Csy",
+          "name": "Verilog Quality",
+          "description": "",
+          "color": "01371D"
+        }
+      ],
+      "similarity": 0.0,
+      "queries": [
+        "packed struct"
+      ]
+    },
+    {
+      "number": 6614,
+      "title": "[LowerSeqToSV] FIRRTL enum with clock field leads to invalid IR",
+      "state": "OPEN",
+      "labels": [],
+      "similarity": 0.0,
+      "queries": [
+        "packed struct"
+      ]
+    },
+    {
+      "number": 2504,
+      "title": "[ExportVerilog] Incorrect verilog output for bitcast + zero width aggregate types",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "MDU6TGFiZWwxODg4ODczNzE3",
+          "name": "bug",
+          "description": "Something isn't working",
+          "color": "d73a4a"
+        },
+        {
+          "id": "MDU6TGFiZWwyNjM1MzI5MzE1",
+          "name": "ExportVerilog",
+          "description": "",
+          "color": "1d76db"
+        }
+      ],
+      "similarity": 0.0,
+      "queries": [
+        "packed struct",
+        "struct array"
+      ]
+    },
+    {
+      "number": 2567,
+      "title": "[HW][FIRRTL] Endian difference between struct and array",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "MDU6TGFiZWwyMTUyNzUzNjMw",
+          "name": "FIRRTL",
+          "description": "Involving the `firrtl` dialect",
+          "color": "fbca04"
+        }
+      ],
+      "similarity": 0.0,
+      "queries": [
+        "packed struct",
+        "struct array"
+      ]
+    },
+    {
+      "number": 2329,
+      "title": "[LowerToHW] Use type decl for Bundle type lowering",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "MDU6TGFiZWwxODg4ODczNzIw",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        },
+        {
+          "id": "MDU6TGFiZWwyNjM1MzI5MzE1",
+          "name": "ExportVerilog",
+          "description": "",
+          "color": "1d76db"
+        }
+      ],
+      "similarity": 0.0,
+      "queries": [
+        "packed struct"
+      ]
+    },
+    {
+      "number": 7535,
+      "title": "[MooreToCore] VariableOp lowered failed",
+      "state": "OPEN",
+      "labels": [],
+      "similarity": 0.0,
+      "queries": [
+        "packed struct",
+        "struct array"
+      ]
+    },
+    {
+      "number": 8476,
+      "title": "[MooreToCore] Lower exponentiation to `math.ipowi`",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "MDU6TGFiZWwxODg4ODczNzIx",
+          "name": "good first issue",
+          "description": "Good for newcomers",
+          "color": "7057ff"
+        },
+        {
+          "id": "LA_kwDODpuCgs7olJFv",
+          "name": "Moore",
+          "description": "",
+          "color": "04673D"
+        }
+      ],
+      "similarity": 0.0,
+      "queries": [
+        "cast<IntegerType>"
+      ]
+    },
+    {
+      "number": 6271,
+      "title": "[HW] Unequal equal types on instancing a module outputting a parametrized array / ArrayType sizeAttr defaults to 64bit",
+      "state": "OPEN",
+      "labels": [],
+      "similarity": 0.0,
+      "queries": [
+        "cast<IntegerType>"
+      ]
+    },
+    {
+      "number": 6816,
+      "title": "[HGLDD] Emit HW struct and array types",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "MDU6TGFiZWwxODg4ODczNzIx",
+          "name": "good first issue",
+          "description": "Good for newcomers",
+          "color": "7057ff"
+        },
+        {
+          "id": "LA_kwDODpuCgs8AAAABa7cUEg",
+          "name": "Debug",
+          "description": "",
+          "color": "D4C5F9"
+        }
+      ],
+      "similarity": 0.0,
+      "queries": [
+        "struct array"
+      ]
+    },
+    {
+      "number": 6983,
+      "title": " Elaborate chisel type annotation from firtool to generate debug information for the Tywaves project",
+      "state": "OPEN",
+      "labels": [],
+      "similarity": 0.0,
+      "queries": [
+        "struct array"
+      ]
+    },
+    {
+      "number": 2590,
+      "title": "[ExportVerilog] Unnecessary temporary wire for bitcast between array and integer",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "MDU6TGFiZWwyNjM1MzI5MzE1",
+          "name": "ExportVerilog",
+          "description": "",
+          "color": "1d76db"
+        }
+      ],
+      "similarity": 0.0,
+      "queries": [
+        "struct array"
+      ]
+    },
+    {
+      "number": 391,
+      "title": "Cache non-inout bits in composite RTL types",
+      "state": "OPEN",
+      "labels": [],
+      "similarity": 0.0,
+      "queries": [
+        "struct array"
+      ]
+    },
+    {
+      "number": 1352,
+      "title": "[FIRRTL] Add create vector/bundle ops",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "MDU6TGFiZWwxODg4ODczNzIw",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        },
+        {
+          "id": "MDU6TGFiZWwyMTUyNzUzNjMw",
+          "name": "FIRRTL",
+          "description": "Involving the `firrtl` dialect",
+          "color": "fbca04"
+        }
+      ],
+      "similarity": 0.0,
+      "queries": [
+        "struct array"
+      ]
+    },
+    {
+      "number": 2419,
+      "title": "[HW][SV] Use FieldID in HW/SV dialects",
+      "state": "OPEN",
+      "labels": [],
+      "similarity": 0.0,
+      "queries": [
+        "struct array"
+      ]
+    },
+    {
+      "number": 5253,
+      "title": "[CI][FIRRTL][LLHD] valgrind failures on nightly (GCC, asserts=ON, shared=OFF)",
+      "state": "OPEN",
+      "labels": [
+        {
+          "id": "MDU6TGFiZWwyMTUyNzUzNjMw",
+          "name": "FIRRTL",
+          "description": "Involving the `firrtl` dialect",
+          "color": "fbca04"
+        },
+        {
+          "id": "MDU6TGFiZWwyMTY1NDc5NTk1",
+          "name": "LLHD",
+          "description": "",
+          "color": "e07b00"
+        }
+      ],
+      "similarity": 0.0,
+      "queries": [
+        "struct array"
+      ]
+    }
+  ],
+  "search_queries": [
+    "arcilator crash",
+    "InferStateProperties assertion",
+    "packed struct",
+    "cast<IntegerType>",
+    "struct array"
+  ]
+}

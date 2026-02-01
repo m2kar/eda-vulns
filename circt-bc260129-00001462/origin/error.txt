@@ -1,0 +1,10 @@
+Crash Type: assertion
+Testcase ID: 260129-00001462
+
+--- Compilation Command ---
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_391741fc8ca5.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_xfhtv50x/test_391741fc8ca5.o
+
+--- Error Message ---
+test_391741fc8ca5.sv:10:3: error: concurrent assertion statements with action blocks are not supported yet
+  assert property (@(posedge clk) q |-> idx != 0) 
+  ^

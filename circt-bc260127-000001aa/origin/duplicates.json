@@ -1,0 +1,26 @@
+{
+  "queries": [
+    "Sig2RegPass",
+    "cannot RAUW a value with itself",
+    "UseDefLists.h:213"
+  ],
+  "candidates": [
+    {
+      "number": 4780,
+      "title": "[FIRRTL] Missed comb cycle, crash in canonicalizer",
+      "url": "https://github.com/llvm/circt/issues/4780",
+      "score": 2.0,
+      "notes": "Different dialect (FIRRTL) and crash site; only shares comb cycle theme."
+    },
+    {
+      "number": 3600,
+      "title": "[FIRRTL] Crash using an instance input ports to drive another instance",
+      "url": "https://github.com/llvm/circt/issues/3600",
+      "score": 1.5,
+      "notes": "Different dialect and pass; likely unrelated."
+    }
+  ],
+  "recommendation": "likely_new",
+  "top_score": 2.0,
+  "top_issue": 4780
+}

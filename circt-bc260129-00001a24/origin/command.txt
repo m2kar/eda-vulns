@@ -1,0 +1,1 @@
+export PATH=/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin:$PATH && circt-verilog bug.sv --ir-hw

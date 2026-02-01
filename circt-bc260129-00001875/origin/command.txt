@@ -1,0 +1,12 @@
+# Reproduction command for arcilator inout port crash
+# Bug occurred in CIRCT 1.139.0, may be fixed in newer versions
+
+# Full pipeline that triggered the original crash:
+circt-verilog --ir-hw bug.sv | arcilator
+
+# Alternative: Step-by-step for debugging
+# Step 1: Generate HW IR
+circt-verilog --ir-hw bug.sv -o bug.mlir
+
+# Step 2: Run arcilator (crash occurred in LowerState pass)
+arcilator bug.mlir

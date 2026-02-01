@@ -1,0 +1,18 @@
+{
+  "crash_id": "origin",
+  "status": "reproduce_failed",
+  "phase": "phase1_completed",
+  "created_at": "2026-02-01T07:06:07+00:00",
+  "updated_at": "2026-02-01T07:12:25+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {"status": "completed"},
+    "phase2": {"status": "skipped"},
+    "phase3": {"status": "skipped"}
+  },
+  "note": "Crash does not reproduce with current toolchain (CIRCT 1.139.0). Bug may have been fixed."
+}

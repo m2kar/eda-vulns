@@ -1,0 +1,25 @@
+=== CIRCT Timeout Crash Reproduction ===
+Hash: e9a5b794d7e3
+Date: 2026-01-31
+Tool: circt-verilog (CIRCT firtool-1.139.0)
+
+=== Reproduction Command ===
+timeout 60s circt-verilog --ir-hw source.sv 2>&1 | arcilator 2>&1 | opt -O0 2>&1 | llc -O0 --filetype=obj 2>&1
+
+=== Execution Details ===
+Input file: source.sv (41 lines, SystemVerilog with packed struct)
+Test module: test_module
+Features: packed struct, always_ff, struct field assignment
+
+=== Result ===
+Exit code: 124 (timeout)
+Duration: ~60.00 seconds (wall clock)
+CPU time: 0.00s user, 0.00s system
+
+The circt-verilog stage consumed the entire 60-second timeout window
+without producing any output or completing compilation.
+
+=== Crash Signature ===
+Timeout in: circt-verilog --ir-hw conversion
+Timeout threshold: 60 seconds
+Reproduced: YES

@@ -1,0 +1,7 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/test.sv",
+    "error_signature": "Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed in StorageUniquerSupport.h:180"
+  }
+}

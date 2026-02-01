@@ -1,0 +1,79 @@
+========================================
+CIRCT Bug Reproduction Log
+Test Case ID: 260129-00001855
+========================================
+
+[CRASH TYPE]: assertion
+[ORIGINAL ERROR]: state type must have a known bit width; got '!llhd.ref<i1>'
+
+[ORIGINAL TOOLCHAIN]: circt-1.139.0
+[CURRENT TOOLCHAIN]: /opt/firtool/bin/
+[SYSTEM]: Linux x86_64
+
+========== COMPILATION PIPELINE ==========
+
+[1] INPUT: source.sv
+module test_module (
+  input logic clk,
+  output logic out,
+  inout logic port_a,
+  inout logic port_b
+);
+
+  logic sig;
+  
+  assign port_a = sig;
+  assign port_b = sig;
+  
+  always @(posedge clk) begin
+    sig = out;
+  end
+  
+  always_comb begin
+    out = ~sig;
+  end
+
+endmodule
+
+[2] STEP 1: circt-verilog --ir-hw
+Command: /opt/firtool/bin/circt-verilog --ir-hw source.sv
+Status: ✓ SUCCESS
+Output: CIRCT IR generated
+
+[3] STEP 2: arcilator
+Command: /opt/firtool/bin/arcilator circt_ir.mlir
+Status: ✓ SUCCESS
+Note: Original version (1.139.0) crashed at this step with assertion error.
+Current toolchain version: FIXED/DIFFERENT
+
+[4] STEP 3: opt -O0
+Command: /opt/firtool/bin/opt -O0 arc_ir.mlir
+Status: ✓ SUCCESS
+Output: Optimized IR
+
+[5] STEP 4: llc -O0 --filetype=obj
+Command: /opt/firtool/bin/llc -O0 --filetype=obj -o test.o opt_ir.mlir
+Status: ✓ SUCCESS
+Output: test.o
+
+========== REPRODUCTION STATUS ==========
+
+ORIGINAL CRASH SIGNATURE:
+- Type: Assertion failure
+- Location: StorageUniquerSupport.h:180
+- Component: circt::arc::StateType::get()
+- Symbol: circt::arc::StateType::get(mlir::Type)
+- Error: "state type must have a known bit width; got '!llhd.ref<i1>'"
+
+REPRODUCTION RESULT:
+- Status: NOT REPRODUCED
+- Reason: Current CIRCT toolchain does not exhibit the original crash
+- Possibility 1: Bug was fixed in newer versions
+- Possibility 2: Different toolchain configuration
+- Toolchain Version Mismatch: 1.139.0 (original) vs current (/opt/firtool/)
+
+ATTEMPTED FIXES/VARIATIONS:
+1. ✓ Direct pipeline execution: SUCCESS (no crash)
+2. ✓ Multiple invocations: SUCCESS (no crash)
+3. ✓ With detailed error output: SUCCESS (no crash)
+

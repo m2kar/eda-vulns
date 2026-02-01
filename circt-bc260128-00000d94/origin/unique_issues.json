@@ -1,0 +1,372 @@
+[
+  {
+    "body": "Code is pulling the ports, then querying the module port-by-port to get the name.\r\n\r\nFiling so I remember to clean this up.",
+    "closedAt": null,
+    "createdAt": "2021-11-09T20:38:29Z",
+    "labels": [],
+    "number": 2123,
+    "state": "OPEN",
+    "title": "ModulePortInfo should return VerilogNames",
+    "url": "https://github.com/llvm/circt/issues/2123",
+    "search_label": "keyword:ModulePortInfo"
+  },
+  {
+    "body": "`circt-opt -canonicalize` triggers an assertion on the following input. Maybe an upstream bug?\r\n\r\n`Assertion failed: (mayBeGraphRegion(*op->getParentRegion()) && \"expected that op has no uses\"), function operator(), file PatternMatch.cpp, line 182.`\r\n\r\n```\r\nmodule {\r\n  moore.module private @snitch_regfile(in %clk_i : !moore.l1, in %raddr_i : !moore.array<2 x l5>, out rdata_o : !moore.array<2 x l32>, in %waddr_i : !moore.array<1 x l5>, in %wdata_i : !moore.array<1 x l32>, in %we_i : !moore.l1) {\r\n    %0 = moore.constant 1 : i32\r\n    %1 = moore.constant 0 : i32\r\n    %rdata_o = moore.variable : <array<2 x l32>>\r\n    moore.procedure always_ff {\r\n      cf.br ^bb1(%1 : !moore.i32)\r\n    ^bb1(%3: !moore.i32):  // 2 preds: ^bb0, ^bb6\r\n      moore.return\r\n    ^bb2:  // no predecessors\r\n      cf.br ^bb4\r\n    ^bb3:  // no predecessors\r\n      cf.br ^bb4\r\n    ^bb4:  // 2 preds: ^bb2, ^bb3\r\n      %4 = moore.add %4, %0 : i32\r\n      cf.br ^bb6\r\n    ^bb5:  // no predecessors\r\n      cf.br ^bb6\r\n    ^bb6:  // 2 preds: ^bb4, ^bb5\r\n      %5 = moore.add %3, %0 : i32\r\n      cf.br ^bb1(%5 : !moore.i32)\r\n    }\r\n    %2 = moore.read %rdata_o : <array<2 x l32>>\r\n    moore.output %2 : !moore.array<2 x l32>\r\n  }\r\n}\r\n```",
+    "closedAt": null,
+    "createdAt": "2024-08-19T20:24:31Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzE3",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 7531,
+    "state": "OPEN",
+    "title": "[Moore] Input triggers assertion in canonicalizer infra",
+    "url": "https://github.com/llvm/circt/issues/7531",
+    "search_label": "dialect:moore"
+  },
+  {
+    "body": "Dear @maerhart @fabianschuiki ,\r\n When lowering `SV` to `Hw` Dialect, there is a stack dump. \r\nDriver: circt-verilog %s\r\n```\r\nmodule top();\r\n  typedef struct {\r\n    int a;\r\n    int b;\r\n  } ms_t;\r\n\r\n  ms_t ms;\r\n\r\n  initial begin\r\n    ms = '{ 0, 1};\r\n\r\n    ms = '{ default:1, int:1};\r\n\r\n    ms = '{ int:0, int:1};\r\n  end\r\n\r\nendmodule\r\n```\r\nIt can be converted to `moore` Dialect like this\r\nDriver:  circt-verilog --ir-moore %s\r\n```\r\nmodule {\r\n  moore.module @top() {\r\n    %0 = moore.constant 1 : i32\r\n    %1 = moore.constant 0 : i32\r\n    %ms = moore.variable : <ustruct<{a: i32, b: i32}>>\r\n    moore.procedure initial {\r\n      %2 = moore.struct_create %1, %0 : !moore.i32, !moore.i32 -> ustruct<{a: i32, b: i32}>\r\n      moore.blocking_assign %ms, %2 : ustruct<{a: i32, b: i32}>\r\n      %3 = moore.struct_create %0, %0 : !moore.i32, !moore.i32 -> ustruct<{a: i32, b: i32}>\r\n      moore.blocking_assign %ms, %3 : ustruct<{a: i32, b: i32}>\r\n      moore.blocking_assign %ms, %3 : ustruct<{a: i32, b: i32}>\r\n      moore.return\r\n    }\r\n    moore.output\r\n  }\r\n}\r\n```\r\nBut it got stack dump when casting `hw::InOutType`. Maybe `structType` should be converted somehow.\r\nThis is part of error codes.\r\n```\r\n#19 0x00005f9660f42af4 (anonymous namespace)::OperationLegalizer::legalizeWithPattern(mlir::Operation*, mlir::ConversionPatternRewriter&) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:1958:21\r\n#20 0x00005f9660f3b100 (anonymous namespace)::OperationLegalizer::legalize(mlir::Operation*, mlir::ConversionPatternRewriter&) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:1850:17\r\n#21 0x00005f9660f3aa73 mlir::OperationConverter::convert(mlir::ConversionPatternRewriter&, mlir::Operation*) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:2384:26\r\n#22 0x00005f9660f3b41f mlir::OperationConverter::convertOperations(llvm::ArrayRef<mlir::Operation*>) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:2436:16\r\n#23 0x00005f9660f3fdfc mlir::applyFullConversion(llvm::ArrayRef<mlir::Operation*>, mlir::ConversionTarget const&, mlir::FrozenRewritePatternSet const&, mlir::ConversionConfig) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:3447:22\r\n#24 0x00005f9660f3fe9d mlir::applyFullConversion(mlir::Operation*, mlir::ConversionTarget const&, mlir::FrozenRewritePatternSet const&, mlir::ConversionConfig) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:3453:10\r\n#25 0x00005f965faed60d (anonymous namespace)::MooreToCorePass::runOnOperation() /home/pluto/Documents/circt/circt/lib/Conversion/MooreToCore/MooreToCore.cpp:1398:14\r\n```",
+    "closedAt": null,
+    "createdAt": "2024-08-20T01:51:29Z",
+    "labels": [],
+    "number": 7535,
+    "state": "OPEN",
+    "title": "[MooreToCore] VariableOp lowered failed",
+    "url": "https://github.com/llvm/circt/issues/7535",
+    "search_label": "keyword:MooreToCore"
+  },
+  {
+    "body": "Add a conversion for the `moore.net` op to MooreToConv: https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+12.4+if",
+    "closedAt": null,
+    "createdAt": "2024-09-25T03:28:07Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzIx",
+        "name": "good first issue",
+        "description": "Good for newcomers",
+        "color": "7057ff"
+      },
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 7629,
+    "state": "OPEN",
+    "title": "[MooreToCore] Support net op",
+    "url": "https://github.com/llvm/circt/issues/7629",
+    "search_label": "dialect:moore"
+  },
+  {
+    "body": "I have a mmu.sv module for RISC-V implementation: \r\n```Verilog\r\nmodule mmu #(\r\n    parameter integer DEVICE_COUNT = 0\r\n) (\r\n...\r\noutput logic [31:2] dev_addr[DEVICE_COUNT]\r\n...\r\n```\r\n\r\nthat is used in top module like:\r\n\r\n```Verilog\r\nmmu #(\r\n        .DEVICE_COUNT(8)\r\n    ) mmu (\r\n...\r\n        .dev_addr(\r\n        '{\r\n            rom_addr,\r\n            ram_addr[0],\r\n            ram_addr[1],\r\n            ram_addr[2],\r\n            ram_addr[3],\r\n            led_addr,\r\n            mtime_addr,\r\n            mtimecmp_addr\r\n        }\r\n\r\n...\r\n```\r\n\r\nwhen trying to compile with `circt-verilog mmu.sv` i get this error:\r\n\r\n```bash\r\ncore/mmu.sv:17:34: error: value must be positive\r\n    output logic [31:2] dev_addr[DEVICE_COUNT],\r\n```\r\n\r\nis it impossible to compile such module? why so?",
+    "closedAt": null,
+    "createdAt": "2024-10-31T00:20:57Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 7753,
+    "state": "OPEN",
+    "title": "[circt-verilog] zero parameter at module declaration fails when used ",
+    "url": "https://github.com/llvm/circt/issues/7753",
+    "search_label": "dialect:moore"
+  },
+  {
+    "body": "Given this module:\n\n```mlir\nmodule {\n  moore.module @test(out x : !moore.l4) {\n    %arr = moore.variable : <array<2 x array<3 x l4>>>\n    %0 = moore.read %arr : <array<2 x array<3 x l4>>>\n    %1 = moore.extract %0 from 1 : array<2 x array<3 x l4>> -> array<3 x l4>\n    %2 = moore.extract %1 from 2 : array<3 x l4> -> l4\n    moore.output %2 : !moore.l4\n  }\n}\n```\n\nHere is the result of running `MooreToCore`:\n\n```mlir\nmodule {\n  hw.module @test(out x : i4) {\n    %c0_i24 = hw.constant 0 : i24\n    %0 = hw.bitcast %c0_i24 : (i24) -> !hw.array<2xarray<3xi4>>\n    %arr = llhd.sig %0 : !hw.array<2xarray<3xi4>>\n    %1 = llhd.prb %arr : !hw.inout<array<2xarray<3xi4>>>\n    %true = hw.constant true\n    %2 = hw.array_slice %1[%true] : (!hw.array<2xarray<3xi4>>) -> !hw.array<3xi4>\n    %c-2_i2 = hw.constant -2 : i2\n    %3 = hw.array_get %2[%c-2_i2] : !hw.array<3xi4>, i2\n    hw.output %3 : i4\n  }\n}\n```\n\nIt can be seen that `%1 = moore.extract ...` was translated to `%2 = hw.array_slice ...`: `moore.extract`'s result type is an array, so it was mistaken for a slicing operation.\n\nThe resulting module is malformed and fails validation after canonicalization (due to `hw.output`'s argument not matching the output port's type).",
+    "closedAt": null,
+    "createdAt": "2024-11-28T19:09:10Z",
+    "labels": [],
+    "number": 7918,
+    "state": "OPEN",
+    "title": "[MooreToCore] `moore.extract` is converted to `hw.array_slice` when array's element type is also array",
+    "url": "https://github.com/llvm/circt/issues/7918",
+    "search_label": "keyword:MooreToCore"
+  },
+  {
+    "body": "Lowering the following with `circt-verilog`\n```sv\nmodule combo (  input   a, b, c, d, e,  output  reg z);\n\n        always @ (*) begin\n                z = ((a & b) | (c ^ d) & ~e);\n        end\n\nendmodule\n```\nresults in this MLIR:\n```mlir\n  hw.module @combo(in %a : i1, in %b : i1, in %c : i1, in %d : i1, in %e : i1, out z : i1) {\n    %0 = llhd.constant_time <0ns, 0d, 1e>\n    %true = hw.constant true\n    %false = hw.constant false\n    %a_0 = llhd.sig name \"a\" %false : i1\n    %1 = llhd.prb %a_0 : !hw.inout<i1>\n    %b_1 = llhd.sig name \"b\" %false : i1\n    %2 = llhd.prb %b_1 : !hw.inout<i1>\n    %c_2 = llhd.sig name \"c\" %false : i1\n    %3 = llhd.prb %c_2 : !hw.inout<i1>\n    %d_3 = llhd.sig name \"d\" %false : i1\n    %4 = llhd.prb %d_3 : !hw.inout<i1>\n    %e_4 = llhd.sig name \"e\" %false : i1\n    %5 = llhd.prb %e_4 : !hw.inout<i1>\n    %z = llhd.sig %false : i1\n    llhd.process {\n      cf.br ^bb1\n    ^bb1:  // 3 preds: ^bb0, ^bb2, ^bb3\n      %7 = llhd.prb %a_0 : !hw.inout<i1>\n      %8 = llhd.prb %b_1 : !hw.inout<i1>\n      %9 = llhd.prb %c_2 : !hw.inout<i1>\n      %10 = llhd.prb %d_3 : !hw.inout<i1>\n      %11 = llhd.prb %e_4 : !hw.inout<i1>\n      llhd.wait (%1, %2, %3, %4, %5 : i1, i1, i1, i1, i1), ^bb2\n    ^bb2:  // pred: ^bb1\n      %12 = llhd.prb %a_0 : !hw.inout<i1>\n      %13 = comb.icmp bin ne %7, %12 : i1\n      %14 = llhd.prb %b_1 : !hw.inout<i1>\n      %15 = comb.icmp bin ne %8, %14 : i1\n      %16 = llhd.prb %c_2 : !hw.inout<i1>\n      %17 = comb.icmp bin ne %9, %16 : i1\n      %18 = llhd.prb %d_3 : !hw.inout<i1>\n      %19 = comb.icmp bin ne %10, %18 : i1\n      %20 = llhd.prb %e_4 : !hw.inout<i1>\n      %21 = comb.icmp bin ne %11, %20 : i1\n      %22 = comb.or bin %13, %15, %17, %19, %21 : i1\n      cf.cond_br %22, ^bb3, ^bb1\n    ^bb3:  // pred: ^bb2\n      %23 = llhd.prb %a_0 : !hw.inout<i1>\n      %24 = llhd.prb %b_1 : !hw.inout<i1>\n      %25 = comb.and %23, %24 : i1\n      %26 = llhd.prb %c_2 : !hw.inout<i1>\n      %27 = llhd.prb %d_3 : !hw.inout<i1>\n      %28 = comb.xor %26, %27 : i1\n      %29 = llhd.prb %e_4 : !hw.inout<i1>\n      %30 = comb.xor %29, %true : i1\n      %31 = comb.and %28, %30 : i1\n      %32 = comb.or %25, %31 : i1\n      llhd.drv %z, %32 after %0 : !hw.inout<i1>\n      cf.br ^bb1\n    }\n    llhd.drv %a_0, %a after %0 : !hw.inout<i1>\n    llhd.drv %b_1, %b after %0 : !hw.inout<i1>\n    llhd.drv %c_2, %c after %0 : !hw.inout<i1>\n    llhd.drv %d_3, %d after %0 : !hw.inout<i1>\n    llhd.drv %e_4, %e after %0 : !hw.inout<i1>\n    %6 = llhd.prb %z : !hw.inout<i1>\n    hw.output %6 : i1\n  }\n```\n\n`%22` will always evaluate to `true` because the wait operation will only branch if one of its sensitivity values changes. We should add a folder/canonicalizer that performs this simplification.\n\nThe code responsible for generating this pattern is in MooreToCore in the WaitEventOp lowering pattern.",
+    "closedAt": null,
+    "createdAt": "2024-12-22T12:56:02Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwyMTY1NDc5NTk1",
+        "name": "LLHD",
+        "description": "",
+        "color": "e07b00"
+      }
+    ],
+    "number": 8013,
+    "state": "OPEN",
+    "title": "[LLHD] Canonicalizer for processes produced by always @(*)",
+    "url": "https://github.com/llvm/circt/issues/8013",
+    "search_label": "keyword:MooreToCore"
+  },
+  {
+    "body": "Now, we ignore statement block symbols. But in some cases, we'll trigger the dominance error. For example:\n```\nmodule top_module;\n    always @(*) begin\n        integer j;\n        for(j = 0; j < 4; j++);\n    end \nendmodule\n```\n**Error:**\n``` cxx\nforLoop.sv:2:12: error: operand #0 does not dominate this use\n    always @(*) begin\n           ^\nforLoop.sv:2:12: note: see current operation: %20 = \"moore.read\"(%0) : (!moore.ref<l32>) -> !moore.l32\nforLoop.sv:3:17: note: note: operand defined here (op in a parent region)\n        integer j;\n```\nor\n```\nmodule top_module;\n    always @(*) begin\n        for(int i = 0;i<4;i++);\n    end\nendmodule\n```\n**Error:**\n```cxx\nforLoop.sv:2:12: error: operand #0 does not dominate this use\n    always @(*) begin\n           ^\nforLoop.sv:2:12: note: see current operation: %9 = \"moore.read\"(%1) : (!moore.ref<i32>) -> !moore.i32\nforLoop.sv:3:17: note: operand defined here (op in a parent region)\n        for(int i = 0;i<4;i++);\n```\n\nThis error is caused by the `moore.wait_event`. When we handle `always @(*)`, we must ensure which signal will lead to recalculating the whole always block. If we declare `integer j` out of the always block, we can generate the following Moore IR:\n```\nmodule {\n  moore.module @top_module() {\n    %j = moore.variable : <l32>\n    moore.procedure always {\n      moore.wait_event {\n        %10 = moore.read %j : <l32>\n        moore.detect_event any %10 : l32\n      }\n      %0 = moore.constant 0 : i32\n      %1 = moore.conversion %0 : !moore.i32 -> !moore.l32\n      moore.blocking_assign %j, %1 : l32\n      cf.br ^bb1\n    ^bb1:  // 2 preds: ^bb0, ^bb3\n      %2 = moore.read %j : <l32>\n      %3 = moore.constant 4 : i32\n      %4 = moore.conversion %3 : !moore.i32 -> !moore.l32\n      %5 = moore.slt %2, %4 : l32 -> l1\n      %6 = moore.conversion %5 : !moore.l1 -> i1\n      cf.cond_br %6, ^bb2, ^bb4\n    ^bb2:  // pred: ^bb1\n      cf.br ^bb3\n    ^bb3:  // pred: ^bb2\n      %7 = moore.read %j : <l32>\n      %8 = moore.constant 1 : l32\n      %9 = moore.add %7, %8 : l32\n      moore.blocking_assign %j, %9 : l32\n      cf.br ^bb1\n    ^bb4:  // pred: ^bb1\n      moore.return\n    }\n    moore.output\n  }\n}\n```\nThe `%10 = moore.read %j : <l32>` means that we must have already created the `%j = moore.variable : <l32>`. So I think maybe we don't ignore `slang::ast::StatementBlockSymbol`.",
+    "closedAt": null,
+    "createdAt": "2024-12-30T05:55:59Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      },
+      {
+        "id": "LA_kwDODpuCgs8AAAABp1j0gg",
+        "name": "ImportVerilog",
+        "description": "",
+        "color": "e99695"
+      }
+    ],
+    "number": 8021,
+    "state": "OPEN",
+    "title": "[ImportVerilog] Support handling the slang::ast::StatementBlockSymbol.",
+    "url": "https://github.com/llvm/circt/issues/8021",
+    "search_label": "dialect:moore"
+  },
+  {
+    "body": "In Verilog it's legal to access arrays/bitvectors out-of-bounds which will yield X or 0. Thus a lowBit attribute not within the range is allowed by `moore.extract`. This is currently lowered 1-1 to `comb.extract` which does verify that the lowBit attribute is within range. Therefore, MooreToCore needs to check if the attribute is out of bounds and lower it to a constant in that case.",
+    "closedAt": null,
+    "createdAt": "2025-01-31T13:37:09Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8163,
+    "state": "OPEN",
+    "title": "[MooreToCore] Out-of-bounds moore.extract lowered incorrectly",
+    "url": "https://github.com/llvm/circt/issues/8163",
+    "search_label": "dialect:moore"
+  },
+  {
+    "body": "The following crashes due to an unattached region when calling `getValuesToObserve`.\n\n```mlir\nmoore.module @crash(in %in0: !moore.i32, in %in1: !moore.i32) {\n  %var = moore.variable : <!moore.i32>\n  moore.procedure always_comb {\n    %0 = moore.pows %in0, %in1 : !moore.i32\n    moore.blocking_assign %var, %0 : !moore.i32\n    moore.return\n  }\n}\n```",
+    "closedAt": null,
+    "createdAt": "2025-02-03T10:27:41Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8176,
+    "state": "OPEN",
+    "title": "[MooreToCore] Crash when getting values to observe",
+    "url": "https://github.com/llvm/circt/issues/8176",
+    "search_label": "dialect:moore"
+  },
+  {
+    "body": "Please check this PR(https://github.com/llvm/circt/pull/8210/files) to view the details.\n\nOr for example:\n```\nmoore.module @crash(in %in0: !moore.i32, in %in1: !moore.i32) {\n  %var = moore.variable : <!moore.i32>\n  moore.procedure always_comb {\n    %0 = moore.pows %in0, %in1 : !moore.i32\n    moore.blocking_assign %var, %0 : !moore.i32\n    moore.return\n  }\n}\n```\n\n`%var` will be regarded as one member of the implicit sensitivity list. But this act is illegal❌.",
+    "closedAt": null,
+    "createdAt": "2025-02-08T13:58:49Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8211,
+    "state": "OPEN",
+    "title": "[MooreToCore]Unexpected observed values in llhd.wait.",
+    "url": "https://github.com/llvm/circt/issues/8211",
+    "search_label": "dialect:moore"
+  },
+  {
+    "body": "If I understand IEEE 1800-2017 §7.4.6 Indexing and slicing of arrays right, an unpacked array slice should be 0/X in its entirety even if only a part of the slice is OOB. Currently, only the OOB part is 0/X because they are lowered just like packed arrays.",
+    "closedAt": null,
+    "createdAt": "2025-02-10T13:02:44Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8215,
+    "state": "OPEN",
+    "title": "[MooreToCore] OOB array slices of unpacked arrays lowered like packed arrays",
+    "url": "https://github.com/llvm/circt/issues/8215",
+    "search_label": "dialect:moore"
+  },
+  {
+    "body": "I'm looking into the failing testcase for `real` constants [on sv-tests-results](https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+5.7.2+real-constants). Just want to put it up here to make sure no one else has already started working on it.",
+    "closedAt": null,
+    "createdAt": "2025-02-23T19:01:31Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8269,
+    "state": "OPEN",
+    "title": "[MooreToCore] Support `real` constants",
+    "url": "https://github.com/llvm/circt/issues/8269",
+    "search_label": "dialect:moore"
+  },
+  {
+    "body": "Currently, CIRCT's MooreToCore pass converts unpacked arrays to packed arrays (hw::ArrayType),\nlosing the unpacked semantics.\n\nWhen we've attempted to preserve unpacked arrays by emitting hw::UnpackedArrayType,\nMLIR raises \"failed to legalize operation\" errors.\n\n## Minimal Reproduction\n\nWhen running `circt-opt` on the following input,\n\n```systemverilog\nmodule a (\n  input logic b[3:0]\n);\nendmodule\n```\n\nwe get the following result:\n\n```mlir\nmodule {\n  hw.module @a(in %b : !hw.array<4xi1>) {\n    hw.output\n  }\n}\n```\n\nas you can clearly see, the `uarray` is converted to a `array`.\n",
+    "closedAt": null,
+    "createdAt": "2025-02-26T14:37:40Z",
+    "labels": [],
+    "number": 8276,
+    "state": "OPEN",
+    "title": "[MooreToCore] Support for UnpackedArrayType emission",
+    "url": "https://github.com/llvm/circt/issues/8276",
+    "search_label": "keyword:MooreToCore"
+  },
+  {
+    "body": "I want to support this [sv-tests-results/string_concat_op](https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+11.4.12.2+string_concat_op) feature, but not sure how to fix it properly.\n\n``` sv\nmodule top();\n\nstring str;\n\ninitial begin\n    str = \"Hello\";\nend\n\nendmodule\n```\n\n`circt-verilog`  has the following complaints when compiling the string.sv file:\n```s.sv:3:8: error: failed to legalize operation 'moore.variable'\nstring str;\n       ^\ns.sv:3:8: note: see current operation: %0 = \"moore.variable\"() <{name = \"str\"}> : () -> !moore.ref<string>\n```\n\nThis error is due to MooreToCore's lack of string-type conversion. It only has `StringConstantOpConv` and `Format*OpConversion`; none of these conversions can handle the `string` type.\n",
+    "closedAt": null,
+    "createdAt": "2025-02-28T08:51:12Z",
+    "labels": [],
+    "number": 8283,
+    "state": "OPEN",
+    "title": "[ImportVerilog] Cannot compile forward decleared string type",
+    "url": "https://github.com/llvm/circt/issues/8283",
+    "search_label": "keyword:MooreToCore"
+  },
+  {
+    "body": "Unsized array type in systemverilog like `OpenArrayType`, `QueueType` can't be lower to Arc Dialect, because Arc only has sized array type. \n\nCommon programming language like `Cpp` can directly call `mmap` provided by OS to get dynamic size array. I can't see this kind of ability in systemverilog.\n\nSo how to achieve that if we want to solve #8276? Can you give me some advice?",
+    "closedAt": null,
+    "createdAt": "2025-03-04T15:38:48Z",
+    "labels": [],
+    "number": 8292,
+    "state": "OPEN",
+    "title": "[MooreToCore] Support for Unsized Array Type",
+    "url": "https://github.com/llvm/circt/issues/8292",
+    "search_label": "keyword:MooreToCore"
+  },
+  {
+    "body": "Hi! Now I try to add types and operators in sim to get the lowered operators in moore, and then lower them to llvm dialect, so that the corresponding dynamic size container can be implemented in arcilator.\n\nFirst, add IntType and RefType in sim, as well as VariableOp, BlockAssignOp, Print, ReadOp, and ConcatOp operators.\nTaking Variable as an example, creating a stringtype VariableOp in Moore will create an int type through string_constant, and then perform conversionOp to convert the int type to Stringtype, and finally create VariableOp. In sim, if VariableOp can directly accept int type, the conversion time can be saved. Therefore, I think it is not necessary to add StringType separately, and only use Int Type and RefType to represent it.\n\nIn sim to llvm dialect, VariableOp will be converted into a series of Ops. First, llvm.alloca will be used to create an i128 memory, which will be divided into i32 size to record the string length, and i96 data to record the string content. Then, llvm.getelementptrOp and llvm.storeOp are used to store the contents in the corresponding locations. This memory will be dynamically doubled according to the length of the string.\n\nCan you give me some advise?",
+    "closedAt": null,
+    "createdAt": "2025-03-20T02:36:53Z",
+    "labels": [],
+    "number": 8332,
+    "state": "OPEN",
+    "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+    "url": "https://github.com/llvm/circt/issues/8332",
+    "search_label": "keyword:MooreToCore"
+  },
+  {
+    "body": "@jiahanxie353 has added the Math dialect to circt-opt in #8475. This is a great precedent to start using that dialect in the MooreToCore conversion. For example, the `moore.pow` operation could be lowered to `math.ipowi` and `math.powf` depending on its type.",
+    "closedAt": null,
+    "createdAt": "2025-05-12T16:08:01Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzIx",
+        "name": "good first issue",
+        "description": "Good for newcomers",
+        "color": "7057ff"
+      },
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8476,
+    "state": "OPEN",
+    "title": "[MooreToCore] Lower exponentiation to `math.ipowi`",
+    "url": "https://github.com/llvm/circt/issues/8476",
+    "search_label": "dialect:moore"
+  },
+  {
+    "body": "It failed when trying to compile https://github.com/pulp-platform/ELAU/blob/b0d113aff6a2d800076f5ebb84f09fba93625bc7/src/SqrtArrUns.sv#L96-L105. \n```\nmoore.module @behavioural_SqrtArrUns(in %X : !moore.l8, out Q : !moore.l4, out R : !moore.l4) {\n  %0 = moore.constant 2 : l8\n  %1 = moore.conversion %X : !moore.l8 -> !moore.real\n  %2 = moore.builtin.sqrt %1 : real\n  %3 = moore.builtin.floor %2 : real\n  %4 = moore.conversion %3 : !moore.real -> !moore.l4\n  %5 = moore.zext %4 : l4 -> l8\n  %6 = moore.powu %5, %0 : l8\n  %7 = moore.sub %X, %6 : l8\n  %8 = moore.trunc %7 : l8 -> l4\n  moore.output %4, %8 : !moore.l4, !moore.l4\n}\n```\n\n```\n[circt-verilog] Running \"convert-moore-to-core\"\ncirct-verilog: /home/uenoku/dev/circt-synth/llvm/llvm/include/llvm/Support/Casting.h:650: decltype(auto) llvm::dyn_cast(const From &) [To = mlir::IntegerType, From = mlir::Type]: Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"' failed.\nPLEASE submit a bug report to https://github.com/llvm/circt and include the crash backtrace.\nStack dump:\n0.      Program arguments: circt-verilog ../out/SqrtArrUns_behavioral.sv -o build/SqrtArrUns_behavioral/circt/SqrtArrUns_behavioral.mlir --mlir-timing -y ../out ../ext/ELAU/src/arith_utils.sv -mlir-print-ir-after-all -verbose-pass-executions\n #0 0x00005a3051df92b8 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /home/uenoku/dev/circt-synth/llvm/llvm/lib/Support/Unix/Signals.inc:834:13\n #1 0x00005a3051df6e93 llvm::sys::RunSignalHandlers() /home/uenoku/dev/circt-synth/llvm/llvm/lib/Support/Signals.cpp:105:18\n #2 0x00005a3051dfa051 SignalHandler(int, siginfo_t*, void*) /home/uenoku/dev/circt-synth/llvm/llvm/lib/Support/Unix/Signals.inc:426:38\n #3 0x00007ecdbca42520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)\n #4 0x00007ecdbca969fc __pthread_kill_implementation ./nptl/./nptl/pthread_kill.c:44:76\n #5 0x00007ecdbca969fc __pthread_kill_internal ./nptl/./nptl/pthread_kill.c:78:10\n #6 0x00007ecdbca969fc pthread_kill ./nptl/./nptl/pthread_kill.c:89:10\n #7 0x00007ecdbca42476 gsignal ./signal/../sysdeps/posix/raise.c:27:6\n #8 0x00007ecdbca287f3 abort ./stdlib/./stdlib/abort.c:81:7\n #9 0x00007ecdbca2871b _nl_load_domain ./intl/./intl/loadmsgcat.c:1177:9\n#10 0x00007ecdbca39e96 (/lib/x86_64-linux-gnu/libc.so.6+0x39e96)\n#11 0x00005a3050b0d8c4 decltype(auto) llvm::dyn_cast<mlir::IntegerType, mlir::Type>(mlir::Type const&) (/home/uenoku/dev/circt-synth/build/bin/circt-verilog+0x1ad8c4)\n#12 0x00005a3050cb10c5 decltype(auto) llvm::detail::TypeSwitchBase<llvm::TypeSwitch<mlir::Type, long>, mlir::Type>::castValue<mlir::IntegerType, mlir::Type const&>(mlir::Type const&) (/home/uenoku/dev/circt-synth/build/bin/circt-verilog+0x3510c5)\n#13 0x00005a3050c9d8da llvm::TypeSwitch<mlir::Type, long>& llvm::TypeSwitch<mlir::Type, long>::Case<mlir::IntegerType, circt::hw::getBitWidth(mlir::Type)::$_0>(circt::hw::getBitWidth(mlir::Type)::$_0&&) HWTypes.cpp:0:0\n#14 0x00005a3050c9d7e6 circt::hw::getBitWidth(mlir::Type) (/home/uenoku/dev/circt-synth/build/bin/circt-verilog+0x33d7e6)\n#15 0x00005a30510f9908 (anonymous namespace)::ConversionOpConversion::matchAndRewrite(circt::moore::ConversionOp, circt::moore::ConversionOpAdaptor, mlir::ConversionPatternRewriter&) const MooreToCore.cpp:0:0\n#16 0x00005a30510fa631 llvm::LogicalResult mlir::ConversionPattern::dispatchTo1To1<mlir::OpConversionPattern<circt::moore::ConversionOp>, circt::moore::ConversionOp>(mlir::OpConversionPattern<circt::moore::ConversionOp> const&, circt::moore::ConversionOp, circt::moore::ConversionOp::GenericAdaptor<llvm::ArrayRef<mlir::ValueRange> >, mlir::ConversionPatternRewriter&) (/home/uenoku/dev/circt-synth/build/bin/circt-verilog+0x79a631)\n```",
+    "closedAt": null,
+    "createdAt": "2025-09-06T09:21:38Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8930,
+    "state": "OPEN",
+    "title": "[MooreToCore] Crash with sqrt/floor",
+    "url": "https://github.com/llvm/circt/issues/8930",
+    "search_label": "dialect:moore"
+  },
+  {
+    "body": "Is there a strong reason to go from PowUOp to math.ipow as opposed to lowering to a sequence of multiplications?\n\nIs there any existing lowering from math.ipow to the core dialects? \n\nhttps://github.com/llvm/circt/blob/83effb21cd6b1cebc060b4f57180f16683309cd9/lib/Conversion/MooreToCore/MooreToCore.cpp#L1379-L1398",
+    "closedAt": null,
+    "createdAt": "2025-09-16T14:19:34Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8973,
+    "state": "OPEN",
+    "title": "[MooreToCore] Lowering to math.ipow?",
+    "url": "https://github.com/llvm/circt/issues/8973",
+    "search_label": "dialect:moore"
+  },
+  {
+    "body": "As pointed out by @Scheremo on #9199, the following SV snippet from sv-tests:\n\n```\n// Copyright (C) 2019-2021  The SymbiFlow Authors.\n//\n// Use of this source code is governed by a ISC-style\n// license that can be found in the LICENSE file or at\n// https://opensource.org/licenses/ISC\n//\n// SPDX-License-Identifier: ISC\n\n\n/*\n:name: string_len\n:description: string.len()  tests\n:tags: 6.16.1\n*/\nmodule top();\n\tstring a = \"Test\";\n\tint b = a.len();\nendmodule\n```\n\nproduces a moore.conversion op from an int to string, but there's a dedicated moore.int_to_string op that we would expect to be materialized there instead",
+    "closedAt": null,
+    "createdAt": "2025-11-07T16:36:26Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      },
+      {
+        "id": "LA_kwDODpuCgs8AAAABp1j0gg",
+        "name": "ImportVerilog",
+        "description": "",
+        "color": "e99695"
+      }
+    ],
+    "number": 9206,
+    "state": "OPEN",
+    "title": "[ImportVerilog] moore.conversion generated instead of moore.int_to_string",
+    "url": "https://github.com/llvm/circt/issues/9206",
+    "search_label": "dialect:moore"
+  },
+  {
+    "body": "Making this issue for tracking as I gradually replace all the uses of to_builtin_bool with to_builtin_int (not totally trivial since we now have to explicitly cast to int type), as I'll split it across PRs to keep the diffs small and make sure I'm not missing anything\n\nPlaces to change:\n- [x] Assertion builtin handling\n- [ ] AssertionExpr.cpp convertToI1 function\n- [ ] Statements.cpp conditions\n- [ ] MooreToCore",
+    "closedAt": null,
+    "createdAt": "2026-01-29T18:09:01Z",
+    "labels": [],
+    "number": 9542,
+    "state": "OPEN",
+    "title": "[Moore] to_builtin_bool should be replaced with to_builtin_int",
+    "url": "https://github.com/llvm/circt/issues/9542",
+    "search_label": "keyword:MooreToCore"
+  }
+]

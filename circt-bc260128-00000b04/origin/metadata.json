@@ -1,0 +1,37 @@
+{
+  "testcase_id": "260128-00000b04",
+  "reproduction": {
+    "reproduced": true,
+    "crash_signature": "circt::comb::XorOp::canonicalize assertion failure in PatternMatch.cpp",
+    "timestamp": "2026-01-31T00:00:00Z",
+    "toolchain_version": "firtool-1.139.0 (LLVM 22)",
+    "exit_code": 139,
+    "crash_type": "segmentation fault / aborted",
+    "command": "circt-verilog --ir-hw source.sv",
+    "source_file": "source.sv",
+    "error_description": "Assertion failure in canonicalization of XorOp operation",
+    "root_cause_file": "lib/Dialect/Comb/CombFolds.cpp",
+    "stack_frames": [
+      {
+        "function": "circt::comb::XorOp::canonicalize",
+        "file": "lib/Dialect/Comb/CombFolds.cpp",
+        "operation": "Pattern rewriting during canonicalization"
+      },
+      {
+        "function": "mlir::PatternApplicator::matchAndRewrite",
+        "file": "llvm/mlir/lib/Rewrite/PatternApplicator.cpp",
+        "operation": "Apply pattern matching rules"
+      },
+      {
+        "function": "mlir::applyPatternsGreedily",
+        "file": "llvm/mlir/lib/Transforms/Utils/GreedyPatternRewriteDriver.cpp",
+        "operation": "Greedy pattern rewriting pass"
+      },
+      {
+        "function": "Canonicalizer::runOnOperation",
+        "file": "llvm/mlir/lib/Transforms/Canonicalizer.cpp",
+        "operation": "Canonicalization pass"
+      }
+    ]
+  }
+}

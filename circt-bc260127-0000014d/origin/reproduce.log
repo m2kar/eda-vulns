@@ -1,0 +1,29 @@
+PLEASE submit a bug report to https://github.com/llvm/circt and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /opt/firtool/bin/circt-verilog --ir-hw source.sv
+ #0 0x00007f001a3548a8 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/opt/firtool-1.139.0/bin/../lib/libLLVMSupport.so+0x2008a8)
+ #1 0x00007f001a3522f5 llvm::sys::RunSignalHandlers() (/opt/firtool-1.139.0/bin/../lib/libLLVMSupport.so+0x1fe2f5)
+ #2 0x00007f001a355631 SignalHandler(int, siginfo_t*, void*) Signals.cpp:0:0
+ #3 0x00007f0019e62330 (/lib/x86_64-linux-gnu/libc.so.6+0x45330)
+ #4 0x00007f001e5768ae (anonymous namespace)::SVModuleOpConversion::matchAndRewrite(circt::moore::SVModuleOp, circt::moore::SVModuleOpAdaptor, mlir::ConversionPatternRewriter&) const MooreToCore.cpp:0:0
+ #5 0x00007f001e576b93 llvm::LogicalResult mlir::ConversionPattern::dispatchTo1To1<mlir::OpConversionPattern<circt::moore::SVModuleOp>, circt::moore::SVModuleOp>(mlir::OpConversionPattern<circt::moore::SVModuleOp> const&, circt::moore::SVModuleOp, circt::moore::SVModuleOp::GenericAdaptor<llvm::ArrayRef<mlir::ValueRange>>, mlir::ConversionPatternRewriter&) (/opt/firtool-1.139.0/bin/../lib/libCIRCTMooreToCore.so+0x50b93)
+ #6 0x00007f001e576530 mlir::OpConversionPattern<circt::moore::SVModuleOp>::matchAndRewrite(mlir::Operation*, llvm::ArrayRef<mlir::ValueRange>, mlir::ConversionPatternRewriter&) const (/opt/firtool-1.139.0/bin/../lib/libCIRCTMooreToCore.so+0x50530)
+ #7 0x00007f001c888438 mlir::ConversionPattern::matchAndRewrite(mlir::Operation*, mlir::PatternRewriter&) const (/opt/firtool-1.139.0/bin/../lib/libMLIRTransformUtils.so+0x2a438)
+ #8 0x00007f001c8528ed void llvm::function_ref<void ()>::callback_fn<mlir::PatternApplicator::matchAndRewrite(mlir::Operation*, mlir::PatternRewriter&, llvm::function_ref<bool (mlir::Pattern const&)>, llvm::function_ref<void (mlir::Pattern const&)>, llvm::function_ref<llvm::LogicalResult (mlir::Pattern const&)>)::$_0>(long) PatternApplicator.cpp:0:0
+ #9 0x00007f001c84f774 mlir::PatternApplicator::matchAndRewrite(mlir::Operation*, mlir::PatternRewriter&, llvm::function_ref<bool (mlir::Pattern const&)>, llvm::function_ref<void (mlir::Pattern const&)>, llvm::function_ref<llvm::LogicalResult (mlir::Pattern const&)>) (/opt/firtool-1.139.0/bin/../lib/libMLIRRewrite.so+0x7774)
+#10 0x00007f001c889c6f (anonymous namespace)::OperationLegalizer::legalize(mlir::Operation*) DialectConversion.cpp:0:0
+#11 0x00007f001c889470 mlir::OperationConverter::convert(mlir::Operation*, bool) (/opt/firtool-1.139.0/bin/../lib/libMLIRTransformUtils.so+0x2b470)
+#12 0x00007f001c889dae mlir::OperationConverter::convertOperations(llvm::ArrayRef<mlir::Operation*>) (/opt/firtool-1.139.0/bin/../lib/libMLIRTransformUtils.so+0x2bdae)
+#13 0x00007f001c8978e4 void llvm::function_ref<void ()>::callback_fn<applyConversion(llvm::ArrayRef<mlir::Operation*>, mlir::ConversionTarget const&, mlir::FrozenRewritePatternSet const&, mlir::ConversionConfig, (anonymous namespace)::OpConversionMode)::$_0>(long) DialectConversion.cpp:0:0
+#14 0x00007f001c88ef7d applyConversion(llvm::ArrayRef<mlir::Operation*>, mlir::ConversionTarget const&, mlir::FrozenRewritePatternSet const&, mlir::ConversionConfig, (anonymous namespace)::OpConversionMode) DialectConversion.cpp:0:0
+#15 0x00007f001c88f0fe mlir::applyFullConversion(mlir::Operation*, mlir::ConversionTarget const&, mlir::FrozenRewritePatternSet const&, mlir::ConversionConfig) (/opt/firtool-1.139.0/bin/../lib/libMLIRTransformUtils.so+0x310fe)
+#16 0x00007f001e548231 (anonymous namespace)::MooreToCorePass::runOnOperation() MooreToCore.cpp:0:0
+#17 0x00007f001c6442a5 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int) (/opt/firtool-1.139.0/bin/../lib/libMLIRPass.so+0x172a5)
+#18 0x00007f001c6477a9 mlir::PassManager::run(mlir::Operation*) (/opt/firtool-1.139.0/bin/../lib/libMLIRPass.so+0x1a7a9)
+#19 0x000055c5a70135d0 executeWithSources(mlir::MLIRContext*, llvm::SourceMgr&) circt-verilog.cpp:0:0
+#20 0x000055c5a700edd5 execute(mlir::MLIRContext*) circt-verilog.cpp:0:0
+#21 0x000055c5a700e4b8 main (/opt/firtool/bin/circt-verilog+0x84b8)
+#22 0x00007f0019e471ca __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:74:3
+#23 0x00007f0019e4728b call_init ./csu/../csu/libc-start.c:128:20
+#24 0x00007f0019e4728b __libc_start_main ./csu/../csu/libc-start.c:347:5
+#25 0x000055c5a700db05 _start (/opt/firtool/bin/circt-verilog+0x7b05)

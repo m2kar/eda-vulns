@@ -1,0 +1,53 @@
+{
+  "testcase_id": "260128-00000da7",
+  "dialect": "Verilog/SystemVerilog",
+  "crash_type": "timeout",
+  "timeout_seconds": 300,
+  "tool_chain": [
+    "circt-verilog --ir-hw",
+    "arcilator",
+    "opt -O0",
+    "llc -O0"
+  ],
+  "suspected_component": "arcilator",
+  "suspected_passes": [
+    "ConvertToArcs",
+    "LowerState",
+    "SplitLoops"
+  ],
+  "root_cause_hypothesis": "Arcilator enters an infinite loop when processing always_comb blocks with dynamic-indexed array elements that have write-then-read patterns on the same index. The dependency analysis fails to distinguish between different fields (data vs valid) of the same packed struct array element, creating a false combinational loop that the tool cannot resolve.",
+  "problematic_constructs": [
+    {
+      "construct": "unpacked_array_of_packed_structs",
+      "code": "array_elem_t arr [0:7]",
+      "description": "Unpacked array containing 8 packed struct elements"
+    },
+    {
+      "construct": "dynamic_index_write",
+      "code": "arr[idx].data = 8'hFF",
+      "line": 15,
+      "description": "Write to struct field via dynamic index"
+    },
+    {
+      "construct": "dynamic_index_read",
+      "code": "if (arr[idx].valid)",
+      "line": 17,
+      "description": "Read from different struct field via same dynamic index"
+    },
+    {
+      "construct": "always_comb_dependency",
+      "description": "Write-then-read pattern in same always_comb block creates apparent dependency cycle"
+    }
+  ],
+  "source_locations": {
+    "ConvertToArcs_loop_detection": "lib/Conversion/ConvertToArcs/ConvertToArcs.cpp:180-183",
+    "LowerState_combinational_loop": "lib/Dialect/Arc/Transforms/LowerState.cpp:286-290"
+  },
+  "confidence": "medium",
+  "analysis_notes": [
+    "Timeout occurs during arcilator processing, not during IR generation or LLVM optimization",
+    "The dependency cycle detection code exists but may not handle dynamic array indexing correctly",
+    "Packed struct field-level dependency tracking may be missing",
+    "Similar issues reported in CIRCT for combinational loop handling"
+  ]
+}

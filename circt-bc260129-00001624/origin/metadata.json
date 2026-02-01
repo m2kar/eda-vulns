@@ -1,0 +1,33 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "crash_type": "assertion",
+    "testcase_id": "260129-00001624",
+    "tool": "circt-verilog",
+    "command": "circt-verilog --ir-hw source.sv",
+    "original_command": "circt-verilog --ir-hw /tmp/featurefuzz_sv_08g_yrpv/test_a75ca164f552.sv",
+    "exit_code": 134,
+    "signal": "SIGABRT (core dumped)"
+  },
+  "crash_signature": {
+    "primary_function": "SVModuleOpConversion::matchAndRewrite",
+    "source_file": "MooreToCore.cpp",
+    "pass": "MooreToCorePass",
+    "error_type": "assertion failure in dyn_cast"
+  },
+  "verification": {
+    "crash_signature_matches": true,
+    "key_stackframes_match": [
+      "SVModuleOpConversion::matchAndRewrite",
+      "MooreToCorePass::runOnOperation",
+      "applyFullConversion",
+      "OperationConverter::convert"
+    ],
+    "root_cause_confirmed": "InOutType casting failure in Moore-to-Core conversion pass"
+  },
+  "artifacts": {
+    "reproduce_log": "reproduce.log",
+    "test_case": "source.sv",
+    "error_log": "error.txt"
+  }
+}

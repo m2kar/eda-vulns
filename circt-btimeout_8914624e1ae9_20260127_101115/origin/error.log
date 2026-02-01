@@ -1,0 +1,9 @@
+Crash Type: timeout
+Hash: 8914624e1ae9
+Original Program File: program_20260127_100955_707292.sv
+
+--- Compilation Command ---
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_b758wq9d/test_8914624e1ae9.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_b758wq9d/test_8914624e1ae9.o
+
+--- Error Message ---
+Compilation timed out after 60s

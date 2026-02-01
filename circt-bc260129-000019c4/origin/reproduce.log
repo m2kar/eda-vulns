@@ -1,0 +1,66 @@
+=== CIRCT Bug Reproduction Report ===
+Testcase ID: 260129-000019c4
+Crash Type: assertion
+
+=== Reproduction Environment ===
+Working Directory: /home/zhiqing/edazz/eda-vulns/circt-bc260129-000019c4/origin
+CIRCT Toolchain: /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin
+Testcase: source.sv
+
+=== Source File ===
+module top_module (
+  inout wire my_pin
+);
+
+  logic [7:0] data_array [0:3];
+  
+  initial begin
+    data_array <= '{default: 8'hFF};
+  end
+  
+  assign my_pin = data_array[0][0] ? 1'bz : 1'b0;
+
+endmodule
+
+=== Compilation Pipeline ===
+Step 1: circt-verilog --ir-hw source.sv
+Status: ✓ SUCCESS
+
+Step 2: arcilator
+Status: ✗ CRASHED (ASSERTION FAILURE)
+
+=== Error Output ===
+<unknown>:0: error: state type must have a known bit width; got '!llhd.ref<i1>'
+arcilator: /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/IR/StorageUniquerSupport.h:180: static ConcreteT mlir::detail::StorageUserBase<circt::arc::StateType, mlir::Type, circt::arc::detail::StateTypeStorage, mlir::detail::TypeUniquer>::get(MLIRContext *, Args &&...) [ConcreteT = circt::arc::StateType, BaseT = mlir::Type, StorageT = circt::arc::detail::StateTypeStorage, UniquerT = mlir::detail::TypeUniquer, Traits = <>, Args = <mlir::Type &>]: Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed.
+
+=== Stack Trace (Key Frames) ===
+#12 0x000055e0ac290ae9 circt::arc::StateType::get(mlir::Type) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/build/tools/circt/include/circt/Dialect/Arc/ArcTypes.cpp.inc:108:3
+#13 0x000055e0ac2fbf5c (anonymous namespace)::ModuleLowering::run() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Dialect/Arc/Transforms/LowerState.cpp:219:66
+#14 0x000055e0ac2fbf5c (anonymous namespace)::LowerStatePass::runOnOperation() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Dialect/Arc/Transforms/LowerState.cpp:1198:41
+
+=== Intermediate MLIR Output ===
+module {
+  hw.module @top_module(in %my_pin : !llhd.ref<i1>) {
+    hw.output
+  }
+}
+
+=== Root Cause Analysis ===
+The crash occurs in the arcilator tool during the LowerState transformation pass. 
+The error indicates that a state type is being created with a reference type (!llhd.ref<i1>)
+which does not have a known bit width. The StateType::verifyInvariants() check fails 
+because reference types cannot be directly used as state types.
+
+The issue originates from the Verilog input where:
+- An inout port (my_pin) is declared
+- A data_array is created with array of logic values  
+- The inout pin assignment uses array indexing with a high-impedance value (1'bz)
+
+This combination creates an LLHD reference type in the intermediate representation that 
+cannot be properly lowered to an arc state type.
+
+=== Reproduction Status ===
+✓ REPRODUCED SUCCESSFULLY
+✓ Error signature matches original report exactly
+✓ All key error messages present and identical
+

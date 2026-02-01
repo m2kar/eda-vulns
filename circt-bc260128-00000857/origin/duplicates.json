@@ -1,0 +1,67 @@
+{
+  "search_queries": [
+    "sim.fmt.literal",
+    "failed to legalize sim",
+    "assertion error message",
+    "sim dialect",
+    "error message string",
+    "assertion failed",
+    "Arc arcilator",
+    "sim.fmt"
+  ],
+  "results": [
+    {
+      "issue_number": 6810,
+      "title": "[Arc] Add basic assertion support",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/6810",
+      "similarity_score": 7,
+      "match_details": [
+        "Matching dialect: Arc",
+        "Matching crash type: assertion",
+        "Similar error context: assertion handling in Arc pipeline"
+      ]
+    },
+    {
+      "issue_number": 9467,
+      "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/9467",
+      "similarity_score": 6,
+      "match_details": [
+        "Matching crash type: legalization failure",
+        "Matching tool: arcilator",
+        "Similar pattern: operation marked illegal with no lowering path"
+      ]
+    },
+    {
+      "issue_number": 7692,
+      "title": "[Sim] Combine integer formatting ops into one op",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/7692",
+      "similarity_score": 4,
+      "match_details": [
+        "Matching dialect: sim",
+        "Related to formatting operations (sim.fmt family)",
+        "Addressing sim dialect formatting infrastructure"
+      ]
+    }
+  ],
+  "top_match": {
+    "issue_number": 6810,
+    "score": 7,
+    "confidence": "medium"
+  },
+  "recommendation": "likely_new",
+  "analysis": {
+    "description": "No exact duplicate found. Issue #6810 is about Arc assertion support infrastructure (verif.assert and sv.assert.concurrent), which is the parent tracking issue for assertion support in Arc. However, this specific crash is about a missing lowering for sim.fmt.literal operations generated from immediate assertions with $error() messages in arcilator. The crash is more specific to the sim dialect formatting pipeline than general assertion support.",
+    "key_differences": [
+      "This crash is specific to sim.fmt.literal legalization failure",
+      "It occurs in the arcilator pipeline during Arc conversion",
+      "The error is triggered by orphaned sim.fmt.literal ops from immediate assertions with $error()",
+      "Issue #6810 is about adding high-level assertion support, not formatting ops",
+      "Issue #9467 is about llhd.constant_time, not sim.fmt.literal"
+    ]
+  },
+  "timestamp": "2026-01-31T00:00:00Z"
+}

@@ -1,0 +1,162 @@
+{
+  "search_queries": [
+    "packed union",
+    "MooreToCore",
+    "dyn_cast assertion",
+    "type converter",
+    "PackedUnionType",
+    "sanitizeInOut"
+  ],
+  "total_found": 14,
+  "similar_issues": [
+    {
+      "issue_number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8930",
+      "similarity_score": 8,
+      "matched_keywords": [
+        "MooreToCore",
+        "dyn_cast assertion",
+        "type conversion"
+      ],
+      "reason": "Same dyn_cast assertion failure in MooreToCore pass. Failure occurs when handling unsupported type conversions, similar root cause pattern where type converter returns unsupported type and dyn_cast fails."
+    },
+    {
+      "issue_number": 8382,
+      "title": "[FIRRTL] Crash with fstring type on port",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8382",
+      "similarity_score": 6,
+      "matched_keywords": [
+        "dyn_cast assertion",
+        "port type",
+        "type conversion"
+      ],
+      "reason": "Similar assertion failure on unsupported port type. Different dialect (FIRRTL) but same pattern: type not handled in conversion, passed to port processing, assertion in dyn_cast."
+    },
+    {
+      "issue_number": 7535,
+      "title": "[MooreToCore] VariableOp lowered failed",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/7535",
+      "similarity_score": 7,
+      "matched_keywords": [
+        "MooreToCore",
+        "type conversion",
+        "InOutType"
+      ],
+      "reason": "MooreToCore conversion failure with struct types on ports. Stack dump shows same issue pattern where unsupported types in MooreToCore conversion cause failures in port lowering (InOutType dyn_cast)."
+    },
+    {
+      "issue_number": 8476,
+      "title": "[MooreToCore] Lower exponentiation to `math.ipowi`",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8476",
+      "similarity_score": 4,
+      "matched_keywords": [
+        "MooreToCore",
+        "type converter"
+      ],
+      "reason": "MooreToCore missing type/operation support. Related to incomplete type converter implementation in MooreToCore."
+    },
+    {
+      "issue_number": 8292,
+      "title": "[MooreToCore] Support for Unsized Array Type",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8292",
+      "similarity_score": 4,
+      "matched_keywords": [
+        "MooreToCore",
+        "type converter"
+      ],
+      "reason": "MooreToCore type converter missing support for unsized array type. Same pattern of incomplete type conversion support."
+    },
+    {
+      "issue_number": 8276,
+      "title": "[MooreToCore] Support for UnpackedArrayType emission",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8276",
+      "similarity_score": 4,
+      "matched_keywords": [
+        "MooreToCore",
+        "type converter"
+      ],
+      "reason": "MooreToCore missing UnpackedArrayType support. Indicates incomplete type conversion coverage in MooreToCore."
+    },
+    {
+      "issue_number": 8269,
+      "title": "[MooreToCore] Support `real` constants",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8269",
+      "similarity_score": 3,
+      "matched_keywords": [
+        "MooreToCore"
+      ],
+      "reason": "MooreToCore missing type support for real constants. Related to incomplete type converter."
+    },
+    {
+      "issue_number": 8266,
+      "title": "[FIRRTL] Integer Property folders assert in getAPSInt",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8266",
+      "similarity_score": 3,
+      "matched_keywords": [
+        "assertion",
+        "type conversion"
+      ],
+      "reason": "Different assertion but same pattern of unsupported type handling leading to assertion."
+    },
+    {
+      "issue_number": 9542,
+      "title": "[Moore] to_builtin_bool should be replaced with to_builtin_int",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/9542",
+      "similarity_score": 2,
+      "matched_keywords": [
+        "Moore"
+      ],
+      "reason": "Moore dialect issue but unrelated to type conversion failures."
+    },
+    {
+      "issue_number": 8973,
+      "title": "[MooreToCore] Lowering to math.ipow?",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8973",
+      "similarity_score": 2,
+      "matched_keywords": [
+        "MooreToCore"
+      ],
+      "reason": "MooreToCore missing operation support, not directly related to type conversion."
+    },
+    {
+      "issue_number": 7629,
+      "title": "[MooreToCore] Support net op",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/7629",
+      "similarity_score": 2,
+      "matched_keywords": [
+        "MooreToCore"
+      ],
+      "reason": "MooreToCore missing operation support, not directly type-related."
+    },
+    {
+      "issue_number": 6614,
+      "title": "[LowerSeqToSV] FIRRTL enum with clock field leads to invalid IR",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/6614",
+      "similarity_score": 2,
+      "matched_keywords": [
+        "packed"
+      ],
+      "reason": "Different subsystem (SeqToSV, not MooreToCore). Mention of packed-related types but not directly applicable."
+    }
+  ],
+  "top_match": {
+    "issue_number": 8930,
+    "score": 8,
+    "title": "[MooreToCore] Crash with sqrt/floor"
+  },
+  "recommendation": "likely_new",
+  "rationale": "While several MooreToCore type conversion issues exist (8930, 7535, 8476, 8292, 8276), none specifically address the PackedUnionType type conversion missing support in the MooreToCore type converter. Issue 8930 has the most similar crash signature (dyn_cast assertion failure in MooreToCore) but is triggered by different missing conversions (real/math operations vs packed union types). The specific combination of PackedUnionType + module port + sanitizeInOut appears to be unique. However, should review issue 8930 before reporting."
+}

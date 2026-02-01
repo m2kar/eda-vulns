@@ -1,0 +1,124 @@
+{
+  "search_results": [
+    {
+      "issue_number": 8219,
+      "title": "[ESI]Assersion: dyn_cast on a non-existent value",
+      "state": "CLOSED",
+      "similarity_score": 5,
+      "matched_keywords": [
+        "dyn_cast on a non-existent value"
+      ]
+    },
+    {
+      "issue_number": 8939,
+      "title": "[MooreToCore] Generating invalid llhd.sig.array_slice",
+      "state": "CLOSED",
+      "similarity_score": 3,
+      "matched_keywords": [
+        "MooreToCore"
+      ]
+    },
+    {
+      "issue_number": 8934,
+      "title": "[MooreToCore] Unsupported $fatal to sim.terminate conversion",
+      "state": "CLOSED",
+      "similarity_score": 3,
+      "matched_keywords": [
+        "MooreToCore"
+      ]
+    },
+    {
+      "issue_number": 7627,
+      "title": "[MooreToCore] Unpacked array causes crash",
+      "state": "CLOSED",
+      "similarity_score": 3,
+      "matched_keywords": [
+        "MooreToCore"
+      ]
+    },
+    {
+      "issue_number": 7628,
+      "title": "[MooreToCore] Support string constants",
+      "state": "CLOSED",
+      "similarity_score": 3,
+      "matched_keywords": [
+        "MooreToCore",
+        "string"
+      ]
+    },
+    {
+      "issue_number": 9057,
+      "title": "[MooreToCore] Unexpected topological cycle after importing generated verilog",
+      "state": "CLOSED",
+      "similarity_score": 2,
+      "matched_keywords": [
+        "MooreToCore"
+      ]
+    },
+    {
+      "issue_number": 9395,
+      "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+      "state": "CLOSED",
+      "similarity_score": 1,
+      "matched_keywords": [
+        "circt-verilog"
+      ]
+    },
+    {
+      "issue_number": 9278,
+      "title": "[FIRRTL] Confusing API between `getPort(size_t)` and `getPorts`",
+      "state": "CLOSED",
+      "similarity_score": 1,
+      "matched_keywords": [
+        "port"
+      ]
+    },
+    {
+      "issue_number": 8906,
+      "title": "[FIRRTL] Fix port insertion/deletion involving domain info",
+      "state": "CLOSED",
+      "similarity_score": 1,
+      "matched_keywords": [
+        "port"
+      ]
+    },
+    {
+      "issue_number": 8943,
+      "title": "[circt-verilog] CommandLine Error: Option 'W' registered more than once!",
+      "state": "CLOSED",
+      "similarity_score": 0,
+      "matched_keywords": [
+        "circt-verilog"
+      ]
+    }
+  ],
+  "recommendation": "new_issue",
+  "top_issue": 8219,
+  "top_score": 5,
+  "search_timestamp": "2026-01-31T17:36:02.498109Z",
+  "search_parameters": {
+    "repository": "llvm/circt",
+    "keywords_searched": [
+      "dyn_cast on a non-existent value",
+      "ModulePortInfo::sanitizeInOut",
+      "MooreToCore.cpp:259",
+      "SVModuleOpConversion",
+      "string port",
+      "moore string type",
+      "InOutType",
+      "circt-verilog --ir-hw",
+      "MooreToCorePass"
+    ],
+    "filters": [
+      "dyn_cast",
+      "ModulePortInfo",
+      "MooreToCore",
+      "circt-verilog"
+    ],
+    "issue_states": [
+      "OPEN",
+      "CLOSED"
+    ],
+    "closed_lookback_months": 24
+  }
+}

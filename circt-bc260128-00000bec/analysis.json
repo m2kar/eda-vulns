@@ -1,0 +1,13 @@
+{
+  "crash_id": "260128-00000bec",
+  "dialect": "sim",
+  "crash_type": "legalization_error",
+  "failing_operation": "sim.fmt.literal",
+  "trigger": "SystemVerilog assert with $error literal message",
+  "pipeline": "circt-verilog --ir-hw | arcilator | opt -O0 | llc -O0",
+  "hypothesis": "Sim dialect formatting literal lacks legalization to LLVM/Arcilator runtime, causing legalization failure.",
+  "evidence": {
+    "error_message": "failed to legalize operation 'sim.fmt.literal'",
+    "reproducer_log": "reproduce.log"
+  }
+}

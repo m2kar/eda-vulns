@@ -1,0 +1,124 @@
+{
+  "dialect": "arc",
+  "related_dialects": ["llhd", "hw"],
+  "failing_pass": "arc::LowerStatePass",
+  "crash_type": "assertion",
+  "assertion_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "crash_location": {
+    "file": "lib/Dialect/Arc/ArcTypes.cpp",
+    "function": "StateType::verify",
+    "line": null,
+    "source_function": "computeLLVMBitWidth"
+  },
+  "stack_trace_key_frames": [
+    {
+      "frame": 12,
+      "function": "circt::arc::StateType::get(mlir::Type)",
+      "file": "build/tools/circt/include/circt/Dialect/Arc/ArcTypes.cpp.inc",
+      "line": 108
+    },
+    {
+      "frame": 13,
+      "function": "(anonymous namespace)::ModuleLowering::run()",
+      "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "line": 219
+    },
+    {
+      "frame": 14,
+      "function": "(anonymous namespace)::LowerStatePass::runOnOperation()",
+      "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "line": 1198
+    }
+  ],
+  "test_case": {
+    "language": "SystemVerilog",
+    "key_constructs": [
+      "inout wire port",
+      "always_comb block",
+      "conditional tristate assignment",
+      "mixed port directions (input/output/inout)"
+    ],
+    "problematic_patterns": [
+      {
+        "pattern": "inout wire c",
+        "description": "Bidirectional port declaration triggers LLHD ref type generation",
+        "line": 4
+      },
+      {
+        "pattern": "assign c = (r1) ? 1'bz : 1'b0",
+        "description": "Tristate/high-impedance assignment to inout port",
+        "line": 15
+      }
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "Missing type conversion before arcilator - LLHD reference types from inout ports should be lowered/converted before reaching arcilator, but the conversion pass is missing or incomplete",
+      "confidence": 0.9,
+      "evidence": [
+        "Error occurs specifically with !llhd.ref<i1> type",
+        "computeLLVMBitWidth() explicitly handles only HW/Seq dialect types",
+        "Arcilator is designed for cycle-based simulation which doesn't natively support bidirectional signals"
+      ]
+    },
+    {
+      "id": 2,
+      "description": "Arcilator should reject unsupported inputs gracefully - should emit a user-friendly error when encountering LLHD reference types instead of assertion failure",
+      "confidence": 0.7,
+      "evidence": [
+        "The assertion failure provides poor error diagnostics (no source location)",
+        "Bidirectional ports may simply be unsupported in arcilator's execution model"
+      ]
+    },
+    {
+      "id": 3,
+      "description": "computeLLVMBitWidth needs LLHD type support - the function could be extended to handle LLHD reference types by extracting inner type's bit width",
+      "confidence": 0.6,
+      "evidence": [
+        "LLHD ref types contain an inner type with known bit width",
+        "However, this may not be correct semantic interpretation for cycle-based simulation"
+      ]
+    }
+  ],
+  "keywords": [
+    "StateType",
+    "llhd.ref",
+    "arcilator",
+    "inout",
+    "LowerState",
+    "bit width",
+    "tristate",
+    "bidirectional",
+    "computeLLVMBitWidth",
+    "verifyInvariants"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Arc/ArcTypes.cpp",
+      "reason": "Contains computeLLVMBitWidth() function that fails to handle LLHD ref types"
+    },
+    {
+      "path": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "reason": "Contains the failing LowerStatePass and ModuleLowering::run()"
+    },
+    {
+      "path": "include/circt/Dialect/LLHD/IR/LLHDTypes.td",
+      "reason": "Defines the LLHD ref type that triggers the crash"
+    },
+    {
+      "path": "tools/arcilator/arcilator.cpp",
+      "reason": "Tool entry point - may need validation for unsupported input types"
+    },
+    {
+      "path": "lib/Conversion/",
+      "reason": "May contain or need conversion passes for LLHD types"
+    }
+  ],
+  "tool_chain": {
+    "command": "circt-verilog --ir-hw <file>.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o <file>.o",
+    "failing_tool": "arcilator",
+    "tools_involved": ["circt-verilog", "arcilator", "opt", "llc"]
+  },
+  "root_cause_summary": "The arc::StateType cannot handle LLHD reference types (!llhd.ref<T>). When circt-verilog processes SystemVerilog with inout ports, it generates LLHD ref types. The LowerStatePass in arcilator attempts to allocate state storage for these types, but StateType::verify() fails because computeLLVMBitWidth() does not recognize LLHD types, returning nullopt and triggering the assertion failure."
+}

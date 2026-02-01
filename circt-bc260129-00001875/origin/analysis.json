@@ -1,0 +1,55 @@
+{
+  "dialect": "Arc/LLHD",
+  "crash_type": "assertion_failure",
+  "location": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "line": 219,
+    "function": "ModuleLowering::run"
+  },
+  "assertion_location": {
+    "file": "lib/Dialect/Arc/ArcTypes.cpp",
+    "line": 79,
+    "function": "StateType::verify"
+  },
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "root_cause": "The arcilator's LowerState pass attempts to create StateType for module input arguments, but the computeLLVMBitWidth() function in ArcTypes.cpp does not handle llhd::RefType (used for inout ports). This causes StateType::verify() to fail when processing modules with bidirectional ports.",
+  "problematic_construct": {
+    "type": "inout_port",
+    "sv_code": "inout wire c",
+    "ir_type": "!llhd.ref<i1>",
+    "description": "SystemVerilog inout port converted to LLHD reference type"
+  },
+  "trigger_condition": "Module has an inout (bidirectional) port that gets represented as !llhd.ref type in the intermediate representation",
+  "failing_function_chain": [
+    "LowerStatePass::runOnOperation",
+    "ModuleLowering::run",
+    "StateType::get",
+    "StateType::verify",
+    "computeLLVMBitWidth"
+  ],
+  "missing_type_support": {
+    "type": "llhd::RefType",
+    "function": "computeLLVMBitWidth",
+    "file": "lib/Dialect/Arc/ArcTypes.cpp"
+  },
+  "keywords": [
+    "StateType",
+    "state type",
+    "bit width",
+    "known bit width",
+    "llhd.ref",
+    "RefType",
+    "arcilator",
+    "LowerState",
+    "inout",
+    "bidirectional port",
+    "computeLLVMBitWidth",
+    "assertion failure",
+    "verifyInvariants"
+  ],
+  "affected_tools": ["arcilator"],
+  "affected_passes": ["arc-lower-state"],
+  "severity": "high",
+  "reproducibility": "deterministic",
+  "suggested_fix": "Extend computeLLVMBitWidth() in ArcTypes.cpp to handle llhd::RefType by recursively computing the bit width of the nested type, or add early validation to emit a proper diagnostic for unsupported port types"
+}

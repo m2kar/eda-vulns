@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T04:01:17.617666",
+  "testcase_id": "260128-00000ff4",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "circt_verilog": "CIRCT firtool-1.139.0 (LLVM 22.0.0git)",
+    "arcilator": "CIRCT firtool-1.139.0 (LLVM 22.0.0git)",
+    "opt": "LLVM 22.0.0git",
+    "llc": "LLVM 22.0.0git"
+  },
+  "original_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_6ed27eea8178.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_xfhtv50x/test_6ed27eea8178.o",
+  "reproduction": {
+    "command_used": "circt-verilog --ir-hw source.sv | arcilator",
+    "exit_code": 0,
+    "reproduced": false,
+    "match_result": "no_crash"
+  },
+  "crash_signature": {
+    "original_error": "<unknown>:0: error: state type must have a known bit width; got '!llhd.ref<i1>'",
+    "original_assertion": "Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed.",
+    "reproduced_error": null,
+    "match_status": "no_crash_in_current_toolchain"
+  },
+  "files": {
+    "reproduce_log": "reproduce.log",
+    "source": "source.sv"
+  },
+  "notes": "Bug does not reproduce with current toolchain (LLVM 22.0.0git, CIRCT firtool-1.139.0). Original bug was in CIRCT 1.139.0 but appears to be fixed or the specific conditions are different."
+}

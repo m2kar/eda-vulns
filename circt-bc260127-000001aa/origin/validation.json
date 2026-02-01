@@ -1,0 +1,12 @@
+{
+  "classification": {
+    "result": "report",
+    "reason": "Valid SystemVerilog according to slang; crash reproduced in circt-verilog."
+  },
+  "tools": {
+    "slang": {
+      "command": "slang --lint-only bug.sv",
+      "exit_code": 0
+    }
+  }
+}

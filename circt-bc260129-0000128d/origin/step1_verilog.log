@@ -1,0 +1,21 @@
+module {
+  hw.module @MixPorts(in %clk : i1, in %rst : i1, in %a : i1, out b : i1, in %c : !llhd.ref<i1>) {
+    %0 = hw.aggregate_constant [0 : i32, 0 : i32, 0 : i32, 0 : i32] : !hw.array<4xi32>
+    %true = hw.constant true
+    %c1_i2 = hw.constant 1 : i2
+    %c-1_i2 = hw.constant -1 : i2
+    %c0_i2 = hw.constant 0 : i2
+    %c0_i30 = hw.constant 0 : i30
+    %1 = comb.concat %c0_i30, %write_idx : i30, i2
+    %2 = comb.add %write_idx, %c1_i2 : i2
+    %3 = comb.xor %rst, %true : i1
+    %4 = comb.mux %3, %2, %c0_i2 : i2
+    %5 = seq.to_clock %clk
+    %write_idx = seq.firreg %4 clock %5 : i2
+    %6 = comb.sub %c-1_i2, %write_idx : i2
+    %7 = hw.array_inject %data[%6], %1 : !hw.array<4xi32>, i2
+    %8 = comb.mux %3, %7, %0 : !hw.array<4xi32>
+    %data = seq.firreg %8 clock %5 : !hw.array<4xi32>
+    hw.output %a : i1
+  }
+}

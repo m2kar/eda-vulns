@@ -1,0 +1,36 @@
+{
+  "crash_id": "260128-00000dd1",
+  "reproduction": {
+    "reproduced": false,
+    "reason": "Bug appears to be fixed in current CIRCT/LLVM-22 toolchain",
+    "original_version": "circt-1.139.0",
+    "current_version": "circt-1.139.0 (with LLVM 22.0.0git)",
+    "original_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_f6087b8d5da1.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_xfhtv50x/test_f6087b8d5da1.o",
+    "reproduction_command": "export PATH=/opt/llvm-22/bin:$PATH && circt-verilog --ir-hw /tmp/test_reproduce.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o /tmp/test_reproduce.o"
+  },
+  "original_crash": {
+    "error_signature": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "crash_location": "circt::arc::StateType::get(mlir::Type) at LowerState.cpp:219:66",
+    "assertion_failed": "Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed",
+    "backtrace_frame": "#12 0x00005568badbbae9 circt::arc::StateType::get(mlir::Type)",
+    "description": "arcilator fails when processing inout ports with !llhd.ref<i1> type in state lowering phase"
+  },
+  "test_case_features": {
+    "source_file": "source.sv",
+    "contains_array_access": true,
+    "array_access_pattern": "data_array[wide_input[9:0]]",
+    "contains_inout_port": true,
+    "inout_port_name": "io_sig",
+    "inout_port_type": "logic",
+    "contains_array_index_assignment": true,
+    "assignment_pattern": "io_sig = data_array[0][0]"
+  },
+  "execution_result": {
+    "exit_code": 0,
+    "crashed": false,
+    "error_message_found": false,
+    "key_error_phrase": "state type must have a known bit width"
+  },
+  "status": "BUG_LIKELY_FIXED",
+  "notes": "The test case executed without errors with current CIRCT toolchain. The original crash signature 'state type must have a known bit width; got \"!llhd.ref<i1>\"' was not reproduced. This suggests the bug may have been fixed in a newer version of CIRCT or through LLVM-22 integration."
+}

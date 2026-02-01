@@ -1,0 +1,132 @@
+{
+  "search_queries": [
+    "MooreToCore",
+    "StringType",
+    "DynamicStringType",
+    "sanitizeInOut",
+    "string input",
+    "module port",
+    "MooreToCore crash",
+    "MooreToCore port"
+  ],
+  "results": [
+    {
+      "issue_number": 8332,
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "state": "open",
+      "similarity_score": 9.2,
+      "matching_keywords": [
+        "MooreToCore",
+        "StringType",
+        "DynamicStringType",
+        "type conversion",
+        "port handling"
+      ],
+      "relevance": "Directly addresses StringType conversion in MooreToCore. Discusses how StringType should be handled in module ports and lowering to llvm dialect. Core to the bug's root cause.",
+      "url": "https://github.com/llvm/circt/issues/8332"
+    },
+    {
+      "issue_number": 9199,
+      "title": "[MooreToCore] Error out on conversions to unsupported types",
+      "state": "closed",
+      "similarity_score": 8.8,
+      "matching_keywords": [
+        "MooreToCore",
+        "assertion failure",
+        "dyn_cast",
+        "type conversion",
+        "null type"
+      ],
+      "relevance": "Specifically addresses assertion failures from dyn_cast when converting to unsupported types. This is the exact issue: failing to check if result type was successfully converted before using it.",
+      "url": "https://github.com/llvm/circt/issues/9199"
+    },
+    {
+      "issue_number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "state": "open",
+      "similarity_score": 7.5,
+      "matching_keywords": [
+        "MooreToCore",
+        "crash",
+        "dyn_cast",
+        "assertion failure",
+        "type conversion"
+      ],
+      "relevance": "Shows a similar crash pattern - assertion failure in dyn_cast during MooreToCore conversion. Different trigger (sqrt/floor) but same root issue: invalid type usage.",
+      "url": "https://github.com/llvm/circt/issues/8930"
+    },
+    {
+      "issue_number": 8176,
+      "title": "[MooreToCore] Crash when getting values to observe",
+      "state": "open",
+      "similarity_score": 7.2,
+      "matching_keywords": [
+        "MooreToCore",
+        "crash",
+        "type handling"
+      ],
+      "relevance": "Another MooreToCore crash, potentially related to type conversion issues.",
+      "url": "https://github.com/llvm/circt/issues/8176"
+    },
+    {
+      "issue_number": 8201,
+      "title": "[MooreToCore] Properly deal with OOB access in dyn_extract",
+      "state": "open",
+      "similarity_score": 6.8,
+      "matching_keywords": [
+        "MooreToCore",
+        "array indexing",
+        "type handling"
+      ],
+      "relevance": "Related to array indexing and extraction, matches test case feature of array_indexing.",
+      "url": "https://github.com/llvm/circt/issues/8201"
+    },
+    {
+      "issue_number": 7403,
+      "title": "[ImportVerilog] Support for String Types, String Literals",
+      "state": "closed",
+      "similarity_score": 6.5,
+      "matching_keywords": [
+        "String Types",
+        "import verilog"
+      ],
+      "relevance": "Related to string type support but in ImportVerilog pass, not MooreToCore conversion.",
+      "url": "https://github.com/llvm/circt/issues/7403"
+    },
+    {
+      "issue_number": 8292,
+      "title": "[MooreToCore] Support for Unsized Array Type",
+      "state": "open",
+      "similarity_score": 6.3,
+      "matching_keywords": [
+        "MooreToCore",
+        "type conversion",
+        "array"
+      ],
+      "relevance": "Related to array type support in MooreToCore conversion.",
+      "url": "https://github.com/llvm/circt/issues/8292"
+    }
+  ],
+  "top_score": 9.2,
+  "top_issue": 8332,
+  "recommendation": "review_existing",
+  "analysis": {
+    "highest_match": {
+      "issue": 8332,
+      "score": 9.2,
+      "reason": "Directly addresses StringType conversion in MooreToCore, discusses module ports and lowering strategy"
+    },
+    "strong_match": {
+      "issue": 9199,
+      "score": 8.8,
+      "reason": "Closed issue that specifically fixed assertion failures from dyn_cast on unsupported types - likely a precursor to this bug"
+    },
+    "recommendation_notes": [
+      "Issue #8332 is OPEN and directly related to StringType support in MooreToCore",
+      "Issue #9199 was CLOSED with a fix for assertion failures on unsupported type conversions",
+      "The current crash in MooreToCore.cpp:259 (getModulePortInfo) appears to be a related but distinct manifestation",
+      "This may be a regression or incomplete fix from #9199, or a new variant of the issue",
+      "Strong recommendation to review #8332 and #9199 before filing a new issue"
+    ]
+  }
+}

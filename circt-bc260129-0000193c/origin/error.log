@@ -1,0 +1,4 @@
+origin/bug.sv:5:8: error: 'hw.bitcast' op result #0 must be Type wherein the bitwidth in hardware is known, but got 'f64'
+  real r;
+       ^
+origin/bug.sv:5:8: note: see current operation: %11 = "hw.bitcast"(%10) : (i1073741823) -> f64

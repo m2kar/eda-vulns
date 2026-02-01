@@ -1,0 +1,2 @@
+export PATH=/opt/llvm-22/bin:$PATH
+timeout 30 /home/zhiqing/edazz/circt/build/bin/circt-verilog --ir-hw bug.sv

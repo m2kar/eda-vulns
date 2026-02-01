@@ -1,0 +1,1 @@
+#9572 | [Moore] Assertion failure when module has string type output port | OPEN | https://github.com/llvm/circt/issues/9572

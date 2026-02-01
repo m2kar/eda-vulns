@@ -1,0 +1,69 @@
+{
+  "valid": true,
+  "classification": "report",
+  "syntax_check": {
+    "valid": true,
+    "details": "SystemVerilog syntax is valid. The 'inout wire' port declaration is standard SystemVerilog syntax for bidirectional ports."
+  },
+  "cross_tool_check": {
+    "tested": true,
+    "tools": [
+      {
+        "name": "Verilator",
+        "version": "system",
+        "command": "verilator --lint-only bug.sv",
+        "exit_code": 0,
+        "result": "success",
+        "notes": "No errors or warnings"
+      },
+      {
+        "name": "Slang",
+        "version": "system",
+        "command": "slang --lint-only bug.sv",
+        "exit_code": 0,
+        "result": "success",
+        "notes": "Build succeeded: 0 errors, 0 warnings"
+      },
+      {
+        "name": "circt-verilog",
+        "version": "1.139.0",
+        "command": "circt-verilog --ir-hw bug.sv",
+        "exit_code": 0,
+        "result": "success",
+        "notes": "Successfully generates MLIR IR with !llhd.ref<i1> type"
+      },
+      {
+        "name": "arcilator",
+        "version": "1.139.0",
+        "command": "circt-verilog --ir-hw bug.sv | arcilator",
+        "exit_code": 134,
+        "result": "crash",
+        "notes": "SIGABRT - assertion failure in StateType::get()"
+      }
+    ],
+    "results": [
+      "Verilator: PASS - accepts valid SystemVerilog",
+      "Slang: PASS - accepts valid SystemVerilog",
+      "circt-verilog: PASS - generates IR correctly",
+      "arcilator: FAIL - crashes with assertion failure"
+    ],
+    "conclusion": "The testcase is valid SystemVerilog that is accepted by multiple tools. The crash is specific to CIRCT's arcilator when processing modules with inout ports."
+  },
+  "minimization": {
+    "original_lines": 13,
+    "minimized_lines": 2,
+    "reduction_percent": "84.6%"
+  },
+  "bug_analysis": {
+    "is_bug": true,
+    "bug_type": "assertion_failure",
+    "affected_component": "arcilator (Arc dialect LowerState pass)",
+    "root_cause": "llhd::RefType (from inout port) is not handled in StateType verification - computeLLVMBitWidth() does not support RefType",
+    "severity": "high",
+    "impact": "Any SystemVerilog module with inout ports cannot be processed by arcilator"
+  },
+  "recommendation": {
+    "action": "report",
+    "reason": "Valid SystemVerilog code causes assertion failure in arcilator. Should emit a clear error message instead of crashing."
+  }
+}

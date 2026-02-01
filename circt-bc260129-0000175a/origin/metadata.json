@@ -1,0 +1,29 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "command": "circt-verilog --ir-hw source.sv",
+    "crash_signature": "integer bitwidth issue",
+    "original_error": "integer bitwidth is limited to 16777215 bits",
+    "current_error": "'hw.bitcast' op result #0 must be Type wherein the bitwidth in hardware is known, but got '!llvm.ptr'",
+    "error_bitwidth": 1073741823,
+    "status": "Bug confirmed - bitwidth handling error detected",
+    "remarks": [
+      "Both original and current versions detect bitwidth constraints",
+      "Original: assertion failure in IntegerType::get()",
+      "Current: error in hw.bitcast operation with excessive bitwidth (1073741823 bits)",
+      "The underlying issue: handling of self-referential parameterized class definitions causing bitwidth overflow"
+    ]
+  },
+  "tool_info": {
+    "tool": "circt-verilog",
+    "path": "/opt/firtool/bin/circt-verilog",
+    "version": "CIRCT firtool-1.139.0",
+    "llvm_version": "22.0.0git"
+  },
+  "testcase": {
+    "id": "260129-0000175a",
+    "type": "assertion",
+    "file": "source.sv",
+    "source_lines": 22
+  }
+}

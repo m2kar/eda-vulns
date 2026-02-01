@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T00:00:00Z",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "circt-verilog + arcilator",
+    "version": "1.140.0",
+    "path": "/opt/firtool/bin"
+  },
+  "reproduction": {
+    "command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv 2>&1 | /opt/firtool/bin/arcilator 2>&1",
+    "exit_code": 1,
+    "reproduced": true,
+    "match_result": "exact_match"
+  },
+  "crash_signature": {
+    "original": "failed to legalize operation 'sim.fmt.literal'",
+    "reproduced": "failed to legalize operation 'sim.fmt.literal'"
+  },
+  "files": {
+    "reproduce_log": "reproduce.log"
+  }
+}

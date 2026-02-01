@@ -1,0 +1,21 @@
+{
+  "crash_id": "260129-00001472",
+  "reproduction": {
+    "reproduced": true,
+    "toolchain": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin",
+    "command": "circt-verilog --ir-hw source.sv | arcilator",
+    "exit_code": 134,
+    "crash_signature": "state type must have a known bit width; got '!llhd.ref<i1>'"
+  },
+  "crash_info": {
+    "type": "assertion",
+    "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "assertion_file": "StorageUniquerSupport.h:180",
+    "crash_location": "LowerState.cpp:219",
+    "crash_function": "ModuleLowering::run()",
+    "function_call": "StateType::get(mlir::Type)"
+  },
+  "input_file": "source.sv",
+  "ir_hw_has_llhd_ref": true,
+  "note": "Bug only triggers with assertions enabled build"
+}

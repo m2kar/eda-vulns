@@ -1,0 +1,58 @@
+=== CIRCT Crash Reproduction Attempt ===
+Date: 2025-01-31
+Testcase ID: 260128-00000a1a
+Target: arcilator (state type assertion)
+
+--- System Information ---
+CIRCT Version: firtool-1.139.0
+LLVM Version: 22.0.0git
+Environment: /opt/firtool/bin
+
+--- Original Command ---
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw <file> | 
+  /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | 
+  /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | 
+  /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj
+
+--- Reproduction Attempts ---
+
+Attempt 1: Basic pipeline
+$ circt-verilog --ir-hw source.sv | arcilator
+Result: SUCCESS (no crash)
+Output: Valid LLVM IR generated
+
+Attempt 2: Full pipeline with opt and llc
+$ circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj
+Result: SUCCESS (no crash)
+Output: Object file generated
+
+Attempt 3: With optimization flags
+$ circt-verilog --ir-hw source.sv | arcilator --detect-enables --detect-resets
+Result: SUCCESS (no crash)
+Output: Valid LLVM IR generated
+
+--- Generated Hardware IR ---
+module {
+  hw.module @MixedPorts(in %a : i1, out b : i1, in %c : !llhd.ref<i1>) {
+    hw.output %a : i1
+  }
+}
+
+Note: The IR contains !llhd.ref<i1> which is the problematic type mentioned in the crash.
+
+--- Expected Crash Signature ---
+"state type must have a known bit width; got '!llhd.ref<i1>'"
+Assertion location: mlir/include/mlir/IR/StorageUniquerSupport.h:180
+Module: circt::arc::StateType::get()
+
+--- Conclusion ---
+The crash could NOT be reproduced with the current CIRCT toolchain (firtool-1.139.0).
+This suggests:
+1. The bug may have been fixed in this version of CIRCT
+2. The original crash occurred in an older/different version
+3. Different compilation environment or flags may be required
+4. The inout port handling for state generation may have changed
+
+--- Reproduction Status ---
+REPRODUCED: false
+Crash signature match: NONE (no crash occurred)

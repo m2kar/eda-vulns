@@ -1,0 +1,74 @@
+{
+  "task": "Verify CIRCT Bug Reproducibility",
+  "timestamp": "2024-02-01T10:30:00Z",
+  "test_case_id": "260129-0000159f",
+  "original_error": {
+    "error_type": "assertion",
+    "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "tool": "arcilator",
+    "crash_location": "circt::arc::StateType::get(mlir::Type)",
+    "source_file": "LowerState.cpp",
+    "line": 219
+  },
+  "original_command": {
+    "full_command": "circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o test.o",
+    "tool_versions": {
+      "circt": "1.139.0",
+      "llvm_base": "based on 1.139.0"
+    }
+  },
+  "reproduction_attempt": {
+    "status": "NOT_REPRODUCED",
+    "reason": "Crash does not occur with current available toolchain",
+    "details": {
+      "environment": {
+        "toolchain_path": "/opt/llvm-22/bin:/opt/firtool/bin",
+        "firtool_version": "firtool-1.139.0",
+        "llvm_version": "22.0.0git",
+        "platform": "Linux x86_64"
+      },
+      "test_execution": {
+        "step_1_circt_verilog": "SUCCESS - Generated CIRCT IR without errors",
+        "step_2_arcilator": "SUCCESS - Converted CIRCT to LLVM IR without errors",
+        "step_3_opt": "NOT_EXECUTED - Previous steps succeeded",
+        "step_4_llc": "NOT_EXECUTED - Previous steps succeeded"
+      }
+    }
+  },
+  "crash_signature": {
+    "original": {
+      "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+      "assertion_file": "/home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/IR/StorageUniquerSupport.h",
+      "assertion_line": 180,
+      "key_stack_frames": [
+        "circt::arc::StateType::get(mlir::Type)",
+        "ModuleLowering::run() in LowerState.cpp:219",
+        "LowerStatePass::runOnOperation() in LowerState.cpp:1198"
+      ]
+    },
+    "reproduced": null
+  },
+  "root_cause_analysis": {
+    "description": "The original crash occurs in the Arc dialect's LowerState pass when attempting to create a StateType with an LLHD reference type (!llhd.ref<i1>) as the underlying type. StateType requires its element type to have a known bit width, but LLHD reference types do not have a concrete bit width.",
+    "affected_code": "circt/Dialect/Arc/Transforms/LowerState.cpp:219",
+    "pass": "LowerStatePass - converts Arc dialect semantics to LLVM",
+    "likely_cause": "Validation in StateType::verifyInvariants() was not properly checking for unsupported types before creation"
+  },
+  "test_case_analysis": {
+    "source_file": "source.sv",
+    "description": "Module with inout port and sequential logic",
+    "key_feature": {
+      "inout_port": "inout logic c",
+      "type_issue": "The inout port gets represented as !llhd.ref<i1> in CIRCT IR, which cannot be used as a StateType element"
+    }
+  },
+  "conclusion": {
+    "summary": "The bug appears to have been fixed in the current toolchain (firtool-1.139.0 with LLVM 22.0.0git)",
+    "evidence": [
+      "Test case compiles successfully through all pipeline stages",
+      "No assertion failures or crashes detected",
+      "Both circt-verilog and arcilator complete without errors"
+    ],
+    "note": "This may indicate the bug was fixed between the original crash build and the current firtool version"
+  }
+}

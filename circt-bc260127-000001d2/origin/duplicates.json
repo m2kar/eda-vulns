@@ -1,0 +1,92 @@
+{
+  "search_queries": [
+    "sim.fmt.literal",
+    "legalization failure",
+    "assertion error",
+    "FormatLiteralOp",
+    "PrintFormatted",
+    "immediate assertion",
+    "$error format",
+    "arcilator conversion",
+    "sim dialect"
+  ],
+  "results": [
+    {
+      "issue_number": 9467,
+      "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "state": "OPEN",
+      "similarity_score": 7.5,
+      "matched_keywords": [
+        "arcilator",
+        "legalization failure",
+        "conversion error",
+        "orphaned operation"
+      ],
+      "reasoning": "Same arcilator/LowerArcToLLVM context. Similar legalization failure pattern where an operation (llhd.constant_time vs sim.fmt.literal) remains unconverted and illegal. Both involve operations marked as legal but not properly consumed or removed. However, different dialect (LLHD vs Sim) and different operation type makes it not a duplicate."
+    },
+    {
+      "issue_number": 6810,
+      "title": "[Arc] Add basic assertion support",
+      "state": "OPEN",
+      "similarity_score": 5.0,
+      "matched_keywords": [
+        "assertion support",
+        "arc dialect",
+        "immediate assertions"
+      ],
+      "reasoning": "Related to assertion handling in Arc dialect. Concerns immediate assertions but is a feature request for assertion support generally, not specific to $error() format strings. No mention of legalization failures or sim.fmt.literal operations."
+    },
+    {
+      "issue_number": 7692,
+      "title": "[Sim] Combine integer formatting ops into one op",
+      "state": "OPEN",
+      "similarity_score": 4.0,
+      "matched_keywords": [
+        "sim dialect",
+        "formatting operations",
+        "sim.fmt operations"
+      ],
+      "reasoning": "Discusses sim formatting operations (sim.fmt.hex, sim.fmt.bin, sim.fmt.dec) but focuses on refactoring/combining them, not on legalization failures or $error() related issues. Different scope and concern."
+    },
+    {
+      "issue_number": 8332,
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "state": "OPEN",
+      "similarity_score": 3.5,
+      "matched_keywords": [
+        "moore to llvm conversion",
+        "type support",
+        "string handling"
+      ],
+      "reasoning": "Relates to conversion from Moore to LLVM with string types, but concerns variable declarations not $error() format strings. Different context and triggering construct."
+    },
+    {
+      "issue_number": 8817,
+      "title": "[FIRRTL] Support special substitutions in assert intrinsics",
+      "state": "OPEN",
+      "similarity_score": 3.5,
+      "matched_keywords": [
+        "assertions",
+        "assert intrinsics",
+        "$error message handling"
+      ],
+      "reasoning": "Involves assert intrinsics and special substitutions but at FIRRTL level, not immediate assertions in arcilator. Focuses on message formatting in intrinsics rather than legalization failures."
+    },
+    {
+      "issue_number": 9191,
+      "title": "MLIR pattern checks failing",
+      "state": "OPEN",
+      "similarity_score": 2.5,
+      "matched_keywords": [
+        "arcilator",
+        "legalization",
+        "conversion pattern"
+      ],
+      "reasoning": "Lists many test failures including arcilator tests, but is a general pattern check issue. No specific mention of sim.fmt.literal or $error() related failures."
+    }
+  ],
+  "top_issue": 9467,
+  "top_score": 7.5,
+  "recommendation": "likely_new",
+  "analysis": "This is likely a NEW issue but shares architectural similarities with #9467. The issue is specific to immediate assertions with $error() that generate sim.fmt.literal operations in the arcilator/LowerArcToLLVM pipeline. While #9467 has similar legalization failure pattern (orphaned operation not properly handled), it concerns llhd.constant_time instead. The root cause appears unique to how sim.fmt.literal operations from immediate assertions are handled - they may lack proper consumption patterns or DCE handling in the format string lowering pipeline. Recommend filing as a new issue with reference to #9467 as a related pattern."
+}

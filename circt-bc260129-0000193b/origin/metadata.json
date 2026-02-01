@@ -1,0 +1,8 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "timestamp": "2025-02-01T13:50:00Z",
+    "command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw source.sv",
+    "crash_signature": "Assertion 'succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed in mlir::IntegerType::get() - integer bitwidth is limited to 16777215 bits"
+  }
+}

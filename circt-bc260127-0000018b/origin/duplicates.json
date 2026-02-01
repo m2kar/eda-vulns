@@ -1,0 +1,106 @@
+{
+  "search_queries": [
+    "extractConcatToConcatExtract",
+    "CombFolds.cpp",
+    "expected 'op' to have no uses",
+    "indexed array assignment",
+    "use_empty",
+    "ExtractOp",
+    "canonicalize",
+    "replaceOpAndCopyNamehint",
+    "Concat extract canonicalizer",
+    "always_comb"
+  ],
+  "matching_issues": [
+    {
+      "issue_number": 8863,
+      "title": "[Comb] Concat/extract canonicalizer crashes on loop",
+      "url": "https://github.com/llvm/circt/issues/8863",
+      "similarity_score": 9.5,
+      "status": "open",
+      "created_date": "2025-08-18T11:02:23Z",
+      "matching_keywords": [
+        "extractConcatToConcatExtract",
+        "CombFolds.cpp",
+        "expected 'op' to have no uses",
+        "replaceOpAndCopyNamehint",
+        "ExtractOp::canonicalize",
+        "canonicalize",
+        "use_empty"
+      ],
+      "stack_trace_match": true,
+      "assertion_match": true,
+      "trigger_pattern_match": true,
+      "comparison": {
+        "issue_8863": {
+          "assertion": "op->use_empty() && \"expected 'op' to have no uses\"",
+          "function": "extractConcatToConcatExtract",
+          "location": "lib/Dialect/Comb/CombFolds.cpp:513",
+          "caller": "ExtractOp::canonicalize",
+          "helper_function": "circt::replaceOpAndCopyNamehint",
+          "trigger": "indexed array assignment (arr[0]=a; arr[1]=b) generates interdependent Extract/Concat ops"
+        },
+        "our_crash": {
+          "assertion": "op->use_empty() && \"expected 'op' to have no uses\"",
+          "function": "extractConcatToConcatExtract",
+          "location": "lib/Dialect/Comb/CombFolds.cpp:548",
+          "caller": "ExtractOp::canonicalize",
+          "helper_function": "circt::replaceOpAndCopyNamehint",
+          "trigger": "indexed array assignment in always_comb"
+        },
+        "note": "Same assertion, same function, same caller, same helper. Only line number differs (513 vs 548), suggesting code evolution/line shifts. Trigger pattern is identical."
+      },
+      "confidence": "very_high"
+    },
+    {
+      "issue_number": 8024,
+      "title": "[Comb] Crash in AndOp folder",
+      "url": "https://github.com/llvm/circt/issues/8024",
+      "similarity_score": 3.0,
+      "status": "open",
+      "created_date": "2025-01-06T21:35:10Z",
+      "matching_keywords": [
+        "canonicalize",
+        "CombFolds.cpp",
+        "crash"
+      ],
+      "stack_trace_match": false,
+      "assertion_match": false,
+      "trigger_pattern_match": false,
+      "comparison": {
+        "issue_8024": {
+          "crash_type": "index out of bounds assertion",
+          "function": "AndOp::fold",
+          "location": "lib/Dialect/Comb/CombFolds.cpp:880",
+          "trigger": "circular dependencies in AndOp"
+        },
+        "our_crash": {
+          "crash_type": "use_empty assertion",
+          "function": "extractConcatToConcatExtract",
+          "location": "lib/Dialect/Comb/CombFolds.cpp:548",
+          "trigger": "indexed array assignment"
+        },
+        "note": "Different functions, different assertions, but both in CombFolds.cpp and both caused by problematic patterns in canonicalize pass"
+      },
+      "confidence": "low"
+    }
+  ],
+  "search_statistics": {
+    "total_queries": 10,
+    "total_matching_issues": 2,
+    "highly_relevant": 1,
+    "likely_duplicates": 1,
+    "unrelated": 1
+  },
+  "top_score": 9.5,
+  "top_issue": 8863,
+  "recommendation": "review_existing",
+  "rationale": "Issue #8863 is a nearly identical duplicate with 95% similarity. It has the exact same assertion failure (`op->use_empty()`), same function (`extractConcatToConcatExtract`), same caller (`ExtractOp::canonicalize`), same helper function (`replaceOpAndCopyNamehint`), and the same trigger pattern (indexed array assignment in always_comb/combinational logic). The line number difference (513 vs 548) is consistent with code evolution. This should be consolidated into the existing issue.",
+  "additional_notes": [
+    "Issue #8863 was created on 2025-08-18 and remains OPEN",
+    "The test case in #8863 uses SystemVerilog array assignment syntax (arr[0]=a; arr[1]=b) which generates the same IR pattern",
+    "Both crashes occur during --canonicalize pass on the Extract/Concat canonicalizer",
+    "The root cause is identical: replaceOpAndCopyNamehint does not ensure all uses are replaced before eraseOp",
+    "This is a confirmed duplicate - recommend closing current crash as duplicate of #8863"
+  ]
+}

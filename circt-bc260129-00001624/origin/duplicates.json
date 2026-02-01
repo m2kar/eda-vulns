@@ -1,0 +1,292 @@
+{
+  "extraction": {
+    "dialect": "moore",
+    "pass": "mooretocore",
+    "crash_type": "assertion",
+    "keywords": [
+      "union packed",
+      "output port",
+      "typedef"
+    ],
+    "assertion_message": "dyn_cast on a non-existent value",
+    "missing_types": [
+      "moore::uniontype",
+      "moore::unpackeduniontype"
+    ]
+  },
+  "search": {
+    "total_issues_found": 13,
+    "issues_searched": [
+      7531,
+      7629,
+      7753,
+      8021,
+      8163,
+      8176,
+      8211,
+      8215,
+      8269,
+      8476,
+      8930,
+      8973,
+      9206
+    ]
+  },
+  "scoring": {
+    "algorithm": "keyword(1) + dialect(2) + pass(2) + assertion(3) + missing_type(3) + inout(3) + union(2)",
+    "top_10": [
+      {
+        "number": 8930,
+        "title": "[MooreToCore] Crash with sqrt/floor",
+        "state": "OPEN",
+        "score": 7,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore",
+          "assertion:dyn_cast"
+        ],
+        "body_preview": "It failed when trying to compile https://github.com/pulp-platform/ELAU/blob/b0d113aff6a2d800076f5ebb84f09fba93625bc7/src/SqrtArrUns.sv#L96-L105. \n```\nmoore.module @behavioural_SqrtArrUns(in %X : !moor"
+      },
+      {
+        "number": 7629,
+        "title": "[MooreToCore] Support net op",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "Add a conversion for the `moore.net` op to MooreToConv: https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+12.4+if"
+      },
+      {
+        "number": 8163,
+        "title": "[MooreToCore] Out-of-bounds moore.extract lowered incorrectly",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "In Verilog it's legal to access arrays/bitvectors out-of-bounds which will yield X or 0. Thus a lowBit attribute not within the range is allowed by `moore.extract`. This is currently lowered 1-1 to `c"
+      },
+      {
+        "number": 8176,
+        "title": "[MooreToCore] Crash when getting values to observe",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "The following crashes due to an unattached region when calling `getValuesToObserve`.\n\n```mlir\nmoore.module @crash(in %in0: !moore.i32, in %in1: !moore.i32) {\n  %var = moore.variable : <!moore.i32>\n  m"
+      },
+      {
+        "number": 8211,
+        "title": "[MooreToCore]Unexpected observed values in llhd.wait.",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "Please check this PR(https://github.com/llvm/circt/pull/8210/files) to view the details.\n\nOr for example:\n```\nmoore.module @crash(in %in0: !moore.i32, in %in1: !moore.i32) {\n  %var = moore.variable : "
+      },
+      {
+        "number": 8215,
+        "title": "[MooreToCore] OOB array slices of unpacked arrays lowered like packed arrays",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "If I understand IEEE 1800-2017 \u00a77.4.6 Indexing and slicing of arrays right, an unpacked array slice should be 0/X in its entirety even if only a part of the slice is OOB. Currently, only the OOB part "
+      },
+      {
+        "number": 8269,
+        "title": "[MooreToCore] Support `real` constants",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "I'm looking into the failing testcase for `real` constants [on sv-tests-results](https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+5.7.2+real-constants). Just want to put it up here to"
+      },
+      {
+        "number": 8476,
+        "title": "[MooreToCore] Lower exponentiation to `math.ipowi`",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "@jiahanxie353 has added the Math dialect to circt-opt in #8475. This is a great precedent to start using that dialect in the MooreToCore conversion. For example, the `moore.pow` operation could be low"
+      },
+      {
+        "number": 8973,
+        "title": "[MooreToCore] Lowering to math.ipow?",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "Is there a strong reason to go from PowUOp to math.ipow as opposed to lowering to a sequence of multiplications?\n\nIs there any existing lowering from math.ipow to the core dialects? \n\nhttps://github.c"
+      },
+      {
+        "number": 7531,
+        "title": "[Moore] Input triggers assertion in canonicalizer infra",
+        "state": "OPEN",
+        "score": 2,
+        "matches": [
+          "dialect:moore"
+        ],
+        "body_preview": "`circt-opt -canonicalize` triggers an assertion on the following input. Maybe an upstream bug?\r\n\r\n`Assertion failed: (mayBeGraphRegion(*op->getParentRegion()) && \"expected that op has no uses\"), funct"
+      }
+    ],
+    "all_scores": [
+      {
+        "number": 8930,
+        "title": "[MooreToCore] Crash with sqrt/floor",
+        "state": "OPEN",
+        "score": 7,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore",
+          "assertion:dyn_cast"
+        ],
+        "body_preview": "It failed when trying to compile https://github.com/pulp-platform/ELAU/blob/b0d113aff6a2d800076f5ebb84f09fba93625bc7/src/SqrtArrUns.sv#L96-L105. \n```\nmoore.module @behavioural_SqrtArrUns(in %X : !moor"
+      },
+      {
+        "number": 7629,
+        "title": "[MooreToCore] Support net op",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "Add a conversion for the `moore.net` op to MooreToConv: https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+12.4+if"
+      },
+      {
+        "number": 8163,
+        "title": "[MooreToCore] Out-of-bounds moore.extract lowered incorrectly",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "In Verilog it's legal to access arrays/bitvectors out-of-bounds which will yield X or 0. Thus a lowBit attribute not within the range is allowed by `moore.extract`. This is currently lowered 1-1 to `c"
+      },
+      {
+        "number": 8176,
+        "title": "[MooreToCore] Crash when getting values to observe",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "The following crashes due to an unattached region when calling `getValuesToObserve`.\n\n```mlir\nmoore.module @crash(in %in0: !moore.i32, in %in1: !moore.i32) {\n  %var = moore.variable : <!moore.i32>\n  m"
+      },
+      {
+        "number": 8211,
+        "title": "[MooreToCore]Unexpected observed values in llhd.wait.",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "Please check this PR(https://github.com/llvm/circt/pull/8210/files) to view the details.\n\nOr for example:\n```\nmoore.module @crash(in %in0: !moore.i32, in %in1: !moore.i32) {\n  %var = moore.variable : "
+      },
+      {
+        "number": 8215,
+        "title": "[MooreToCore] OOB array slices of unpacked arrays lowered like packed arrays",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "If I understand IEEE 1800-2017 \u00a77.4.6 Indexing and slicing of arrays right, an unpacked array slice should be 0/X in its entirety even if only a part of the slice is OOB. Currently, only the OOB part "
+      },
+      {
+        "number": 8269,
+        "title": "[MooreToCore] Support `real` constants",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "I'm looking into the failing testcase for `real` constants [on sv-tests-results](https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+5.7.2+real-constants). Just want to put it up here to"
+      },
+      {
+        "number": 8476,
+        "title": "[MooreToCore] Lower exponentiation to `math.ipowi`",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "@jiahanxie353 has added the Math dialect to circt-opt in #8475. This is a great precedent to start using that dialect in the MooreToCore conversion. For example, the `moore.pow` operation could be low"
+      },
+      {
+        "number": 8973,
+        "title": "[MooreToCore] Lowering to math.ipow?",
+        "state": "OPEN",
+        "score": 4,
+        "matches": [
+          "dialect:moore",
+          "pass:mooretocore"
+        ],
+        "body_preview": "Is there a strong reason to go from PowUOp to math.ipow as opposed to lowering to a sequence of multiplications?\n\nIs there any existing lowering from math.ipow to the core dialects? \n\nhttps://github.c"
+      },
+      {
+        "number": 7531,
+        "title": "[Moore] Input triggers assertion in canonicalizer infra",
+        "state": "OPEN",
+        "score": 2,
+        "matches": [
+          "dialect:moore"
+        ],
+        "body_preview": "`circt-opt -canonicalize` triggers an assertion on the following input. Maybe an upstream bug?\r\n\r\n`Assertion failed: (mayBeGraphRegion(*op->getParentRegion()) && \"expected that op has no uses\"), funct"
+      },
+      {
+        "number": 7753,
+        "title": "[circt-verilog] zero parameter at module declaration fails when used ",
+        "state": "OPEN",
+        "score": 2,
+        "matches": [
+          "dialect:moore"
+        ],
+        "body_preview": "I have a mmu.sv module for RISC-V implementation: \r\n```Verilog\r\nmodule mmu #(\r\n    parameter integer DEVICE_COUNT = 0\r\n) (\r\n...\r\noutput logic [31:2] dev_addr[DEVICE_COUNT]\r\n...\r\n```\r\n\r\nthat is used in"
+      },
+      {
+        "number": 8021,
+        "title": "[ImportVerilog] Support handling the slang::ast::StatementBlockSymbol.",
+        "state": "OPEN",
+        "score": 2,
+        "matches": [
+          "dialect:moore"
+        ],
+        "body_preview": "Now, we ignore statement block symbols. But in some cases, we'll trigger the dominance error. For example:\n```\nmodule top_module;\n    always @(*) begin\n        integer j;\n        for(j = 0; j < 4; j++"
+      },
+      {
+        "number": 9206,
+        "title": "[ImportVerilog] moore.conversion generated instead of moore.int_to_string",
+        "state": "OPEN",
+        "score": 2,
+        "matches": [
+          "dialect:moore"
+        ],
+        "body_preview": "As pointed out by @Scheremo on #9199, the following SV snippet from sv-tests:\n\n```\n// Copyright (C) 2019-2021  The SymbiFlow Authors.\n//\n// Use of this source code is governed by a ISC-style\n// licens"
+      }
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "testcase_id": "260129-00001473",
+  "validation_result": "report",
+  "syntax_check": {
+    "slang": {
+      "valid": true,
+      "errors": [],
+      "warnings": []
+    },
+    "verilator": {
+      "valid": true,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "crash_verification": {
+    "reproducible": true,
+    "tool": "circt-verilog",
+    "version": "CIRCT 1.139.0",
+    "command": "circt-verilog --ir-hw bug.sv",
+    "crash_type": "assertion",
+    "assertion_message": "detail::isPresent(Val) && \"dyn_cast on a non-existent value\"",
+    "crash_signature_match": true
+  },
+  "minimization": {
+    "original_lines": 25,
+    "minimized_lines": 2,
+    "reduction_percent": 92.0,
+    "preserved_constructs": [
+      "module declaration",
+      "output string port"
+    ],
+    "removed_constructs": [
+      "input ports (clk, rst, sel)",
+      "always_ff block",
+      "always_comb block",
+      "state machine logic"
+    ]
+  },
+  "bug_classification": {
+    "category": "type_conversion_validation",
+    "is_valid_bug": true,
+    "is_user_error": false,
+    "synthesizable_input": false,
+    "expected_behavior": "graceful error or successful lowering",
+    "actual_behavior": "assertion failure crash"
+  },
+  "root_cause": {
+    "component": "MooreToCore conversion",
+    "function": "getModulePortInfo / sanitizeInOut",
+    "issue": "String type port converted to sim::DynamicStringType which is not valid for hw::ModulePortInfo",
+    "trigger": "output string s"
+  },
+  "recommendation": {
+    "action": "report",
+    "severity": "high",
+    "notes": "Valid SystemVerilog syntax causes compiler crash. Should emit diagnostic instead of assertion failure."
+  },
+  "timestamp": "2026-02-01T08:00:00Z"
+}

@@ -1,0 +1,18 @@
+{
+  "crash_type": "assertion_failure",
+  "dialect": "Arc",
+  "crash_location": "lib/Dialect/Arc/Transforms/LowerState.cpp:219",
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "testcase_analysis": {
+    "module_name": "TopModule",
+    "ports": ["clk", "wide_input", "out", "io_sig"],
+    "special_constructs": ["inout port", "conditional assignment", "z-state"],
+    "potential_trigger": "inout port io_sig assigned with conditional z-state"
+  },
+  "root_cause_hypothesis": "The LowerState pass in the Arc dialect iterates over all module port arguments and attempts to allocate StateType storage for each. When a module contains an inout port (bidirectional signal), it is represented as llhd.ref<T> type. The StateType::get() function has a verification invariant that checks if the inner type has a known bit width via computeLLVMBitWidth(). This function only handles seq::ClockType, IntegerType, hw::ArrayType, and hw::StructType - it does not handle llhd::RefType. When the code attempts StateType::get(llhd.ref<i1>), the verification fails because computeLLVMBitWidth() returns nullopt for RefType, triggering the assertion failure.",
+  "suggested_fix": "The LowerState pass should either: (1) Filter out llhd.ref<T> types before calling StateType::get() and emit a proper diagnostic that inout ports are not supported, (2) Extend computeLLVMBitWidth() to recursively handle llhd::RefType by extracting its nested type, or (3) Handle RefType specially in the port iteration loop by unwrapping the reference and allocating state for the underlying type.",
+  "affected_passes": ["arc-lower-state"],
+  "related_dialects": ["Arc", "LLHD"],
+  "trigger_pattern": "SystemVerilog module with inout port processed through circt-verilog and arcilator",
+  "severity": "crash"
+}

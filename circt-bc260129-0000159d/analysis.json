@@ -1,0 +1,76 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Arc",
+  "failing_pass": "LowerState",
+  "crash_type": "assertion",
+  "assertion_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "crash_location": {
+    "file": "LowerState.cpp",
+    "function": "ModuleLowering::run",
+    "line": 219
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": ["inout port", "sequential logic (always_ff)", "for loop", "register assignment"],
+    "problematic_patterns": ["inout port assigned from register", "inout port in sequential context"]
+  },
+  "hypotheses": [
+    {
+      "description": "LowerState pass does not handle LLHD reference types that result from inout ports. The pass assumes all module arguments are bit-width types but LLHD refs lack bit width, causing assertion failure.",
+      "confidence": "high",
+      "evidence": [
+        "Stack trace shows crash at StateType::get(arg.getType()) where arg.getType() is !llhd.ref<i1>",
+        "Test case has inout port c converted to !llhd.ref<i1> in intermediate MLIR",
+        "Error message explicitly states 'state type must have a known bit width; got !llhd.ref<i1>'",
+        "Related GitHub issue #9574 describes same problem: 'Assertion failure when lowering inout ports in sequential logic'"
+      ]
+    },
+    {
+      "description": "Missing conversion step between circt-verilog and arcilator that should transform LLHD ref types to something Arc can handle.",
+      "confidence": "low",
+      "evidence": [
+        "Pipeline uses 'circt-verilog --ir-hw | arcilator' with no explicit conversion",
+        "Both LLHD and Arc dialects handle different aspects",
+        "Counter-evidence: Would affect all inout ports, not just those with sequential logic"
+      ]
+    }
+  ],
+  "keywords": [
+    "inout port arcilator",
+    "LLHD ref type LowerState",
+    "StateType known bit width",
+    "arc dialect inout",
+    "sequential logic inout",
+    "!llhd.ref<i1>"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "reason": "Contains crash site at line 219, handles state lowering and allocation"
+    },
+    {
+      "path": "lib/Dialect/Moore/Conversions/VerilogToHW.cpp",
+      "reason": "Converts Verilog/SV to HW dialect, generates LLHD refs for inout ports"
+    },
+    {
+      "path": "include/circt/Dialect/Arc/ArcOps.td",
+      "reason": "Defines Arc types including StateType and its constraints"
+    },
+    {
+      "path": "lib/Dialect/LLHD/IR/LLHDDialect.cpp",
+      "reason": "Defines LLHD reference type semantics and usage"
+    }
+  ],
+  "related_github_issue": "https://github.com/llvm/circt/issues/9574",
+  "reproduction_status": {
+    "original_version_1.139.0": "reproduces",
+    "current_version_22.0.0git": "does_not_reproduce",
+    "note": "Bug appears to be fixed in current version but issue #9574 is still open"
+  },
+  "fix_suggestions": [
+    "Filter out LLHD ref types in LowerState pass to skip creating state storage for them",
+    "Add conversion pass to transform !llhd.ref<T> to Arc-compatible types before Arc lowering",
+    "Add type validation before state allocation to provide better error messages instead of assertion failure"
+  ]
+}

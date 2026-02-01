@@ -1,0 +1,53 @@
+{
+  "testcase_id": "260128-0000074e",
+  "crash_type": "timeout",
+  "analysis_timestamp": "2026-01-31T19:28:45+00:00",
+  "dialect": "hw",
+  "affected_tool": "circt-verilog",
+  "root_cause": {
+    "category": "infinite_loop",
+    "stage": "elaboration",
+    "trigger": "self_referential_output_struct",
+    "confidence": "high"
+  },
+  "key_constructs": [
+    {
+      "type": "packed_struct_output",
+      "description": "output state_data_t out",
+      "line": 8
+    },
+    {
+      "type": "self_referential_always_comb",
+      "description": "case(out.state) assigns to out.data",
+      "lines": [10, 16]
+    },
+    {
+      "type": "case_statement_on_output",
+      "description": "case(out.state) with out as output port",
+      "line": 11
+    }
+  ],
+  "semantic_issue": {
+    "read_signal": "out.state",
+    "write_signal": "out.data",
+    "same_base": true,
+    "creates_loop": true
+  },
+  "severity": "high",
+  "classification": {
+    "is_bug": true,
+    "type": "compiler_hang",
+    "reportable": true
+  },
+  "keywords": [
+    "timeout",
+    "hang",
+    "infinite loop",
+    "circt-verilog",
+    "packed struct",
+    "output port",
+    "always_comb",
+    "self-referential",
+    "case statement"
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "search_results": [
+    {
+      "issue_number": 9287,
+      "title": "[HW] Make `hw::getBitWidth` use std::optional vs -1",
+      "labels": ["HW"],
+      "created_at": "2025-12-02T20:12:37Z",
+      "description": "Convert `circt::getBitWidth` to return `std::optional<uint64_t>`. Where the callsites do not check for it, add an assertion. In cases where a bitwidth was inappropriately assumed but wasn't checked or asserted, update the code to bail out appropriately without making changes."
+    },
+    {
+      "issue_number": 8693,
+      "title": "[Mem2Reg] Local signal does not dominate final drive",
+      "labels": ["LLHD"],
+      "created_at": "2025-07-11T20:50:35Z",
+      "description": "Mem2Reg pass produces a local signal that doesn't dominate its final drive, resulting in MLIR verification error"
+    },
+    {
+      "issue_number": 9013,
+      "title": "[circt-opt] Segmentation fault during XOR op building",
+      "labels": ["LLHD"],
+      "created_at": "2025-09-24T16:10:55Z",
+      "description": "Segmentation fault in llhd-desequentialize pass with XOR operation on mismatched types"
+    },
+    {
+      "issue_number": 9574,
+      "title": "[Arc] Assertion failure when lowering inout ports in sequential logic",
+      "labels": [],
+      "created_at": "2026-02-01T05:48:51Z",
+      "description": "Assertion failure in Arc LowerStatePass when attempting to create StateType for LLHD reference type"
+    },
+    {
+      "issue_number": 9467,
+      "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time`",
+      "labels": ["LLHD", "Arc"],
+      "created_at": "2026-01-20T17:10:39Z",
+      "description": "Arcilator fails to lower llhd.constant_time operation"
+    },
+    {
+      "issue_number": 7989,
+      "title": "[LLHD] Improve llhd-desequentialize pass",
+      "labels": [],
+      "created_at": "2024-12-13T16:25:58Z",
+      "description": "Enhancement for llhd-desequentialize pass"
+    },
+    {
+      "issue_number": 8266,
+      "title": "[FIRRTL] Integer Property folders assert in getAPSInt",
+      "labels": ["bug", "FIRRTL"],
+      "created_at": "2025-02-24T17:35:43Z",
+      "description": "Integer property folder assertion in getAPSInt"
+    },
+    {
+      "issue_number": 8825,
+      "title": "[LLHD] Switch from hw.inout to a custom signal reference type",
+      "labels": ["LLHD"],
+      "created_at": "2025-08-06T04:38:33Z",
+      "description": "Design discussion about switching from hw.inout to custom signal reference"
+    },
+    {
+      "issue_number": 7665,
+      "title": "[LLHD][ProcessLowering] Incorrectly inlines aliasing drives",
+      "labels": ["bug", "LLHD"],
+      "created_at": "2025-02-25T23:38:31Z",
+      "description": "Bug in LLHD ProcessLowering incorrectly inlining aliasing drives"
+    },
+    {
+      "issue_number": 8226,
+      "title": "[ImportVerilog] Problem with conditional + register",
+      "labels": ["bug", "LLHD"],
+      "created_at": "2025-02-12T09:27:03Z",
+      "description": "Bug with ImportVerilog handling conditionals and registers in LLHD"
+    }
+  ],
+  "top_matches": [
+    {
+      "issue_number": 9287,
+      "title": "[HW] Make `hw::getBitWidth` use std::optional vs -1",
+      "similarity_score": 7,
+      "matched_keywords": [
+        "getBitWidth",
+        "bitwidth validation",
+        "assertion failure when invalid bitwidth passed",
+        "getIntegerType without validation"
+      ],
+      "match_reason": "DIRECTLY RELATED: This issue explicitly addresses the root cause of the crash - getBitWidth() not validating return values before passing to getIntegerType(). The crash message 'integer bitwidth is limited to 16777215 bits' suggests invalid bitwidth from getBitWidth() being passed to IntegerType::get(), which is exactly what issue #9287 is proposing to fix."
+    },
+    {
+      "issue_number": 9574,
+      "title": "[Arc] Assertion failure when lowering inout ports in sequential logic",
+      "similarity_score": 6,
+      "matched_keywords": [
+        "assertion failure",
+        "bitwidth validation",
+        "verifyInvariants",
+        "LLHD type issues",
+        "StateType creation failure"
+      ],
+      "match_reason": "SIMILAR PATTERN: This is a different but related issue. Both involve assertion failures triggered by type verification with invalid bitwidths. Issue #9574 crashes in Arc's LowerStatePass with 'state type must have a known bit width; got !llhd.ref<i1>', showing similar root cause pattern of bitwidth validation failure, but in a different pass (Arc vs Mem2Reg)."
+    },
+    {
+      "issue_number": 8693,
+      "title": "[Mem2Reg] Local signal does not dominate final drive",
+      "similarity_score": 5,
+      "matched_keywords": [
+        "Mem2Reg pass",
+        "LLHD dialect",
+        "assertion/verification error",
+        "signal handling"
+      ],
+      "match_reason": "SAME PASS, DIFFERENT BUG: This is another Mem2Reg pass bug in LLHD dialect. While the specific error (domination check) differs from the bitwidth issue, both are Mem2Reg failures in LLHD. They may share root cause or infrastructure issues, making this a related but distinct problem."
+    },
+    {
+      "issue_number": 9013,
+      "title": "[circt-opt] Segmentation fault during XOR op building",
+      "similarity_score": 4,
+      "matched_keywords": [
+        "LLHD",
+        "assertion/crash in pass",
+        "type mismatch",
+        "verifyInvariants context"
+      ],
+      "match_reason": "LLHD INFRASTRUCTURE: This is a different LLHD pass crash (llhd-desequentialize vs Mem2Reg) but related to type system issues. Shows pattern of LLHD dialect infrastructure issues with type handling, though the specific trigger pattern differs."
+    }
+  ],
+  "recommendation": "review_existing",
+  "top_score": 7,
+  "top_issue": "9287",
+  "confidence": "high",
+  "notes": "This is NOT a new issue - it is a direct manifestation of a known problem already tracked in issue #9287. The root cause (getBitWidth() returning invalid values without validation before passing to getIntegerType()) is explicitly documented in the root cause analysis. Issue #9287, created 2025-12-02, proposes converting getBitWidth to return std::optional and adding validation at callsites. The crash occurs at Mem2Reg.cpp line 1753, which needs to be updated as part of the fix described in #9287."
+}

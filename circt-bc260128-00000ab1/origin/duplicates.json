@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T22:11:48+00:00",
+  "search_terms": {
+    "dialect": "Moore",
+    "failing_pass": "MooreToCore",
+    "crash_type": "assertion"
+  },
+  "results": {
+    "total_found": 43,
+    "top_score": 16,
+    "top_issue_number": 8332,
+    "top_issue_title": "[MooreToCore] Support for StringType from moore to llvm dialect\n"
+  },
+  "recommendation": {
+    "action": "review_existing",
+    "confidence": "high"
+  }
+}

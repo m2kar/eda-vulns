@@ -1,0 +1,70 @@
+{
+  "validation_timestamp": "2025-01-13T00:00:00Z",
+  "test_case": "bug.sv",
+  "original_test_case": "source.sv",
+  
+  "syntax_validation": {
+    "verilator": {
+      "tool": "verilator",
+      "command": "verilator --lint-only bug.sv",
+      "exit_code": 0,
+      "result": "pass",
+      "errors": 0,
+      "warnings": 0
+    },
+    "slang": {
+      "tool": "slang",
+      "command": "slang --lint-only bug.sv",
+      "exit_code": 0,
+      "result": "pass",
+      "errors": 0,
+      "warnings": 0,
+      "message": "Build succeeded: 0 errors, 0 warnings"
+    }
+  },
+  
+  "bug_reproduction": {
+    "tool": "circt-verilog",
+    "version": "firtool-1.139.0",
+    "command": "circt-verilog --ir-hw bug.sv",
+    "exit_code": 1,
+    "reproduced": true,
+    "error_type": "hw.bitcast_invalid_type",
+    "error_message": "'hw.bitcast' op result #0 must be Type wherein the bitwidth in hardware is known, but got 'f64'",
+    "invalid_operation": "%11 = \"hw.bitcast\"(%10) : (i1073741823) -> f64",
+    "invalid_bitwidth": 1073741823,
+    "expected_bitwidth_source": "hw::getBitWidth() returns -1 for Float64Type"
+  },
+  
+  "cross_tool_validation": {
+    "summary": "Test case is valid SystemVerilog accepted by Verilator and Slang",
+    "tools_tested": ["verilator", "slang", "circt-verilog"],
+    "consensus": "CIRCT-only failure indicates a compiler bug, not invalid input"
+  },
+  
+  "validation_result": {
+    "is_valid_testcase": true,
+    "is_reproducible_bug": true,
+    "classification": "report",
+    "confidence": "high",
+    "rationale": [
+      "Test case passes syntax validation in Verilator and Slang",
+      "Uses standard SystemVerilog real type feature",
+      "CIRCT fails with invalid bitwidth error (i1073741823)",
+      "Error indicates internal type handling bug, not user input error"
+    ]
+  },
+  
+  "minimization_stats": {
+    "original_lines": 13,
+    "minimized_lines": 7,
+    "functional_lines": 4,
+    "reduction_percent": 46,
+    "preserved_constructs": [
+      "real type",
+      "always_ff block",
+      "clock edge sensitivity",
+      "nonblocking assignment"
+    ]
+  }
+}

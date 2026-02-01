@@ -1,0 +1,101 @@
+{
+  "search_queries": [
+    "arcilator",
+    "InferStateProperties",
+    "array type assertion",
+    "type cast IntegerType",
+    "arc StateOp array",
+    "hw::ConstantOp assertion",
+    "unpacked array",
+    "assertion failure Arc",
+    "shift register arc",
+    "applyEnableTransformation"
+  ],
+  "matching_issues": [
+    {
+      "issue_number": 9469,
+      "title": "[circt-verilog][arcilator] Inconsistent compilation behavior: direct array indexing in always_ff sensitivity list vs. intermediate wire",
+      "url": "https://github.com/llvm/circt/issues/9469",
+      "state": "CLOSED",
+      "similarity_score": 6.5,
+      "matching_aspects": [
+        "component_arcilator",
+        "array_type_handling",
+        "llhd_constant_time_related"
+      ],
+      "reasoning": "Related to array indexing and arcilator lowering but different root cause (llhd.constant_time vs type cast assertion)"
+    },
+    {
+      "issue_number": 9395,
+      "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+      "url": "https://github.com/llvm/circt/issues/9395",
+      "state": "CLOSED",
+      "similarity_score": 4.0,
+      "matching_aspects": [
+        "component_arcilator",
+        "assertion_failure"
+      ],
+      "reasoning": "Both arcilator assertion failures but different error (ConversionPatternRewriter vs cast assertion)"
+    },
+    {
+      "issue_number": 9417,
+      "title": "[Arc][arcilator] `hw.bitcast` Data Corruption for Aggregate Types with Non-Power-of-2 Element Widths in Arc",
+      "url": "https://github.com/llvm/circt/issues/9417",
+      "state": "CLOSED",
+      "similarity_score": 5.5,
+      "matching_aspects": [
+        "component_arc",
+        "aggregate_types",
+        "data_handling_issue"
+      ],
+      "reasoning": "Involves Arc dialect and aggregate types but focused on data corruption in hw.bitcast, not type casting in InferStateProperties"
+    },
+    {
+      "issue_number": 9373,
+      "title": "Assertion failure in Arc function splitting",
+      "url": "https://github.com/llvm/circt/issues/9373",
+      "state": "CLOSED",
+      "similarity_score": 3.5,
+      "matching_aspects": [
+        "component_arc",
+        "assertion_failure"
+      ],
+      "reasoning": "Arc assertion but in function splitting, not InferStateProperties pass"
+    },
+    {
+      "issue_number": 7627,
+      "title": "[MooreToCore] Unpacked array causes crash",
+      "url": "https://github.com/llvm/circt/issues/7627",
+      "state": "CLOSED",
+      "similarity_score": 5.0,
+      "matching_aspects": [
+        "unpacked_arrays",
+        "crash_pattern"
+      ],
+      "reasoning": "Unpacked array crash but in Moore dialect lowering, not Arc InferStateProperties"
+    }
+  ],
+  "top_issue": {
+    "issue_number": 9469,
+    "score": 6.5,
+    "title": "[circt-verilog][arcilator] Inconsistent compilation behavior: direct array indexing in always_ff sensitivity list vs. intermediate wire"
+  },
+  "recommendation": "likely_new",
+  "reasoning": {
+    "summary": "This appears to be a NEW BUG with similarities to existing Arc/arcilator issues but with a distinct root cause.",
+    "key_findings": [
+      "Root cause is specifically in InferStateProperties.cpp line 211 - applyEnableTransformation function",
+      "Type safety bug: IntegerType cast fails on unpacked array types",
+      "No existing issues specifically mention this function or this type of casting failure",
+      "Issue #9469 is closest but deals with llhd.constant_time legalization, not type casting assertions",
+      "The crash occurs at a different location (Casting.h line 566) vs other arcilator assertion failures"
+    ],
+    "evidence_for_new_issue": [
+      "Specific function name 'applyEnableTransformation' not found in any related issues",
+      "InferStateProperties.cpp line 211 not mentioned in search results",
+      "Type casting from unpacked array to IntegerType is a specific pattern not covered in existing issues",
+      "Shift register pattern with array state is a specific triggering condition"
+    ]
+  },
+  "timestamp": "2026-01-31T22:00:00Z"
+}

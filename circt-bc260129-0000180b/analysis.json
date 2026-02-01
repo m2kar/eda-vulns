@@ -1,0 +1,136 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "timestamp": "2025-02-01T12:02:04Z",
+  "dialect": "Moore",
+  "failing_pass": "HoistSignals",
+  "crash_type": "assertion",
+  "assertion_message": "numBits >= 0",
+  "crash_location": {
+    "file": "lib/Dialect/LLHD/Transforms/HoistSignals.cpp",
+    "function": "DriveHoister::hoistDrives()::materialize",
+    "line": 549
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "parameterized class",
+      "self-referential typedef",
+      "package",
+      "class instantiation"
+    ],
+    "problematic_patterns": [
+      "typedef container#(pkg::my_class) my_type creates circular type dependency",
+      "Parameterized class with type parameter referring to containing class",
+      "Recursive type without base case"
+    ]
+  },
+  "hypotheses": [
+    {
+      "description": "Missing circular type detection in Moore dialect's type resolution causes infinite recursion during bit width calculation",
+      "confidence": "high",
+      "evidence": [
+        "Self-referential typedef creates circular dependency: my_type → container#(pkg::my_class) → my_type",
+        "hw::getBitWidth() returns -1 when unable to calculate width, triggering assertion",
+        "Current version shows overflow value i1073741823, suggesting unbounded recursion before detection",
+        "StructType shows error propagation logic but Moore dialect may not use it properly"
+      ],
+      "mechanism": "Type resolution expands typedef recursively without cycle detection, leading to either -1 return or integer overflow"
+    },
+    {
+      "description": "Parameterized class size calculation bug causes exponential or unbounded type size growth",
+      "confidence": "medium",
+      "evidence": [
+        "Type involves parameterized class container#(type T = int)",
+        "When T = pkg::my_class, creates recursive parameter",
+        "Size calculation may inline full type instead of using pointer semantics",
+        "Overflow value 1073741823 suggests unbounded accumulation"
+      ],
+      "mechanism": "Compiler attempts to inline complete type size instead of treating class as reference/pointer"
+    },
+    {
+      "description": "HoistSignals assertion too strict for types with unknown or invalid bit widths",
+      "confidence": "low",
+      "evidence": [
+        "Assertion fails when getBitWidth() returns -1 (error indicator)",
+        "Could emit diagnostic instead of asserting",
+        "Would only be symptom handling, not root cause fix"
+      ],
+      "mechanism": "Better error handling would prevent crash but underlying type calculation bug remains"
+    }
+  ],
+  "current_error": {
+    "message": "'hw.bitcast' op result #0 must be Type wherein the bitwidth in hardware is known, but got '!llvm.ptr'",
+    "operation": "%20 = \"hw.bitcast\"(%19) : (i1073741823) -> !llvm.ptr",
+    "bitwidth": 1073741823,
+    "note": "Overflow value 2^30-1 suggests unbounded recursion or signed integer overflow"
+  },
+  "keywords": [
+    "self-referential typedef",
+    "circular type",
+    "recursive type",
+    "parameterized class",
+    "HoistSignals",
+    "numBits",
+    "getBitWidth",
+    "container class",
+    "type alias",
+    "Moore dialect"
+  ],
+  "suggested_fixes": [
+    {
+      "priority": 1,
+      "description": "Add circular type detection in Moore dialect type resolution",
+      "implementation": [
+        "Add visited set to type resolution in MooreTypes.cpp",
+        "Track type expansion during bit width calculation",
+        "Emit diagnostic: 'self-referential typedef in parameterized class not supported'"
+      ],
+      "benefits": "Prevents infinite recursion, provides clear error message"
+    },
+    {
+      "priority": 2,
+      "description": "Improve error handling in HoistSignals",
+      "file": "lib/Dialect/LLHD/Transforms/HoistSignals.cpp:549",
+      "implementation": "Replace assertion with diagnostic emission for types with unknown bit width",
+      "benefits": "Prevents crash, provides actionable feedback to user"
+    },
+    {
+      "priority": 3,
+      "description": "Limit type size calculation",
+      "implementation": [
+        "Add maximum bit width constant",
+        "Check during size accumulation in StructType::getBitWidth()",
+        "Emit diagnostic when size exceeds limit"
+      ],
+      "benefits": "Prevents overflow issues like i1073741823"
+    }
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Moore/MooreTypes.cpp",
+      "reason": "Type resolution and bit width calculation for Moore dialect"
+    },
+    {
+      "path": "lib/Dialect/LLHD/Transforms/HoistSignals.cpp:549",
+      "reason": "Location of assertion failure that needs error handling improvement"
+    },
+    {
+      "path": "lib/Dialect/HW/HWTypes.cpp",
+      "reason": "getBitWidth implementation that returns -1 on error"
+    },
+    {
+      "path": "include/circt/Dialect/HW/HWTypes.h",
+      "reason": "BitWidthTypeInterface definition"
+    },
+    {
+      "path": "lib/Conversion/MooreToCore/",
+      "reason": "Moore to HW conversion logic where type size is calculated"
+    }
+  ],
+  "minimization_notes": {
+    "potential": "Test case can likely be minimized to just self-referential typedef",
+    "suggested_minimal": "package pkg; class my_class; typedef pkg::my_class self_type; endclass endpackage",
+    "unnecessary_elements": ["Sub module", "System module structure", "initial block logic", "logic signals"]
+  }
+}

@@ -1,0 +1,6 @@
+hw.mlir:45:10: error: 'arc.state' op operand type mismatch: operand #2
+    %3 = comb.mux bin %1#1, %1#0, %shift_reg : !hw.array<4xstruct<valid: i1, data: i8>>
+         ^
+hw.mlir:45:10: note: see current operation: %3 = "arc.state"(%10, %0#1, %1, %0#0, %2) <{arc = @xor_shift_module_arc, latency = 1 : i32, operandSegmentSizes = array<i32: 1, 1, 0, 3, 0>}> : (!seq.clock, i1, i1, !hw.array<4xstruct<valid: i1, data: i8>>, i21560136) -> !hw.array<4xstruct<valid: i1, data: i8>>
+hw.mlir:45:10: note: expected type: '!hw.array<4xstruct<valid: i1, data: i8>>'
+hw.mlir:45:10: note:   actual type: 'i21560136'

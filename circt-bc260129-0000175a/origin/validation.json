@@ -1,0 +1,48 @@
+{
+  "classification": {
+    "result": "report",
+    "reason": "Valid SystemVerilog syntax verified by slang. The code uses standard features (class definition, class instantiation, always_ff block) that should be supported. circt-verilog fails to handle ClassHandleType correctly, producing an internal error with invalid bitwidth handling.",
+    "syntax_valid": true,
+    "slang_verified": true,
+    "slang_version": "10.0.6+3d7e6cd2e"
+  },
+  "reduction": {
+    "original_lines": 22,
+    "minimized_lines": 5,
+    "reduction_percent": 77
+  },
+  "error_analysis": {
+    "original_error": "integer bitwidth is limited to 16777215 bits (Assertion failure)",
+    "current_error": "hw.bitcast op result must be Type wherein the bitwidth in hardware is known",
+    "same_root_cause": true,
+    "explanation": "Both errors stem from getBitWidth() returning -1 for ClassHandleType. The current version may have additional validation that catches this earlier, but the underlying issue is the same - ClassHandleType is not properly supported in the Mem2Reg pass."
+  },
+  "features_used": {
+    "class_definition": {
+      "standard": "IEEE 1800-2017",
+      "section": "8. Classes",
+      "status": "standard_feature"
+    },
+    "class_handle": {
+      "standard": "IEEE 1800-2017",
+      "section": "8.4 Object handles",
+      "status": "standard_feature"
+    },
+    "always_ff": {
+      "standard": "IEEE 1800-2017", 
+      "section": "9.2.2.4 Sequential logic",
+      "status": "standard_feature"
+    },
+    "new_operator": {
+      "standard": "IEEE 1800-2017",
+      "section": "8.7 Constructors",
+      "status": "standard_feature"
+    }
+  },
+  "verdict": {
+    "is_bug": true,
+    "bug_type": "internal_error",
+    "severity": "high",
+    "component": "LLHD Mem2Reg / HW bitwidth handling"
+  }
+}

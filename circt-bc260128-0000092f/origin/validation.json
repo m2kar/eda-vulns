@@ -1,0 +1,21 @@
+{
+  "classification": {
+    "result": "report",
+    "reason": "arcilator consistently asserts in InferStateProperties (applyEnableTransformation) when a packed-struct array state is enabled, indicating a compiler bug rather than invalid SV."
+  },
+  "syntax_check": {
+    "valid": true,
+    "errors": []
+  },
+  "reproducibility": {
+    "consistent": true,
+    "attempts": 3,
+    "success_rate": "100%"
+  },
+  "cross_tool_validation": {
+    "tool": "verilator --lint-only",
+    "result": "passed",
+    "notes": "No lint errors reported."
+  },
+  "reduction_percent": "53.1%"
+}

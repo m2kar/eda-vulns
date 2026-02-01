@@ -1,0 +1,64 @@
+{
+  "search_queries": [
+    "arcilator inout",
+    "arcilator llhd.ref",
+    "StateType known bit width",
+    "LowerState assertion",
+    "arcilator tri-state",
+    "arcilator crash",
+    "inout StateType",
+    "llhd.ref state"
+  ],
+  "results": [
+    {
+      "issue_number": 9574,
+      "title": "[Arc] Assertion failure when lowering inout ports in sequential logic",
+      "url": "https://github.com/llvm/circt/issues/9574",
+      "state": "open",
+      "created_at": "2026-02-01T05:48:51Z",
+      "similarity_score": 9.5,
+      "matching_factors": [
+        "Same error message: 'state type must have a known bit width; got !llhd.ref<...>'",
+        "Same component: arcilator",
+        "Same assertion location: LowerState.cpp:219 in ModuleLowering::run()",
+        "Same trigger construct: inout port with tri-state logic",
+        "Same problematic type: !llhd.ref<i1>",
+        "Same root cause: StateType::get() fails on LLHD reference types",
+        "Same affected pass: LowerStatePass"
+      ],
+      "description_excerpt": "CIRCT crashes with an assertion failure when compiling SystemVerilog code that uses `inout` ports within `always_ff` blocks. The crash occurs in the Arc dialect's `LowerStatePass` when attempting to create a `StateType` for an LLHD reference type.",
+      "crash_signature": "assertion `succeeded( ConcreteT::verifyInvariants(...))' failed",
+      "expected_behavior": "Either successful compilation or a graceful error message such as: error: inout ports cannot be used directly in sequential logic"
+    },
+    {
+      "issue_number": 9260,
+      "title": "Arcilator crashes in Upload Release Artifacts CI",
+      "url": "https://github.com/llvm/circt/issues/9260",
+      "state": "open",
+      "created_at": "2025-11-26T21:12:57Z",
+      "similarity_score": 2.0,
+      "matching_factors": [
+        "Same component: arcilator",
+        "Crash in CI environment (different from specific type-related crash)"
+      ],
+      "description_excerpt": "There are two configs of the Upload Release Artifacts CI job where check-circt fails on three arcilator tests",
+      "crash_signature": "Unknown (CI-level crash, not detailed in issue)",
+      "relevance": "Low - appears to be a different arcilator crash unrelated to type handling"
+    }
+  ],
+  "recommendation": "review_existing",
+  "top_score": 9.5,
+  "top_issue": "#9574",
+  "analysis": {
+    "primary_match": "Issue #9574 is an almost exact match for the reported bug",
+    "match_details": {
+      "error_message_match": true,
+      "component_match": true,
+      "location_match": true,
+      "trigger_match": true,
+      "type_match": true
+    },
+    "differences": "The reported crash shows inout port with tri-state assignment in a test module. Issue #9574 shows the same crash pattern triggered by inout ports in always_ff blocks. Both represent the same underlying issue where inout ports (mapped to !llhd.ref<...> types) cannot be handled by StateType::get() in LowerState.cpp.",
+    "uniqueness_assessment": "The current test case and issue #9574 appear to be **DUPLICATES** or variants of the same bug. Both trigger the identical assertion failure at the same location with the same type mismatch problem."
+  }
+}

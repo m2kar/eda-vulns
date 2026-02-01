@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T18:19:13+00:00",
+  "testcase_id": "260127-0000037b",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tools": {
+    "circt_verilog": {
+      "path": "/opt/firtool/bin/circt-verilog",
+      "version": "LLVM 22.0.0git"
+    },
+    "arcilator": {
+      "path": "/opt/firtool/bin/arcilator",
+      "version": "LLVM 22.0.0git"
+    }
+  },
+  "original_command": "circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_0038e1810fb2.sv | arcilator | opt -O0 | llc -O0 --filetype=obj",
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv | arcilator",
+    "exit_code": 0,
+    "reproduced": false,
+    "match_result": "no_crash"
+  },
+  "crash_signatures": {
+    "original": "Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed; error: state type must have a known bit width; got '!llhd.ref<i1>'",
+    "reproduced": null,
+    "error_message": "No crash - program completed successfully (exit code 0)"
+  },
+  "root_cause": {
+    "issue": "inout port type !llhd.ref<i1> causes StateType::get() to fail verification",
+    "affected_code": "lib/Dialect/Arc/Transforms/LowerState.cpp:219",
+    "status": "FIXED in current CIRCT version"
+  },
+  "files": {
+    "reproduce_log": "reproduce.log",
+    "source": "source.sv",
+    "error": "error.txt"
+  }
+}

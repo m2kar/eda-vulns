@@ -1,0 +1,57 @@
+{
+  "crash_id": "260129-000019c4",
+  "crash_type": "assertion",
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "crash_location": {
+    "file": "circt/Dialect/Arc/Transforms/LowerState.cpp",
+    "line": 219,
+    "function": "circt::arc::StateType::get"
+  },
+  "stack_trace_summary": [
+    "LowerStatePass::runOnOperation() at LowerState.cpp:1198",
+    "ModuleLowering::run() at LowerState.cpp:219",
+    "StateType::get(mlir::Type) at ArcTypes.cpp.inc:108"
+  ],
+  "dialect": "arc",
+  "tool": "arcilator",
+  "testcase_features": [
+    "inout_port",
+    "wire_declaration",
+    "tri_state_logic",
+    "conditional_expression",
+    "unpacked_array",
+    "array_indexing",
+    "initial_block",
+    "assign_statement"
+  ],
+  "root_cause_hypothesis": "Arc dialect's LowerState pass does not support llhd::RefType as module input. When an inout port is converted from Moore dialect to Core, it becomes a !llhd.ref<T> typed block argument. The StateType::verify() function fails because computeLLVMBitWidth() does not handle RefType, which is a reference/pointer type that shouldn't have a fixed bit width. This is a known limitation documented in MooreToCore.cpp with a FIXME comment.",
+  "root_cause_category": "unsupported_feature",
+  "trigger_condition": "Module with inout port processed by arcilator",
+  "related_types": [
+    "llhd::RefType",
+    "arc::StateType",
+    "moore::RefType",
+    "hw::InOutType"
+  ],
+  "related_source_files": [
+    "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "lib/Dialect/Arc/ArcTypes.cpp",
+    "lib/Conversion/MooreToCore/MooreToCore.cpp"
+  ],
+  "keywords": [
+    "inout",
+    "llhd.ref",
+    "StateType",
+    "LowerState",
+    "arcilator",
+    "bidirectional port",
+    "tri-state",
+    "RefType",
+    "bit width"
+  ],
+  "severity": "high",
+  "reproducible": true,
+  "suggested_fix": "Add early detection of llhd::RefType in LowerState pass and emit a clear error message that inout ports are not supported by arcilator, instead of triggering an assertion failure.",
+  "related_issues": [],
+  "analysis_confidence": "high"
+}

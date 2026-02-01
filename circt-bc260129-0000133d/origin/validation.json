@@ -1,0 +1,32 @@
+{
+  "classification": {
+    "result": "report",
+    "reason": "Valid SystemVerilog code with $error in always @(*) assertion triggers legalization failure for sim.fmt.literal in ArcToLLVM pass. Both slang and verilator accept the syntax, confirming this is a CIRCT/arcilator bug, not invalid input."
+  },
+  "syntax_check": {
+    "valid": true,
+    "tool": "slang",
+    "errors": []
+  },
+  "cross_tool": {
+    "tested": true,
+    "tools": ["slang", "verilator"],
+    "results": {
+      "slang": {
+        "command": "slang --parse-only bug.sv",
+        "success": true,
+        "errors": []
+      },
+      "verilator": {
+        "command": "verilator --lint-only --sv bug.sv",
+        "success": true,
+        "errors": []
+      }
+    }
+  },
+  "reduction": {
+    "original_lines": 14,
+    "minimized_lines": 3,
+    "reduction_percent": 78.57
+  }
+}

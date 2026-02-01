@@ -1,0 +1,26 @@
+{
+  "queries": [
+    "sim.fmt.literal",
+    "failed to legalize operation",
+    "arcilator"
+  ],
+  "candidates": [
+    {
+      "issue": 9467,
+      "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "url": "https://github.com/llvm/circt/issues/9467",
+      "similarity_score": 6.5,
+      "notes": "Same pipeline (circt-verilog -> arcilator) and legalization failure, but different illegal op (llhd.constant_time vs sim.fmt.literal)."
+    },
+    {
+      "issue": 8286,
+      "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+      "url": "https://github.com/llvm/circt/issues/8286",
+      "similarity_score": 5.0,
+      "notes": "General lowering issues and legalization failures in arcilator, but not about sim.fmt.literal."
+    }
+  ],
+  "recommendation": "likely_new",
+  "top_score": 6.5,
+  "top_issue": 9467
+}

@@ -1,0 +1,84 @@
+{
+  "search_keywords": [
+    "sim.fmt.literal",
+    "legalize operation",
+    "always_comb assertion",
+    "immediate assertion",
+    "arcilator",
+    "ArcToLLVM"
+  ],
+  "search_results": [
+    {
+      "issue_number": 9395,
+      "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+      "url": "https://github.com/llvm/circt/issues/9395",
+      "state": "CLOSED",
+      "similarity_score": 8.2,
+      "matched_keywords": ["arcilator", "assertion"]
+    },
+    {
+      "issue_number": 6810,
+      "title": "[Arc] Add basic assertion support",
+      "url": "https://github.com/llvm/circt/issues/6810",
+      "state": "OPEN",
+      "similarity_score": 7.5,
+      "matched_keywords": ["assertion", "Arc"]
+    },
+    {
+      "issue_number": 8286,
+      "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+      "url": "https://github.com/llvm/circt/issues/8286",
+      "state": "OPEN",
+      "similarity_score": 7.8,
+      "matched_keywords": ["arcilator", "legalize", "LLVM lowering"]
+    },
+    {
+      "issue_number": 8012,
+      "title": "[Moore][Arc][LLHD] Moore to LLVM lowering issues",
+      "url": "https://github.com/llvm/circt/issues/8012",
+      "state": "OPEN",
+      "similarity_score": 7.3,
+      "matched_keywords": ["Arc", "LLVM lowering"]
+    },
+    {
+      "issue_number": 7692,
+      "title": "[Sim] Combine integer formatting ops into one op",
+      "url": "https://github.com/llvm/circt/issues/7692",
+      "state": "OPEN",
+      "similarity_score": 6.8,
+      "matched_keywords": ["sim", "formatting"]
+    },
+    {
+      "issue_number": 9467,
+      "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "url": "https://github.com/llvm/circt/issues/9467",
+      "state": "OPEN",
+      "similarity_score": 7.0,
+      "matched_keywords": ["arcilator", "lowering failure"]
+    },
+    {
+      "issue_number": 4532,
+      "title": "[ExportVerilog] always_comb ordering issue",
+      "url": "https://github.com/llvm/circt/issues/4532",
+      "state": "OPEN",
+      "similarity_score": 5.5,
+      "matched_keywords": ["always_comb"]
+    },
+    {
+      "issue_number": 8770,
+      "title": "(f)printf parsing assertion failure",
+      "url": "https://github.com/llvm/circt/issues/8770",
+      "state": "OPEN",
+      "similarity_score": 6.2,
+      "matched_keywords": ["printf", "assertion"]
+    }
+  ],
+  "top_match": {
+    "issue_number": 9395,
+    "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+    "similarity_score": 8.2
+  },
+  "recommendation": "likely_new",
+  "reasoning": "已找到 sim.fmt.literal 相关 Issue #9395，但该 Issue 聚焦于一般性 arcilator assertion failure，而当前 Bug 的根本原因是 sim.fmt.literal 在 always_comb 块中的立即断言处理不完整。#8286 (Verilog-to-LLVM lowering) 和 #6810 (Arc assertion support) 也相关但不完全匹配具体场景。建议提交新 Issue 但参考 #9395 作为相关工作。",
+  "timestamp": "2026-01-31T20:05:00Z"
+}

@@ -1,0 +1,76 @@
+{
+  "crash_summary": "arcilator LowerState pass 在处理 llhd::RefType 类型时崩溃，因为 StateType::get() 的验证函数 computeLLVMBitWidth() 不支持 LLHD ref 类型",
+  "dialect": "Arc/LLHD",
+  "crash_type": "assertion failure",
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "key_constructs": [
+    "inout port",
+    "conditional tristate assign",
+    "high impedance (1'bz)"
+  ],
+  "root_cause_hypothesis": "arcilator 的 arc::StateType 验证逻辑 (computeLLVMBitWidth) 只支持 IntegerType、hw::ArrayType、hw::StructType 和 seq::ClockType，不包括 llhd::RefType。当 inout 端口产生的 llhd::RefType 值被传递给 StateType::get() 时验证失败导致 assertion 崩溃",
+  "source_location": {
+    "file": "lib/Dialect/Arc/ArcTypes.cpp",
+    "line": 87,
+    "function": "StateType::verify -> computeLLVMBitWidth",
+    "call_site": {
+      "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "line": 219,
+      "function": "ModuleLowering::getAllocatedState"
+    }
+  },
+  "hypotheses": [
+    {
+      "description": "computeLLVMBitWidth() 不支持 llhd::RefType，导致返回 std::nullopt，触发 StateType::verify() 失败",
+      "confidence": "high",
+      "evidence": [
+        "错误信息明确指出 'state type must have a known bit width; got !llhd.ref<i1>'",
+        "computeLLVMBitWidth() 源码只处理 4 种类型: ClockType, IntegerType, ArrayType, StructType",
+        "llhd::RefType 不在支持列表中"
+      ]
+    },
+    {
+      "description": "circt-verilog 对 inout/tristate 使用 LLHD 方言，但 arcilator 期望纯 HW/Seq/Comb IR",
+      "confidence": "medium",
+      "evidence": [
+        "管道流程 circt-verilog --ir-hw | arcilator",
+        "inout 端口被编译为 llhd::RefType",
+        "arcilator 设计用于 HW 层级仿真"
+      ]
+    }
+  ],
+  "keywords": [
+    "arcilator",
+    "llhd.ref",
+    "StateType",
+    "bit width",
+    "inout",
+    "tristate",
+    "LowerState",
+    "computeLLVMBitWidth"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Arc/ArcTypes.cpp",
+      "reason": "包含 computeLLVMBitWidth() 和 StateType::verify() 实现"
+    },
+    {
+      "path": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "reason": "崩溃调用点，需要添加类型检查或错误处理"
+    },
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "inout 端口转换为 llhd::RefType 的位置"
+    }
+  ],
+  "test_case": {
+    "language": "systemverilog",
+    "file": "source.sv",
+    "key_features": [
+      "inout port declaration",
+      "conditional tristate assignment with 1'bz",
+      "continuous assign to inout"
+    ]
+  },
+  "timestamp": "2026-01-31T18:45:24+00:00"
+}

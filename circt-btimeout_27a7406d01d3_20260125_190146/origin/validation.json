@@ -1,0 +1,60 @@
+{
+  "validation": {
+    "result": "report",
+    "classification": "genuine_bug",
+    "confidence": "high",
+    "timestamp": "2026-01-31T00:00:00Z"
+  },
+  "syntax_validation": {
+    "slang": {
+      "status": "pass",
+      "errors": 0,
+      "warnings": 0,
+      "message": "Build succeeded: 0 errors, 0 warnings"
+    },
+    "verilator": {
+      "status": "warnings_only",
+      "errors": 0,
+      "warnings": 3,
+      "details": [
+        "DECLFILENAME: Filename does not match MODULE name (cosmetic)",
+        "UNUSEDSIGNAL: Bits of signal not used: s[0] (expected - intentional partial use)",
+        "UNDRIVEN: Bits of signal not driven: s[1] (expected - this IS the bug trigger)"
+      ]
+    },
+    "iverilog": {
+      "status": "pass",
+      "errors": 0,
+      "warnings": 1,
+      "details": ["always_comb process has no sensitivities (acceptable for constant assignment)"]
+    }
+  },
+  "cross_tool_validation": {
+    "summary": "Valid SystemVerilog code accepted by multiple tools",
+    "tools_tested": ["slang", "verilator", "iverilog"],
+    "all_pass_syntax": true,
+    "circt_behavior": "timeout/infinite_loop"
+  },
+  "bug_classification": {
+    "is_genuine_bug": true,
+    "is_design_limitation": false,
+    "is_invalid_testcase": false,
+    "is_feature_request": false,
+    "rationale": "Valid SystemVerilog code compiles successfully with Slang, Verilator, and Icarus Verilog but causes infinite loop in CIRCT arcilator pipeline"
+  },
+  "test_case": {
+    "file": "bug.sv",
+    "lines": 6,
+    "bytes": 123,
+    "reduction_from_original": {
+      "original_lines": 34,
+      "reduction_percent": 82.4
+    }
+  },
+  "reproduction": {
+    "command": "/opt/firtool/bin/circt-verilog --ir-hw bug.sv | /opt/firtool/bin/arcilator | /opt/firtool/bin/opt -O0 | /opt/firtool/bin/llc -O0 --filetype=obj",
+    "timeout_seconds": 60,
+    "exit_code": 124,
+    "reproducible": true
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Comb",
+  "failing_pass": "Canonicalizer",
+  "crash_type": "assertion",
+  "assertion_message": "op->use_empty() && \"expected 'op' to have no uses\"",
+  "crash_location": {
+    "file": "lib/Dialect/Comb/CombFolds.cpp",
+    "function": "extractConcatToConcatExtract",
+    "line": 548
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "for loop",
+      "array bit indexing",
+      "bit extraction from integer"
+    ],
+    "problematic_patterns": [
+      "dynamic array indexing in loop",
+      "bit extraction from loop variable i[0]"
+    ]
+  },
+  "hypotheses": [
+    {
+      "description": "Cyclic dependency in extract/concat optimization causes use-after-replace. When ConcatOp simplification results in a single value that has dependency on the original ExtractOp, replaceOpAndCopyNamehint attempts to erase an operation that still has uses.",
+      "confidence": "high",
+      "evidence": [
+        "Assertion message: 'expected op to have no uses'",
+        "Stack trace shows crash at replaceOpAndCopyNamehint after extractConcatToConcatExtract",
+        "Test case generates multiple interdependent extract/concat operations from loop",
+        "Single-element result path (reverseConcatArgs.size() == 1) triggers problematic replace"
+      ]
+    },
+    {
+      "description": "replaceOpAndCopyNamehint implementation may incorrectly call eraseOp without proper use replacement, unlike standard rewriter.replaceOp semantics.",
+      "confidence": "medium",
+      "evidence": [
+        "CIRCT custom naming helper may bypass MLIR's safe replacement logic",
+        "Standard replaceOp handles use substitution automatically"
+      ]
+    }
+  ],
+  "keywords": [
+    "extractConcatToConcatExtract",
+    "replaceOpAndCopyNamehint",
+    "use_empty",
+    "eraseOp",
+    "ExtractOp",
+    "ConcatOp",
+    "CombFolds",
+    "Canonicalizer",
+    "canonicalize"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Comb/CombFolds.cpp",
+      "reason": "Contains the crashing extractConcatToConcatExtract function and ExtractOp canonicalization"
+    },
+    {
+      "path": "lib/Support/Naming.cpp",
+      "reason": "Contains replaceOpAndCopyNamehint implementation that triggers the assertion"
+    },
+    {
+      "path": "llvm/mlir/lib/IR/PatternMatch.cpp",
+      "reason": "MLIR's eraseOp implementation with the use_empty assertion"
+    }
+  ]
+}

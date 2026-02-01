@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T04:19:00Z",
+  "input_file": "source.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": ""
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "verilator": "pass",
+    "icarus": "error",
+    "slang": "pass"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "medium",
+    "reason": "Slang/Verilator accept the test; CIRCT crashes uniquely, while Icarus lacks string port support."
+  }
+}

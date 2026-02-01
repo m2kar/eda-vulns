@@ -1,0 +1,64 @@
+{
+  "validation_result": "report",
+  "testcase_id": "260129-00001624",
+  
+  "syntax_check": {
+    "slang": {
+      "tool": "slang",
+      "version": "10.0.6",
+      "status": "valid",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  
+  "cross_tool_validation": {
+    "verilator": {
+      "tool": "verilator",
+      "command": "verilator --lint-only bug.sv",
+      "status": "valid",
+      "errors": [],
+      "warnings": []
+    },
+    "circt_latest": {
+      "tool": "circt-verilog",
+      "version": "CIRCT 690366b6c (slang 9.1.0+0)",
+      "command": "circt-verilog --ir-hw bug.sv",
+      "status": "crash",
+      "crash_type": "assertion",
+      "error_message": "dyn_cast on a non-existent value"
+    },
+    "circt_target": {
+      "tool": "circt-verilog",
+      "version": "CIRCT 1.139.0",
+      "command": "circt-verilog --ir-hw bug.sv",
+      "status": "crash",
+      "crash_type": "assertion",
+      "error_message": "dyn_cast on a non-existent value"
+    }
+  },
+  
+  "feature_support": {
+    "packed_union": {
+      "systemverilog_standard": "IEEE 1800-2017",
+      "verilator_support": "full",
+      "slang_support": "full",
+      "circt_support": "partial - parsing supported, MooreToCore conversion missing"
+    }
+  },
+  
+  "classification": {
+    "is_valid_systemverilog": true,
+    "is_circt_bug": true,
+    "bug_type": "missing_type_conversion",
+    "severity": "medium",
+    "affected_pass": "MooreToCore",
+    "affected_type": "moore::UnionType"
+  },
+  
+  "recommendation": {
+    "action": "report",
+    "reason": "Valid SystemVerilog code causes assertion failure in CIRCT. The packed union type is correctly parsed but not handled during conversion to HW dialect.",
+    "fix_suggestion": "Add type converter for moore::UnionType in MooreToCore.cpp"
+  }
+}

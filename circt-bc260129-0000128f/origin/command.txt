@@ -1,0 +1,1 @@
+circt-verilog --ir-hw bug.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o /tmp/arcilator_repro.o

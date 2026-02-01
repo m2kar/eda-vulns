@@ -1,0 +1,63 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCore",
+  "crash_type": "timeout",
+  "assertion_message": "",
+  "crash_location": {
+    "file": "unknown",
+    "function": "unknown",
+    "line": 0
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "struct packed",
+      "always_comb",
+      "submodule instantiation",
+      "initial block with forever loop"
+    ],
+    "problematic_patterns": [
+      "struct field used as submodule input while another struct field is written in always_comb"
+    ]
+  },
+  "hypotheses": [
+    {
+      "description": "The MooreToCore pass enters an infinite loop when lowering packed structs where different fields are used in conflicting contexts (one as submodule input, another written in always_comb)",
+      "confidence": "high",
+      "evidence": [
+        "Test case with separate variables instead of struct compiles successfully",
+        "Test case with struct but no field access to submodule compiles successfully",
+        "Only fails when struct field is used as submodule input AND another field is written in always_comb",
+        "Other SV tools (slang, iverilog) accept the syntax without issues"
+      ]
+    },
+    {
+      "description": "The compiler is unable to resolve circular dependencies introduced by the struct field accesses",
+      "confidence": "medium",
+      "evidence": [
+        "The pattern creates a dependency chain through the struct and submodule",
+        "Combination logic involving struct fields may not be properly tracked during lowering"
+      ]
+    }
+  ],
+  "keywords": [
+    "struct packed",
+    "always_comb",
+    "MooreToCore",
+    "timeout",
+    "lowering",
+    "circular dependency"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/",
+      "reason": "Contains Moore to Core dialect lowering passes"
+    },
+    {
+      "path": "lib/Dialect/Moore/",
+      "reason": "Moore dialect definition and lowering utilities"
+    }
+  ]
+}

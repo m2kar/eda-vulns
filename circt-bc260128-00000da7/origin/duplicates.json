@@ -1,0 +1,277 @@
+{
+  "search_queries": [
+    "arcilator timeout",
+    "combinational loop always_comb",
+    "dynamic array packed struct",
+    "ConvertToArcs",
+    "infinite loop",
+    "unpacked array"
+  ],
+  "results": [
+    {
+      "issue_number": 9469,
+      "title": "[circt-verilog][arcilator] Inconsistent compilation behavior: direct array indexing in always_ff sensitivity list vs. intermediate wire",
+      "state": "closed",
+      "score": 4.0,
+      "matched_keywords": [
+        "ConvertToArcs",
+        "array indexing"
+      ],
+      "url": "https://github.com/llvm/circt/issues/9469"
+    },
+    {
+      "issue_number": 9560,
+      "title": "[FIRRTL] Canonicalize infinite loop",
+      "state": "open",
+      "score": 3.0,
+      "matched_keywords": [
+        "infinite loop"
+      ],
+      "url": "https://github.com/llvm/circt/issues/9560"
+    },
+    {
+      "issue_number": 8022,
+      "title": "[Comb] Infinite loop in OrOp folder",
+      "state": "open",
+      "score": 3.0,
+      "matched_keywords": [
+        "infinite loop"
+      ],
+      "url": "https://github.com/llvm/circt/issues/8022"
+    },
+    {
+      "issue_number": 4269,
+      "title": "PrettifyVerilog: infinite loop + growing memory consumption on self-loop unary op",
+      "state": "open",
+      "score": 3.0,
+      "matched_keywords": [
+        "infinite loop"
+      ],
+      "url": "https://github.com/llvm/circt/issues/4269"
+    },
+    {
+      "issue_number": 8024,
+      "title": "[Comb] Crash in AndOp folder",
+      "state": "open",
+      "score": 3.0,
+      "matched_keywords": [
+        "infinite loop"
+      ],
+      "url": "https://github.com/llvm/circt/issues/8024"
+    },
+    {
+      "issue_number": 9420,
+      "title": "[HoistSignals] Multiple drives to same signal are handled incorrectly",
+      "state": "closed",
+      "score": 3.0,
+      "matched_keywords": [
+        "infinite loop"
+      ],
+      "url": "https://github.com/llvm/circt/issues/9420"
+    },
+    {
+      "issue_number": 9415,
+      "title": "[FIRRTL] Bytecode reader stucks with debug build",
+      "state": "closed",
+      "score": 3.0,
+      "matched_keywords": [
+        "infinite loop"
+      ],
+      "url": "https://github.com/llvm/circt/issues/9415"
+    },
+    {
+      "issue_number": 8865,
+      "title": "[Comb] AddOp canonicalizer hangs in an infinite loop",
+      "state": "closed",
+      "score": 3.0,
+      "matched_keywords": [
+        "infinite loop"
+      ],
+      "url": "https://github.com/llvm/circt/issues/8865"
+    },
+    {
+      "issue_number": 5462,
+      "title": "[FIRRTL][CheckCombCycles] Missed cycles, sensitive to presence of node?",
+      "state": "closed",
+      "score": 3.0,
+      "matched_keywords": [
+        "infinite loop"
+      ],
+      "url": "https://github.com/llvm/circt/issues/5462"
+    },
+    {
+      "issue_number": 9467,
+      "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "state": "open",
+      "score": 2.0,
+      "matched_keywords": [
+        "ConvertToArcs"
+      ],
+      "url": "https://github.com/llvm/circt/issues/9467"
+    },
+    {
+      "issue_number": 9191,
+      "title": "MLIR pattern checks failing",
+      "state": "open",
+      "score": 2.0,
+      "matched_keywords": [
+        "ConvertToArcs"
+      ],
+      "url": "https://github.com/llvm/circt/issues/9191"
+    },
+    {
+      "issue_number": 9466,
+      "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "state": "closed",
+      "score": 2.0,
+      "matched_keywords": [
+        "ConvertToArcs"
+      ],
+      "url": "https://github.com/llvm/circt/issues/9466"
+    },
+    {
+      "issue_number": 8012,
+      "title": "[Moore][Arc][LLHD] Moore to LLVM lowering issues",
+      "state": "open",
+      "score": 2.0,
+      "matched_keywords": [
+        "ConvertToArcs"
+      ],
+      "url": "https://github.com/llvm/circt/issues/8012"
+    },
+    {
+      "issue_number": 9395,
+      "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+      "state": "closed",
+      "score": 2.0,
+      "matched_keywords": [
+        "ConvertToArcs"
+      ],
+      "url": "https://github.com/llvm/circt/issues/9395"
+    },
+    {
+      "issue_number": 6810,
+      "title": "[Arc] Add basic assertion support",
+      "state": "open",
+      "score": 2.0,
+      "matched_keywords": [
+        "ConvertToArcs"
+      ],
+      "url": "https://github.com/llvm/circt/issues/6810"
+    },
+    {
+      "issue_number": 4722,
+      "title": "[Arc] Test failing in nightly builds",
+      "state": "closed",
+      "score": 2.0,
+      "matched_keywords": [
+        "ConvertToArcs"
+      ],
+      "url": "https://github.com/llvm/circt/issues/4722"
+    },
+    {
+      "issue_number": 5453,
+      "title": "[SV] Array reduction methods for unpacked arrays",
+      "state": "open",
+      "score": 1.0,
+      "matched_keywords": [
+        "unpacked array"
+      ],
+      "url": "https://github.com/llvm/circt/issues/5453"
+    },
+    {
+      "issue_number": 8215,
+      "title": "[MooreToCore] OOB array slices of unpacked arrays lowered like packed arrays",
+      "state": "open",
+      "score": 1.0,
+      "matched_keywords": [
+        "unpacked array"
+      ],
+      "url": "https://github.com/llvm/circt/issues/8215"
+    },
+    {
+      "issue_number": 8276,
+      "title": "[MooreToCore] Support for UnpackedArrayType emission",
+      "state": "open",
+      "score": 1.0,
+      "matched_keywords": [
+        "unpacked array"
+      ],
+      "url": "https://github.com/llvm/circt/issues/8276"
+    },
+    {
+      "issue_number": 8173,
+      "title": "[ImportVerilog] Crash on ordering-methods-reverse test",
+      "state": "open",
+      "score": 1.0,
+      "matched_keywords": [
+        "unpacked array"
+      ],
+      "url": "https://github.com/llvm/circt/issues/8173"
+    },
+    {
+      "issue_number": 7753,
+      "title": "[circt-verilog] zero parameter at module declaration fails when used ",
+      "state": "open",
+      "score": 1.0,
+      "matched_keywords": [
+        "unpacked array"
+      ],
+      "url": "https://github.com/llvm/circt/issues/7753"
+    },
+    {
+      "issue_number": 7535,
+      "title": "[MooreToCore] VariableOp lowered failed",
+      "state": "open",
+      "score": 1.0,
+      "matched_keywords": [
+        "unpacked array"
+      ],
+      "url": "https://github.com/llvm/circt/issues/7535"
+    },
+    {
+      "issue_number": 4479,
+      "title": "[FIRRTL] MemTap could be broken with aggregate preservation",
+      "state": "open",
+      "score": 1.0,
+      "matched_keywords": [
+        "unpacked array"
+      ],
+      "url": "https://github.com/llvm/circt/issues/4479"
+    },
+    {
+      "issue_number": 8572,
+      "title": "[MooreToCore] Fail to legalize moore::ArrayCreateOp in some cases",
+      "state": "closed",
+      "score": 1.0,
+      "matched_keywords": [
+        "unpacked array"
+      ],
+      "url": "https://github.com/llvm/circt/issues/8572"
+    },
+    {
+      "issue_number": 8657,
+      "title": "Imported verilog flips output",
+      "state": "closed",
+      "score": 1.0,
+      "matched_keywords": [
+        "unpacked array"
+      ],
+      "url": "https://github.com/llvm/circt/issues/8657"
+    },
+    {
+      "issue_number": 7627,
+      "title": "[MooreToCore] Unpacked array causes crash",
+      "state": "closed",
+      "score": 1.0,
+      "matched_keywords": [
+        "unpacked array"
+      ],
+      "url": "https://github.com/llvm/circt/issues/7627"
+    }
+  ],
+  "top_score": 4.0,
+  "top_issue": 9469,
+  "recommendation": "new_issue",
+  "reason": "Low similarity score 4.0 - likely unique issue"
+}

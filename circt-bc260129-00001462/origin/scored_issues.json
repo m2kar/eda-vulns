@@ -1,0 +1,978 @@
+[
+  {
+    "body": "I initially added added some basic support for real number format specifiers in PR #8848 some months ago. Due to school I have been busy and unable to follow up. I believe the functionality still needs to be implemented. I apologize for forgetting about this until now. More info at **_IEEE 1800-2017 \u00a7 21.2.1.2 \"Format specifications\"_**.",
+    "createdAt": "2025-11-17T01:43:55Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs8AAAABp1j0gg",
+        "name": "ImportVerilog",
+        "description": "",
+        "color": "e99695"
+      }
+    ],
+    "number": 9234,
+    "state": "OPEN",
+    "title": "[ImportVerilog] Functionality for real number format specifiers not defined",
+    "url": "https://github.com/llvm/circt/issues/9234",
+    "similarity_score": 17,
+    "score_details": [
+      "keyword_match(2)",
+      "component_match(10)",
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "As pointed out by @Scheremo on #9199, the following SV snippet from sv-tests:\n\n```\n// Copyright (C) 2019-2021  The SymbiFlow Authors.\n//\n// Use of this source code is governed by a ISC-style\n// license that can be found in the LICENSE file or at\n// https://opensource.org/licenses/ISC\n//\n// SPDX-License-Identifier: ISC\n\n\n/*\n:name: string_len\n:description: string.len()  tests\n:tags: 6.16.1\n*/\nmodule top();\n\tstring a = \"Test\";\n\tint b = a.len();\nendmodule\n```\n\nproduces a moore.conversion op from an int to string, but there's a dedicated moore.int_to_string op that we would expect to be materialized there instead",
+    "createdAt": "2025-11-07T16:36:26Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      },
+      {
+        "id": "LA_kwDODpuCgs8AAAABp1j0gg",
+        "name": "ImportVerilog",
+        "description": "",
+        "color": "e99695"
+      }
+    ],
+    "number": 9206,
+    "state": "OPEN",
+    "title": "[ImportVerilog] moore.conversion generated instead of moore.int_to_string",
+    "url": "https://github.com/llvm/circt/issues/9206",
+    "similarity_score": 17,
+    "score_details": [
+      "keyword_match(2)",
+      "component_match(10)",
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "Running `circt-verilog` on https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+7.4.2+ordering-methods-reverse causes a crash.\n\n```systemverilog\nmodule top ();\n\nstring s[] = { \"hello\", \"sad\", \"world\" };\n\ninitial begin\n\t$display(\":assert: (('%s' == 'hello') and ('%s' == 'sad') and ('%s' == 'world'))\",\n\t\ts[0], s[1], s[2]);\n\ts.reverse;\n\t$display(\":assert: (('%s' == 'world') and ('%s' == 'sad') and ('%s' == 'hello'))\",\n\t\ts[0], s[1], s[2]);\nend\n\nendmodule\n```\n\n```\ncirct-verilog -I /root/sv-tests/sv-tests/tests/chapter-7/arrays/unpacked/ordering-methods --timescale=1ns/1ns --single-unit --top=top [tests/chapter-7/arrays/unpacked/ordering-methods/reverse.sv](https://chipsalliance.github.io/sv-tests-results/tests/chapter-7/arrays/unpacked/ordering-methods/reverse.sv.html)\n[tests/chapter-7/arrays/unpacked/ordering-methods/reverse.sv:18:16](https://chipsalliance.github.io/sv-tests-results/tests/chapter-7/arrays/unpacked/ordering-methods/reverse.sv.html#l-18): error: expression of type '!moore.string' cannot be cast to a simple bit vector\nstring s[] = { \"hello\", \"sad\", \"world\" };\n               ^\n[tests/chapter-7/arrays/unpacked/ordering-methods/reverse.sv:18:25](https://chipsalliance.github.io/sv-tests-results/tests/chapter-7/arrays/unpacked/ordering-methods/reverse.sv.html#l-18): error: expression of type '!moore.string' cannot be cast to a simple bit vector\nstring s[] = { \"hello\", \"sad\", \"world\" };\n                        ^\n[tests/chapter-7/arrays/unpacked/ordering-methods/reverse.sv:18:32](https://chipsalliance.github.io/sv-tests-results/tests/chapter-7/arrays/unpacked/ordering-methods/reverse.sv.html#l-18): error: expression of type '!moore.string' cannot be cast to a simple bit vector\nstring s[] = { \"hello\", \"sad\", \"world\" };\n                               ^\nPLEASE submit a bug report to https://github.com/llvm/circt and include the crash backtrace.\nStack dump:\n0.\tProgram arguments: circt-verilog -I /root/sv-tests/sv-tests/tests/chapter-7/arrays/unpacked/ordering-methods --timescale=1ns/1ns --single-unit --top=top [tests/chapter-7/arrays/unpacked/ordering-methods/reverse.sv](https://chipsalliance.github.io/sv-tests-results/tests/chapter-7/arrays/unpacked/ordering-methods/reverse.sv.html)\nStack dump without symbol names (ensure you have llvm-symbolizer in your PATH or set the environment var `LLVM_SYMBOLIZER_PATH` to point to it):\n0  circt-verilog 0x000055976388cb47\n1  circt-verilog 0x000055976388a9ee\n2  circt-verilog 0x000055976388d21a\n[...]\n```",
+    "createdAt": "2025-02-02T23:54:27Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzE3",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDODpuCgs8AAAABp1j0gg",
+        "name": "ImportVerilog",
+        "description": "",
+        "color": "e99695"
+      }
+    ],
+    "number": 8173,
+    "state": "OPEN",
+    "title": "[ImportVerilog] Crash on ordering-methods-reverse test",
+    "url": "https://github.com/llvm/circt/issues/8173",
+    "similarity_score": 17,
+    "score_details": [
+      "keyword_match(2)",
+      "component_match(10)",
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "Now, we ignore statement block symbols. But in some cases, we'll trigger the dominance error. For example:\n```\nmodule top_module;\n    always @(*) begin\n        integer j;\n        for(j = 0; j < 4; j++);\n    end \nendmodule\n```\n**Error:**\n``` cxx\nforLoop.sv:2:12: error: operand #0 does not dominate this use\n    always @(*) begin\n           ^\nforLoop.sv:2:12: note: see current operation: %20 = \"moore.read\"(%0) : (!moore.ref<l32>) -> !moore.l32\nforLoop.sv:3:17: note: note: operand defined here (op in a parent region)\n        integer j;\n```\nor\n```\nmodule top_module;\n    always @(*) begin\n        for(int i = 0;i<4;i++);\n    end\nendmodule\n```\n**Error:**\n```cxx\nforLoop.sv:2:12: error: operand #0 does not dominate this use\n    always @(*) begin\n           ^\nforLoop.sv:2:12: note: see current operation: %9 = \"moore.read\"(%1) : (!moore.ref<i32>) -> !moore.i32\nforLoop.sv:3:17: note: operand defined here (op in a parent region)\n        for(int i = 0;i<4;i++);\n```\n\nThis error is caused by the `moore.wait_event`. When we handle `always @(*)`, we must ensure which signal will lead to recalculating the whole always block. If we declare `integer j` out of the always block, we can generate the following Moore IR:\n```\nmodule {\n  moore.module @top_module() {\n    %j = moore.variable : <l32>\n    moore.procedure always {\n      moore.wait_event {\n        %10 = moore.read %j : <l32>\n        moore.detect_event any %10 : l32\n      }\n      %0 = moore.constant 0 : i32\n      %1 = moore.conversion %0 : !moore.i32 -> !moore.l32\n      moore.blocking_assign %j, %1 : l32\n      cf.br ^bb1\n    ^bb1:  // 2 preds: ^bb0, ^bb3\n      %2 = moore.read %j : <l32>\n      %3 = moore.constant 4 : i32\n      %4 = moore.conversion %3 : !moore.i32 -> !moore.l32\n      %5 = moore.slt %2, %4 : l32 -> l1\n      %6 = moore.conversion %5 : !moore.l1 -> i1\n      cf.cond_br %6, ^bb2, ^bb4\n    ^bb2:  // pred: ^bb1\n      cf.br ^bb3\n    ^bb3:  // pred: ^bb2\n      %7 = moore.read %j : <l32>\n      %8 = moore.constant 1 : l32\n      %9 = moore.add %7, %8 : l32\n      moore.blocking_assign %j, %9 : l32\n      cf.br ^bb1\n    ^bb4:  // pred: ^bb1\n      moore.return\n    }\n    moore.output\n  }\n}\n```\nThe `%10 = moore.read %j : <l32>` means that we must have already created the `%j = moore.variable : <l32>`. So I think maybe we don't ignore `slang::ast::StatementBlockSymbol`.",
+    "createdAt": "2024-12-30T05:55:59Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      },
+      {
+        "id": "LA_kwDODpuCgs8AAAABp1j0gg",
+        "name": "ImportVerilog",
+        "description": "",
+        "color": "e99695"
+      }
+    ],
+    "number": 8021,
+    "state": "OPEN",
+    "title": "[ImportVerilog] Support handling the slang::ast::StatementBlockSymbol.",
+    "url": "https://github.com/llvm/circt/issues/8021",
+    "similarity_score": 17,
+    "score_details": [
+      "keyword_match(2)",
+      "component_match(10)",
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "Hello fabian and hailong:\r\n@fabianschuiki @hailongSun2000 \r\nI'm trying to implement SVA for moore, and the main problem is how to implement property and sequence for moore, I find that   dialect LTL is a good choice to model SVA.\r\n\r\n>The main goal of the ltl dialect is to capture the core formalism underpinning SystemVerilog Assertions (SVAs), the de facto standard for describing temporal logic sequences and properties in hardware verification. (See IEEE 1800-2017 section 16 \u201cAssertions\u201d.) We expressly try not to model this dialect like an AST for SVAs, but instead try to strip away all the syntactic sugar and Verilog quirks, and distill out the core foundation as an IR. Within the CIRCT project, this dialect intends to enable emission of rich temporal assertions as part of the Verilog output, but also provide a foundation for formal tools built ontop of CIRCT.\r\n\r\nI think it's a good choice to directly convert SVA to LTL and bypass Moore, we can saving out time and avoid to model sva property again.",
+    "createdAt": "2024-11-12T17:40:46Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs8AAAABp1j0gg",
+        "name": "ImportVerilog",
+        "description": "",
+        "color": "e99695"
+      }
+    ],
+    "number": 7801,
+    "state": "OPEN",
+    "title": "[ImportVerilog] How to implement SVA in Moore?",
+    "url": "https://github.com/llvm/circt/issues/7801",
+    "similarity_score": 17,
+    "score_details": [
+      "keyword_match(2)",
+      "component_match(10)",
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "As suggested in a discussion in PR #6773, consider turning the AST visitors in ImportVerilog into a non-recursive, worklist-based implementation.",
+    "createdAt": "2024-03-03T04:56:35Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs8AAAABp1j0gg",
+        "name": "ImportVerilog",
+        "description": "",
+        "color": "e99695"
+      }
+    ],
+    "number": 6776,
+    "state": "OPEN",
+    "title": "[ImportVerilog] Make AST traveral non-recursive",
+    "url": "https://github.com/llvm/circt/issues/6776",
+    "similarity_score": 17,
+    "score_details": [
+      "keyword_match(2)",
+      "component_match(10)",
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "Rename the `Context` in `ImportVerilogInternals.h` to `Converter` once the Slang frontend integration development has moved fully upstream into the main branch.",
+    "createdAt": "2024-02-25T22:25:23Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs8AAAABp1j0gg",
+        "name": "ImportVerilog",
+        "description": "",
+        "color": "e99695"
+      }
+    ],
+    "number": 6745,
+    "state": "OPEN",
+    "title": "[ImportVerilog] Rename `Context` to `Converter`",
+    "url": "https://github.com/llvm/circt/issues/6745",
+    "similarity_score": 17,
+    "score_details": [
+      "keyword_match(2)",
+      "component_match(10)",
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "Slang has seen a few changes to its options. We should make sure that our `ImportVerilogOptions` (in `include/circt/Conversion/ImportVerilog.h`) line up with the `Driver::Options` ones in Slang (in `include/slang/driver/Driver.h`). The circt-verilog tool should also expose all new options as its own command line arguments.",
+    "createdAt": "2025-08-08T22:55:53Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzIx",
+        "name": "good first issue",
+        "description": "Good for newcomers",
+        "color": "7057ff"
+      },
+      {
+        "id": "LA_kwDODpuCgs8AAAABp1j0gg",
+        "name": "ImportVerilog",
+        "description": "",
+        "color": "e99695"
+      }
+    ],
+    "number": 8836,
+    "state": "OPEN",
+    "title": "[circt-verilog] Align command-line options with Slang v9",
+    "url": "https://github.com/llvm/circt/issues/8836",
+    "similarity_score": 16,
+    "score_details": [
+      "keyword_match(1)",
+      "component_match(10)",
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "Outlining of expressions from concurrent assertion action blocks is tripping a VCS lint error.  Something like the following seems to show the issue.  Here, an expression in the action block is shared between two statements.  This then gets CSE'd.\r\n\r\n```mlir\r\nhw.module @Foo(%clock: i1, %a: i1, %b: i1) -> (b: i1) {\r\n  %0 = comb.or %a, %b : i1\r\n  sv.assert.concurrent posedge %clock, %0 label \"hello\" message \"world\"(%a) : i1\r\n  hw.output %0 : i1\r\n}\r\n```\r\n\r\nThis produces (`firtool Baz.mlir`):\r\n```verilog\r\nmodule Foo(\t// Baz.mlir:1:1\r\n  input  clock, a, b,\r\n  output b_0);\r\n\r\n  wire _T = a | b;\t// Baz.mlir:2:8\r\n  hello: assert property (@(posedge clock) _T) else $error(\"world\", a);\t// Baz.mlir:3:3\r\n  assign b_0 = _T;\t// Baz.mlir:4:3\r\nendmodule\r\n```\r\n\r\nVCS then complains along the lines of \"non-sampled variable `_T` is used in the action block of assertion\".  I'm not sure if this is actually a problem.",
+    "createdAt": "2022-01-21T00:09:02Z",
+    "labels": [],
+    "number": 2486,
+    "state": "OPEN",
+    "title": "[ExportVerilog] CSE of Assert Action Block Temporaries trips VCS Lint",
+    "url": "https://github.com/llvm/circt/issues/2486",
+    "similarity_score": 15,
+    "score_details": [
+      "keyword_match(5)",
+      "error_match(10)"
+    ]
+  },
+  {
+    "body": "```sv\nmodule test(    // bar.mlir:2:1\n  input  [1:0] a,       // bar.mlir:2:20\n  input  [2:0] b,       // bar.mlir:2:31\n  output [3:0] c,       // bar.mlir:2:43\n  output [4:0] d        // bar.mlir:2:54\n);\n\n  ext e (       // bar.mlir:3:12\n    .a (a),\n    .b (b),\n    .c (c),\n    .d (d)\n  );    // bar.mlir:3:12\nendmodule\n```\n\n```bash\n$ circt-verilog %s --ignore-unknown-modules\nfoo.sv:9:7: error: unsupported module member: UninstantiatedDef\n  ext e (       // bar.mlir:3:12\n      ^\n```\n\n",
+    "createdAt": "2025-06-17T00:52:03Z",
+    "labels": [],
+    "number": 8571,
+    "state": "OPEN",
+    "title": "[ImportVerilog] Unknown module instantiation fails even with `--ignore-unknown-modules`",
+    "url": "https://github.com/llvm/circt/issues/8571",
+    "similarity_score": 12,
+    "score_details": [
+      "keyword_match(2)",
+      "component_match(10)"
+    ]
+  },
+  {
+    "body": "Getting a `error: 'func.call' op operand type mismatch: expected operand type '!moore.union<..., A, ...>', but provided 'A'`.",
+    "createdAt": "2025-05-08T20:55:11Z",
+    "labels": [],
+    "number": 8471,
+    "state": "OPEN",
+    "title": "[ImportVerilog] Union type in call",
+    "url": "https://github.com/llvm/circt/issues/8471",
+    "similarity_score": 12,
+    "score_details": [
+      "keyword_match(2)",
+      "component_match(10)"
+    ]
+  },
+  {
+    "body": "We are trying to link SystemVerilog against FIRRTL at CIRCT time.\nI'm requesting a API to expose SystemVerilog as FIRRTL Blackbox, being able to inspect via C-API, which can be linked to other modules later in the FIRRTL.\nThis feature originally is done in [AutoBlackBox](https://github.com/chipsalliance/chisel/blob/6603b9860ce9eddd0520ad1978137b248fdef01a/src/main/scala/chisel3/util/experimental/AutoBlackBox.scala#L10) in Chisel, however to do it more elegantly, it's necessary to migrate this feature to CIRCT.",
+    "createdAt": "2025-04-19T02:55:44Z",
+    "labels": [],
+    "number": 8429,
+    "state": "OPEN",
+    "title": "[ImportVerilog] Request to expose a SystemVerilog Top in FIRRTL",
+    "url": "https://github.com/llvm/circt/issues/8429",
+    "similarity_score": 12,
+    "score_details": [
+      "keyword_match(2)",
+      "component_match(10)"
+    ]
+  },
+  {
+    "body": "The [chipsalliance tests for delay control](https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+9.4.1+always) currently fail. For instance:\n```systemverilog\nmodule always_tb ();\n\tlogic a = 0;\n\talways #5 a = ~a;\nendmodule\n```\n\nIt should be possible to support SystemVerilog delay controls by lowering `slang::ast::DelayControl` to `llhd::WaitOp` right?\n\nEdit: Realised that it would have to go through Moore dialect first. Not sure what to use there; is it currently doable in Moore?",
+    "createdAt": "2025-03-20T16:48:20Z",
+    "labels": [],
+    "number": 8334,
+    "state": "OPEN",
+    "title": "[ImportVerilog] Support Delay control",
+    "url": "https://github.com/llvm/circt/issues/8334",
+    "similarity_score": 12,
+    "score_details": [
+      "keyword_match(2)",
+      "component_match(10)"
+    ]
+  },
+  {
+    "body": "I want to support this [sv-tests-results/string_concat_op](https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+11.4.12.2+string_concat_op) feature, but not sure how to fix it properly.\n\n``` sv\nmodule top();\n\nstring str;\n\ninitial begin\n    str = \"Hello\";\nend\n\nendmodule\n```\n\n`circt-verilog`  has the following complaints when compiling the string.sv file:\n```s.sv:3:8: error: failed to legalize operation 'moore.variable'\nstring str;\n       ^\ns.sv:3:8: note: see current operation: %0 = \"moore.variable\"() <{name = \"str\"}> : () -> !moore.ref<string>\n```\n\nThis error is due to MooreToCore's lack of string-type conversion. It only has `StringConstantOpConv` and `Format*OpConversion`; none of these conversions can handle the `string` type.\n",
+    "createdAt": "2025-02-28T08:51:12Z",
+    "labels": [],
+    "number": 8283,
+    "state": "OPEN",
+    "title": "[ImportVerilog] Cannot compile forward decleared string type",
+    "url": "https://github.com/llvm/circt/issues/8283",
+    "similarity_score": 12,
+    "score_details": [
+      "keyword_match(2)",
+      "component_match(10)"
+    ]
+  },
+  {
+    "body": "\nHi, I think I might have encountered a bug in the Verilog frontend of CIRCT. Below is the Verilog code in `bug.v`:\n\n```verilog\nmodule Bug (O, A, B, C);\n\ninput A, B, C;\noutput O;\n\nreg O;\n\nalways @(posedge B)\n  if (C)\n    O = A;\n  else\n    O = 1'b1;\n\nendmodule\n```\n\nWhen I run the following command:\n\n```sh\ncirct-verilog -o bug.mlir bug.v\n```\n\nI get the following output in `bug.mlir`:\n\n```mlir\nmodule {\n  hw.module @Bug(in %A : i1, in %B : i1, in %C : i1, out O : i1) {\n    %0 = seq.to_clock %B\n    %1 = seq.compreg %A, %0 : i1  \n    hw.output %1 : i1\n  }\n}\n```\n\nIt appears that `bug.v` and `bug.mlir` are not semantically equivalent. \n\nPS : I am a beginner with CIRCT, so it might just be a misuse from myself ^^\n\nBest,\n\nF\u00e9lix\n",
+    "createdAt": "2025-02-12T08:34:20Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzE3",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "MDU6TGFiZWwyMTY1NDc5NTk1",
+        "name": "LLHD",
+        "description": "",
+        "color": "e07b00"
+      }
+    ],
+    "number": 8226,
+    "state": "OPEN",
+    "title": "[ImportVerilog] Problem with conditional + register",
+    "url": "https://github.com/llvm/circt/issues/8226",
+    "similarity_score": 12,
+    "score_details": [
+      "keyword_match(2)",
+      "component_match(10)"
+    ]
+  },
+  {
+    "body": "Hi all, \n\nwhen building with the latest [slang](https://github.com/MikePopoloski/slang) master branch, there seems to be an issue with tests on `basic.sv`.\n\nSpecifically, I'm getting the following unexpected output\n```\n$ circt-translate --import-verilog test/Conversion/ImportVerilog/basic.sv | FileCheck test/Conversion/ImportVerilog/basic.sv\n\n../test/Conversion/ImportVerilog/basic.sv:1740:12: error: CHECK: expected string not found in input\n // CHECK: [[V0:%.+]] = moore.extract_ref %z3 from 2\n           ^\n<stdin>:1431:36: note: scanning from here\n %11 = moore.extract_ref %z3 from 1 : <l3> -> <l1>\n                                   ^\n<stdin>:1435:2: note: possible intended match here\n %15 = moore.extract_ref %w3 from 0 : <l2> -> <l1>\n ^\n\nInput file: <stdin>\nCheck file: ../test/Conversion/ImportVerilog/basic.sv\n\n-dump-input=help explains the following input dump.\n\nInput was:\n<<<<<<\n              .\n              .\n              .\n           1426:  %z3 = moore.net wire : <l3> \n           1427:  %w3 = moore.net wire : <l2> \n           1428:  %8 = moore.read %x3 : <l1> \n           1429:  %9 = moore.read %y3 : <l1> \n           1430:  %10 = moore.extract_ref %z3 from 0 : <l3> -> <l1> \n           1431:  %11 = moore.extract_ref %z3 from 1 : <l3> -> <l1> \ncheck:1740'0                                        X~~~~~~~~~~~~~~~ error: no match found\n           1432:  %12 = moore.read %z3 : <l3> \ncheck:1740'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n           1433:  %13 = moore.constant 2 : i32 \ncheck:1740'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n           1434:  %14 = moore.dyn_extract %12 from %13 : l3, i32 -> l1 \ncheck:1740'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n           1435:  %15 = moore.extract_ref %w3 from 0 : <l2> -> <l1> \ncheck:1740'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\ncheck:1740'1      ?                                                  possible intended match\n           1436:  %16 = moore.read %w3 : <l2> \ncheck:1740'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n           1437:  %17 = moore.constant 1 : i32 \ncheck:1740'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n           1438:  %18 = moore.dyn_extract %16 from %17 : l2, i32 -> l1 \ncheck:1740'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n           1439:  %p3.v1, %p3.c1 = moore.instance \"p3\" @MultiPorts(a0: %8: !moore.l1, a1: %9: !moore.l1, v0: %14: !moore.l1, v2: %10: !moore.ref<l1>, c0: %18: !moore.l1) -> (v1: !moore.l1, c1: !moore.l1) \ncheck:1740'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n           1440:  moore.assign %11, %p3.v1 : l1 \ncheck:1740'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n              .\n              .\n              .\n>>>>>>\n\n```\n\nIt looks like `moore.extract_ref %z3 from 2` is missing but therefore we have this:\n```\n%12 = moore.read %z3 : <l3>\n%13 = moore.constant 2 : i32\n%14 = moore.dyn_extract %12 from %13 : l3, i32 -> l1 \n```\n\nDo you have any advice on how to proceed with this?\n\nThanks!",
+    "createdAt": "2026-01-22T00:06:42Z",
+    "labels": [],
+    "number": 9489,
+    "state": "OPEN",
+    "title": "[slang] Testing error when switching to slang master branch",
+    "url": "https://github.com/llvm/circt/issues/9489",
+    "similarity_score": 11,
+    "score_details": [
+      "keyword_match(1)",
+      "component_match(10)"
+    ]
+  },
+  {
+    "body": "**Test release**\n firtool-1.138.0\n\n**Description**\n \nI am trying to convert a simple Verilog netlist to using `circt-verilog`.  The netlist depends on a standard cell library file which I use the `--l` option to specify. The tool fails to resolve the modules defined in that library file, behaving as if the `--l` option is not provided or the library file is not loaded.\n\nThe netlist and library file I use are as follows:\nnetlist.v\n```\n/* Generated by Yosys 0.53+98 (git sha1 50b63c648, g++ 13.3.0-6ubuntu2~24.04 -Og -fPIC) */\n\n(* top =  1  *)\n(* src = \"test.v:1.1-5.10\" *)\nmodule top(in1, in2, out);\n  wire _00_;\n  wire _01_;\n  wire _02_;\n  wire _03_;\n  wire _04_;\n  wire _05_;\n  wire _06_;\n  wire _07_;\n  wire _08_;\n  wire _09_;\n  wire _10_;\n  wire _11_;\n  wire _12_;\n  wire _13_;\n  (* src = \"test.v:1.25-1.28\" *)\n  input [1:0] in1;\n  wire [1:0] in1;\n  (* src = \"test.v:1.42-1.45\" *)\n  input [1:0] in2;\n  wire [1:0] in2;\n  (* src = \"test.v:1.60-1.63\" *)\n  output [3:0] out;\n  wire [3:0] out;\n  NOT _14_ (\n    .A(in1[0]),\n    .Y(_12_)\n  );\n  NOT _15_ (\n    .A(in2[0]),\n    .Y(_13_)\n  );\n  NAND _16_ (\n    .A(in1[1]),\n    .B(in2[1]),\n    .Y(_00_)\n  );\n  NOT _17_ (\n    .A(_00_),\n    .Y(_01_)\n  );\n  NOR _18_ (\n    .A(_12_),\n    .B(_13_),\n    .Y(_02_)\n  );\n  NAND _19_ (\n    .A(in1[0]),\n    .B(in2[0]),\n    .Y(_03_)\n  );\n  NOR _20_ (\n    .A(in1[1]),\n    .B(in2[1]),\n    .Y(_04_)\n  );\n  NOT _21_ (\n    .A(_04_),\n    .Y(_05_)\n  );\n  NOR _22_ (\n    .A(_01_),\n    .B(_04_),\n    .Y(_06_)\n  );\n  NAND _23_ (\n    .A(_00_),\n    .B(_05_),\n    .Y(_07_)\n  );\n  NOR _24_ (\n    .A(_03_),\n    .B(_07_),\n    .Y(_08_)\n  );\n  NAND _25_ (\n    .A(_02_),\n    .B(_06_),\n    .Y(_09_)\n  );\n  NAND _26_ (\n    .A(_00_),\n    .B(_09_),\n    .Y(out[2])\n  );\n  NOR _27_ (\n    .A(_02_),\n    .B(_06_),\n    .Y(_10_)\n  );\n  NOR _28_ (\n    .A(_08_),\n    .B(_10_),\n    .Y(out[1])\n  );\n  NOR _29_ (\n    .A(in1[0]),\n    .B(in2[0]),\n    .Y(_11_)\n  );\n  NOR _30_ (\n    .A(_02_),\n    .B(_11_),\n    .Y(out[0])\n  );\n  assign out[3] = 1'h0;\nendmodule\n```\n\nlibrary.v\n```\nmodule BUF(A, Y);\ninput A;\noutput Y;\nassign Y = A;\nendmodule\n\nmodule NOT(A, Y);\ninput A;\noutput Y;\nassign Y = ~A;\nendmodule\n\nmodule NAND(A, B, Y);\ninput A, B;\noutput Y;\nassign Y = ~(A & B);\nendmodule\n\nmodule NOR(A, B, Y);\ninput A, B;\noutput Y;\nassign Y = ~(A | B);\nendmodule\n\nmodule DFF(C, D, Q);\ninput C, D;\noutput reg Q;\nalways @(posedge C)\n\tQ <= D;\nendmodule\n\nmodule DFFSR(C, D, Q, S, R);\ninput C, D, S, R;\noutput reg Q;\nalways @(posedge C, posedge S, posedge R)\n\tif (S)\n\t\tQ <= 1'b1;\n\telse if (R)\n\t\tQ <= 1'b0;\n\telse\n\t\tQ <= D;\nendmodule\n```\n\nRun `circt-verilog` command:\n```\ncirct-verilog netlist.v --l library.v\n```\n\nThe tool reports an `unkonwn module xxx` error:\n```\nnetlist.v:29:3: error: unknown module 'NOT'\n  NOT _14_ (\n  ^\nnetlist.v:33:3: error: unknown module 'NOT'\n  NOT _15_ (\n  ^\nnetlist.v:37:3: error: unknown module 'NAND'\n\n......\n```\n\n**Root Cause**\nI investigated the code and believe I found the cause of the issue.\nIn `circt/lib/Conversion/ImportVerilog/ImportVerilog.cpp`, inside the `circt::ImportDriver::prepareDriver` function, the` libraryFiles` from `ImportVerilogOptions` do not appear to be passed to the` slang::driver::Driver instance`.\nSpecifically, while `sourceFiles` are processed, the `options.libraryFiles` seem to be missing from the configuration step for the Slang driver. This prevents the specified library files from being included during compilation.\n\n**Relevant Code Location**\nFile: `circt/lib/Conversion/ImportVerilog/ImportVerilog.cpp`\nFunction: `circt::ImportDriver::prepareDriver`",
+    "createdAt": "2025-12-25T07:41:09Z",
+    "labels": [],
+    "number": 9387,
+    "state": "OPEN",
+    "title": "[circt-verilog] Option '--l' of circt-verilog Has No Effect.",
+    "url": "https://github.com/llvm/circt/issues/9387",
+    "similarity_score": 11,
+    "score_details": [
+      "keyword_match(1)",
+      "component_match(10)"
+    ]
+  },
+  {
+    "body": "The following Verilog currently fails to round-trip through `circt-verilog | circt-opt --lower-seq-to-sv --export-verilog`:\n```systemverilog\nmodule binary_ops_00000105(a, y);\n  input [3:0] a;\n  output [4:0] y;\n  assign y = 4'd2 ** a;\nendmodule\n```\nError:\n```\nsyn_circt/binary_ops_00000105.mlir:6:10: error: dialect \"math\" not supported for direct Verilog emission\n    %1 = math.ipowi %c2_i6, %0 : i6\n         ^\nsyn_circt/binary_ops_00000105.mlir:6:10: note: see current operation: %3 = \"math.ipowi\"(%0, %2) : (i6, i6) -> i6\nsyn_circt/binary_ops_00000105.mlir:6:10: note: ExportVerilog cannot emit this operation; it needs to be lowered before running ExportVerilog\n```\nI don't think we have ever run into a need to have `**` emitted back to Verilog before. There is no op in the Comb dialect to represent `**`, which is why ImportVerilog uses `math.ipowi`. It might be worthwhile adding direct support for `math.ipowi` to ExportVerilog for the few cases where this comes up.",
+    "createdAt": "2025-07-11T20:06:29Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwyNjM1MzI5MzE1",
+        "name": "ExportVerilog",
+        "description": "",
+        "color": "1d76db"
+      }
+    ],
+    "number": 8692,
+    "state": "OPEN",
+    "title": "[ExportVerilog] Support `math.ipowi` operation",
+    "url": "https://github.com/llvm/circt/issues/8692",
+    "similarity_score": 11,
+    "score_details": [
+      "keyword_match(1)",
+      "component_match(10)"
+    ]
+  },
+  {
+    "body": "There are a number of cool projects/ideas (Arc, ImportVerilog, SystemC, LEC, Model Checking, Synthesis, HLS, Rust bindings and so on) in CIRCT but I think currently it's not much visible from outsides. For open projects it would be nice to create a page like https://mlir.llvm.org/getting_started/openprojects/.",
+    "createdAt": "2024-06-02T16:13:38Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzE4",
+        "name": "documentation",
+        "description": "Improvements or additions to documentation",
+        "color": "0075ca"
+      }
+    ],
+    "number": 7114,
+    "state": "OPEN",
+    "title": "[Docs] Add \"Open Projects\" page",
+    "url": "https://github.com/llvm/circt/issues/7114",
+    "similarity_score": 11,
+    "score_details": [
+      "keyword_match(1)",
+      "component_match(10)"
+    ]
+  },
+  {
+    "body": "# Analysis of SystemVerilog Assertions (SVA) Clocking Semantics: A Foundation for Ambiguity\n\nIn SystemVerilog, concurrent assertions without an explicit clocking event infer the clock from the surrounding context. This \"action at a distance\" violates the principle of locality, a key tenet of effective compiler IR design, where an operation's semantics should be self-contained.\n\nThe inference hierarchy, in descending order of priority, is as follows:\n- **Explicit Clock in the `Property`/`Sequence` Instance**: An explicit clocking event specified directly in the assertion statement or property instance takes highest precedence.\n- **Explicit Clock in the `Property`/`Sequence` Declaration**: A leading clocking event within a named property or sequence declaration is used if the instance itself has no explicit clock.9\n- **Inferred Clock from a Procedural Block**: If a concurrent assertion is embedded within a procedural block (e.g., `always`, `always_ff`), the clocking event of that block is inferred as the clock for the assertion. This is a common source of confusion, as the procedural activation mechanism becomes entangled - with the temporal sampling clock of the assertion.\n**Inferred Clock from a default clocking Block**: A module- or interface-level default clocking block can specify a default clock for all concurrent assertions within its scope that have not otherwise determined a clock.\n\nClock determination for SVA is complex, hindering automated analysis. A simple sequence like `##1 b` requires checking for explicit clocks in assert statements or property definitions, then traversing the IR tree for procedural block sensitivity (e.g., always @(posedge clk)), and finally scanning for default clocking definitions. This non-local dependency complicates IR transformations. For example, hoisting a common sub-sequence from blocks with different clocks could silently alter program meaning, creating \"murky semantics\" and analytical \"annoyance.\" IR should facilitate, not obstruct, transformations with hidden semantic dependencies.\n\nOpaque Semantics of Clock Flow and Propagation\n---\nSVA's intricate rules for clock flow, especially concerning named sequences and parenthesized expressions, lead to non-compositional semantics problematic for IR.\n\nThe LRM defines two key concepts: clock flow and clock trapping:\n- **Clock Flow**: A leading clocking event generally flows from left to right across sequence operators like `##` and implication operators like `|=>`. For example, in `@(posedge clk) a ##1 b`, the `posedge clk` event serves as the clock for both a and the `##1` delay leading to `b`.\n- **Clock Trapping**: Crucially, a clocking event specified inside a named sequence declaration or a parenthesized expression is \"trapped.\" It does not flow out of that scope to influence subsequent elements of the larger expression.\n\nThis \"trapping\" rule has profound consequences for IR design. Consider the following example based on the rules in the SystemVerilog specification:\n- **Case 1: Inline Sequence**\n```systemverilog\nap_ok: assert property(@(posedge clk) e ##[1:5] f ##1 a);\n```\nHere, the clock @(posedge clk) is the leading clock for the entire anonymous sequence. It flows across e ##[1:5] f and also across the ##1 to clock the evaluation of a. The meaning of ##1 a is \"one clk cycle after f\".\n- **Case 2: Named Sequence**\n```systemverilog\nsequence q_ef; @(posedge clk) e ##[1:5] f; endsequence;\nap_q_ef_a: assert property (q_ef ##1 a);\n```\nIn this case, the `@(posedge clk)` is part of the `q_ef` declaration. According to the LRM, this clock is trapped within `q_ef`. It does not flow out of the `q_ef` instance.\nTherefore, the subsequent `##1` a has no clocking event.\nThis expression is syntactically valid, but the evaluation of `a` is now unclocked, which is almost certainly not the user's intent and semantically distinct from Case 1.\nThis reveals a core lack of compositionality: the meaning of `##1 a` drastically shifts based on how its left operand (`q_ef`) was defined.\nAn IR designed for local rewrites cannot accommodate this.\nConcatenation should have consistent semantics regardless of operand generation.\nSVA's rules force an IR to carry extra, non-local \"containment\" information, complicating a simple composition.\nThis language feature, manageable for humans, poses significant problems for a compiler IR.\n\n\nImplicit Dependencies in Temporal System Functions\n--- \nThe issue of implicit clocking extends to fundamental SVA building blocks, including the temporal system functions `$stable`, `$rose`, `$fell`, and `$past`.\nWhile their syntax suggests they are pure functions of their expression arguments (e.g., `$stable(req)`), their semantics are critically dependent on the hidden, implicitly inferred clocking event.\nThese functions inherently describe a relationship between a signal's value at the current clock tick and its value at a previous clock tick.\n`$stable(x)` is true if the sampled value of `x` at the current tick is the same as its value at the previous tick.\n`$rose(x)` is true if the LSB of `x` was `0` at the previous tick and is `1` at the current tick.\n`$fell(x)` is true if the LSB of `x` was `1` at the previous tick and is `0` at the current tick.\n`$past(x, N)` returns the value of `x` from `N` ticks ago.\nThe critical question is: \"relative to which clock's ticks?\" In all these cases, the clock is inferred from the context using the same problematic hierarchy as described above.\nThe function call itself provides no local indication of its clock dependency.\nThe `$past` system function is particularly illustrative because the LRM provides an optional syntax to specify the clocking event directly within the function call: `$past(expression1, number_of_ticks, expression2, clocking_event)`.\nThe optional `clocking_event` syntax in `$past` functions, unique among system functions, highlights the clock's fundamental role. Its absence in other functions like `$stable`, `$rose`, and `$fell` prioritizes brevity over clarity.\n\n# A Critique of the Current CIRCT LTL Dialect's Clocking Model\n\nThe CIRCT LTL dialect, designed for temporal logic and SVA constructs, inherits SVA's flawed implicit clocking model. This non-local and complex design hinders IR robustness and transformation.\n\nThe `ltl.clock` Operation as an Inherited Implicit Context\n---\n\nThe primary mechanism for specifying a clock in the current LTL dialect is the `ltl.clock` operation.\nThis operation takes a property or sequence as an input and produces a new property or sequence with an associated clocking event.\nThis clock then applies to all cycle-delay-based operations (e.g., `ltl.delay`, `ltl.repeat`) within the logical expression tree of the input sequence.   \n\nAn example in the dialect would be:\n```mlir\n// %unclocked_seq is some sequence, e.g., ltl.delay(ltl.concat(%a, %b), 1)\n%clocked_seq = ltl.clock %unclocked_seq, posedge %clk :!ltl.sequence,!hw.clock ->!ltl.sequence\n```\n\nThe `ltl.delay` operation lacks an explicit clock, requiring an analysis pass to trace its use-def chain back to an `ltl.clock` operation to determine its clock. While better than SVA, this non-local semantic definition is a design flaw. It complicates IR analysis and transformations like common sub-expression elimination, as hoisting identical sequences with different `ltl.clock` operations would be invalid due to altered delay meanings. This implicit clock context should be eliminated, making `ltl.delay` explicit about its clock dependency via a direct SSA operand, ensuring self-contained semantics and safe transformations.\n\nSemantic Gaps in Operator Mapping: The Case of ##\n---\nThe implicit clocking model in the LTL dialect creates a semantic misalignment with SVA's compositional structure, particularly for the `##` cycle delay operator. In SVA, `a ##1 b` naturally ties the delay's clock to sequence `a`. However, the current LTL dialect models delay as a prefix operation (`ltl.delay %b, 1`), leading to a mismatch where the delay's clock is derived from an outer `ltl.clock` block, not `a`. \n\nThis misalignment complicates lowering from frontend languages, especially in multi-clock scenarios. The proposed solution, refactoring delay into an explicitly clocked sequence object, would allow `a ##1 b` to be represented as a concatenation of three distinct, explicitly clocked sequences (`a`, `delay1`, `b`), providing a more robust and transparent mapping for frontends and backend tools.\n\n# Proposal for an Explicitly Clocked LTL Intermediate Representation\n\nAddressing SVA and current CIRCT LTL dialect semantic flaws, this section proposes a new LTL IR based on explicitness and locality to remove ambiguity, improve analyzability, and support advanced verification.\nThe guiding philosophy of this proposal is simple yet powerful: **Any IR operation whose semantics are dependent on a clocking event must accept that clocking event as an explicit SSA operand.**\n\nThis directly addresses previous issues by making clock dependencies explicit and local, achieving:\n- **Semantic Clarity**: Operations are self-contained; no external search or inference is needed.\n- **Compositionality**: Operations retain meaning regardless of context.\n- **Analyzability**: IR analysis and transformations are simplified and more robust, acting locally without breaking non-local semantics.\n\nThis principle will redefine the LTL dialect's core types and operations.\n\n\nThe Clocked Sequence (`!ltl.clocked_sequence`)\n---\n\nThe proposal introduces a new fundamental type, `!ltl.clocked_sequence`, to replace the current `!ltl.sequence` which has implicit clocking.\n`!ltl.clocked_sequence` intrinsically carries its clocking context, explicitly binding a temporal sequence of events to a specific clock.\nOperations like `ltl.concat`, `ltl.and`, and `ltl.or` will be modified to operate on `!ltl.clocked_sequence` operands, ensuring all sequence operands share the same clock.\nBoolean inputs will be implicitly lifted to a zero-length clocked sequence. This change makes clock domains explicit and type-checked, preventing errors and clarifying clock domains for analysis passes.\n\nThe Standalone ltl.delay Operation\n---\n\nWe can refactor `ltl.delay` to be a standalone leaf operation producing `!ltl.clocked_sequence`, resolving `##` operator misalignment and enhancing explicitness. The new signature, `%delay_seq = ltl.delay(%clock :!sv.clock, range : RangeAttr) ->!ltl.clocked_sequence`, defines a \"pure delay\" sequence that evaluates immediately and matches after a specified number of `%clock` ticks. This first-class object can be composed with `ltl.concat`, allowing clean lowering of SVA expressions like `a ##1 b on clock clk`.\n\nThe Clock-Agnostic Property (`!ltl.property`)\n---\nThe proposal redefines `!ltl.property` as a clock-agnostic, verifiable entity. It's a quantified statement about explicitly clocked sequences, rather than a clocked entity itself.\nThe \"lifting\" from clocked sequences to clock-agnostic properties occurs via property operators like `ltl.implication`, `ltl.always`, and `ltl.eventually`.\n\nThe `ltl.implication` operator is crucial for CDC. Its signature, `%prop = ltl.implication(%lhs :!ltl.clocked_sequence, %rhs :!ltl.clocked_sequence) ->!ltl.property`, allows `%lhs` and `%rhs` to be explicitly clocked `sequence` that don't need to share the same clock.\nThis creates a property asserting a relationship between potentially asynchronous temporal patterns.\n\n\ncc @fabianschuiki @dobios @seldridge ",
+    "createdAt": "2025-07-09T06:56:11Z",
+    "labels": [],
+    "number": 8673,
+    "state": "OPEN",
+    "title": "[LTL][SVA] Proposal for Explicit Clocking in the CIRCT LTL(SVA) Intermediate Representation",
+    "url": "https://github.com/llvm/circt/issues/8673",
+    "similarity_score": 7,
+    "score_details": [
+      "keyword_match(2)",
+      "error_match(5)"
+    ]
+  },
+  {
+    "body": "I've been reading https://circt.llvm.org/docs/Dialects/HWArith/RationaleHWArith/ and start to wonder if an arithmetic negation op also fits here?\n\nProposal for the type inference rules:\n\n|   | Operand type | Result type                                |\n| - | :----------- | :----------------------------------------- |\n|(U)| `ui<a>`      | `si<r>`, *r* = *a* + 1                     |\n|(S)| `si<a>`      | `si<r>`, *r* = *a* + 1                     |\n\nThis is essentially the [existing subtraction rules](https://circt.llvm.org/docs/Dialects/HWArith/RationaleHWArith/#subtraction) with `a == 0`. But since it's said that 0-width values are not supported yet. Maybe it's useful to add arithmetic negation on its own?\n",
+    "createdAt": "2025-05-19T20:46:56Z",
+    "labels": [],
+    "number": 8493,
+    "state": "OPEN",
+    "title": "[HWArith] Does it make sense to add an arithmetic negation unary op?",
+    "url": "https://github.com/llvm/circt/issues/8493",
+    "similarity_score": 6,
+    "score_details": [
+      "keyword_match(1)",
+      "error_match(5)"
+    ]
+  },
+  {
+    "body": "Is there a strong reason to go from PowUOp to math.ipow as opposed to lowering to a sequence of multiplications?\n\nIs there any existing lowering from math.ipow to the core dialects? \n\nhttps://github.com/llvm/circt/blob/83effb21cd6b1cebc060b4f57180f16683309cd9/lib/Conversion/MooreToCore/MooreToCore.cpp#L1379-L1398",
+    "createdAt": "2025-09-16T14:19:34Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8973,
+    "state": "OPEN",
+    "title": "[MooreToCore] Lowering to math.ipow?",
+    "url": "https://github.com/llvm/circt/issues/8973",
+    "similarity_score": 5,
+    "score_details": [
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "It failed when trying to compile https://github.com/pulp-platform/ELAU/blob/b0d113aff6a2d800076f5ebb84f09fba93625bc7/src/SqrtArrUns.sv#L96-L105. \n```\nmoore.module @behavioural_SqrtArrUns(in %X : !moore.l8, out Q : !moore.l4, out R : !moore.l4) {\n  %0 = moore.constant 2 : l8\n  %1 = moore.conversion %X : !moore.l8 -> !moore.real\n  %2 = moore.builtin.sqrt %1 : real\n  %3 = moore.builtin.floor %2 : real\n  %4 = moore.conversion %3 : !moore.real -> !moore.l4\n  %5 = moore.zext %4 : l4 -> l8\n  %6 = moore.powu %5, %0 : l8\n  %7 = moore.sub %X, %6 : l8\n  %8 = moore.trunc %7 : l8 -> l4\n  moore.output %4, %8 : !moore.l4, !moore.l4\n}\n```\n\n```\n[circt-verilog] Running \"convert-moore-to-core\"\ncirct-verilog: /home/uenoku/dev/circt-synth/llvm/llvm/include/llvm/Support/Casting.h:650: decltype(auto) llvm::dyn_cast(const From &) [To = mlir::IntegerType, From = mlir::Type]: Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"' failed.\nPLEASE submit a bug report to https://github.com/llvm/circt and include the crash backtrace.\nStack dump:\n0.      Program arguments: circt-verilog ../out/SqrtArrUns_behavioral.sv -o build/SqrtArrUns_behavioral/circt/SqrtArrUns_behavioral.mlir --mlir-timing -y ../out ../ext/ELAU/src/arith_utils.sv -mlir-print-ir-after-all -verbose-pass-executions\n #0 0x00005a3051df92b8 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /home/uenoku/dev/circt-synth/llvm/llvm/lib/Support/Unix/Signals.inc:834:13\n #1 0x00005a3051df6e93 llvm::sys::RunSignalHandlers() /home/uenoku/dev/circt-synth/llvm/llvm/lib/Support/Signals.cpp:105:18\n #2 0x00005a3051dfa051 SignalHandler(int, siginfo_t*, void*) /home/uenoku/dev/circt-synth/llvm/llvm/lib/Support/Unix/Signals.inc:426:38\n #3 0x00007ecdbca42520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)\n #4 0x00007ecdbca969fc __pthread_kill_implementation ./nptl/./nptl/pthread_kill.c:44:76\n #5 0x00007ecdbca969fc __pthread_kill_internal ./nptl/./nptl/pthread_kill.c:78:10\n #6 0x00007ecdbca969fc pthread_kill ./nptl/./nptl/pthread_kill.c:89:10\n #7 0x00007ecdbca42476 gsignal ./signal/../sysdeps/posix/raise.c:27:6\n #8 0x00007ecdbca287f3 abort ./stdlib/./stdlib/abort.c:81:7\n #9 0x00007ecdbca2871b _nl_load_domain ./intl/./intl/loadmsgcat.c:1177:9\n#10 0x00007ecdbca39e96 (/lib/x86_64-linux-gnu/libc.so.6+0x39e96)\n#11 0x00005a3050b0d8c4 decltype(auto) llvm::dyn_cast<mlir::IntegerType, mlir::Type>(mlir::Type const&) (/home/uenoku/dev/circt-synth/build/bin/circt-verilog+0x1ad8c4)\n#12 0x00005a3050cb10c5 decltype(auto) llvm::detail::TypeSwitchBase<llvm::TypeSwitch<mlir::Type, long>, mlir::Type>::castValue<mlir::IntegerType, mlir::Type const&>(mlir::Type const&) (/home/uenoku/dev/circt-synth/build/bin/circt-verilog+0x3510c5)\n#13 0x00005a3050c9d8da llvm::TypeSwitch<mlir::Type, long>& llvm::TypeSwitch<mlir::Type, long>::Case<mlir::IntegerType, circt::hw::getBitWidth(mlir::Type)::$_0>(circt::hw::getBitWidth(mlir::Type)::$_0&&) HWTypes.cpp:0:0\n#14 0x00005a3050c9d7e6 circt::hw::getBitWidth(mlir::Type) (/home/uenoku/dev/circt-synth/build/bin/circt-verilog+0x33d7e6)\n#15 0x00005a30510f9908 (anonymous namespace)::ConversionOpConversion::matchAndRewrite(circt::moore::ConversionOp, circt::moore::ConversionOpAdaptor, mlir::ConversionPatternRewriter&) const MooreToCore.cpp:0:0\n#16 0x00005a30510fa631 llvm::LogicalResult mlir::ConversionPattern::dispatchTo1To1<mlir::OpConversionPattern<circt::moore::ConversionOp>, circt::moore::ConversionOp>(mlir::OpConversionPattern<circt::moore::ConversionOp> const&, circt::moore::ConversionOp, circt::moore::ConversionOp::GenericAdaptor<llvm::ArrayRef<mlir::ValueRange> >, mlir::ConversionPatternRewriter&) (/home/uenoku/dev/circt-synth/build/bin/circt-verilog+0x79a631)\n```",
+    "createdAt": "2025-09-06T09:21:38Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8930,
+    "state": "OPEN",
+    "title": "[MooreToCore] Crash with sqrt/floor",
+    "url": "https://github.com/llvm/circt/issues/8930",
+    "similarity_score": 5,
+    "score_details": [
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "I ran `circt-verilog` on this file from OpenTitan:\nhttps://github.com/lowRISC/opentitan/blob/d8b5efd1427152b8387d6e03d9db413167e58475/hw/ip/lc_ctrl/rtl/lc_ctrl_fsm.sv\n\nI got this error:\n\n```bash\nak2518@autobot:/local/scratch/ak2518/opentitan$ /local/scratch/ak2518/circt/build/bin/circt-verilog --debug --parse-only /local/scratch/ak2518/opentitan/hw/ip/lc_ctrl/rtl/lc_ctrl_fsm.sv -yhw/ip/prim_generic/rtl -yhw/ip/prim/rtl -yhw/ip/lc_ctrl/rtl -yhw/ip/rom_ctrl/rtl -Ihw/ip/prim/rtl -yhw/ip/prim_generic/rtl -DYOSYS -DSYNTHESIS  --mlir-print-ir-after-failure --verbose-pass-executions --mlir-pass-statistics\nArgs: /local/scratch/ak2518/circt/build/bin/circt-verilog --debug --parse-only /local/scratch/ak2518/opentitan/hw/ip/lc_ctrl/rtl/lc_ctrl_fsm.sv -yhw/ip/prim_generic/rtl -yhw/ip/prim/rtl -yhw/ip/lc_ctrl/rtl -yhw/ip/rom_ctrl/rtl -Ihw/ip/prim/rtl -yhw/ip/prim_generic/rtl -DYOSYS -DSYNTHESIS --mlir-print-ir-after-failure --verbose-pass-executions --mlir-pass-statistics\nLoad new dialect in Context builtin\nLoad new dialect in Context moore\nLoad new dialect in Context hw\nLoad new dialect in Context cf\nLoad new dialect in Context arith\nLoad new dialect in Context func\nLoad new dialect in Context verif\nLoad new dialect in Context seq\nLoad new dialect in Context ltl\nLoad new dialect in Context comb\nLoad new dialect in Context dbg\n-:148:13: error: 'moore.case_eq' op operand #0 must be simple bit vector type, but got '!moore.array<6 x l5>'\n-:148:13: note: see current operation: %243 = \"moore.case_eq\"(%239, %242) : (!moore.array<6 x l5>, !moore.l30) -> !moore.i1\nak2518@autobot:/local/scratch/ak2518/opentitan$\n```\n\n\nI'm not sure what this error means. I don't know how to debug/inspect the intermediate representation before the error happens. It would be useful if I could see what construct in the original SystemVerilog caused this line in the MLIR.\n\n\nversion:\n\n```bash\nak2518@autobot:/local/scratch/ak2518/opentitan$  /local/scratch/ak2518/circt/build/bin/circt-verilog --version\nLLVM (http://llvm.org/):\n  LLVM version 22.0.0git\n  DEBUG build with assertions.\nCIRCT 55f12edd1\nslang version 9.0.0+54385bb\n```\n\nThrough trial-and-error, I've realised that this is caused by lines 148-203 in `lc_ctrl_state_transition.sv`\nhttps://github.com/lowRISC/opentitan/blob/d8b5efd1427152b8387d6e03d9db413167e58475/hw/ip/lc_ctrl/rtl/lc_ctrl_state_transition.sv#L148-L203",
+    "createdAt": "2025-08-12T11:51:40Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs8AAAABp1j0gg",
+        "name": "ImportVerilog",
+        "description": "",
+        "color": "e99695"
+      }
+    ],
+    "number": 8844,
+    "state": "OPEN",
+    "title": "[circt-verilog]  'moore.case_eq' operand must be simple bit vector type, but got array",
+    "url": "https://github.com/llvm/circt/issues/8844",
+    "similarity_score": 5,
+    "score_details": [
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "@jiahanxie353 has added the Math dialect to circt-opt in #8475. This is a great precedent to start using that dialect in the MooreToCore conversion. For example, the `moore.pow` operation could be lowered to `math.ipowi` and `math.powf` depending on its type.",
+    "createdAt": "2025-05-12T16:08:01Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzIx",
+        "name": "good first issue",
+        "description": "Good for newcomers",
+        "color": "7057ff"
+      },
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8476,
+    "state": "OPEN",
+    "title": "[MooreToCore] Lower exponentiation to `math.ipowi`",
+    "url": "https://github.com/llvm/circt/issues/8476",
+    "similarity_score": 5,
+    "score_details": [
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "I'm looking into the failing testcase for `real` constants [on sv-tests-results](https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+5.7.2+real-constants). Just want to put it up here to make sure no one else has already started working on it.",
+    "createdAt": "2025-02-23T19:01:31Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8269,
+    "state": "OPEN",
+    "title": "[MooreToCore] Support `real` constants",
+    "url": "https://github.com/llvm/circt/issues/8269",
+    "similarity_score": 5,
+    "score_details": [
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "If I understand IEEE 1800-2017 \u00a77.4.6 Indexing and slicing of arrays right, an unpacked array slice should be 0/X in its entirety even if only a part of the slice is OOB. Currently, only the OOB part is 0/X because they are lowered just like packed arrays.",
+    "createdAt": "2025-02-10T13:02:44Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8215,
+    "state": "OPEN",
+    "title": "[MooreToCore] OOB array slices of unpacked arrays lowered like packed arrays",
+    "url": "https://github.com/llvm/circt/issues/8215",
+    "similarity_score": 5,
+    "score_details": [
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "Please check this PR(https://github.com/llvm/circt/pull/8210/files) to view the details.\n\nOr for example:\n```\nmoore.module @crash(in %in0: !moore.i32, in %in1: !moore.i32) {\n  %var = moore.variable : <!moore.i32>\n  moore.procedure always_comb {\n    %0 = moore.pows %in0, %in1 : !moore.i32\n    moore.blocking_assign %var, %0 : !moore.i32\n    moore.return\n  }\n}\n```\n\n`%var` will be regarded as one member of the implicit sensitivity list. But this act is illegal\u274c.",
+    "createdAt": "2025-02-08T13:58:49Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8211,
+    "state": "OPEN",
+    "title": "[MooreToCore]Unexpected observed values in llhd.wait.",
+    "url": "https://github.com/llvm/circt/issues/8211",
+    "similarity_score": 5,
+    "score_details": [
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "The following crashes due to an unattached region when calling `getValuesToObserve`.\n\n```mlir\nmoore.module @crash(in %in0: !moore.i32, in %in1: !moore.i32) {\n  %var = moore.variable : <!moore.i32>\n  moore.procedure always_comb {\n    %0 = moore.pows %in0, %in1 : !moore.i32\n    moore.blocking_assign %var, %0 : !moore.i32\n    moore.return\n  }\n}\n```",
+    "createdAt": "2025-02-03T10:27:41Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8176,
+    "state": "OPEN",
+    "title": "[MooreToCore] Crash when getting values to observe",
+    "url": "https://github.com/llvm/circt/issues/8176",
+    "similarity_score": 5,
+    "score_details": [
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "In Verilog it's legal to access arrays/bitvectors out-of-bounds which will yield X or 0. Thus a lowBit attribute not within the range is allowed by `moore.extract`. This is currently lowered 1-1 to `comb.extract` which does verify that the lowBit attribute is within range. Therefore, MooreToCore needs to check if the attribute is out of bounds and lower it to a constant in that case.",
+    "createdAt": "2025-01-31T13:37:09Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 8163,
+    "state": "OPEN",
+    "title": "[MooreToCore] Out-of-bounds moore.extract lowered incorrectly",
+    "url": "https://github.com/llvm/circt/issues/8163",
+    "similarity_score": 5,
+    "score_details": [
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "I have a mmu.sv module for RISC-V implementation: \r\n```Verilog\r\nmodule mmu #(\r\n    parameter integer DEVICE_COUNT = 0\r\n) (\r\n...\r\noutput logic [31:2] dev_addr[DEVICE_COUNT]\r\n...\r\n```\r\n\r\nthat is used in top module like:\r\n\r\n```Verilog\r\nmmu #(\r\n        .DEVICE_COUNT(8)\r\n    ) mmu (\r\n...\r\n        .dev_addr(\r\n        '{\r\n            rom_addr,\r\n            ram_addr[0],\r\n            ram_addr[1],\r\n            ram_addr[2],\r\n            ram_addr[3],\r\n            led_addr,\r\n            mtime_addr,\r\n            mtimecmp_addr\r\n        }\r\n\r\n...\r\n```\r\n\r\nwhen trying to compile with `circt-verilog mmu.sv` i get this error:\r\n\r\n```bash\r\ncore/mmu.sv:17:34: error: value must be positive\r\n    output logic [31:2] dev_addr[DEVICE_COUNT],\r\n```\r\n\r\nis it impossible to compile such module? why so?",
+    "createdAt": "2024-10-31T00:20:57Z",
+    "labels": [
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 7753,
+    "state": "OPEN",
+    "title": "[circt-verilog] zero parameter at module declaration fails when used ",
+    "url": "https://github.com/llvm/circt/issues/7753",
+    "similarity_score": 5,
+    "score_details": [
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "Add a conversion for the `moore.net` op to MooreToConv: https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+12.4+if",
+    "createdAt": "2024-09-25T03:28:07Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzIx",
+        "name": "good first issue",
+        "description": "Good for newcomers",
+        "color": "7057ff"
+      },
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 7629,
+    "state": "OPEN",
+    "title": "[MooreToCore] Support net op",
+    "url": "https://github.com/llvm/circt/issues/7629",
+    "similarity_score": 5,
+    "score_details": [
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "`circt-opt -canonicalize` triggers an assertion on the following input. Maybe an upstream bug?\r\n\r\n`Assertion failed: (mayBeGraphRegion(*op->getParentRegion()) && \"expected that op has no uses\"), function operator(), file PatternMatch.cpp, line 182.`\r\n\r\n```\r\nmodule {\r\n  moore.module private @snitch_regfile(in %clk_i : !moore.l1, in %raddr_i : !moore.array<2 x l5>, out rdata_o : !moore.array<2 x l32>, in %waddr_i : !moore.array<1 x l5>, in %wdata_i : !moore.array<1 x l32>, in %we_i : !moore.l1) {\r\n    %0 = moore.constant 1 : i32\r\n    %1 = moore.constant 0 : i32\r\n    %rdata_o = moore.variable : <array<2 x l32>>\r\n    moore.procedure always_ff {\r\n      cf.br ^bb1(%1 : !moore.i32)\r\n    ^bb1(%3: !moore.i32):  // 2 preds: ^bb0, ^bb6\r\n      moore.return\r\n    ^bb2:  // no predecessors\r\n      cf.br ^bb4\r\n    ^bb3:  // no predecessors\r\n      cf.br ^bb4\r\n    ^bb4:  // 2 preds: ^bb2, ^bb3\r\n      %4 = moore.add %4, %0 : i32\r\n      cf.br ^bb6\r\n    ^bb5:  // no predecessors\r\n      cf.br ^bb6\r\n    ^bb6:  // 2 preds: ^bb4, ^bb5\r\n      %5 = moore.add %3, %0 : i32\r\n      cf.br ^bb1(%5 : !moore.i32)\r\n    }\r\n    %2 = moore.read %rdata_o : <array<2 x l32>>\r\n    moore.output %2 : !moore.array<2 x l32>\r\n  }\r\n}\r\n```",
+    "createdAt": "2024-08-19T20:24:31Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzE3",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "LA_kwDODpuCgs7olJFv",
+        "name": "Moore",
+        "description": "",
+        "color": "04673D"
+      }
+    ],
+    "number": 7531,
+    "state": "OPEN",
+    "title": "[Moore] Input triggers assertion in canonicalizer infra",
+    "url": "https://github.com/llvm/circt/issues/7531",
+    "similarity_score": 5,
+    "score_details": [
+      "label_match(5)"
+    ]
+  },
+  {
+    "body": "# Summary\r\n\r\nUsing printf strings to encode verification operations is deprecated.  This is a transparent change to Chisel users, as Chisel no longer uses this for assert/assume/cover.\r\n\r\nFor the deprecation period, a warning will be emitted for these, and eventually this will be treated just like any other printf.\r\n\r\nIf you're seeing the warning, you should migrate to using intrinsics instead, and eventually FIRRTL will support what's needed without intrinsics.  Post on this thread if you have any questions or concerns.\r\n\r\n## Details\r\n\r\nHistorically, special printf strings nested within when statements were used to encode various verification intent.\r\nWhile normal assert/assume/cover statements are emitted by Chisel they're always placeholders with the printf containing a payload indicating what really is requested.  For example:\r\n\r\n```firrtl\r\nFIRRTL version 4.0.0\r\ncircuit TestCover:\r\n  public module TestCover:\r\n    input clock: Clock\r\n    input cond: UInt<1>\r\n    input enable: UInt<1>\r\n    input value: UInt<5>\r\n\r\n    assert(clock, cond, enable, \"hello\")\r\n    when not(cond):\r\n      printf(clock, enable, \"Assertion failed: [verif-library-assume]<extraction-summary>{\\\"predicateModifier\\\":{\\\"type\\\":\\\"noMod\\\"},\\\"conditionalCompileToggles\\\":[{\\\"type\\\":\\\"unrOnly\\\"},{\\\"type\\\":\\\"formalOnly\\\"}],\\\"labelExts\\\":[\\\"assume\\\",\\\"label\\\"],\\\"format\\\":{\\\"type\\\":\\\"ifElseFatal\\\"},\\\"baseMsg\\\":\\\"assume hello world testing: %d\\\"}\", value)\r\n```\r\n\r\nWhich generates:\r\n\r\n```systemverilog\r\n// Generated by CIRCT firtool-1.73.0g20240430_3ef492c\r\nmodule TestCover(\r\n  input       clock,\r\n              cond,\r\n              enable,\r\n  input [4:0] value\r\n);\r\n\r\n  `ifdef USE_UNR_ONLY_CONSTRAINTS\r\n    `ifdef USE_FORMAL_ONLY_CONSTRAINTS\r\n      assume__verif_library_assume_label:\r\n        assume property (@(posedge clock) ~enable | cond)\r\n        else $error(\"assume hello world testing: %d\", $sampled(value));\r\n    `endif // USE_FORMAL_ONLY_CONSTRAINTS\r\n  `endif // USE_UNR_ONLY_CONSTRAINTS\r\nendmodule\r\n```\r\n\r\nExamples include variations of assert, assume, and cover -- with more control over their lowering, inserted preprocessor guards, and other features.\r\n\r\nThese have been deprecated in favor of using intrinsics, see: https://circt.llvm.org/docs/Dialects/FIRRTL/FIRRTLIntrinsics/ .\r\n\r\nThe end-goal is to extend FIRRTL so that the standard assert/assume/cover and other language features are enough for our needs.  Until then, intrinsics have been added and should be used instead.\r\n\r\nThe example above is captured using the `assume` intrinsic:\r\n\r\n```firrtl\r\nFIRRTL version 4.0.0\r\ncircuit TestCover:\r\n  public module TestCover:\r\n    input clock: Clock\r\n    input cond: UInt<1>\r\n    input enable: UInt<1>\r\n    input value: UInt<5>\r\n\r\n    intrinsic(circt_chisel_assume<label=\"verif_library_assume_label\", format=\"assume hello world testing: %d\", guards = \"USE_UNR_ONLY_CONSTRAINTS;USE_FORMAL_ONLY_CONSTRAINTS\">, clock, cond, enable, value)\r\n```",
+    "createdAt": "2024-04-30T15:14:08Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwyMTUyNzUzNjMw",
+        "name": "FIRRTL",
+        "description": "Involving the `firrtl` dialect",
+        "color": "fbca04"
+      },
+      {
+        "id": "MDU6TGFiZWwyOTc3OTYzNzA4",
+        "name": "Tracking Issue",
+        "description": "A tracking issue for a set of features or large code changes",
+        "color": "1D76DB"
+      }
+    ],
+    "number": 6970,
+    "state": "OPEN",
+    "title": "Printf-encoded verification deprecation",
+    "url": "https://github.com/llvm/circt/issues/6970",
+    "similarity_score": 1,
+    "score_details": [
+      "keyword_match(1)"
+    ]
+  },
+  {
+    "body": "<!-- Title: [Comb] Assertion failure in Canonicalizer with extractConcatToConcatExtract pattern -->\n\n## Description\n\nCIRCT crashes with an assertion failure when processing SystemVerilog code that uses mixed continuous and procedural assignments to different bits of the same output signal. The crash occurs during the Canonicalizer pass when the `extractConcatToConcatExtract` fold pattern attempts to replace an `ExtractOp` with a single value.\n\n**Root Cause**: The `extractConcatToConcatExtract` pattern in `lib/Dialect/Comb/CombFolds.cpp:547` calls `replaceOpAndCopyNamehint()` which invokes `replaceOp()`, but the operation unexpectedly still has uses when `eraseOp()` is called. This occurs because the GreedyPatternRewriteDriver may apply multiple canonicalization patterns concurrently or in rapid succession, and the pattern logic doesn't properly account for operations that may have already been modified by other patterns in the same rewrite iteration.\n\n**Crash Type**: assertion\n**Dialect**: Comb\n**Failing Pass**: Canonicalizer (GreedyPatternRewriteDriver)\n\n## Steps to Reproduce\n\n1. Save the test case below as `bug.sv`\n2. Run:\n   ```bash\n   circt-verilog --ir-hw bug.sv\n   ```\n\n## Test Case\n\n```systemverilog\nmodule test_module(\n  input  logic [1:0] in,\n  output logic [3:0] out\n);\n\n  // Continuous assignments to output bits\n  assign out[0] = in[0] ^ in[1];\n  assign out[3] = 1'h0;\n\n  // Combinational always block with implicit sensitivity list\n  always @* begin\n    out[1] = in[0] & in[1];\n    out[2] = in[0] | in[1];\n  end\n\nendmodule\n```\n\n## Error Output\n\n```\nPLEASE submit a bug report to https://github.com/llvm/circt and include the crash backtrace.\nStack dump:\n0.      Program arguments: circt-verilog --ir-hw bug.sv\n #0 0x00007f1d3e6bf8a8 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/opt/firtool-1.139.0/bin/../lib/libLLVMSupport.so+0x2008a8)\n #1 0x00007f1d3e6bd2f5 llvm::sys::RunSignalHandlers() (/opt/firtool-1.139.0/bin/../lib/libLLVMSupport.so+0x1fe2f5)\n #2 0x00007f1d3e6c0631 SignalHandler(int, siginfo_t*, void*) Signals.cpp:0:0\n #3 0x00007f1d3e1cd330 (/lib/x86_64-linux-gnu/libc.so.6+0x45330)\n #4 0x00007f1d40f55713 circt::comb::ExtractOp::canonicalize(circt::comb::ExtractOp, mlir::PatternRewriter&) (/opt/firtool-1.139.0/bin/../lib/libCIRCTComb.so+0x41713)\n #5 0x00007f1d40bbd8ed void llvm::function_ref<void ()>::callback_fn<mlir::PatternApplicator::matchAndRewrite(mlir::Operation*, mlir::PatternRewriter&, llvm::function_ref<bool (mlir::Pattern const&)>, llvm::function_ref<void (mlir::Pattern const&)>, llvm::function_ref<llvm::LogicalResult (mlir::Pattern const&)>)::$_0>(long) PatternApplicator.cpp:0:0\n #6 0x00007f1d40bba774 mlir::PatternApplicator::matchAndRewrite(mlir::Operation*, mlir::PatternRewriter&, llvm::function_ref<bool (mlir::Pattern const&)>, llvm::function_ref<void (mlir::Pattern const&)>, llvm::function_ref<llvm::LogicalResult (mlir::Pattern const&)>) (/opt/firtool-1.139.0/bin/../lib/libMLIRRewrite.so+0x7774)\n #7 0x00007f1d40c124a7 (anonymous namespace)::GreedyPatternRewriteDriver::processWorklist() GreedyPatternRewriteDriver.cpp:0:0\n #8 0x00007f1d40c0ffd9 mlir::applyPatternsGreedily(mlir::Region&, mlir::FrozenRewritePatternSet const&, mlir::GreedyRewriteConfig, bool*) (/opt/firtool-1.139.0/bin/../lib/libMLIRTransformUtils.so+0x46fd9)\n #9 0x00007f1d40c55d35 (anonymous namespace)::Canonicalizer::runOnOperation() Canonicalizer.cpp:0:0\n#10 0x00007f1d409af2a5 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int) (/opt/firtool-1.139.0/bin/../lib/libMLIRPass.so+0x172a5)\n#11 0x00007f1d409aff48 mlir::detail::OpToOpPassAdaptor::runPipeline(mlir::OpPassManager&, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int, mlir::PassInstrumentor*, mlir::PassInstrumentation::PipelineParentInfo const*) (/opt/firtool-1.139.0/bin/../lib/libMLIRPass.so+0x17f48)\n#12 0x00007f1d409b1663 mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool) (/opt/firtool-1.139.0/bin/../lib/libMLIRPass.so+0x19663)\n#13 0x00007f1d409af7e5 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int) (/opt/firtool-1.139.0/bin/../lib/libMLIRPass.so+0x177e5)\n#14 0x00007f1d409b27a9 mlir::PassManager::run(mlir::Operation*) (/opt/firtool-1.139.0/bin/../lib/libMLIRPass.so+0x1a7a9)\n#15 0x000055df3c65a5d0 executeWithSources(mlir::MLIRContext*, llvm::SourceMgr&) circt-verilog.cpp:0:0\n#16 0x000055df3c655dd5 execute(mlir::MLIRContext*) circt-verilog.cpp:0:0\n#17 0x000055df3c6554b8 main (/opt/firtool-1.139.0/bin/circt-verilog+0x84b8)\n#18 0x00007f1d3e1b21ca __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:74:3\n#19 0x00007f1d3e1b228b call_init ./csu/../csu/libc-start.c:128:20\n#20 0x00007f1d3e1b228b __libc_start_main ./csu/../csu/libc-start.c:347:5\n#21 0x000055df3c654b05 _start (/opt/firtool-1.139.0/bin/circt-verilog+0x7b05)\n[1]    1198938 segmentation fault (core dumped)  circt-verilog --ir-hw bug.sv\n```\n\n## Root Cause Analysis\n\nThe crash occurs in the `extractConcatToConcatExtract` canonicalization pattern when it attempts to simplify an `extract(concat(...))` operation to a single value. The problematic code path is:\n\n**File**: `lib/Dialect/Comb/CombFolds.cpp:547`\n\n```cpp\nif (reverseConcatArgs.size() == 1) {\n  replaceOpAndCopyNamehint(rewriter, op, reverseConcatArgs[0]);  // CRASH HERE\n}\n```\n\n**Call Stack**:\n```\nExtractOp::canonicalize\n  \u2192 extractConcatToConcatExtract\n    \u2192 replaceOpAndCopyNamehint\n      \u2192 mlir::RewriterBase::replaceOp\n        \u2192 mlir::RewriterBase::eraseOp [ASSERTION FAILURE]\n```\n\n**Hypothesis (High Confidence)**: The GreedyPatternRewriteDriver applies multiple canonicalization patterns in rapid succession. When `reverseConcatArgs.size() == 1`, the pattern calls `replaceOpAndCopyNamehint()` which calls `replaceOp()`. The `replaceOp()` function calls `replaceAllOpUsesWith()` followed by `eraseOp()`. However, if another pattern has already modified the operation's uses in the same worklist iteration, the assertion `op->use_empty()` fails.\n\n**Test Case Pattern**: The test case uses mixed continuous assignments (`assign`) and procedural assignments (`always @*`) to different bits of the same 4-bit output signal. This creates multiple extract operations from the same source, which triggers the optimization bug when the IR is lowered to Comb dialect and canonicalized.\n\n## Environment\n\n- **CIRCT Version**: firtool-1.139.0\n- **LLVM Version**: 22.0.0git\n- **OS**: Linux\n- **Architecture**: x86_64\n\n## Suggested Fixes\n\n1. **Add use checking before replaceOp**: Verify that the operation is in a valid state before calling `replaceOpAndCopyNamehint`\n2. **Return failure() on edge cases**: Be more defensive and return `failure()` if encountering situations that might lead to invalid IR state\n3. **Improve rewriter API usage**: Use proper rewriter API sequence instead of relying on `replaceOp` to handle namehint and replacement separately\n\n## Related Information\n\n- **Affected Operations**: `comb.extract`, `comb.concat`\n- **Affected Files**: `lib/Dialect/Comb/CombFolds.cpp`, `lib/Support/Naming.cpp`\n- **Keywords**: canonicalizer, assertion, use_empty, ExtractOp, extractConcatToConcatExtract, GreedyPatternRewriteDriver\n\n",
+    "createdAt": "2026-02-01T04:05:34Z",
+    "labels": [],
+    "number": 9573,
+    "state": "OPEN",
+    "title": "[Comb] Assertion failure in Canonicalizer with extractConcatToConcatExtract pattern",
+    "url": "https://github.com/llvm/circt/issues/9573",
+    "similarity_score": 0,
+    "score_details": []
+  },
+  {
+    "body": "The following seems like it should work, but it doesn't:\n\n``` firrtl\nFIRRTL version 5.1.0\ncircuit Foo1 :\n  public module Foo1 :\n    input clock : Clock\n    input reset : UInt<1>\n    input a : UInt<1>\n\n    node _T = eq(reset, UInt<1>(0h0))\n    intrinsic(circt_chisel_ifelsefatal<format = \"Assertion failed: In {{HierarchicalModuleName}}, a = %d\\n\", label = \"chisel3_builtin\">, clock, a, _T, a)\n    node _T_1 = eq(reset, UInt<1>(0h0))\n    when _T_1 :\n      printf(clock, UInt<1>(0h1), \"In {{HierarchicalModuleName}}, a = %d\", a) : printf\n```\n\nThis compiles to:\n\n``` verilog\nmodule Foo1(\n  input clock,\n        reset,\n        a\n);\n\n  `ifndef SYNTHESIS\n    always @(posedge clock) begin\n      if (~reset & ~a) begin\n        if (`ASSERT_VERBOSE_COND_)\n          $error(\"Assertion failed: In {{HierarchicalModuleName}}, a = %d\\n\", a);\n        if (`STOP_COND_)\n          $fatal;\n      end\n      if ((`PRINTF_COND_) & ~reset)\n        $fwrite(32'h80000002, \"In %m, a = %d\", a);\n    end // always @(posedge)\n  `endif // not def SYNTHESIS\nendmodule\n```\n\nIt seems like you should be able to use any special substitution in an assert intrinsic. However, this doesn't do the replacement.\n\nThis was created from the example here: https://github.com/chipsalliance/chisel/issues/5001#issuecomment-3146901413",
+    "createdAt": "2025-08-03T03:58:45Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzIw",
+        "name": "enhancement",
+        "description": "New feature or request",
+        "color": "a2eeef"
+      },
+      {
+        "id": "MDU6TGFiZWwyMTUyNzUzNjMw",
+        "name": "FIRRTL",
+        "description": "Involving the `firrtl` dialect",
+        "color": "fbca04"
+      }
+    ],
+    "number": 8817,
+    "state": "OPEN",
+    "title": "[FIRRTL] Support special substitutions in assert intrinsics",
+    "url": "https://github.com/llvm/circt/issues/8817",
+    "similarity_score": 0,
+    "score_details": []
+  },
+  {
+    "body": "### Context\nI'm using PyCDE to generate parameterized modules and test them using a handwritten Verilator testbench. To simplify the testbench logic, I instantiate different versions of the module under test using a single testbench. For that to work, all the modules must have the same top-level name.\n\nTo achieve this, I prefixed the module builder's argument with an underscore (\"_\"). With that, generated module's name doesn't contain parameters and is unified, but it creates another problem\u2026\n### Problem\nBy removing the parameters from the module name, I lose visibility into what configuration a given module was generated from. This makes it difficult to track which parameters were used for which module, especially when dealing with multiple variations. As a result, debugging and traceability suffer.\n### Question/Feature Request\nIs there a way to annotate the generated Verilog/SystemVerilog module with a comment that includes the parameter values? Ideally, I\u2019d like to see something like this:\n```verilog\n// Parameters: WIDTH=32, DEPTH=64\nmodule my_module (...);\n```\nIf this is already supported in PyCDE, could you provide an example of how to do it? If not, would it be feasible to add such a feature?",
+    "createdAt": "2025-06-02T05:06:50Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwzMDUzOTI4MTAz",
+        "name": "PyCDE",
+        "description": "Python CIRCT Design Entry API",
+        "color": "c5def5"
+      }
+    ],
+    "number": 8525,
+    "state": "OPEN",
+    "title": "Support for Adding Parameter Annotations to Generated Modules (e.g., as Comments)",
+    "url": "https://github.com/llvm/circt/issues/8525",
+    "similarity_score": 0,
+    "score_details": []
+  },
+  {
+    "body": "Hi! I'm trying to use circt for lowering to LLVM IR. I found such a construction in some example:\n\n```verilog\nmodule Mod (input clk, input a, input b, output logic[1:0] c);\nalways_ff @(posedge clk) begin\n    c[0] <= a;\n    c[1] <= b;\nend\nendmodule\n```\n\nI used this pipeline:\n\n```bash\ncirct-verilog ranges.sv | circt-opt --llhd-early-code-motion --llhd-temporal-code-motion --llhd-desequentialize --llhd-sig2reg --canonicalize | arcilator\n```\n\nBut I got error **body contains non-pure operation** in `arcilator`. Also I had same error when I tried to use slicing instead of indexing. What needs to be done to run `arcilator` successfully?",
+    "createdAt": "2025-01-10T16:04:15Z",
+    "labels": [],
+    "number": 8065,
+    "state": "OPEN",
+    "title": "[LLHD][Arc] Indexing and slicing lowering from Verilog to LLVM IR",
+    "url": "https://github.com/llvm/circt/issues/8065",
+    "similarity_score": 0,
+    "score_details": []
+  },
+  {
+    "body": "The ProcessLowering pass checks whether an `llhd.process` operation is a combinational process and inlines it into the parent module if that's the case.\r\n\r\nHowever, it doesn't check for aliasing drives. There can be a series of blocking drives where the first one does a general default assignment to the entire signal, and subsequent conditional drives, aliasing part of the signal, override parts. Since there is no fixed execution order inside modules, these must be combined before inlining. ProcessLowering should check for that and not perform the inlining in such cases.\r\n\r\nThe TemporalCodeMotion pass combines drives to the same signal to some degree but doesn't consider subelement aliasing. One option to support this is to perform SROA before TemporalCodeMotion.",
+    "createdAt": "2024-10-04T10:44:00Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzE3",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "MDU6TGFiZWwyMTY1NDc5NTk1",
+        "name": "LLHD",
+        "description": "",
+        "color": "e07b00"
+      }
+    ],
+    "number": 7665,
+    "state": "OPEN",
+    "title": "[LLHD][ProcessLowering] Incorrectly inlines aliasing drives",
+    "url": "https://github.com/llvm/circt/issues/7665",
+    "similarity_score": 0,
+    "score_details": []
+  },
+  {
+    "body": "Dear @maerhart @fabianschuiki ,\r\n When lowering `SV` to `Hw` Dialect, there is a stack dump. \r\nDriver: circt-verilog %s\r\n```\r\nmodule top();\r\n  typedef struct {\r\n    int a;\r\n    int b;\r\n  } ms_t;\r\n\r\n  ms_t ms;\r\n\r\n  initial begin\r\n    ms = '{ 0, 1};\r\n\r\n    ms = '{ default:1, int:1};\r\n\r\n    ms = '{ int:0, int:1};\r\n  end\r\n\r\nendmodule\r\n```\r\nIt can be converted to `moore` Dialect like this\r\nDriver:  circt-verilog --ir-moore %s\r\n```\r\nmodule {\r\n  moore.module @top() {\r\n    %0 = moore.constant 1 : i32\r\n    %1 = moore.constant 0 : i32\r\n    %ms = moore.variable : <ustruct<{a: i32, b: i32}>>\r\n    moore.procedure initial {\r\n      %2 = moore.struct_create %1, %0 : !moore.i32, !moore.i32 -> ustruct<{a: i32, b: i32}>\r\n      moore.blocking_assign %ms, %2 : ustruct<{a: i32, b: i32}>\r\n      %3 = moore.struct_create %0, %0 : !moore.i32, !moore.i32 -> ustruct<{a: i32, b: i32}>\r\n      moore.blocking_assign %ms, %3 : ustruct<{a: i32, b: i32}>\r\n      moore.blocking_assign %ms, %3 : ustruct<{a: i32, b: i32}>\r\n      moore.return\r\n    }\r\n    moore.output\r\n  }\r\n}\r\n```\r\nBut it got stack dump when casting `hw::InOutType`. Maybe `structType` should be converted somehow.\r\nThis is part of error codes.\r\n```\r\n#19 0x00005f9660f42af4 (anonymous namespace)::OperationLegalizer::legalizeWithPattern(mlir::Operation*, mlir::ConversionPatternRewriter&) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:1958:21\r\n#20 0x00005f9660f3b100 (anonymous namespace)::OperationLegalizer::legalize(mlir::Operation*, mlir::ConversionPatternRewriter&) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:1850:17\r\n#21 0x00005f9660f3aa73 mlir::OperationConverter::convert(mlir::ConversionPatternRewriter&, mlir::Operation*) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:2384:26\r\n#22 0x00005f9660f3b41f mlir::OperationConverter::convertOperations(llvm::ArrayRef<mlir::Operation*>) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:2436:16\r\n#23 0x00005f9660f3fdfc mlir::applyFullConversion(llvm::ArrayRef<mlir::Operation*>, mlir::ConversionTarget const&, mlir::FrozenRewritePatternSet const&, mlir::ConversionConfig) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:3447:22\r\n#24 0x00005f9660f3fe9d mlir::applyFullConversion(mlir::Operation*, mlir::ConversionTarget const&, mlir::FrozenRewritePatternSet const&, mlir::ConversionConfig) /home/pluto/Documents/circt/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:3453:10\r\n#25 0x00005f965faed60d (anonymous namespace)::MooreToCorePass::runOnOperation() /home/pluto/Documents/circt/circt/lib/Conversion/MooreToCore/MooreToCore.cpp:1398:14\r\n```",
+    "createdAt": "2024-08-20T01:51:29Z",
+    "labels": [],
+    "number": 7535,
+    "state": "OPEN",
+    "title": "[MooreToCore] VariableOp lowered failed",
+    "url": "https://github.com/llvm/circt/issues/7535",
+    "similarity_score": 0,
+    "score_details": []
+  },
+  {
+    "body": "Add support for `verif.assert` and `sv.assert.concurrent` operations to the Arc dialect and passes. When lowering towards LLVM, the asserts should lower to an `scf.if` operation that checks whether their condition holds, and if it does not, calls a callback function (or aborts with a message for starters).\r\n\r\nThis is likely to uncover a lot of details about how clocked and unclocked asserts need to be handled, and where they have to be scheduled and checked in the simulation model.",
+    "createdAt": "2024-03-11T16:54:47Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzIx",
+        "name": "good first issue",
+        "description": "Good for newcomers",
+        "color": "7057ff"
+      },
+      {
+        "id": "LA_kwDODpuCgs8AAAABNapjiA",
+        "name": "Arc",
+        "description": "Involving the `arc` dialect",
+        "color": "bfd4f2"
+      }
+    ],
+    "number": 6810,
+    "state": "OPEN",
+    "title": "[Arc] Add basic assertion support",
+    "url": "https://github.com/llvm/circt/issues/6810",
+    "similarity_score": 0,
+    "score_details": []
+  },
+  {
+    "body": "Hi, I found that using `assert` with dynamic subaccess in firrtl would generate two different type but duplicated `assert` and `$fatal` in verilog.\r\n\r\n## Duplicated `assert` and `$fatal` with dynamic subaccess\r\n``` scala\r\nFIRRTL version 3.3.0\r\ncircuit our :%[[\r\n  {\r\n    \"class\":\"firrtl.transforms.DedupGroupAnnotation\",\r\n    \"target\":\"~our|our\",\r\n    \"group\":\"our\"\r\n  }\r\n]]\r\n  module our : @[src/main/scala/gcd/GCD.scala 16:7]\r\n    input clock : Clock\r\n    input reset : UInt<1>\r\n    output io : { flip addr : UInt<1>, flip wen : UInt<1>[2]} @[src/main/scala/gcd/GCD.scala 17:14]\r\n\r\n    node _T = eq(reset, UInt<1>(0h0)) @[src/main/scala/gcd/GCD.scala 21:9]\r\n    when _T : @[src/main/scala/gcd/GCD.scala 21:9]\r\n      node _T_1 = eq(io.wen[io.addr], UInt<1>(0h0)) @[src/main/scala/gcd/GCD.scala 21:9]\r\n      when _T_1 : @[src/main/scala/gcd/GCD.scala 21:9]\r\n        printf(clock, UInt<1>(0h1), \"Assertion failed: gg!\\n    at GCD.scala:21 assert(io.wen(io.addr), \\\"gg!\\\")\\n\") : printf @[src/main/scala/gcd/GCD.scala 21:9]\r\n      assert(clock, io.wen[io.addr], UInt<1>(0h1), \"\") : assert @[src/main/scala/gcd/GCD.scala 21:9]\r\n```\r\ngenerates\r\n``` verilog\r\n// Generated by CIRCT firtool-1.62.0\r\n// Standard header to adapt well known macros for prints and assertions.\r\n\r\n// Users can define 'ASSERT_VERBOSE_COND' to add an extra gate to assert error printing.\r\n`ifndef ASSERT_VERBOSE_COND_\r\n  `ifdef ASSERT_VERBOSE_COND\r\n    `define ASSERT_VERBOSE_COND_ (`ASSERT_VERBOSE_COND)\r\n  `else  // ASSERT_VERBOSE_COND\r\n    `define ASSERT_VERBOSE_COND_ 1\r\n  `endif // ASSERT_VERBOSE_COND\r\n`endif // not def ASSERT_VERBOSE_COND_\r\n\r\n// Users can define 'STOP_COND' to add an extra gate to stop conditions.\r\n`ifndef STOP_COND_\r\n  `ifdef STOP_COND\r\n    `define STOP_COND_ (`STOP_COND)\r\n  `else  // STOP_COND\r\n    `define STOP_COND_ 1\r\n  `endif // STOP_COND\r\n`endif // not def STOP_COND_\r\n\r\nmodule our(\t// src/main/scala/gcd/GCD.scala:16:7\r\n  input clock,\r\n        reset,\r\n        io_addr,\t// src/main/scala/gcd/GCD.scala:17:14\r\n        io_wen_0,\t// src/main/scala/gcd/GCD.scala:17:14\r\n        io_wen_1\t// src/main/scala/gcd/GCD.scala:17:14\r\n);\r\n\r\n  wire _GEN = io_addr ? io_wen_1 : io_wen_0;\t// src/main/scala/gcd/GCD.scala:21:9\r\n  `ifndef SYNTHESIS\t// src/main/scala/gcd/GCD.scala:21:9\r\n    always @(posedge clock) begin\t// src/main/scala/gcd/GCD.scala:21:9\r\n      if (~reset & ~_GEN) begin\t// src/main/scala/gcd/GCD.scala:21:9\r\n        if (`ASSERT_VERBOSE_COND_)\t// src/main/scala/gcd/GCD.scala:21:9\r\n          $error(\"Assertion failed: gg!\\n    at GCD.scala:21 assert(io.wen(io.addr), \\\"gg!\\\")\\n\");\t// src/main/scala/gcd/GCD.scala:21:9\r\n        if (`STOP_COND_)\t// src/main/scala/gcd/GCD.scala:21:9\r\n          $fatal;\t// src/main/scala/gcd/GCD.scala:21:9\r\n      end\r\n    end // always @(posedge)\r\n  `endif // not def SYNTHESIS\r\n  always @(posedge clock) begin\t// src/main/scala/gcd/GCD.scala:21:9\r\n    if (~reset)\t// src/main/scala/gcd/GCD.scala:21:9\r\n      assert__assert: assert(_GEN);\t// src/main/scala/gcd/GCD.scala:21:9\r\n  end // always @(posedge)\r\nendmodule\r\n```\r\nHere firtool not only generates\r\n``` verilog\r\n      if (~reset & ~_GEN) begin\t// src/main/scala/gcd/GCD.scala:21:9\r\n        if (`ASSERT_VERBOSE_COND_)\t// src/main/scala/gcd/GCD.scala:21:9\r\n          $error(\"Assertion failed: gg!\\n    at GCD.scala:21 assert(io.wen(io.addr), \\\"gg!\\\")\\n\");\t// src/main/scala/gcd/GCD.scala:21:9\r\n        if (`STOP_COND_)\t// src/main/scala/gcd/GCD.scala:21:9\r\n          $fatal;\t// src/main/scala/gcd/GCD.scala:21:9\r\n      end\r\n```\r\nbut also generates\r\n```verilog\r\n    if (~reset)\t// src/main/scala/gcd/GCD.scala:21:9\r\n      assert__assert: assert(_GEN);\t// src/main/scala/gcd/GCD.scala:21:9\r\n```\r\nwhich is duplicted.\r\n## Only one `$fatal` generated with static subaccess\r\n\r\nIf we change `io.addr` to `0`, like:\r\n```scala\r\nFIRRTL version 3.3.0\r\ncircuit our :%[[\r\n  {\r\n    \"class\":\"firrtl.transforms.DedupGroupAnnotation\",\r\n    \"target\":\"~our|our\",\r\n    \"group\":\"our\"\r\n  }\r\n]]\r\n  module our : @[src/main/scala/gcd/GCD.scala 16:7]\r\n    input clock : Clock\r\n    input reset : UInt<1>\r\n    output io : { flip addr : UInt<1>, flip wen : UInt<1>[2]} @[src/main/scala/gcd/GCD.scala 17:14]\r\n\r\n    node _T = eq(reset, UInt<1>(0h0)) @[src/main/scala/gcd/GCD.scala 21:9]\r\n    when _T : @[src/main/scala/gcd/GCD.scala 21:9]\r\n      node _T_1 = eq(io.wen[0], UInt<1>(0h0)) @[src/main/scala/gcd/GCD.scala 21:9]\r\n      when _T_1 : @[src/main/scala/gcd/GCD.scala 21:9]\r\n        printf(clock, UInt<1>(0h1), \"Assertion failed: gg!\\n    at GCD.scala:21 assert(io.wen(0.U), \\\"gg!\\\")\\n\") : printf @[src/main/scala/gcd/GCD.scala 21:9]\r\n      assert(clock, io.wen[0], UInt<1>(0h1), \"\") : assert @[src/main/scala/gcd/GCD.scala 21:9]\r\n```\r\nit would generate only one `$fatal` without duplicated `assert`:\r\n``` verilog\r\n// Generated by CIRCT firtool-1.62.0\r\n// Standard header to adapt well known macros for prints and assertions.\r\n\r\n// Users can define 'ASSERT_VERBOSE_COND' to add an extra gate to assert error printing.\r\n`ifndef ASSERT_VERBOSE_COND_\r\n  `ifdef ASSERT_VERBOSE_COND\r\n    `define ASSERT_VERBOSE_COND_ (`ASSERT_VERBOSE_COND)\r\n  `else  // ASSERT_VERBOSE_COND\r\n    `define ASSERT_VERBOSE_COND_ 1\r\n  `endif // ASSERT_VERBOSE_COND\r\n`endif // not def ASSERT_VERBOSE_COND_\r\n\r\n// Users can define 'STOP_COND' to add an extra gate to stop conditions.\r\n`ifndef STOP_COND_\r\n  `ifdef STOP_COND\r\n    `define STOP_COND_ (`STOP_COND)\r\n  `else  // STOP_COND\r\n    `define STOP_COND_ 1\r\n  `endif // STOP_COND\r\n`endif // not def STOP_COND_\r\n\r\nmodule our(\t// src/main/scala/gcd/GCD.scala:16:7\r\n  input clock,\r\n        reset,\r\n        io_addr,\t// src/main/scala/gcd/GCD.scala:17:14\r\n        io_wen_0,\t// src/main/scala/gcd/GCD.scala:17:14\r\n        io_wen_1\t// src/main/scala/gcd/GCD.scala:17:14\r\n);\r\n\r\n  `ifndef SYNTHESIS\t// src/main/scala/gcd/GCD.scala:21:9\r\n    always @(posedge clock) begin\t// src/main/scala/gcd/GCD.scala:21:9\r\n      if (~reset & ~io_wen_0) begin\t// src/main/scala/gcd/GCD.scala:21:9\r\n        if (`ASSERT_VERBOSE_COND_)\t// src/main/scala/gcd/GCD.scala:21:9\r\n          $error(\"Assertion failed: gg!\\n    at GCD.scala:21 assert(io.wen(0.U), \\\"gg!\\\")\\n\");\t// src/main/scala/gcd/GCD.scala:21:9\r\n        if (`STOP_COND_)\t// src/main/scala/gcd/GCD.scala:21:9\r\n          $fatal;\t// src/main/scala/gcd/GCD.scala:21:9\r\n      end\r\n    end // always @(posedge)\r\n  `endif // not def SYNTHESIS\r\nendmodule\r\n```\r\n\r\n## Expected behaviour\r\nDynamic subaccess with `assert` in firrtl may not generate `assert` but only generate `$fatal` and `$error` in verilog.",
+    "createdAt": "2024-01-24T10:01:47Z",
+    "labels": [],
+    "number": 6604,
+    "state": "OPEN",
+    "title": "[FIRRTL] duplicated `assert` and `$fatal` with dynamic subaccess",
+    "url": "https://github.com/llvm/circt/issues/6604",
+    "similarity_score": 0,
+    "score_details": []
+  },
+  {
+    "body": "I came across the following failure. The problem occurs if a module which is not under the main module in the instance graph includes reference type ports:\r\n\r\n```mlir\r\nfirrtl.circuit \"Foo\" {\r\n  firrtl.module @Foo() {}\r\n  firrtl.module @Bar(in %a: !firrtl.uint<1>, out %b: !firrtl.probe<uint<1>>) {\r\n    %0 = firrtl.ref.send %a : !firrtl.uint<1>\r\n    firrtl.ref.define %b, %0 : !firrtl.probe<uint<1>>\r\n  }\r\n}\r\n```\r\n\r\nThe failure trips an assert in `LowerToHW` [here](https://github.com/llvm/circt/blob/main/lib/Conversion/FIRRTLToHW/LowerToHW.cpp#L2337):\r\n\r\n```\r\nAssertion failed: ((!result || !isa<FIRRTLType>(result.getType())) && \"Lowering didn't turn a FIRRTL value into a non-FIRRTL value\"), function setLowering, file LowerToHW.cpp, line 2338.\r\n```",
+    "createdAt": "2023-07-10T23:17:06Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzE3",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "MDU6TGFiZWwyMTUyNzUzNjMw",
+        "name": "FIRRTL",
+        "description": "Involving the `firrtl` dialect",
+        "color": "fbca04"
+      }
+    ],
+    "number": 5562,
+    "state": "OPEN",
+    "title": "[FIRRTL][LowerToHW] An uninstantiated module can crash LowerToHW",
+    "url": "https://github.com/llvm/circt/issues/5562",
+    "similarity_score": 0,
+    "score_details": []
+  },
+  {
+    "body": "Hi there, I saw in the docs and found [this example](https://github.com/llvm/circt/blob/8321cc1f9aa8956ef2556be946689f5f87a0a199/test/ExportVerilog/sv-dialect.mlir#L174) that the `sv` dialect supports properties.\r\n\r\nI'm wondering if it's possible to use `cond` to refer to an SVA property.  For example, I could use `sv.verbatim` to define a property, but I'm not sure if I can associate this to an MLIR bool value that I can the use in the `sv.assert.concurrent` operation (we can't just assign it to a \"boolean\" wire in verilog like a simpler logic expression).  Naturally I could go about defining the assertion inside the verbatim entirely, but I figured this might be a good incremental step towards property support.  Are there any examples of defining properties using SVA? Alternatively, if this is not currently supported, is there any work in progress on or plans for adding support for SVA style assertions?",
+    "createdAt": "2023-03-06T17:52:04Z",
+    "labels": [],
+    "number": 4772,
+    "state": "OPEN",
+    "title": "Using SVA properties for sv.assert.property",
+    "url": "https://github.com/llvm/circt/issues/4772",
+    "similarity_score": 0,
+    "score_details": []
+  },
+  {
+    "body": "Nested binds are pedantically illegal SystemVerilog even though some tools support them. I have a situation where the combination of instantiating a module inside a Grand Central View that has assertions can result in extraction which produces a bind-under-bind.\r\n\r\nConsider the following FIRRTL text and annotation file:\r\n\r\n```\r\ncircuit Top :\r\n  extmodule DataTap_2 :\r\n    output _2 : UInt<1>\r\n    output _1 : UInt<1>\r\n    output _0 : Clock\r\n    defname = DataTap_2\r\n\r\n  module Wrapper :\r\n    input clock : Clock\r\n    input reset : Reset\r\n    input in : UInt<1>\r\n\r\n    node _T = asUInt(reset)\r\n    node _T_1 = eq(_T, UInt<1>(\"h0\"))\r\n    when _T_1 :\r\n      node _T_2 = eq(in, UInt<1>(\"h0\"))\r\n      when _T_2 :\r\n        printf(clock, UInt<1>(\"h1\"), \"Assertion failed: hello\\n    at AssertInView.scala:24 assert(in, \\\"hello\\\")\\n\") : printf\r\n      assert(clock, in, UInt<1>(\"h1\"), \"\") : assert\r\n\r\n\r\n  module MyView_companion :\r\n\r\n    wire _WIRE : UInt<1>\r\n    _WIRE <= UInt<1>(\"h0\")\r\n    wire clk : Clock\r\n    wire rst : UInt<1>\r\n    wire cond : UInt<1>\r\n    inst DataTap_2 of DataTap_2\r\n    DataTap_2._0 is invalid\r\n    DataTap_2._1 is invalid\r\n    DataTap_2._2 is invalid\r\n    clk <= DataTap_2._0\r\n    rst <= DataTap_2._1\r\n    cond <= DataTap_2._2\r\n    inst wrapper of Wrapper\r\n    wrapper.clock <= clk\r\n    wrapper.reset <= rst\r\n    wrapper.in <= cond\r\n\r\n  module DUT :\r\n    input clock : Clock\r\n    input reset : Reset\r\n    input in : UInt<1>\r\n\r\n    wire w : UInt<1>\r\n    w <= in\r\n    inst MyView_companion of MyView_companion\r\n\r\n  module Top :\r\n    input clock : Clock\r\n    input reset : UInt<1>\r\n    input in : UInt<1>\r\n\r\n    inst dut of DUT\r\n    dut.clock <= clock\r\n    dut.reset <= reset\r\n    dut.in <= in\r\n```\r\n\r\n```json\r\n[\r\n  {\r\n    \"class\":\"sifive.enterprise.grandcentral.DataTapsAnnotation\",\r\n    \"blackBox\":\"~Top|DataTap_2\",\r\n    \"keys\":[\r\n      {\r\n        \"class\":\"sifive.enterprise.grandcentral.ReferenceDataTapKey\",\r\n        \"source\":\"~Top|Top/dut:DUT>clock\",\r\n        \"portName\":\"~Top|DataTap_2>_0\"\r\n      },\r\n      {\r\n        \"class\":\"sifive.enterprise.grandcentral.ReferenceDataTapKey\",\r\n        \"source\":\"~Top|Top/dut:DUT>reset\",\r\n        \"portName\":\"~Top|DataTap_2>_1\"\r\n      },\r\n      {\r\n        \"class\":\"sifive.enterprise.grandcentral.ReferenceDataTapKey\",\r\n        \"source\":\"~Top|Top/dut:DUT>w\",\r\n        \"portName\":\"~Top|DataTap_2>_2\"\r\n      }\r\n    ]\r\n  },\r\n  {\r\n    \"class\":\"sifive.enterprise.grandcentral.GrandCentralView$SerializedViewAnnotation\",\r\n    \"name\":\"MyView\",\r\n    \"companion\":\"~Top|MyView_companion\",\r\n    \"parent\":\"~Top|DUT\",\r\n    \"view\":\"{\\\"class\\\":\\\"sifive.enterprise.grandcentral.AugmentedBundleType\\\",\\\"defName\\\":\\\"MyInterface\\\",\\\"elements\\\":[{\\\"name\\\":\\\"ground\\\",\\\"description\\\":\\\"a ground type port\\\",\\\"tpe\\\":{\\\"class\\\":\\\"sifive.enterprise.grandcentral.AugmentedGroundType\\\",\\\"ref\\\":{\\\"circuit\\\":\\\"Top\\\",\\\"module\\\":\\\"Top\\\",\\\"path\\\":[{\\\"_1\\\":{\\\"class\\\":\\\"firrtl.annotations.TargetToken$Instance\\\",\\\"value\\\":\\\"dut\\\"},\\\"_2\\\":{\\\"class\\\":\\\"firrtl.annotations.TargetToken$OfModule\\\",\\\"value\\\":\\\"DUT\\\"}}],\\\"ref\\\":\\\"w\\\",\\\"component\\\":[]},\\\"tpe\\\":{\\\"class\\\":\\\"sifive.enterprise.grandcentral.GrandCentralView$UnknownGroundType$\\\"}}}]}\"\r\n  },\r\n  {\r\n    \"class\":\"sifive.enterprise.firrtl.MarkDUTAnnotation\",\r\n    \"target\":\"Top.DUT\"\r\n  },\r\n  {\r\n    \"class\":\"sifive.enterprise.grandcentral.ExtractGrandCentralAnnotation\",\r\n    \"directory\":\"gct\",\r\n    \"filename\":\"bindings.sv\"\r\n  }\r\n]\r\n```\r\n\r\nCompiling this with `firtool Top.fir -annotation-file Top.anno.json -extract-test-code` produces the illegal:\r\n\r\n```\r\n// Generated by CIRCT unknown git version\r\n// Standard header to adapt well known macros to our needs.\r\n\r\n// Users can define 'ASSERT_VERBOSE_COND' to add an extra gate to assert error printing.\r\n`ifdef ASSERT_VERBOSE_COND\r\n  `define ASSERT_VERBOSE_COND_ (`ASSERT_VERBOSE_COND)\r\n`else  // ASSERT_VERBOSE_COND\r\n  `define ASSERT_VERBOSE_COND_ 1\r\n`endif // ASSERT_VERBOSE_COND\r\n\r\n// Users can define 'STOP_COND' to add an extra gate to stop conditions.\r\n`ifdef STOP_COND\r\n  `define STOP_COND_ (`STOP_COND)\r\n`else  // STOP_COND\r\n  `define STOP_COND_ 1\r\n`endif // STOP_COND\r\n\r\n// VCS coverage exclude_file\r\nmodule Wrapper_assert(\r\n  input in,\r\n        reset,\r\n        clock);\r\n\r\n  `ifndef SYNTHESIS\r\n    always @(posedge clock) begin\r\n      if (~reset & ~in) begin\r\n        if (`ASSERT_VERBOSE_COND_)\r\n          $error(\"Assertion failed: hello\\n    at AssertInView.scala:24 assert(in, \\\"hello\\\")\\n\");\r\n        if (`STOP_COND_)\r\n          $fatal;\r\n      end\r\n    end // always @(posedge)\r\n  `endif // not def SYNTHESIS\r\nendmodule\r\n\r\nmodule DUT(\r\n  input clock,\r\n        reset,\r\n        in);\r\n\r\n  wire w = in;\r\n  /* This instance is elsewhere emitted as a bind statement.\r\n    MyView_companion MyView_companion ();\r\n  */\r\nendmodule\r\n\r\nmodule Top(\r\n  input clock,\r\n        reset,\r\n        in);\r\n\r\n  DUT dut (\r\n    .clock (clock),\r\n    .reset (reset),\r\n    .in    (in)\r\n  );\r\nendmodule\r\n\r\n\r\n// ----- 8< ----- FILE \"gct/DataTap_2_impl_0.sv\" ----- 8< -----\r\n\r\n// Generated by CIRCT unknown git version\r\n// VCS coverage exclude_file\r\nmodule DataTap_2_impl_0(\r\n  output _2,\r\n         _1,\r\n         _0);\r\n\r\n  assign _2 = DUT.w;\r\n  assign _1 = DUT.reset;\r\n  assign _0 = DUT.clock;\r\nendmodule\r\n\r\n\r\n// ----- 8< ----- FILE \"gct/MyView_companion.sv\" ----- 8< -----\r\n\r\n// Generated by CIRCT unknown git version\r\n// Standard header to adapt well known macros to our needs.\r\n\r\n// Users can define 'ASSERT_VERBOSE_COND' to add an extra gate to assert error printing.\r\n`ifdef ASSERT_VERBOSE_COND\r\n  `define ASSERT_VERBOSE_COND_ (`ASSERT_VERBOSE_COND)\r\n`else  // ASSERT_VERBOSE_COND\r\n  `define ASSERT_VERBOSE_COND_ 1\r\n`endif // ASSERT_VERBOSE_COND\r\n\r\n// Users can define 'STOP_COND' to add an extra gate to stop conditions.\r\n`ifdef STOP_COND\r\n  `define STOP_COND_ (`STOP_COND)\r\n`else  // STOP_COND\r\n  `define STOP_COND_ 1\r\n`endif // STOP_COND\r\n\r\n// VCS coverage exclude_file\r\nmodule MyView_companion();\r\n  wire _DataTap_2__2;\r\n  wire _DataTap_2__1;\r\n  wire _DataTap_2__0;\r\n  MyInterface MyView();\r\n  `ifndef SYNTHESIS\r\n    always @(posedge _DataTap_2__0) begin\r\n      if (~_DataTap_2__1 & ~_DataTap_2__2) begin\r\n        if (`ASSERT_VERBOSE_COND_)\r\n          $error(\"Assertion failed: hello\\n    at AssertInView.scala:24 assert(in, \\\"hello\\\")\\n\");\r\n        if (`STOP_COND_)\r\n          $fatal;\r\n      end\r\n    end // always @(posedge)\r\n  `endif // not def SYNTHESIS\r\n  assign MyView.ground = DUT.w;\r\n  DataTap_2_impl_0 DataTap_2 (\r\n    ._2 (_DataTap_2__2),\r\n    ._1 (_DataTap_2__1),\r\n    ._0 (_DataTap_2__0)\r\n  );\r\n  /* This instance is elsewhere emitted as a bind statement.\r\n    Wrapper_assert Wrapper_assert (\r\n      .in    (_DataTap_2__2),\r\n      .reset (_DataTap_2__1),\r\n      .clock (_DataTap_2__0)\r\n    );\r\n  */\r\nendmodule\r\n\r\n\r\n// ----- 8< ----- FILE \"bindings.sv\" ----- 8< -----\r\n\r\n// Generated by CIRCT unknown git version\r\nbind DUT MyView_companion MyView_companion ();\r\n\r\n// ----- 8< ----- FILE \"gct/MyInterface.sv\" ----- 8< -----\r\n\r\n// Generated by CIRCT unknown git version\r\n// VCS coverage exclude_file\r\ninterface MyInterface;\r\n  // a ground type port\r\n  logic ground;\r\nendinterface\r\n\r\n\r\n// ----- 8< ----- FILE \"bindfile\" ----- 8< -----\r\n\r\n// Standard header to adapt well known macros to our needs.\r\n\r\n// Users can define 'ASSERT_VERBOSE_COND' to add an extra gate to assert error printing.\r\n`ifdef ASSERT_VERBOSE_COND\r\n  `define ASSERT_VERBOSE_COND_ (`ASSERT_VERBOSE_COND)\r\n`else  // ASSERT_VERBOSE_COND\r\n  `define ASSERT_VERBOSE_COND_ 1\r\n`endif // ASSERT_VERBOSE_COND\r\n\r\n// Users can define 'STOP_COND' to add an extra gate to stop conditions.\r\n`ifdef STOP_COND\r\n  `define STOP_COND_ (`STOP_COND)\r\n`else  // STOP_COND\r\n  `define STOP_COND_ 1\r\n`endif // STOP_COND\r\n\r\nbind MyView_companion Wrapper_assert Wrapper_assert (\r\n  .in    (_DataTap_2__2),\r\n  .reset (_DataTap_2__1),\r\n  .clock (_DataTap_2__0)\r\n);\r\n```\r\n\r\nNotice that `MyView_companion` is bound into `DUT` and `Wrapper_assert` is bound into `MyView_companion`. Verilator happily accepts this, so I don't have a nice script to lint that this doesn't happen.",
+    "createdAt": "2022-10-13T21:36:28Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzE3",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "MDU6TGFiZWwyMTUyNzUzNjMw",
+        "name": "FIRRTL",
+        "description": "Involving the `firrtl` dialect",
+        "color": "fbca04"
+      }
+    ],
+    "number": 4097,
+    "state": "OPEN",
+    "title": "[FIRRTL][SV] Grand Central w/ Extract Test Code Can Create Bind-under-bind",
+    "url": "https://github.com/llvm/circt/issues/4097",
+    "similarity_score": 0,
+    "score_details": []
+  },
+  {
+    "body": "Currently, there are no canonicalization patterns for `pack` and `unpack`.",
+    "createdAt": "2022-10-03T11:18:41Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzIx",
+        "name": "good first issue",
+        "description": "Good for newcomers",
+        "color": "7057ff"
+      },
+      {
+        "id": "MDU6TGFiZWwyMTUyNzUzODY1",
+        "name": "Handshake",
+        "description": "",
+        "color": "d0a6fc"
+      }
+    ],
+    "number": 4044,
+    "state": "OPEN",
+    "title": "[Handshake] Canonicalize pack and unpack",
+    "url": "https://github.com/llvm/circt/issues/4044",
+    "similarity_score": 0,
+    "score_details": []
+  },
+  {
+    "body": "It should give a nice error about unhandled operation.",
+    "createdAt": "2022-09-21T17:47:22Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwyNjM1MzI5MzE1",
+        "name": "ExportVerilog",
+        "description": "",
+        "color": "1d76db"
+      },
+      {
+        "id": "MDU6TGFiZWwzMzQyNzE0MjY4",
+        "name": "Seq",
+        "description": "Involving the `seq` dialect",
+        "color": "7ED2BA"
+      }
+    ],
+    "number": 3966,
+    "state": "OPEN",
+    "title": "ExportVerilog crashes when encountering an seq.firrtlreg",
+    "url": "https://github.com/llvm/circt/issues/3966",
+    "similarity_score": 0,
+    "score_details": []
+  },
+  {
+    "body": "Currently, `BranchOpInterface` is supported for conversion, which takes care of block-based control flow. \r\nhttps://github.com/llvm/circt/blob/533cbc673068f2c4ce668ba63ac78d740246450d/lib/Conversion/SCFToCalyx/SCFToCalyx.cpp#L821-L822\r\n\r\nHowever, operations such as `scf::IfOp` implement region-based control flow. To support this in a generalized manner, an op builder specialization  should be added for the `RegionBranchOpInterface`.",
+    "createdAt": "2021-09-23T17:30:43Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwzMDk2MTk4MzEw",
+        "name": "Calyx",
+        "description": "The Calyx dialect",
+        "color": "94BD78"
+      }
+    ],
+    "number": 1871,
+    "state": "OPEN",
+    "title": "[SCFToCalyx] Add support for `RegionBranchOpInterface`",
+    "url": "https://github.com/llvm/circt/issues/1871",
+    "similarity_score": 0,
+    "score_details": []
+  },
+  {
+    "body": "Add support for the \"old\" read-under-write FIRRTL memory behavior. Currently, this is incorrectly emitted as \"new\".\r\n\r\nThe FIRRTL spec defines three read-under-write behaviors for memories. A read-under-write behavior is what happens if you try to read and write the same address on the same cycle These three behaviors are:\r\n\r\n1. New (return the value in the memory when the read was made)\r\n2. Old (return the value when the read was requested)\r\n3. Undefined (technically anything, but the Scala FIRRTL Compiler treats this as \"compiler's choice\" and chooses \"New\")\r\n\r\nNote that this only matters for read latencies > 0. These can be treated as equivalent if the ~read latency == 1~ read latency == 0.",
+    "createdAt": "2021-03-18T22:30:18Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzE3",
+        "name": "bug",
+        "description": "Something isn't working",
+        "color": "d73a4a"
+      },
+      {
+        "id": "MDU6TGFiZWwyMTUyNzUzNjMw",
+        "name": "FIRRTL",
+        "description": "Involving the `firrtl` dialect",
+        "color": "fbca04"
+      }
+    ],
+    "number": 787,
+    "state": "OPEN",
+    "title": "[FIRRTL] FIRRTL to RTL Memory Lowering Needs to Handle All Read Under Write Behaviors",
+    "url": "https://github.com/llvm/circt/issues/787",
+    "similarity_score": 0,
+    "score_details": []
+  }
+]

@@ -1,0 +1,70 @@
+{
+  "search_queries": [
+    "InferStateProperties",
+    "Arc applyEnableTransformation",
+    "hw::ConstantOp::create cast assertion",
+    "IntegerType cast assertion circt",
+    "Arc dialect StateOp DefineOp",
+    "arcilator InferStateProperties",
+    "hw.constant type assertion",
+    "enable transformation Arc",
+    "state properties Arc",
+    "SV to HW lowering error"
+  ],
+  "results": [
+    {
+      "issue_number": 9467,
+      "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "state": "OPEN",
+      "similarity_score": 13,
+      "matching_keywords": [
+        "arcilator"
+      ],
+      "reasoning": "Similar arcilator+SV lowering context, but different specific error",
+      "url": "https://github.com/llvm/circt/issues/9467"
+    },
+    {
+      "issue_number": 8286,
+      "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+      "state": "OPEN",
+      "similarity_score": 10,
+      "matching_keywords": [
+        "arcilator"
+      ],
+      "reasoning": "Arc dialect related, but different operation",
+      "url": "https://github.com/llvm/circt/issues/8286"
+    },
+    {
+      "issue_number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "state": "OPEN",
+      "similarity_score": 10,
+      "matching_keywords": [
+        "IntegerType"
+      ],
+      "reasoning": "Generic type casting issue in CIRCT",
+      "url": "https://github.com/llvm/circt/issues/8930"
+    },
+    {
+      "issue_number": 8024,
+      "title": "[Comb] Crash in AndOp folder",
+      "state": "OPEN",
+      "similarity_score": 4,
+      "matching_keywords": [],
+      "reasoning": "Generic type casting issue in CIRCT",
+      "url": "https://github.com/llvm/circt/issues/8024"
+    },
+    {
+      "issue_number": 8844,
+      "title": "[circt-verilog]  'moore.case_eq' operand must be simple bit vector type, but got array",
+      "state": "OPEN",
+      "similarity_score": 2,
+      "matching_keywords": [],
+      "reasoning": "Generic type casting issue in CIRCT",
+      "url": "https://github.com/llvm/circt/issues/8844"
+    }
+  ],
+  "recommendation": "review_existing",
+  "top_score": 13,
+  "top_issue": 9467
+}

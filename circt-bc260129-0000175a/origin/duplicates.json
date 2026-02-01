@@ -1,0 +1,132 @@
+{
+  "search_queries": [
+    {
+      "query": "integer bitwidth",
+      "results_count": 5,
+      "relevant_results": []
+    },
+    {
+      "query": "Mem2Reg",
+      "results_count": 13,
+      "relevant_results": [
+        8693,
+        8286,
+        9469,
+        9052,
+        8832,
+        8494,
+        8541,
+        8860,
+        8245,
+        8246,
+        7483
+      ]
+    },
+    {
+      "query": "ClassHandleType",
+      "results_count": 0,
+      "relevant_results": []
+    },
+    {
+      "query": "SystemVerilog class",
+      "results_count": 0,
+      "relevant_results": []
+    },
+    {
+      "query": "getBitWidth",
+      "results_count": 9,
+      "relevant_results": [
+        9287,
+        8930,
+        1171,
+        9269,
+        9348,
+        9374,
+        6273,
+        4326,
+        3201
+      ]
+    }
+  ],
+  "found_issues": [
+    {
+      "issue_number": 9287,
+      "title": "[HW] Make `hw::getBitWidth` use std::optional vs -1",
+      "state": "open",
+      "similarity_score": 9.5,
+      "reason": "Directly addresses the root cause: getBitWidth() returning -1 for unsupported types and the need to handle it properly. Planned fix to use std::optional instead of -1. This is the exact root cause of our crash.",
+      "labels": ["HW"],
+      "url": "https://github.com/llvm/circt/issues/9287"
+    },
+    {
+      "issue_number": 8245,
+      "title": "[LLHD] Mem2Reg crash on reasonable input",
+      "state": "closed",
+      "similarity_score": 8.0,
+      "reason": "Similar Mem2Reg crash in LLHD with integer bitwidth issue. Different root cause but same error location and pass. Shows Mem2Reg has multiple crash points.",
+      "labels": ["bug", "LLHD"],
+      "url": "https://github.com/llvm/circt/issues/8245"
+    },
+    {
+      "issue_number": 8246,
+      "title": "[LLHD] Mem2Reg creates drives to read-only signals",
+      "state": "closed",
+      "similarity_score": 6.5,
+      "reason": "Related Mem2Reg bug, but focuses on correctness of drives rather than crash. Still same Mem2Reg pass.",
+      "labels": ["bug", "LLHD"],
+      "url": "https://github.com/llvm/circt/issues/8246"
+    },
+    {
+      "issue_number": 8494,
+      "title": "[LLHD] Mem2Reg does not properly combine enables of successive drives",
+      "state": "closed",
+      "similarity_score": 6.0,
+      "reason": "Related Mem2Reg bug. Same pass and component but different issue type (logic bug vs crash).",
+      "labels": ["bug", "LLHD"],
+      "url": "https://github.com/llvm/circt/issues/8494"
+    },
+    {
+      "issue_number": 8693,
+      "title": "[Mem2Reg] Local signal does not dominate final drive",
+      "state": "open",
+      "similarity_score": 5.5,
+      "reason": "Open Mem2Reg issue, same pass but different problem type. Indicates ongoing issues with Mem2Reg.",
+      "labels": ["LLHD"],
+      "url": "https://github.com/llvm/circt/issues/8693"
+    },
+    {
+      "issue_number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "state": "open",
+      "similarity_score": 5.0,
+      "reason": "MooreToCore crash, different component but also calls getBitWidth() and crashes with IntegerType issue.",
+      "labels": ["Moore"],
+      "url": "https://github.com/llvm/circt/issues/8930"
+    },
+    {
+      "issue_number": 7483,
+      "title": "[Moore] Mem2Reg Error",
+      "state": "closed",
+      "similarity_score": 7.5,
+      "reason": "Mem2Reg error on Moore types. Very similar - Mem2Reg processing Moore dialect with type errors. Shows Mem2Reg doesn't properly handle Moore types like ClassHandleType.",
+      "labels": ["Moore"],
+      "url": "https://github.com/llvm/circt/issues/7483"
+    }
+  ],
+  "recommendation": "review_existing",
+  "confidence": "high",
+  "analysis": {
+    "direct_match": "Issue #9287 is directly addressing the root cause. It's an open issue about making getBitWidth() return std::optional instead of -1, which would prevent this crash entirely.",
+    "likely_duplicate_of": "#9287 is the core issue; this crash is a manifestation of that problem",
+    "related_issues": [
+      "8245 (Mem2Reg crash with integer bitwidth)",
+      "7483 (Mem2Reg with Moore types)",
+      "8930 (getBitWidth crash in MooreToCore)"
+    ],
+    "uniqueness_assessment": "This testcase is UNIQUE. While it's caused by the same root problem as #9287, the specific trigger (SystemVerilog class with self-referential typedef in Mem2Reg pass on Moore dialect) is a new and specific way of reproducing the issue.",
+    "severity": "high",
+    "crash_signature": "Mem2Reg.cpp:1742 - IntegerType::get() assertion failure with bitwidth > 16777215"
+  },
+  "top_score": 9.5,
+  "top_issue": 9287
+}

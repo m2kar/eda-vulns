@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "timestamp": "2025-01-31T22:30:00Z",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "circt-verilog+arcilator",
+    "original_version": "circt-1.139.0",
+    "current_version": "firtool-1.139.0 + LLVM 22.0.0git",
+    "path": "/opt/firtool/bin"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o test.o",
+    "exit_code": 0,
+    "reproduced": false,
+    "match_result": "no_crash"
+  },
+  "crash_signature": {
+    "original": "Assertion `succeeded(ConcreteT::verifyInvariants...)' failed at StateType::get()",
+    "reproduced": "Program completed successfully (no assertion, exit code 0)"
+  },
+  "analysis": {
+    "status": "NOT REPRODUCED",
+    "reason": "Current toolchain version appears to have fixed the bug. arcilator runs successfully without assertion failure.",
+    "original_error": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "current_output": "arcilator generated LLVM IR successfully"
+  }
+}

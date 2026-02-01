@@ -1,0 +1,50 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T04:28:00Z",
+  "search_terms": {
+    "dialect": "Moore",
+    "failing_pass": "MooreToCore",
+    "crash_type": "assertion",
+    "keywords": [
+      "string",
+      "StringType",
+      "sanitizeInOut",
+      "dyn_cast",
+      "port type",
+      "MooreToCore"
+    ],
+    "assertion_message": "dyn_cast on a non-existent value"
+  },
+  "results": {
+    "total_found": 3,
+    "top_score": 12.5,
+    "issues": [
+      {
+        "number": 9572,
+        "title": "[Moore] Assertion failure when module has string type output port",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/9572",
+        "similarity_score": 12.5
+      },
+      {
+        "number": 9570,
+        "title": "[Moore] Assertion in MooreToCore when module uses packed union type as port",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/9570",
+        "similarity_score": 7.0
+      },
+      {
+        "number": 8930,
+        "title": "[MooreToCore] Crash with sqrt/floor",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8930",
+        "similarity_score": 4.0
+      }
+    ]
+  },
+  "recommendation": {
+    "action": "review_existing",
+    "confidence": "high",
+    "reason": "Issue #9572 matches the same Moore string-port crash pattern and likely duplicates this report."
+  }
+}

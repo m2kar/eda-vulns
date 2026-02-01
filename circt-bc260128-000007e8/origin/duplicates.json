@@ -1,0 +1,113 @@
+{
+  "crash_id": "260128-000007e8",
+  "search_terms": [
+    "string port",
+    "InOutType",
+    "dyn_cast",
+    "sanitizeInOut",
+    "MooreToCore",
+    "SVModuleOp",
+    "Moore",
+    "assertion"
+  ],
+  "search_strategy": "Keywords extracted from analysis.json crash signature and root cause analysis. Searched llvm/circt repository using gh CLI with various related terms.",
+  "results": [
+    {
+      "issue_number": 8332,
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "state": "OPEN",
+      "similarity_score": 8.5,
+      "matching_keywords": [
+        "string",
+        "MooreToCore",
+        "StringType",
+        "moore.variable"
+      ],
+      "crash_analysis": "Discusses StringType handling in MooreToCore conversion. Related to our issue where string-typed module outputs are not properly converted, leaving port type empty.",
+      "url": "https://github.com/llvm/circt/issues/8332",
+      "notes": "High relevance - addresses StringType support gap that directly relates to our crash where string output port is unconvertible"
+    },
+    {
+      "issue_number": 8283,
+      "title": "[ImportVerilog] Cannot compile forward decleared string type",
+      "state": "OPEN",
+      "similarity_score": 8.0,
+      "matching_keywords": [
+        "string",
+        "moore.variable",
+        "MooreToCore",
+        "legalizing operation"
+      ],
+      "crash_analysis": "Reports failure to legalize moore.variable operation with string type. Error message indicates moore.ref<string> cannot be converted. Core issue: lack of string-type conversion in MooreToCore.",
+      "url": "https://github.com/llvm/circt/issues/8283",
+      "notes": "High relevance - identical root cause: MooreToCore lacks string type conversion, leading to unconvertible types"
+    },
+    {
+      "issue_number": 8176,
+      "title": "[MooreToCore] Crash when getting values to observe",
+      "state": "OPEN",
+      "similarity_score": 6.5,
+      "matching_keywords": [
+        "MooreToCore",
+        "Crash",
+        "assertion",
+        "dyn_cast",
+        "always_comb"
+      ],
+      "crash_analysis": "MooreToCore crash with dyn_cast assertion in getValuesToObserve function. Different specific operation but same crash pattern (dyn_cast assertion in MooreToCore context).",
+      "url": "https://github.com/llvm/circt/issues/8176",
+      "notes": "Related pattern: dyn_cast assertion in MooreToCore, but different context (values to observe vs port info)"
+    },
+    {
+      "issue_number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "state": "OPEN",
+      "similarity_score": 6.0,
+      "matching_keywords": [
+        "MooreToCore",
+        "Crash",
+        "dyn_cast",
+        "assertion",
+        "ConversionOp"
+      ],
+      "crash_analysis": "MooreToCore dyn_cast assertion during type conversion (real type). Pattern match: dyn_cast on non-existent value in MooreToCore conversion pipeline.",
+      "url": "https://github.com/llvm/circt/issues/8930",
+      "notes": "Similar crash mechanism: dyn_cast assertion in MooreToCore during type conversion, suggests broader type handling issue"
+    },
+    {
+      "issue_number": 7531,
+      "title": "[Moore] Input triggers assertion in canonicalizer infra",
+      "state": "OPEN",
+      "similarity_score": 4.5,
+      "matching_keywords": [
+        "Moore",
+        "assertion",
+        "canonicalizer"
+      ],
+      "crash_analysis": "Moore dialect assertion in canonicalizer, different failure point than our sanitizeInOut assertion.",
+      "url": "https://github.com/llvm/circt/issues/7531",
+      "notes": "Lower relevance - different crash mechanism (canonicalizer vs port handling)"
+    }
+  ],
+  "top_match": {
+    "issue_number": 8332,
+    "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+    "similarity_score": 8.5,
+    "url": "https://github.com/llvm/circt/issues/8332",
+    "reason": "Directly addresses StringType support in MooreToCore, which is the root cause of our crash: string output port type cannot be converted, leaving it empty/invalid, causing dyn_cast assertion in sanitizeInOut"
+  },
+  "secondary_match": {
+    "issue_number": 8283,
+    "title": "[ImportVerilog] Cannot compile forward decleared string type",
+    "similarity_score": 8.0,
+    "url": "https://github.com/llvm/circt/issues/8283",
+    "reason": "Nearly identical root cause: MooreToCore conversion fails for string types, but manifests at moore.variable legalization rather than port sanitization"
+  },
+  "recommendation": "review_existing",
+  "recommendation_rationale": "Our crash is a specific manifestation of broader string type handling gaps in MooreToCore. Issues 8332 and 8283 track the core problem: MooreToCore lacks StringType support. Our crash is the consequence when a module port is declared as string type - it fails to convert, leaving the port type invalid, which sanitizeInOut then tries to dyn_cast to InOutType, triggering the assertion. This should be reported as a duplicate or related issue to 8332 (higher priority) or 8283.",
+  "action_items": [
+    "Cross-reference with issue #8332 as the most relevant existing issue",
+    "Consider reporting as duplicate of #8332 with additional focus on module port-level impact",
+    "Alternatively, close as duplicate if developers indicate ongoing work in #8332"
+  ]
+}

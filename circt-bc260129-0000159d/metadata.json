@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T09:44:31Z",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "arcilator/circt-opt",
+    "version": "22.0.0git",
+    "path": "/opt/firtool/bin/arcilator"
+  },
+  "reproduction": {
+    "command": "circt-verilog source.sv --ir-hw | circt-opt --convert-to-arcs --arc-infer-state-properties --arc-lower-state",
+    "exit_code": 0,
+    "reproduced": false,
+    "match_result": "fixed_in_current_version"
+  },
+  "crash_signature": {
+    "original": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "reproduced": null,
+    "related_github_issue": "https://github.com/llvm/circt/issues/9574"
+  },
+  "notes": "Bug appears to be fixed in LLVM 22.0.0git. Related issue #9574: '[Arc] Assertion failure when lowering inout ports in sequential logic' was created on 2026-02-01."
+}

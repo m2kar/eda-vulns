@@ -1,0 +1,151 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T01:15:16.843367",
+  "case_id": "260128-00000d94",
+  "crash_signature": {
+    "assertion": "dyn_cast on a non-existent value",
+    "crash_location": {
+      "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "function": "getModulePortInfo",
+      "line": 259
+    },
+    "failing_pass": "convert-moore-to-core",
+    "dialect": "moore"
+  },
+  "search_strategy": {
+    "keywords": [
+      "StringType",
+      "DynamicStringType",
+      "getModulePortInfo",
+      "sanitizeInOut",
+      "dyn_cast non-existent",
+      "convertType null",
+      "MooreToCore",
+      "string output port",
+      "type conversion failure",
+      "ModulePortInfo"
+    ],
+    "search_terms": [
+      "StringType",
+      "DynamicStringType",
+      "getModulePortInfo",
+      "sanitizeInOut",
+      "MooreToCore",
+      "type conversion"
+    ]
+  },
+  "results": {
+    "total_issues_found": 22,
+    "top_10_similar": [
+      {
+        "number": 8930,
+        "title": "[MooreToCore] Crash with sqrt/floor",
+        "url": "https://github.com/llvm/circt/issues/8930",
+        "state": "OPEN",
+        "similarity_score": 13.5,
+        "search_label": "dialect:moore"
+      },
+      {
+        "number": 8332,
+        "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+        "url": "https://github.com/llvm/circt/issues/8332",
+        "state": "OPEN",
+        "similarity_score": 9.5,
+        "search_label": "keyword:MooreToCore"
+      },
+      {
+        "number": 8283,
+        "title": "[ImportVerilog] Cannot compile forward decleared string type",
+        "url": "https://github.com/llvm/circt/issues/8283",
+        "state": "OPEN",
+        "similarity_score": 7.0,
+        "search_label": "keyword:MooreToCore"
+      },
+      {
+        "number": 7629,
+        "title": "[MooreToCore] Support net op",
+        "url": "https://github.com/llvm/circt/issues/7629",
+        "state": "OPEN",
+        "similarity_score": 6.5,
+        "search_label": "dialect:moore"
+      },
+      {
+        "number": 8163,
+        "title": "[MooreToCore] Out-of-bounds moore.extract lowered incorrectly",
+        "url": "https://github.com/llvm/circt/issues/8163",
+        "state": "OPEN",
+        "similarity_score": 6.5,
+        "search_label": "dialect:moore"
+      },
+      {
+        "number": 8269,
+        "title": "[MooreToCore] Support `real` constants",
+        "url": "https://github.com/llvm/circt/issues/8269",
+        "state": "OPEN",
+        "similarity_score": 6.5,
+        "search_label": "dialect:moore"
+      },
+      {
+        "number": 8476,
+        "title": "[MooreToCore] Lower exponentiation to `math.ipowi`",
+        "url": "https://github.com/llvm/circt/issues/8476",
+        "state": "OPEN",
+        "similarity_score": 6.5,
+        "search_label": "dialect:moore"
+      },
+      {
+        "number": 8973,
+        "title": "[MooreToCore] Lowering to math.ipow?",
+        "url": "https://github.com/llvm/circt/issues/8973",
+        "state": "OPEN",
+        "similarity_score": 6.5,
+        "search_label": "dialect:moore"
+      },
+      {
+        "number": 7918,
+        "title": "[MooreToCore] `moore.extract` is converted to `hw.array_slice` when array's element type is also array",
+        "url": "https://github.com/llvm/circt/issues/7918",
+        "state": "OPEN",
+        "similarity_score": 6.0,
+        "search_label": "keyword:MooreToCore"
+      },
+      {
+        "number": 8276,
+        "title": "[MooreToCore] Support for UnpackedArrayType emission",
+        "url": "https://github.com/llvm/circt/issues/8276",
+        "state": "OPEN",
+        "similarity_score": 6.0,
+        "search_label": "keyword:MooreToCore"
+      }
+    ]
+  },
+  "recommendation": {
+    "action": "review_existing",
+    "confidence": "high",
+    "top_score": 13.5,
+    "top_issue": {
+      "number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "url": "https://github.com/llvm/circt/issues/8930",
+      "reason": "Most similar: Same MooreToCore pass, type conversion issues, related to StringType handling"
+    },
+    "reason": "High similarity score (>10) indicates this may be related to existing issues"
+  },
+  "analysis": {
+    "issue_8930": {
+      "relationship": "RELATED but DISTINCT",
+      "description": "Same dyn_cast assertion, but different crash location (sqrt/floor vs string port)",
+      "severity": "Related pattern but separate bug"
+    },
+    "issue_8332": {
+      "relationship": "RELATED FEATURE REQUEST",
+      "description": "Feature request for StringType support in Moore to LLVM lowering",
+      "severity": "Missing feature that affects string type handling"
+    },
+    "issue_8283": {
+      "relationship": "HIGHLY RELEVANT",
+      "description": "String type variable compilation failure in MooreToCore",
+      "severity": "Known limitation with string type conversion"
+    }
+  }
+}

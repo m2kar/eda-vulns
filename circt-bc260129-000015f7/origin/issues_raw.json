@@ -1,0 +1,50 @@
+{
+  "search_keywords": {
+    "crash_type": "assertion",
+    "dialect": "LLHD",
+    "pass": "Mem2Reg",
+    "tool": "circt-verilog",
+    "error_message": "integer bitwidth is limited to 16777215 bits",
+    "assertion_message": "Assertion `succeeded(ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed"
+  },
+  "search_queries_used": [
+    "repo:llvm/circt Mem2Reg class",
+    "repo:llvm/circt Mem2Reg assertion",
+    "repo:llvm/circt LLHD Mem2Reg",
+    "repo:llvm/circt intwidth bitwidth limit",
+    "repo:llvm/circt SystemVerilog class LLHD",
+    "repo:llvm/circt class instantiation Mem2Reg"
+  ],
+  "issues_found": [
+    {
+      "number": 8693,
+      "title": "[Mem2Reg] Local signal does not dominate final drive",
+      "body": "For input (derived from SV import minized and then MLIR minized)\n\n```mlir\nmodule {\n  hw.module @a() {\n    %false = hw.constant false\n    %b = llhd.sig %false : i1\n    llhd.combinational {\n      cf.br ^bb2\n    ^bb1:  // no predecessors\n      %0 = llhd.prb %b : !hw.inout<i1>\n      %1 = llhd.constant_time <0ns, 0d, 1e>\n      %g = llhd.sig %false : i1\n      llhd.drv %g, %0 after %1 : !hw.inout<i1>\n      cf.br ^bb2\n    ^bb2:  // 2 preds: ^bb0, ^bb1\n      llhd.yield\n    }\n    hw.output\n  }\n}\n```\n\nresults post llhd-mem2reg in\n\n```\nerror: operand #0 does not dominate this use\nnote: see current operation: \"llhd.drv\"(%6, %7, %9, %8) : (!hw.inout<i1>, i1, !llhd.time, i1) -> ()\n/tmp/t2.mlir:10:12: note: operand defined here (op in the same region)\n      %g = llhd.sig %false : i1\n           ^\n```\n\nprint IR after:\n\n```mlir\n\"builtin.module\"() ({\n  \"hw.module\"() <{module_type = !hw.modty<>, parameters = [], sym_name = \"a\"}> ({\n    %0 = \"hw.constant\"() <{value = false}> : () -> i1\n    %1 = \"llhd.sig\"(%0) <{name = \"b\"}> : (i1) -> !hw.inout<i1>\n    %2 = \"llhd.prb\"(%1) : (!hw.inout<i1>) -> i1\n    \"llhd.combinational\"() ({\n      %3 = \"hw.constant\"() <{value = false}> : () -> i1\n      %4 = \"hw.constant\"() <{value = false}> : () -> i1\n      \"cf.br\"(%3, %4)[^bb2] : (i1, i1) -> ()\n    ^bb1:  // no predecessors\n      %5 = \"hw.constant\"() <{value = true}> : () -> i1\n      %6 = \"llhd.sig\"(%0) <{name = \"g\"}> : (i1) -> !hw.inout<i1>\n      \"cf.br\"(%2, %5)[^bb2] : (i1, i1) -> ()\n    ^bb2(%7: i1, %8: i1):  // 2 preds: ^bb0, ^bb1\n      %9 = \"llhd.constant_time\"() <{value = #llhd.time<0ns, 0d, 1e>}> : () -> !llhd.time\n      \"llhd.drv\"(%6, %7, %9, %8) : (!hw.inout<i1>, i1, !llhd.time, i1) -> ()\n      // ^\n      \"llhd.yield\"() : () -> ()\n    }) : () -> ()\n    \"hw.output\"() : () -> ()\n  }) : () -> ()\n}) : () -> ()\n```",
+      "labels": [
+        "LLHD"
+      ],
+      "state": "OPEN",
+      "createdAt": "2025-07-11T20:11:54Z"
+    },
+    {
+      "number": 8286,
+      "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+      "body": "Hi all!\n\nThere are a few issues related to moore to llvm lowering pipeline.\n\nCurrently there is no possibility to lower combination logic with control flow operators into LLVM. For example:\n\n```verilog\nmodule  top  (\n    input           clk ,\n    input           rstn ,\n    input      in\n    output     out\n    );\n\n    parameter            P1   = 3'd0 ;\n    parameter            P2  = 3'd3 ;\n\n    reg [2:0]            r1 = 3'd1;\n\n    always_comb begin\n        if (in)\n            r1 = P1;\n        else\n            r1 = P2;\n    end\nendmodule\n```\n\nbecause it fails with this : `error: failed to legalize operation 'llhd.constant_time'`\n\nAnd also `arcilator` fails to lower sequential logic which contains both blocking and nonblocking assignments like this example:\n\n```verilog\nmodule  top  (\n    input           clk ,\n    input           rstn ,\n    input      in\n    output     out\n    );\n\n    parameter            P1   = 3'd0 ;\n    parameter            P2  = 3'd3 ;\n\n    reg [2:0]            r1 = 3'd1;\n\n    always @(posedge clk or negedge rstn) begin\n        r1 = P1;\n        r1 <= P2 + r1;\n    end\n\nendmodule\n```\n\nbecause it fails with that:\n\n```\n error: body contains non-pure operation\n    %2 = comb.add %1, %c3_i3 : i3\n```\n\nI'm using to lower a such cmd:\n\n```\ncirct-verilog sample.sv | arcilator \n```\n\nAlso I tried to add into \"populate LLHD\" pipeline a newly added passes  -- \"llhd-hoist-signals\" and \"llhd-mem2reg\". It didn't help.\n\nMaybe I'm doing something wrong or what could be the issue?\n\n1) What are the plans for improving verilog-to-llvm lowering  and do they exist at all?\n2) Will the \"llhd-hoist-signals\" and \"llhd-mem2reg\" passes be added to the `circt-verilog` tool or will they stay standalone?\n\n@fabianschuiki @maerhart ",
+      "labels": [],
+      "state": "OPEN",
+      "createdAt": "2025-03-03T10:23:03Z"
+    },
+    {
+      "number": 1352,
+      "title": "[FIRRTL] Add create vector/bundle ops",
+      "body": "As [discussed](https://github.com/llvm/circt/pull/1304#discussion_r659352639) in #1304, constructing a vector or bundle currently requires a temporary `firrtl.wire`, with subfield/subindex ops and connects. This makes it generally difficult to find out if a vector/bundle is a constant, among other things.\r\n\r\nIt might make sense to introduce `create_vector` and `create_bundle` ops, similar to HW's `create_array` and `create_struct`, to generaten aggregate value from fields. It might also make sense to have a `create_vector_uniform` (after LLHD's `array_uniform`) which constructs a vector where all elements are the same.",
+      "labels": [
+        "enhancement",
+        "FIRRTL"
+      ],
+      "state": "OPEN",
+      "createdAt": "2021-06-30T15:15:09Z"
+    }
+  ],
+  "total_found": 3
+}

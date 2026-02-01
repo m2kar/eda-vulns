@@ -1,0 +1,11 @@
+%Warning-STMTDLY: bug.sv:26:13: Ignoring delay on this statement due to --no-timing
+                              : ... note: In instance 'top_module'
+   26 |     forever #5 clk = ~clk;
+      |             ^
+                  ... For warning description see https://verilator.org/warn/STMTDLY?v=5.022
+                  ... Use "/* verilator lint_off STMTDLY */" and lint_on around source to disable this message.
+%Warning-INFINITELOOP: bug.sv:26:5: Infinite loop (condition always true)
+                                  : ... note: In instance 'top_module'
+   26 |     forever #5 clk = ~clk;
+      |     ^~~~~~~
+%Error: Exiting due to 2 warning(s)

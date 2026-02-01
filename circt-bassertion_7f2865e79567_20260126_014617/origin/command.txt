@@ -1,8 +1,0 @@
-# Original reproduction command (CIRCT 1.139.0)
-# /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_85ldhy3n/test_7f2865e79567.sv | \
-# /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | \
-# /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | \
-# /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_85ldhy3n/test_7f2865e79567.o
-
-# Note: Original CIRCT version 1.139.0 is not available in current environment
-# Current tools: LLVM 22.0.0git (firtool-1.139.0), CIRCT latest

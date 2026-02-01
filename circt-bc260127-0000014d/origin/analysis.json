@@ -1,0 +1,41 @@
+{
+  "dialect": "Moore",
+  "crash_type": "assertion failure",
+  "location": {
+    "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+    "line": 259,
+    "function": "getModulePortInfo"
+  },
+  "secondary_location": {
+    "file": "include/circt/Dialect/HW/PortImplementation.h",
+    "line": 177,
+    "function": "ModulePortInfo::sanitizeInOut"
+  },
+  "hypothesis": "The MooreToCore type converter fails to convert SystemVerilog 'string' type to a valid HW type, returning null. When ModulePortInfo::sanitizeInOut() iterates over ports and calls dyn_cast<hw::InOutType>(p.type) on the null type, LLVM's dyn_cast assertion fires because the value is not present. String is a dynamic type without direct hardware representation, causing the type conversion to fail silently.",
+  "relevant_code": {
+    "crash_site": "void sanitizeInOut() {\n  for (auto &p : ports)\n    if (auto inout = dyn_cast<hw::InOutType>(p.type)) {\n      p.type = inout.getElementType();\n      p.dir = ModulePort::Direction::InOut;\n    }\n}",
+    "testcase": "module test(input string a, output int b);\n  wire [31:0] len_signal;\n  wire [31:0] inverted_len;\n  \n  assign len_signal = a.len();\n  assign inverted_len = ~len_signal;\n  assign b = inverted_len;\nendmodule"
+  },
+  "key_constructs": [
+    "string type port declaration",
+    "string.len() built-in method",
+    "module port with unsupported type"
+  ],
+  "error_message": "Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"' failed",
+  "stack_trace_summary": [
+    "llvm::dyn_cast<circt::hw::InOutType, mlir::Type>",
+    "circt::hw::ModulePortInfo::sanitizeInOut()",
+    "getModulePortInfo(mlir::TypeConverter const&, circt::moore::SVModuleOp)",
+    "SVModuleOpConversion::matchAndRewrite()",
+    "MooreToCorePass::runOnOperation()"
+  ],
+  "root_cause_category": "missing_error_handling",
+  "affected_component": "MooreToCore dialect conversion",
+  "trigger_condition": "Module port with SystemVerilog string type that cannot be converted to HW type",
+  "suggested_fixes": [
+    "Add null type check in getModulePortInfo() before constructing ModulePortInfo",
+    "Emit proper diagnostic error when type conversion fails for a port",
+    "Add defensive null check in sanitizeInOut() before calling dyn_cast",
+    "Reject unsupported types like string earlier in ImportVerilog"
+  ]
+}

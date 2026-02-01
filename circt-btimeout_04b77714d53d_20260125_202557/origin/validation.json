@@ -1,0 +1,53 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T16:35:00+00:00",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang",
+    "version": "10.0.6"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": ""
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": null
+  },
+  "cross_tool_validation": {
+    "slang": {
+      "status": "pass",
+      "errors": 0,
+      "warnings": 0
+    },
+    "verilator": {
+      "status": "warning",
+      "errors": 0,
+      "warnings": 3,
+      "notes": "lint warnings only (DECLFILENAME, UNUSEDSIGNAL, UNDRIVEN)"
+    },
+    "icarus": {
+      "status": "pass",
+      "errors": 0,
+      "warnings": 1,
+      "notes": "always_comb sensitivity warning (benign)"
+    }
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid SystemVerilog accepted by all major tools causes CIRCT to timeout"
+  },
+  "minimization": {
+    "minimal": true,
+    "original_lines": 35,
+    "minimized_lines": 5,
+    "reduction_percent": 85.7
+  },
+  "bug_pattern": {
+    "description": "always_comb assigning to one struct field + reading different struct field causes MooreToHW conversion timeout",
+    "trigger": "Partial struct field assignment in always_comb with separate field read",
+    "affected_component": "MooreToHW conversion (circt-verilog --ir-hw)"
+  }
+}

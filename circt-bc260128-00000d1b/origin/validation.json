@@ -1,0 +1,58 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T00:00:00Z",
+  "input_file": "bug.sv",
+  "classification": {
+    "result": "regression_test",
+    "confidence": "high",
+    "reason": "Bug not reproducible with current CIRCT (LLVM 22) - appears fixed"
+  },
+  "syntax_check": {
+    "valid": true,
+    "tool": "slang",
+    "result": "Build succeeded: 0 errors, 0 warnings"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": []
+  },
+  "cross_tool_validation": {
+    "slang": {
+      "status": "pass",
+      "notes": "Build succeeded: 0 errors, 0 warnings"
+    },
+    "verilator": {
+      "status": "warning",
+      "notes": "WIDTHEXPAND warning - width mismatch in ternary (lint only)"
+    },
+    "icarus": {
+      "status": "pass",
+      "notes": "Compiled successfully"
+    }
+  },
+  "minimization": {
+    "original_file": "source.sv",
+    "original_lines": 9,
+    "minimized_file": "bug.sv",
+    "minimized_lines": 13,
+    "reduction_percent": 0,
+    "notes": [
+      "Original test case was already minimal",
+      "Added documentation comments (6 lines)",
+      "Core triggering code unchanged"
+    ]
+  },
+  "tool_versions": {
+    "circt": "firtool-1.139.0 (LLVM 22.0.0git)",
+    "slang": "9.1.0+0",
+    "verilator": "5.022",
+    "icarus": "system version"
+  },
+  "original_crash": {
+    "version": "circt-1.139.0",
+    "assertion": "op->use_empty() && \"expected 'op' to have no uses\"",
+    "location": "lib/Dialect/Comb/CombFolds.cpp:548",
+    "function": "extractConcatToConcatExtract"
+  },
+  "recommendation": "Archive as regression test - bug appears fixed in current version"
+}

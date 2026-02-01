@@ -1,0 +1,22 @@
+{
+  "testcase_id": "260128-00000959",
+  "reproduction": {
+    "reproduced": true,
+    "signature_match": true,
+    "error_type": "failed to legalize operation 'sim.fmt.literal'",
+    "error_location": "<stdin>:3:10"
+  },
+  "environment": {
+    "llvm_path": "/opt/llvm-22/bin",
+    "circt_path": "/opt/firtool/bin",
+    "tools": {
+      "circt_verilog": "/opt/firtool/bin/circt-verilog",
+      "arcilator": "/opt/firtool/bin/arcilator",
+      "opt": "/opt/llvm-22/bin/opt",
+      "llc": "/opt/llvm-22/bin/llc"
+    }
+  },
+  "command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv 2>&1 | /opt/firtool/bin/arcilator 2>&1",
+  "timestamp": "2026-01-31T21:09:41.515010",
+  "status": "SUCCESS"
+}

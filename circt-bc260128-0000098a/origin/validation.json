@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T21:30:00Z",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang",
+    "version": "10.0.6"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": ""
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "slang": "pass",
+    "verilator": "pass",
+    "icarus": "pass"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid SystemVerilog code accepted by all major tools; only CIRCT crashes"
+  },
+  "minimization": {
+    "original_lines": 29,
+    "minimized_lines": 5,
+    "reduction_percent": 82.8
+  },
+  "crash_info": {
+    "original_crash_point": "extractConcatToConcatExtract (CombFolds.cpp:548)",
+    "minimized_crash_point": "canonicalizeLogicalCstWithConcat (CombFolds.cpp)",
+    "same_root_cause": true,
+    "reason": "Both in CombFolds.cpp canonicalization patterns with cyclic dataflow handling issue"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "crash_signature": "matching",
+    "exit_code": 134,
+    "error_message": "Assertion failed in dyn_cast: 'detail::isPresent(Val) && dyn_cast on a non-existent value' at llvm/Support/Casting.h:650"
+  },
+  "command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw source.sv",
+  "timestamp": "2026-01-31T22:50:00Z",
+  "crash_details": {
+    "tool": "circt-verilog",
+    "version": "1.139.0",
+    "crash_type": "assertion",
+    "location": "circt::hw::ModulePortInfo::sanitizeInOut() at PortImplementation.h:177:24"
+  }
+}

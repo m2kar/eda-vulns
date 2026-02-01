@@ -1,0 +1,76 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "LLHD",
+  "failing_pass": "Mem2Reg",
+  "crash_type": "assertion",
+  "assertion_message": "integer bitwidth is limited to 16777215 bits",
+  "crash_location": {
+    "file": "Mem2Reg.cpp",
+    "function": "(anonymous namespace)::Promoter::insertBlockArgs(BlockEntry*)",
+    "line": 1742
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "real type",
+      "always_ff block",
+      "continuous assignment",
+      "real arithmetic"
+    ],
+    "problematic_patterns": [
+      "Floating-point types in sequential logic",
+      "RefType with floating-point nested type",
+      "Mem2Reg attempting to optimize floating-point memory"
+    ]
+  },
+  "hypotheses": [
+    {
+      "description": "Missing float type handling in Mem2Reg - assumes all types can be represented as integers, but hw::getBitWidth(f64) returns invalid sentinel value 1073741823",
+      "confidence": "high",
+      "evidence": [
+        "Crash at builder.getIntegerType(hw::getBitWidth(type)) line",
+        "Bitwidth 1073741823 (0x40000000) is a sentinel value",
+        "real type maps to Float64Type, not an integer type",
+        "No special handling for floats before calling getBitWidth()"
+      ]
+    },
+    {
+      "description": "Incorrect type conversion in frontend",
+      "confidence": "low",
+      "evidence": []
+    }
+  ],
+  "keywords": [
+    "real type",
+    "floating point",
+    "Mem2Reg",
+    "LLHD",
+    "bitwidth",
+    "IntegerType",
+    "f64",
+    "Float64Type",
+    "RefType",
+    "getBitWidth",
+    "assertion",
+    "16777215"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/LLHD/Transforms/Mem2Reg.cpp",
+      "reason": "Contains the crashing code at line 1742 in insertBlockArgs()"
+    },
+    {
+      "path": "include/circt/Dialect/HW/HWTypes.h",
+      "reason": "Likely contains getBitWidth() declaration"
+    },
+    {
+      "path": "lib/Dialect/HW/HWTypes.cpp",
+      "reason": "Likely contains getBitWidth() implementation"
+    },
+    {
+      "path": "lib/Conversion/MooreToCore/",
+      "reason": "SystemVerilog to Core dialect conversion where real type is handled"
+    }
+  ]
+}

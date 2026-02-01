@@ -1,0 +1,39 @@
+{
+  "testcase_id": "260129-000013cb",
+  "crash_signature": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "reproduction": {
+    "reproduced": false,
+    "command": "circt-verilog --ir-hw source.sv 2>&1 | arcilator 2>&1",
+    "status": "CRASH_NOT_REPRODUCED"
+  },
+  "crash_location": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "line": 219,
+    "column": 66,
+    "function": "ModuleLowering::run()",
+    "context": "StateType::get() assertion failure"
+  },
+  "environment": {
+    "circt_version": "firtool-1.139.0",
+    "llvm_version": "22.0.0git",
+    "toolchain_path": "/opt/firtool/bin",
+    "platform": "linux"
+  },
+  "diagnostics": {
+    "key_observation": "The current CIRCT toolchain successfully handles the conversion without triggering the assertion.",
+    "possible_causes": [
+      "Bug has been fixed in the current version",
+      "Fix was backported to 1.139.0 release",
+      "Environment/build configuration differences"
+    ],
+    "ir_generation": "SUCCESS",
+    "arcilator_pass": "SUCCESS",
+    "crash_expected_at": "LowerState pass when creating StateType"
+  },
+  "analysis": {
+    "source_module": "TopModule with inout port io_sig: !llhd.ref<i1>",
+    "problematic_type": "!llhd.ref<i1>",
+    "issue_description": "StateType requires known bit width but received reference type",
+    "root_cause": "Type system mismatch in state allocation for inout reference types"
+  }
+}

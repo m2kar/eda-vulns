@@ -1,0 +1,44 @@
+{
+  "testcase_id": "260129-00001599",
+  "crash_type": "assertion",
+  "reproduction": {
+    "reproduced": false,
+    "reason": "Bug appears to be fixed in current toolchain",
+    "match_result": "no_crash",
+    "original_assertion_signature": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "current_behavior": "Command completes successfully without error"
+  },
+  "toolchain": {
+    "original": {
+      "circt": "circt-1.139.0",
+      "llvm": "LLVM 22.0.0git (embedded)",
+      "path": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin"
+    },
+    "current": {
+      "circt": "firtool-1.139.0",
+      "llvm": "LLVM 22.0.0git",
+      "path": "/opt/firtool/bin",
+      "commit": "b32e067e97003db47aed52edc9ef8c3c30899b91"
+    }
+  },
+  "source_code": {
+    "file": "source.sv",
+    "type": "Verilog testcase with mixed ports",
+    "key_feature": "inout port with !llhd.ref<i1> type",
+    "lines": 11
+  },
+  "command": {
+    "original": "circt-verilog --ir-hw test.sv | arcilator | opt -O0 | llc -O0 --filetype=obj",
+    "executed": "circt-verilog --ir-hw source.sv | arcilator | opt -O0",
+    "exit_code": 0,
+    "stderr": "none",
+    "stdout_size": 371
+  },
+  "analysis": {
+    "root_cause": "StateType verification in arcilator's LowerState pass failed on !llhd.ref<i1> type (no known bit width)",
+    "affected_component": "circt::arc::StateType::get() in lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "fix_status": "FIXED - The current toolchain handles this case without assertion",
+    "fix_description": "The LowerState pass or StateType verification has been updated to properly handle reference types without triggering assertions"
+  },
+  "timestamp": "2026-02-01T00:00:00Z"
+}

@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T00:35:39+00:00",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "circt-verilog",
+    "version": "LLVM (http://llvm.org/):",
+    "path": "/opt/firtool/bin/circt-verilog"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv",
+    "exit_code": 0,
+    "reproduced": false,
+    "match_result": "no_crash"
+  },
+  "crash_signature": {
+    "original": "Assertion `op->use_empty() && \"expected 'op' to have no uses\"' failed.",
+    "reproduced": ""
+  },
+  "analysis": {
+    "reason": "Bug likely fixed in current CIRCT version",
+    "original_version": "circt-1.139.0",
+    "test_version": "current (llvm-22 toolchain)"
+  }
+}

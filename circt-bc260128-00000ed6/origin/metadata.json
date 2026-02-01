@@ -1,0 +1,34 @@
+{
+  "testcase_id": "260128-00000ed6",
+  "original_error": {
+    "type": "assertion",
+    "message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "component": "arcilator",
+    "location": "StorageUniquerSupport.h:180"
+  },
+  "reproduction": {
+    "reproduced": false,
+    "reason": "Bug appears to be FIXED in current CIRCT version (firtool-1.139.0)",
+    "tools_used": {
+      "circt_version": "firtool-1.139.0",
+      "llvm_version": "22.0.0git",
+      "path": "/opt/firtool/bin"
+    },
+    "pipeline_status": {
+      "circt_verilog": "SUCCESS",
+      "arcilator": "SUCCESS",
+      "opt": "SUCCESS",
+      "llc": "SUCCESS"
+    }
+  },
+  "test_case": {
+    "file": "source.sv",
+    "description": "Verilog module with inout port, mixed sequential logic, and conditional assignments",
+    "key_features": [
+      "inout wire port (c)",
+      "sequential logic with bit-select condition",
+      "inout wire assignment with conditional driver"
+    ]
+  },
+  "notes": "The original error was expected during the arcilator transformation step when creating StateType with ref type. Current version successfully completes the full pipeline without crashing."
+}

@@ -1,0 +1,56 @@
+{
+  "testcase_id": "260129-000015f7",
+  "validation_timestamp": "2025-01-14T00:00:00Z",
+  "syntax_validation": {
+    "valid": true,
+    "verilator": {
+      "version": "5.022 2024-02-24",
+      "result": "pass",
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    "slang": {
+      "version": "10.0.6+3d7e6cd2e",
+      "result": "pass",
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "crash_validation": {
+    "circt_verilog": {
+      "version": "firtool-1.139.0",
+      "llvm_version": "22.0.0git",
+      "slang_version": "9.1.0+0",
+      "crash_reproduced": true,
+      "error_type": "semantic_error",
+      "error_message": "'hw.bitcast' op result #0 must be Type wherein the bitwidth in hardware is known, but got '!llvm.ptr'",
+      "invalid_bitwidth": 1073741823,
+      "mlir_limit": 16777215
+    }
+  },
+  "classification": {
+    "result": "report",
+    "category": "compiler_bug",
+    "severity": "medium",
+    "reason": "Valid SystemVerilog code (confirmed by Verilator and Slang) causes CIRCT to produce internal error with invalid integer bitwidth when processing class-type variables in sequential logic"
+  },
+  "minimization": {
+    "original_size_bytes": 731,
+    "minimized_size_bytes": 93,
+    "original_lines": 33,
+    "minimized_lines": 5,
+    "reduction_percent": 87.3
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw bug.sv",
+    "file": "bug.sv",
+    "deterministic": true
+  },
+  "feature_status": {
+    "systemverilog_classes": "not_fully_supported",
+    "warning_issued": true,
+    "warning_message": "Class builtin functions (needed for randomization, constraints, and covergroups) are not yet supported and will be dropped during lowering."
+  }
+}

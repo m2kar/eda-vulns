@@ -1,0 +1,61 @@
+{
+  "testcase_id": "260129-0000178d",
+  "dialect": "moore",
+  "target_dialect": "hw",
+  "crash_type": "assertion_failure",
+  "crash_signature": "dyn_cast on a non-existent value",
+  "affected_components": [
+    "circt::hw::ModulePortInfo::sanitizeInOut",
+    "getModulePortInfo",
+    "SVModuleOpConversion",
+    "MooreToCorePass",
+    "TypeConverter"
+  ],
+  "crash_location": {
+    "file": "include/circt/Dialect/HW/PortImplementation.h",
+    "line": 177,
+    "function": "sanitizeInOut"
+  },
+  "triggering_construct": {
+    "type": "output_port_with_string_type",
+    "description": "SystemVerilog module with 'output string' port declaration",
+    "minimal_example": "output string out"
+  },
+  "root_cause": {
+    "category": "missing_type_conversion",
+    "description": "Moore dialect string type lacks conversion rule in MooreToCore TypeConverter",
+    "details": "When converting Moore SVModuleOp to HW module, the TypeConverter returns null for string type ports. This null type is stored in PortInfo and later causes assertion failure in sanitizeInOut() when dyn_cast<InOutType> is called on it."
+  },
+  "keywords": [
+    "string",
+    "output port",
+    "string type",
+    "MooreToCore",
+    "type conversion",
+    "sanitizeInOut",
+    "dyn_cast",
+    "ModulePortInfo",
+    "null type",
+    "assertion failure",
+    "SVModuleOp",
+    "dynamic string",
+    "moore dialect",
+    "hw dialect"
+  ],
+  "severity": "high",
+  "reproducibility": "always",
+  "command": "circt-verilog --ir-hw <testcase.sv>",
+  "tool_chain": [
+    "circt-verilog"
+  ],
+  "related_types": [
+    "moore::StringType",
+    "hw::InOutType",
+    "sim::DynamicStringType"
+  ],
+  "analysis_confidence": "high",
+  "suggested_fix": {
+    "short_term": "Add null type check in getModulePortInfo() before creating PortInfo",
+    "long_term": "Add string type conversion rule in MooreToCore TypeConverter"
+  }
+}

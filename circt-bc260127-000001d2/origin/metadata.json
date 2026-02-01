@@ -1,0 +1,26 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "testcase_id": "260127-000001d2",
+    "crash_type": "assertion",
+    "command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv 2>&1 | /opt/firtool/bin/arcilator 2>&1",
+    "original_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_9f063ecfd72b.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_xfhtv50x/test_9f063ecfd72b.o",
+    "toolchain_paths": {
+      "circt_verilog": "/opt/firtool/bin/circt-verilog",
+      "arcilator": "/opt/firtool/bin/arcilator",
+      "opt": "/opt/llvm-22/bin/opt",
+      "llc": "/opt/llvm-22/bin/llc"
+    },
+    "crash_signature": "failed to legalize operation 'sim.fmt.literal'",
+    "crash_signature_matched": true,
+    "crash_details": {
+      "operation": "sim.fmt.literal",
+      "error_message": "failed to legalize operation 'sim.fmt.literal'",
+      "location": "<stdin>:3:10",
+      "operation_details": "%27 = \"sim.fmt.literal\"() <{literal = \"Error: Assertion failed: q != 0\"}> : () -> !sim.fstring"
+    },
+    "test_input": "source.sv",
+    "assertion_statement": "$error(\"Assertion failed: q != 0\")",
+    "reproduction_success": true
+  }
+}

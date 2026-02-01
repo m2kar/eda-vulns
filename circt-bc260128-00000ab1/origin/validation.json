@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T22:10:00+00:00",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang",
+    "tool_version": "10.0.6"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": ""
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "slang": "pass",
+    "verilator": "pass",
+    "icarus": "error"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid IEEE 1800-2017 SystemVerilog (string type port), passes slang and verilator, crashes CIRCT"
+  },
+  "minimization": {
+    "original_lines": 23,
+    "minimized_lines": 2,
+    "reduction_percent": 91.3
+  }
+}

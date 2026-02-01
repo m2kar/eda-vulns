@@ -1,0 +1,67 @@
+{
+  "testcase_id": "260129-000015f7",
+  "crash_type": "assertion",
+  "dialect": "LLHD",
+  "pass": "Mem2Reg",
+  "tool": "circt-verilog",
+  "error_message": "integer bitwidth is limited to 16777215 bits",
+  "assertion_message": "Assertion `succeeded(ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed",
+  "crash_location": {
+    "file": "lib/Dialect/LLHD/Transforms/Mem2Reg.cpp",
+    "function": "Promoter::insertBlockArgs",
+    "line": 1742,
+    "call_chain": [
+      "Mem2RegPass::runOnOperation()",
+      "Promoter::promote()",
+      "Promoter::insertBlockArgs()",
+      "mlir::IntegerType::get()"
+    ]
+  },
+  "problematic_constructs": [
+    {
+      "type": "class_declaration",
+      "code": "class my_class;",
+      "description": "SystemVerilog class declaration with properties and methods"
+    },
+    {
+      "type": "class_variable",
+      "code": "my_class mc;",
+      "description": "Class-type variable declaration"
+    },
+    {
+      "type": "class_instantiation",
+      "code": "mc = new();",
+      "description": "Dynamic class object instantiation in sequential block"
+    },
+    {
+      "type": "method_call",
+      "code": "mc.set_data(computed_value);",
+      "description": "Class method invocation"
+    }
+  ],
+  "root_cause": {
+    "category": "type_handling",
+    "summary": "LLHD Mem2Reg pass fails to handle unsupported class types, resulting in invalid integer bitwidth computation",
+    "details": "When processing class-type variables during block argument insertion, the pass attempts to create an IntegerType with a bitwidth exceeding MLIR's 16777215-bit limit. The class type's size is incorrectly interpreted, causing the assertion failure.",
+    "trigger_condition": "SystemVerilog class object used in sequential logic block with new() instantiation"
+  },
+  "feature_support": {
+    "classes": "not_supported",
+    "warning_issued": true,
+    "warning_message": "Class builtin functions (needed for randomization, constraints, and covergroups) are not yet supported and will be dropped during lowering."
+  },
+  "severity": "medium",
+  "reproducibility": "deterministic",
+  "suggested_fix": [
+    "Add type validation in Mem2Reg pass to skip unsupported types",
+    "Validate bitwidth before IntegerType::get() call",
+    "Ensure complete lowering of class constructs before optimization passes",
+    "Emit diagnostic error instead of assertion failure for unsupported types"
+  ],
+  "compilation_command": "circt-verilog --ir-hw <source.sv>",
+  "related_source_files": [
+    "lib/Dialect/LLHD/Transforms/Mem2Reg.cpp",
+    "llvm/mlir/lib/IR/MLIRContext.cpp",
+    "llvm/mlir/include/mlir/IR/StorageUniquerSupport.h"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "crash_id": "260129-00001645",
+  "status": "duplicate",
+  "phase": "completed",
+  "created_at": "2026-02-01T10:50:28Z",
+  "updated_at": "2026-02-01T10:58:00Z",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed",
+      "tasks": [
+        {"name": "reproduce", "status": "completed", "result": "not_reproducible"},
+        {"name": "root-cause-analysis", "status": "completed", "result": "completed"}
+      ]
+    },
+    "phase2": {
+      "status": "completed",
+      "tasks": [
+        {"name": "minimize+validate", "status": "completed", "result": "historical_bug"},
+        {"name": "check-duplicates", "status": "completed", "result": "duplicate_found"}
+      ]
+    },
+    "phase3": {
+      "status": "skipped",
+      "reason": "Perfect duplicate found in Phase 2"
+    }
+  },
+  "duplicate": {
+    "found": true,
+    "issue_number": "9574",
+    "title": "[Arc] Assertion failure when lowering inout ports in sequential logic",
+    "url": "https://github.com/llvm/circt/issues/9574",
+    "similarity_score": 100,
+    "recommendation": "review_existing"
+  },
+  "summary": {
+    "classification": "historical_bug",
+    "reduction_percent": 89.5,
+    "minimized_testcase": "bug.sv",
+    "root_cause": "LowerState pass does not handle inout ports (llhd.ref types)",
+    "action_taken": "No new issue created - duplicate of #9574"
+  }
+}

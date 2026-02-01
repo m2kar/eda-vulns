@@ -1,0 +1,1 @@
+/opt/firtool/bin/circt-verilog --ir-hw bug.sv | /opt/firtool/bin/arcilator | /opt/llvm-22/bin/opt -O0 | /opt/llvm-22/bin/llc -O0 --filetype=obj -o /tmp/circt_260129_0000129c_min.o

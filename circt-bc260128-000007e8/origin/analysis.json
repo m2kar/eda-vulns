@@ -1,0 +1,17 @@
+{
+  "crash_id": "260128-000007e8",
+  "dialect": "Moore/SystemVerilog",
+  "crash_type": "assertion",
+  "crash_location": "circt::hw::ModulePortInfo::sanitizeInOut()",
+  "root_cause": {
+    "description": "Moore-to-Core conversion produced a null/invalid port type for a string-typed module output, and sanitizeInOut() unconditionally dyn_casts it to InOutType, triggering an assertion on a non-existent value.",
+    "hypothesis": "SV module output of type string is not converted to a valid HW type; getModulePortInfo() leaves the port type empty, and sanitizeInOut() assumes a valid type, causing the dyn_cast assertion.",
+    "file": "include/circt/Dialect/HW/PortImplementation.h",
+    "line": 177
+  },
+  "testcase": {
+    "problematic_construct": "Module port declared as 'output string str' with assignments in always_comb",
+    "expected_behavior": "Emit a diagnostic for unsupported string port types or convert them to a supported HW type before sanitizeInOut().",
+    "actual_behavior": "Conversion proceeds with a null port type and crashes in sanitizeInOut() with a dyn_cast assertion."
+  }
+}

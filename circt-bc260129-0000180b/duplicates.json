@@ -1,0 +1,102 @@
+{
+  "version": "1.0",
+  "timestamp": "2025-02-01T12:02:04Z",
+  "search_terms": {
+    "dialect": "Moore",
+    "failing_pass": "HoistSignals",
+    "crash_type": "assertion",
+    "keywords": [
+      "self-referential typedef",
+      "circular type",
+      "recursive type",
+      "parameterized class",
+      "HoistSignals",
+      "hw.bitcast",
+      "bitwidth overflow"
+    ],
+    "assertion_message": "'hw.bitcast' op result #0 must be Type wherein the bitwidth in hardware is known, but got '!llvm.ptr'"
+  },
+  "results": {
+    "total_found": 10,
+    "top_score": 0,
+    "issues": [
+      {
+        "number": 6866,
+        "title": "[OM] parsing depend on ordering of Class",
+        "state": "OPEN",
+        "labels": ["OM"],
+        "similarity_score": 0,
+        "reason": "About class type resolution, but different issue (ordering vs self-reference)"
+      },
+      {
+        "number": 9287,
+        "title": "[HW] Make `hw::getBitWidth` use std::optional vs -1",
+        "state": "OPEN",
+        "labels": ["HW"],
+        "similarity_score": 0,
+        "reason": "About getBitWidth API, but not about self-referential types"
+      },
+      {
+        "number": 9570,
+        "title": "[Moore] Assertion in MooreToCore when module uses packed union type as port",
+        "state": "OPEN",
+        "labels": ["bug", "Moore"],
+        "similarity_score": 0,
+        "reason": "About union types as ports, different issue"
+      },
+      {
+        "number": 2590,
+        "title": "[ExportVerilog] Incorrect verilog output for bitcast + zero width aggregate types",
+        "state": "OPEN",
+        "labels": ["ExportVerilog"],
+        "similarity_score": 0,
+        "reason": "About bitcast, but for zero-width types, not overflow"
+      },
+      {
+        "number": 2593,
+        "title": "[ExportVerilog] Omit bitwidth of constant array index",
+        "state": "OPEN",
+        "labels": ["ExportVerilog"],
+        "similarity_score": 0,
+        "reason": "About bitwidth issues, but for array indices"
+      },
+      {
+        "number": 8286,
+        "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+        "state": "OPEN",
+        "labels": [],
+        "similarity_score": 0,
+        "reason": "General LLHD issue, not specific to our bug"
+      },
+      {
+        "number": 6740,
+        "title": "[FIRRTLToHW] Conversion failure of invalidated wire of clock type",
+        "state": "OPEN",
+        "labels": ["FIRRTL"],
+        "similarity_score": 0,
+        "reason": "About type conversion, but for clock wires"
+      },
+      {
+        "number": 3768,
+        "title": "[ExportVerilog] Enum aliasing in SV output",
+        "state": "OPEN",
+        "labels": ["ExportVerilog"],
+        "similarity_score": 0,
+        "reason": "About enum types, different issue"
+      },
+      {
+        "number": 2583,
+        "title": "[LegalizeNames] Typedefs need to be checked if they collide with reserved words",
+        "state": "OPEN",
+        "labels": [],
+        "similarity_score": 0,
+        "reason": "About typedef checking, but for reserved words"
+      }
+    ]
+  },
+  "recommendation": {
+    "action": "new_issue",
+    "confidence": "high",
+    "reason": "No similar issues found. Search terms (self-referential typedef, circular type, parameterized class, HoistSignals, hw.bitcast, bitwidth overflow) did not match any existing CIRCT issues. The issues found are related to type handling but describe different problems."
+  }
+}

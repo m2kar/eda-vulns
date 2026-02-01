@@ -1,0 +1,428 @@
+{
+  "analysis_date": "2026-02-01T13:06:28.643439",
+  "total_issues_found": 29,
+  "all_results": [
+    {
+      "issue_number": 9570,
+      "title": "[Moore] Assertion in MooreToCore when module uses packed union type as port",
+      "similarity_score": 5.5,
+      "matches": [
+        "function call chain",
+        "MooreToCore pass involved",
+        "moore dialect",
+        "verilog-related",
+        "suspected function/location: matchAndRewrite"
+      ],
+      "created_date": "2026-02-01T02:15:22Z",
+      "labels": [],
+      "preview": "## Description\n\nCIRCT crashes with assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"` when compiling SystemVerilog modules that use packed union types as module ports.\n\n**Likely "
+    },
+    {
+      "issue_number": 8844,
+      "title": "[circt-verilog]  'moore.case_eq' operand must be simple bit vector type, but got array",
+      "similarity_score": 5.0,
+      "matches": [
+        "always_comb/combinational logic",
+        "ImportVerilog pass involved",
+        "moore dialect",
+        "verilog-related"
+      ],
+      "created_date": "2025-08-12T11:51:40Z",
+      "labels": [
+        "ImportVerilog"
+      ],
+      "preview": "I ran `circt-verilog` on this file from OpenTitan:\nhttps://github.com/lowRISC/opentitan/blob/d8b5efd1427152b8387d6e03d9db413167e58475/hw/ip/lc_ctrl/rtl/lc_ctrl_fsm.sv\n\nI got this error:\n\n```bash\nak251"
+    },
+    {
+      "issue_number": 8176,
+      "title": "[MooreToCore] Crash when getting values to observe",
+      "similarity_score": 4.5,
+      "matches": [
+        "always_comb/combinational logic",
+        "MooreToCore pass involved",
+        "moore dialect"
+      ],
+      "created_date": "2025-02-03T10:27:41Z",
+      "labels": [
+        "Moore"
+      ],
+      "preview": "The following crashes due to an unattached region when calling `getValuesToObserve`.\n\n```mlir\nmoore.module @crash(in %in0: !moore.i32, in %in1: !moore.i32) {\n  %var = moore.variable : <!moore.i32>\n  m"
+    },
+    {
+      "issue_number": 8211,
+      "title": "[MooreToCore]Unexpected observed values in llhd.wait.",
+      "similarity_score": 4.5,
+      "matches": [
+        "always_comb/combinational logic",
+        "MooreToCore pass involved",
+        "moore dialect"
+      ],
+      "created_date": "2025-02-08T13:58:49Z",
+      "labels": [
+        "Moore"
+      ],
+      "preview": "Please check this PR(https://github.com/llvm/circt/pull/8210/files) to view the details.\n\nOr for example:\n```\nmoore.module @crash(in %in0: !moore.i32, in %in1: !moore.i32) {\n  %var = moore.variable : "
+    },
+    {
+      "issue_number": 7535,
+      "title": "[MooreToCore] VariableOp lowered failed",
+      "similarity_score": 3.5,
+      "matches": [
+        "MooreToCore pass involved",
+        "moore dialect",
+        "verilog-related"
+      ],
+      "created_date": "2024-08-20T01:51:29Z",
+      "labels": [],
+      "preview": "Dear @maerhart @fabianschuiki ,\r\n When lowering `SV` to `Hw` Dialect, there is a stack dump. \r\nDriver: circt-verilog %s\r\n```\r\nmodule top();\r\n  typedef struct {\r\n    int a;\r\n    int b;\r\n  } ms_t;\r\n\r\n  "
+    },
+    {
+      "issue_number": 7801,
+      "title": "[ImportVerilog] How to implement SVA in Moore?",
+      "similarity_score": 3.5,
+      "matches": [
+        "ImportVerilog pass involved",
+        "moore dialect",
+        "verilog-related"
+      ],
+      "created_date": "2024-11-12T17:40:46Z",
+      "labels": [
+        "ImportVerilog"
+      ],
+      "preview": "Hello fabian and hailong:\r\n@fabianschuiki @hailongSun2000 \r\nI'm trying to implement SVA for moore, and the main problem is how to implement property and sequence for moore, I find that   dialect LTL i"
+    },
+    {
+      "issue_number": 8269,
+      "title": "[MooreToCore] Support `real` constants",
+      "similarity_score": 3.5,
+      "matches": [
+        "MooreToCore pass involved",
+        "moore dialect",
+        "verilog-related"
+      ],
+      "created_date": "2025-02-23T19:01:31Z",
+      "labels": [
+        "Moore"
+      ],
+      "preview": "I'm looking into the failing testcase for `real` constants [on sv-tests-results](https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+5.7.2+real-constants). Just want to put it up here to"
+    },
+    {
+      "issue_number": 8283,
+      "title": "[ImportVerilog] Cannot compile forward decleared string type",
+      "similarity_score": 3.5,
+      "matches": [
+        "ImportVerilog pass involved",
+        "moore dialect",
+        "verilog-related"
+      ],
+      "created_date": "2025-02-28T08:51:12Z",
+      "labels": [],
+      "preview": "I want to support this [sv-tests-results/string_concat_op](https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+11.4.12.2+string_concat_op) feature, but not sure how to fix it properly.\n\n"
+    },
+    {
+      "issue_number": 8334,
+      "title": "[ImportVerilog] Support Delay control",
+      "similarity_score": 3.5,
+      "matches": [
+        "ImportVerilog pass involved",
+        "moore dialect",
+        "verilog-related"
+      ],
+      "created_date": "2025-03-20T16:48:20Z",
+      "labels": [],
+      "preview": "The [chipsalliance tests for delay control](https://chipsalliance.github.io/sv-tests-results/?v=circt_verilog+9.4.1+always) currently fail. For instance:\n```systemverilog\nmodule always_tb ();\n\tlogic a"
+    },
+    {
+      "issue_number": 9013,
+      "title": "[circt-opt] Segmentation fault during XOR op building",
+      "similarity_score": 3.5,
+      "matches": [
+        "function call chain",
+        "always_comb/combinational logic",
+        "verilog-related"
+      ],
+      "created_date": "2025-09-24T16:10:55Z",
+      "labels": [
+        "LLHD"
+      ],
+      "preview": "Hi, all! Let's consider a such `Verilog` example:\n\n```verilog\nmodule top (input clk, input rstn);\n    reg r1;\n    always @(posedge clk or negedge rstn) begin\n        r1 = 0;\n    end\nendmodule\n```\n\nDur"
+    },
+    {
+      "issue_number": 2006,
+      "title": "Adopt \"pretty accessors\" in MLIR",
+      "similarity_score": 3,
+      "matches": [
+        "timeout/hang detection"
+      ],
+      "created_date": "2021-10-16T20:06:14Z",
+      "labels": [
+        "good first issue"
+      ],
+      "preview": "MLIR mainline added the ability to synthesize get/setters with a properly camel cased and get/set-prefixed name, see [this patch](https://reviews.llvm.org/D111033) and [this announcement](https://llvm"
+    },
+    {
+      "issue_number": 8286,
+      "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+      "similarity_score": 3.0,
+      "matches": [
+        "always_comb/combinational logic",
+        "moore dialect",
+        "verilog-related"
+      ],
+      "created_date": "2025-03-03T10:23:03Z",
+      "labels": [],
+      "preview": "Hi all!\n\nThere are a few issues related to moore to llvm lowering pipeline.\n\nCurrently there is no possibility to lower combination logic with control flow operators into LLVM. For example:\n\n```verilo"
+    },
+    {
+      "issue_number": 8332,
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "similarity_score": 3,
+      "matches": [
+        "MooreToCore pass involved",
+        "moore dialect"
+      ],
+      "created_date": "2025-03-20T02:36:53Z",
+      "labels": [],
+      "preview": "Hi! Now I try to add types and operators in sim to get the lowered operators in moore, and then lower them to llvm dialect, so that the corresponding dynamic size container can be implemented in arcil"
+    },
+    {
+      "issue_number": 8476,
+      "title": "[MooreToCore] Lower exponentiation to `math.ipowi`",
+      "similarity_score": 3,
+      "matches": [
+        "MooreToCore pass involved",
+        "moore dialect"
+      ],
+      "created_date": "2025-05-12T16:08:01Z",
+      "labels": [
+        "good first issue",
+        "Moore"
+      ],
+      "preview": "@jiahanxie353 has added the Math dialect to circt-opt in #8475. This is a great precedent to start using that dialect in the MooreToCore conversion. For example, the `moore.pow` operation could be low"
+    },
+    {
+      "issue_number": 9124,
+      "title": "How to obtain Core-only (hw/comb/seq) MLIR from verilog?",
+      "similarity_score": 3.0,
+      "matches": [
+        "always_comb/combinational logic",
+        "moore dialect",
+        "verilog-related"
+      ],
+      "created_date": "2025-10-21T12:45:18Z",
+      "labels": [],
+      "preview": "circt-bmc does not accept LLHD;\n\nVerilog -> Moore -> Core still emits llhd.*, how to obtain Core-only (hw/comb/seq) MLIR for BMC?\n\nThank you!"
+    },
+    {
+      "issue_number": 7692,
+      "title": "[Sim] Combine integer formatting ops into one op",
+      "similarity_score": 2.5,
+      "matches": [
+        "always_comb/combinational logic",
+        "moore dialect"
+      ],
+      "created_date": "2024-10-10T20:39:13Z",
+      "labels": [
+        "Simulator"
+      ],
+      "preview": "@fzi-hielscher I was wondering what your thoughts are on maybe combining the integer formatting operations `sim.fmt.hex`, `sim.fmt.bin`, and `sim.fmt.dec` into a single `sim.fmt.int` operation. The Mo"
+    },
+    {
+      "issue_number": 9234,
+      "title": "[ImportVerilog] Functionality for real number format specifiers not defined",
+      "similarity_score": 2.5,
+      "matches": [
+        "ImportVerilog pass involved",
+        "verilog-related"
+      ],
+      "created_date": "2025-11-17T01:43:55Z",
+      "labels": [
+        "ImportVerilog"
+      ],
+      "preview": "I initially added added some basic support for real number format specifiers in PR #8848 some months ago. Due to school I have been busy and unable to follow up. I believe the functionality still need"
+    },
+    {
+      "issue_number": 1545,
+      "title": "[PrettifyVerilog] Transform (some) array_create/get pairs into cases",
+      "similarity_score": 2.0,
+      "matches": [
+        "always_comb/combinational logic",
+        "verilog-related"
+      ],
+      "created_date": "2021-08-11T20:23:23Z",
+      "labels": [
+        "ExportVerilog"
+      ],
+      "preview": "As [discussed in the design meeting](https://docs.google.com/document/d/1fOSRdyZR2w75D87yU2Ma9h2-_lEPL4NxvhJGJd-s5pk/edit#heading=h.ygmlwiic5e1y) it would make sense to lower certain array_create/get "
+    },
+    {
+      "issue_number": 4532,
+      "title": "[ExportVerilog] always_comb ordering issue",
+      "similarity_score": 2.0,
+      "matches": [
+        "always_comb/combinational logic",
+        "verilog-related"
+      ],
+      "created_date": "2023-01-11T18:58:12Z",
+      "labels": [],
+      "preview": "The following MLIR (bear with me there's potentially a lot of un-important parts of this IR):\r\n\r\n```mlir\r\nmodule attributes {circt.loweringOptions = \"locationInfoStyle=none\"} {\r\n    hw.module @Main(%I"
+    },
+    {
+      "issue_number": 8406,
+      "title": "[hlstool] `noAlwaysComb` lowering option does not seem to work with `hlstool`",
+      "similarity_score": 2.0,
+      "matches": [
+        "always_comb/combinational logic",
+        "verilog-related"
+      ],
+      "created_date": "2025-04-10T00:37:09Z",
+      "labels": [],
+      "preview": "While exploring the toolset and fiddling around with Calyx/CF code, I found this:\n\n```test02.mlir\nfunc.func @main(%arg0 : i32, %arg1 : i32) -> i32 {\n  %0 = arith.cmpi slt, %arg0, %arg1 : i32\n  cf.cond"
+    },
+    {
+      "issue_number": 8863,
+      "title": "[Comb] Concat/extract canonicalizer crashes on loop",
+      "similarity_score": 2.0,
+      "matches": [
+        "always_comb/combinational logic",
+        "verilog-related"
+      ],
+      "created_date": "2025-08-16T20:38:33Z",
+      "labels": [
+        "Comb"
+      ],
+      "preview": "Consider the following input:\n```mlir\nhw.module @Foo(in %a : i1, in %b : i1, out z : i4) {\n  %0 = comb.extract %1 from 2 : (i4) -> i2\n  %1 = comb.concat %0, %b, %a : i2, i1, i1\n  hw.output %1 : i4\n}\n`"
+    },
+    {
+      "issue_number": 9467,
+      "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "similarity_score": 2.0,
+      "matches": [
+        "always_comb/combinational logic",
+        "verilog-related"
+      ],
+      "created_date": "2026-01-17T18:13:38Z",
+      "labels": [
+        "LLHD",
+        "Arc"
+      ],
+      "preview": "## Title\n[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)\n\n## Summary\nI ran into a failure in the arcilator flow with a minimal SystemVe"
+    },
+    {
+      "issue_number": 1522,
+      "title": "Experimentation with FSM dialect during Calyx lowering",
+      "similarity_score": 1.5,
+      "matches": [
+        "always_comb/combinational logic"
+      ],
+      "created_date": "2021-08-04T22:00:23Z",
+      "labels": [
+        "Tracking Issue",
+        "Calyx",
+        "FSM"
+      ],
+      "preview": "In https://github.com/llvm/circt/pull/1506#pullrequestreview-720563236 I mentioned that it might be useful to use the proposed FSM dialect during Calyx's CompileControl pass. That pass is generating a"
+    },
+    {
+      "issue_number": 6810,
+      "title": "[Arc] Add basic assertion support",
+      "similarity_score": 1.5,
+      "matches": [
+        "function call chain"
+      ],
+      "created_date": "2024-03-11T16:54:47Z",
+      "labels": [
+        "good first issue",
+        "Arc"
+      ],
+      "preview": "Add support for `verif.assert` and `sv.assert.concurrent` operations to the Arc dialect and passes. When lowering towards LLVM, the asserts should lower to an `scf.if` operation that checks whether th"
+    },
+    {
+      "issue_number": 7665,
+      "title": "[LLHD][ProcessLowering] Incorrectly inlines aliasing drives",
+      "similarity_score": 1.5,
+      "matches": [
+        "always_comb/combinational logic"
+      ],
+      "created_date": "2024-10-04T10:44:00Z",
+      "labels": [
+        "bug",
+        "LLHD"
+      ],
+      "preview": "The ProcessLowering pass checks whether an `llhd.process` operation is a combinational process and inlines it into the parent module if that's the case.\r\n\r\nHowever, it doesn't check for aliasing drive"
+    },
+    {
+      "issue_number": 8012,
+      "title": "[Moore][Arc][LLHD] Moore to LLVM lowering issues",
+      "similarity_score": 1.5,
+      "matches": [
+        "moore dialect",
+        "verilog-related"
+      ],
+      "created_date": "2024-12-20T16:49:46Z",
+      "labels": [],
+      "preview": "Hi all!\n\nI am trying to simulate a SystemVerilog code (listed below) using `arcilator`:\n\n```verilog\nmodule dff(D, clk, Q);\n    input D; // Data input \n    input clk; // clock input \n    output reg Q; "
+    },
+    {
+      "issue_number": 9191,
+      "title": "MLIR pattern checks failing",
+      "similarity_score": 1.5,
+      "matches": [
+        "always_comb/combinational logic"
+      ],
+      "created_date": "2025-11-05T16:47:22Z",
+      "labels": [],
+      "preview": "@fabianschuiki, @maerhart and I noticed while debugging some conversion that adding the flag `-DMLIR_ENABLE_EXPENSIVE_PATTERN_API_CHECKS=ON` to a CIRCT LLVM build exposes several places where our pass"
+    },
+    {
+      "issue_number": 9238,
+      "title": "Why does Moore lower to LLHD instead of directly lowering to core/seq?",
+      "similarity_score": 1,
+      "matches": [
+        "moore dialect"
+      ],
+      "created_date": "2025-11-18T14:58:07Z",
+      "labels": [],
+      "preview": "Hi, I have a question. Why does Moore lower to LLHD instead of directly lowering to core/seq? Would it be more convenient to lower to core/seq directly? Thanks!"
+    },
+    {
+      "issue_number": 2565,
+      "title": "[FIRRTL] Simplify PrefixModules pass",
+      "similarity_score": 0.5,
+      "matches": [
+        "verilog-related"
+      ],
+      "created_date": "2022-02-02T15:01:42Z",
+      "labels": [
+        "FIRRTL"
+      ],
+      "preview": "`PrefixModules` is a global pass that renames the modules based on certain annotation.\r\n It seems to be a relatively expensive pass for just renaming the modules.\r\nCan we simplify the pass for certain"
+    }
+  ],
+  "search_parameters": {
+    "crash_type": "timeout",
+    "dialect": "moore",
+    "key_constructs": [
+      "nested_modules",
+      "function_call_chain",
+      "always_comb_dependency"
+    ],
+    "function_keywords": [
+      "analyzeFanIn",
+      "Converter::analyzeFanIn",
+      "convertModuleHeader",
+      "Context::convertModuleHeader",
+      "convertModuleBody",
+      "Context::convertModuleBody",
+      "matchAndRewrite",
+      "ProcedureOpConversion::matchAndRewrite",
+      "ensureNoLoops",
+      "SplitLoopsPass::ensureNoLoops"
+    ],
+    "location_keywords": [
+      "ImportVerilog",
+      "MooreToCore",
+      "SplitLoops"
+    ]
+  }
+}

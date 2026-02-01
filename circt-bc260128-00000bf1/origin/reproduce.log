@@ -1,0 +1,31 @@
+=== CIRCT TIMEOUT CRASH REPRODUCTION ===
+
+Testcase ID: 260128-00000bf1
+Crash Type: timeout
+
+Original Command:
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw ./source.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o test_output.o
+
+Original Timeout: 300s
+Reproduction Timeout: 60s
+
+=== REPRODUCTION ATTEMPT ===
+
+Command executed:
+export PATH=/opt/llvm-22/bin:$PATH
+timeout 60s bash -c '/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw ./source.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o test_output.o'
+
+Exit Code: 124 (TIMEOUT)
+Actual Time: 60s
+Status: REPRODUCED ✓
+
+The command hung after 60 seconds, confirming the timeout bug.
+The pipeline is stuck in one of these stages:
+- circt-verilog (IR generation)
+- arcilator (ArcME simulation)
+- opt (optimization pass)
+- llc (LLVM code generation)
+
+Testcase Details:
+- Input: source.sv (SystemVerilog with struct types and array indexing)
+- Error Type: Infinite loop or performance regression during compilation

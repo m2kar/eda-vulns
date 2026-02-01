@@ -1,0 +1,22 @@
+{
+  "syntax_valid": true,
+  "circt_compilation": "success",
+  "original_bug_reproduces": false,
+  "classification": {
+    "result": "not_a_bug",
+    "reason": "Bug has been fixed in current CIRCT version. The original assertion failure in StateType::get() when handling !llhd.ref<i1> type for inout ports no longer occurs.",
+    "note": "Original bug no longer reproduces - likely fixed between CIRCT 1.139.0 and current version"
+  },
+  "minimization": {
+    "original_lines": 9,
+    "minimized_lines": 4,
+    "reduction_percent": 55.6,
+    "preserved_construct": "inout wire port declaration"
+  },
+  "validation_details": {
+    "slang_syntax_check": "passed",
+    "circt_verilog_ir_hw": "success - generates !llhd.ref<i1> type",
+    "arcilator_pipeline": "success - no crash or assertion failure"
+  },
+  "timestamp": "2026-02-01T12:53:07Z"
+}

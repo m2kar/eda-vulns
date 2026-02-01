@@ -1,0 +1,104 @@
+{
+  "analysis_date": "2025-02-01",
+  "bug_id": "260129-00001855",
+  "bug_summary": {
+    "dialect": "arc",
+    "tool": "arcilator",
+    "pass": "LowerStatePass",
+    "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "keywords": [
+      "arcilator",
+      "LowerState",
+      "StateType",
+      "llhd.ref",
+      "inout",
+      "bidirectional port",
+      "computeLLVMBitWidth",
+      "assertion failure"
+    ]
+  },
+  "search_summary": {
+    "queries_used": 6,
+    "total_issues_found": 3,
+    "issues_analyzed": 3
+  },
+  "duplicate_check_results": [
+    {
+      "issue_number": 9574,
+      "title": "[Arc] Assertion failure when lowering inout ports in sequential logic",
+      "url": "https://github.com/llvm/circt/issues/9574",
+      "state": "OPEN",
+      "similarity_score": 90.0,
+      "detail_scores": {
+        "keywords": 75.0,
+        "error_message": 100,
+        "tool_dialect": 100,
+        "pass": 100,
+        "sequence": 1.6
+      },
+      "match_details": {
+        "keywords_found": [
+          "arcilator",
+          "LowerState",
+          "StateType",
+          "llhd.ref",
+          "inout",
+          "assertion failure"
+        ],
+        "has_error_message": true,
+        "has_tool": true,
+        "has_dialect": true,
+        "has_pass": true
+      }
+    },
+    {
+      "issue_number": 6810,
+      "title": "[Arc] Add basic assertion support",
+      "url": "https://github.com/llvm/circt/issues/6810",
+      "state": "OPEN",
+      "similarity_score": 10.0,
+      "detail_scores": {
+        "keywords": 0.0,
+        "error_message": 0,
+        "tool_dialect": 50,
+        "pass": 0,
+        "sequence": 3.2
+      },
+      "match_details": {
+        "keywords_found": [],
+        "has_error_message": false,
+        "has_tool": false,
+        "has_dialect": true,
+        "has_pass": false
+      }
+    },
+    {
+      "issue_number": 8825,
+      "title": "[LLHD] Switch from hw.inout to a custom signal reference type",
+      "url": "https://github.com/llvm/circt/issues/8825",
+      "state": "OPEN",
+      "similarity_score": 10.0,
+      "detail_scores": {
+        "keywords": 25.0,
+        "error_message": 0,
+        "tool_dialect": 0,
+        "pass": 0,
+        "sequence": 4.0
+      },
+      "match_details": {
+        "keywords_found": [
+          "llhd.ref",
+          "inout"
+        ],
+        "has_error_message": false,
+        "has_tool": false,
+        "has_dialect": false,
+        "has_pass": false
+      }
+    }
+  ],
+  "recommendation": "likely_duplicate",
+  "highest_similarity_score": 90.0,
+  "most_similar_issue": 9574,
+  "recommendation_reason": "找到高度相似的Issue #9574 (相似度: 90.0%)"
+}

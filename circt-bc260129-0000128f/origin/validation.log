@@ -1,0 +1,6 @@
+<stdin>:30:10: error: 'arc.state' op operand type mismatch: operand #2
+    %2 = comb.mux bin %0#1, %0#0, %data_reg : !hw.array<16xi32>
+         ^
+<stdin>:30:10: note: see current operation: %3 = "arc.state"(%5, %0#1, %1, %0#0, %2) <{arc = @example_module_arc, latency = 1 : i32, operandSegmentSizes = array<i32: 1, 1, 0, 3, 0>}> : (!seq.clock, i1, i1, !hw.array<16xi32>, i691698096) -> !hw.array<16xi32>
+<stdin>:30:10: note: expected type: '!hw.array<16xi32>'
+<stdin>:30:10: note:   actual type: 'i691698096'

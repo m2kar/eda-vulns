@@ -1,0 +1,91 @@
+{
+  "search_keywords": [
+    "string port MooreToCore",
+    "sanitizeInOut",
+    "Moore string type conversion",
+    "dyn_cast null type",
+    "PortImplementation assertion",
+    "SVModuleOpConversion",
+    "Moore output port assertion",
+    "TypeConverter null",
+    "output string port",
+    "module has string"
+  ],
+  "issues_found": [
+    {
+      "number": 9572,
+      "title": "[Moore] Assertion failure when module has string type output port",
+      "state": "open",
+      "created_at": "2026-02-01T03:00:12Z",
+      "url": "https://github.com/llvm/circt/issues/9572",
+      "similarity_score": 9.8,
+      "matching_keywords": [
+        "string port MooreToCore",
+        "sanitizeInOut",
+        "dyn_cast null type",
+        "PortImplementation assertion",
+        "SVModuleOpConversion",
+        "output string port",
+        "module has string"
+      ],
+      "matching_components": [
+        "circt::hw::ModulePortInfo::sanitizeInOut",
+        "getModulePortInfo",
+        "SVModuleOpConversion",
+        "MooreToCorePass",
+        "TypeConverter"
+      ],
+      "crash_signature_match": "exact",
+      "test_case_match": "exact",
+      "analysis": "This issue is virtually identical to the crash being analyzed. Both involve:\n1. Moore dialect string type in output port\n2. Missing type conversion rule causing null type\n3. Crash in SVModuleOpConversion::matchAndRewrite\n4. Same assertion failure: 'dyn_cast on a non-existent value'\n5. Same affected components and crash location (PortImplementation.h:177)\n6. Both use same test case: 'module test_module(output string a);'\n\nThis appears to be an EXACT DUPLICATE of the current crash.",
+      "severity": "high",
+      "reproducibility": "always"
+    },
+    {
+      "number": 9570,
+      "title": "[Moore] Assertion in MooreToCore when module uses packed union type as port",
+      "state": "open",
+      "created_at": "2026-02-01T02:15:22Z",
+      "url": "https://github.com/llvm/circt/issues/9570",
+      "similarity_score": 6.5,
+      "matching_keywords": [
+        "SVModuleOpConversion",
+        "TypeConverter",
+        "dyn_cast null type",
+        "PortImplementation assertion"
+      ],
+      "matching_components": [
+        "circt::hw::ModulePortInfo",
+        "getModulePortInfo",
+        "SVModuleOpConversion",
+        "MooreToCorePass",
+        "TypeConverter"
+      ],
+      "crash_signature_match": "similar",
+      "test_case_match": "different_type_different_construct",
+      "analysis": "This issue shares the same root cause mechanism as the string port crash:\n1. Both involve MooreToCore conversion pass\n2. Both have missing type conversion rules (string vs packed union)\n3. Both trigger same assertion: 'dyn_cast on a non-existent value'\n4. Same affected components: SVModuleOpConversion, getModulePortInfo, TypeConverter\n5. Same crash location: PortImplementation.h (getModulePortInfo line 259)\n\nHowever, they differ in:\n- Trigger type: packed union type instead of string type\n- Test construct: union typedef vs simple string port\n\nThis is a RELATED ISSUE with the same root cause pattern (missing type conversion rules for unsupported types).",
+      "severity": "high",
+      "reproducibility": "always"
+    }
+  ],
+  "search_results_summary": {
+    "total_issues_found": 2,
+    "open_issues": 2,
+    "closed_issues": 0,
+    "exact_duplicates": 1,
+    "related_issues": 1,
+    "potential_duplicates": 0
+  },
+  "recommendation": "review_existing",
+  "confidence": "very_high",
+  "top_score": 9.8,
+  "top_issue": 9572,
+  "report_action": "DO NOT CREATE NEW ISSUE - Issue #9572 is an exact duplicate of the crash being analyzed. The issue was created on 2026-02-01T03:00:12Z and contains virtually identical crash information, test case, and analysis.",
+  "cross_check_notes": [
+    "Both issues report the same crash in the same components",
+    "Both have identical test cases for the string port scenario",
+    "Both trace the crash to PortImplementation.h:177 in sanitizeInOut()",
+    "Both identify the same root cause: missing string type conversion in MooreToCore",
+    "Issue #9570 (union type) demonstrates this is a systemic issue with missing type conversion rules"
+  ]
+}

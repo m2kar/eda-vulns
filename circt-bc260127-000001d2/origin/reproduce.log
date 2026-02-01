@@ -1,0 +1,29 @@
+=== CIRCT Crash Reproduction Log ===
+Testcase ID: 260127-000001d2
+Crash Type: assertion
+
+--- Reproduction Command ---
+/opt/firtool/bin/circt-verilog --ir-hw source.sv 2>&1 | /opt/firtool/bin/arcilator 2>&1
+
+--- Toolchain Paths Used ---
+circt-verilog: /opt/firtool/bin/circt-verilog
+arcilator: /opt/firtool/bin/arcilator
+opt: /opt/llvm-22/bin/opt
+llc: /opt/llvm-22/bin/llc
+PATH: /opt/llvm-22/bin:$PATH
+
+--- Reproduction Output ---
+<stdin>:3:10: error: failed to legalize operation 'sim.fmt.literal'
+    %0 = sim.fmt.literal "Error: Assertion failed: q != 0"
+         ^
+<stdin>:3:10: note: see current operation: %27 = "sim.fmt.literal"() <{literal = "Error: Assertion failed: q != 0"}> : () -> !sim.fstring
+
+--- Analysis ---
+The crash is successfully reproduced. The error occurs during the arcilator pass when attempting to legalize the 'sim.fmt.literal' operation. This operation is used to format the error message string in the Verilog assertion statement.
+
+Original command used: /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw
+Current command used: /opt/firtool/bin/circt-verilog --ir-hw
+
+The crash signature matches the original error exactly:
+- Error message: "failed to legalize operation 'sim.fmt.literal'"
+- Operation details: %27 = "sim.fmt.literal"() <{literal = "Error: Assertion failed: q != 0"}> : () -> !sim.fstring

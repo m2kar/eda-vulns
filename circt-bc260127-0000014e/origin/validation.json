@@ -1,0 +1,14 @@
+{
+  "classification": {
+    "result": "report",
+    "reasoning": "The minimized test case uses a string input port that triggers a circt-verilog assertion during Moore-to-Core lowering. This is a compiler crash on valid syntax and should be reported as a bug."
+  },
+  "validation": {
+    "syntax_valid": true,
+    "cross_tool_results": {
+      "slang": "ok (0 errors, 0 warnings)",
+      "verilator": "ok (lint-only, no diagnostics)"
+    },
+    "timestamp": "2026-01-31T17:39:05+00:00"
+  }
+}

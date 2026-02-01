@@ -1,0 +1,63 @@
+{
+  "testcase_id": "260128-00000717",
+  "status": "in_progress",
+  "phase": "completed",
+  "crash_type": "assertion",
+  "crash_location": "SVModuleOpConversion::matchAndRewrite in MooreToCore.cpp",
+  "reproducible": true,
+  "reproduction_command": "circt-verilog --ir-hw /tmp/test_crash.sv",
+  "original_error": "dyn_cast on a non-existent value in circt::hw::ModulePortInfo::sanitizeInOut()",
+  "current_error": "Stack dump in SVModuleOpConversion::matchAndRewrite",
+  "test_file": "/tmp/test_crash.sv",
+  "validation": {
+    "syntax_valid": true,
+    "syntax_checked_by": "slang 10.0.6",
+    "feature_supported": true,
+    "sv_feature": "packed union in module ports",
+    "cross_tool_validation": {
+      "slang": "passes",
+      "circt": "crashes"
+    },
+    "classification": "bug_report",
+    "trigger": "packed union as module port"
+  },
+  "phases": {
+    "reproduce": "completed",
+    "validate": "completed",
+    "root_cause_analysis": "completed",
+    "minimize": "completed",
+    "validate_minimized": "completed",
+    "check_duplicates": "completed",
+    "generate_issue": "completed"
+  },
+  "root_cause": {
+    "type": "type_conversion_bug",
+    "location": "ModulePortInfo::sanitizeInOut()",
+    "trigger": "moore::UnionType as module port",
+    "mechanism": "dyn_cast<hw::InOutType>() fails on UnionType",
+    "hypothesis": "Missing type conversion pattern for UnionType"
+  },
+  "minimization": {
+    "original_lines": 28,
+    "minimized_lines": 4,
+    "reduction_ratio": "85.7%",
+    "minimized_test": "/home/zhiqing/edazz/eda-vulns/circt-bc260128-00000717/minimized_test.sv",
+    "reproduction_command": "circt-verilog --ir-hw minimized_test.sv"
+  },
+  "duplicates": {
+    "checked": true,
+    "found": 4,
+    "top_score": 7.0,
+    "recommendation": "likely_new",
+    "confidence": "medium",
+    "related_issues": [8930, 8471, 7378]
+  },
+  "output": {
+    "issue_report": "/home/zhiqing/edazz/eda-vulns/circt-bc260128-00000717/issue.md",
+    "root_cause_analysis": "/home/zhiqing/edazz/eda-vulns/circt-bc260128-00000717/root_cause_analysis.md",
+    "duplicates_report": "/home/zhiqing/edazz/eda-vulns/circt-bc260128-00000717/duplicates.md"
+  },
+  "created_at": "2026-01-31T19:17:00Z",
+  "last_updated": "2026-01-31T19:22:00Z",
+  "status": "ready_to_submit"
+}

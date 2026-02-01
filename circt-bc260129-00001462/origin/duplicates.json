@@ -1,0 +1,172 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T07:35:18.474287",
+  "search_context": {
+    "keywords": [
+      "concurrent assertion",
+      "action block",
+      "assert property",
+      "else $error",
+      "ImportVerilog",
+      "not supported yet",
+      "ConcurrentAssertionStatement"
+    ],
+    "error_message": "concurrent assertion statements with action blocks are not supported yet",
+    "failing_component": "ImportVerilog",
+    "dialect": "Moore",
+    "crash_type": "feature_limitation"
+  },
+  "search_results": {
+    "total_issues_found": 49,
+    "top_10_issues": [
+      {
+        "number": 9234,
+        "title": "[ImportVerilog] Functionality for real number format specifiers not defined",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/9234",
+        "similarity_score": 17,
+        "score_breakdown": [
+          "keyword_match(2)",
+          "component_match(10)",
+          "label_match(5)"
+        ],
+        "created_at": "2025-11-17T01:43:55Z"
+      },
+      {
+        "number": 9206,
+        "title": "[ImportVerilog] moore.conversion generated instead of moore.int_to_string",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/9206",
+        "similarity_score": 17,
+        "score_breakdown": [
+          "keyword_match(2)",
+          "component_match(10)",
+          "label_match(5)"
+        ],
+        "created_at": "2025-11-07T16:36:26Z"
+      },
+      {
+        "number": 8173,
+        "title": "[ImportVerilog] Crash on ordering-methods-reverse test",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8173",
+        "similarity_score": 17,
+        "score_breakdown": [
+          "keyword_match(2)",
+          "component_match(10)",
+          "label_match(5)"
+        ],
+        "created_at": "2025-02-02T23:54:27Z"
+      },
+      {
+        "number": 8021,
+        "title": "[ImportVerilog] Support handling the slang::ast::StatementBlockSymbol.",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8021",
+        "similarity_score": 17,
+        "score_breakdown": [
+          "keyword_match(2)",
+          "component_match(10)",
+          "label_match(5)"
+        ],
+        "created_at": "2024-12-30T05:55:59Z"
+      },
+      {
+        "number": 7801,
+        "title": "[ImportVerilog] How to implement SVA in Moore?",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/7801",
+        "similarity_score": 17,
+        "score_breakdown": [
+          "keyword_match(2)",
+          "component_match(10)",
+          "label_match(5)"
+        ],
+        "created_at": "2024-11-12T17:40:46Z"
+      },
+      {
+        "number": 6776,
+        "title": "[ImportVerilog] Make AST traveral non-recursive",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/6776",
+        "similarity_score": 17,
+        "score_breakdown": [
+          "keyword_match(2)",
+          "component_match(10)",
+          "label_match(5)"
+        ],
+        "created_at": "2024-03-03T04:56:35Z"
+      },
+      {
+        "number": 6745,
+        "title": "[ImportVerilog] Rename `Context` to `Converter`",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/6745",
+        "similarity_score": 17,
+        "score_breakdown": [
+          "keyword_match(2)",
+          "component_match(10)",
+          "label_match(5)"
+        ],
+        "created_at": "2024-02-25T22:25:23Z"
+      },
+      {
+        "number": 8836,
+        "title": "[circt-verilog] Align command-line options with Slang v9",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8836",
+        "similarity_score": 16,
+        "score_breakdown": [
+          "keyword_match(1)",
+          "component_match(10)",
+          "label_match(5)"
+        ],
+        "created_at": "2025-08-08T22:55:53Z"
+      },
+      {
+        "number": 2486,
+        "title": "[ExportVerilog] CSE of Assert Action Block Temporaries trips VCS Lint",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/2486",
+        "similarity_score": 15,
+        "score_breakdown": [
+          "keyword_match(5)",
+          "error_match(10)"
+        ],
+        "created_at": "2022-01-21T00:09:02Z"
+      },
+      {
+        "number": 8571,
+        "title": "[ImportVerilog] Unknown module instantiation fails even with `--ignore-unknown-modules`",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/8571",
+        "similarity_score": 12,
+        "score_breakdown": [
+          "keyword_match(2)",
+          "component_match(10)"
+        ],
+        "created_at": "2025-06-17T00:52:03Z"
+      }
+    ]
+  },
+  "top_issue": {
+    "number": 9234,
+    "title": "[ImportVerilog] Functionality for real number format specifiers not defined",
+    "state": "OPEN",
+    "url": "https://github.com/llvm/circt/issues/9234",
+    "similarity_score": 17,
+    "score_breakdown": [
+      "keyword_match(2)",
+      "component_match(10)",
+      "label_match(5)"
+    ],
+    "created_at": "2025-11-17T01:43:55Z"
+  },
+  "assessment": {
+    "recommendation": "likely_new",
+    "confidence": "medium",
+    "reason": "Related issues exist but appear to address different aspects",
+    "top_score": 17,
+    "score_scale": "0-40 (keyword_overlap:10 + error_match:10 + component_match:10 + construct_match:10)"
+  }
+}

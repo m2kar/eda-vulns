@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T01:15:09+00:00",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang",
+    "result": "Build succeeded: 0 errors, 0 warnings"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": "",
+    "notes": "String type is valid IEEE 1800 SystemVerilog"
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "verilator": "pass",
+    "icarus": "not_supported",
+    "slang": "pass"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid SystemVerilog test case causes crash in CIRCT. Verilator and Slang accept the code. The crash is in Moore-to-Core conversion when handling string type ports."
+  }
+}

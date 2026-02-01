@@ -1,0 +1,4 @@
+<stdin>:3:10: error: failed to legalize operation 'sim.fmt.literal'
+    %0 = sim.fmt.literal "Error: f"
+         ^
+<stdin>:3:10: note: see current operation: %7 = "sim.fmt.literal"() <{literal = "Error: f"}> : () -> !sim.fstring

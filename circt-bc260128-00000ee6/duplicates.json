@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T02:54:20+00:00",
+  "repository": "llvm/circt",
+  "search_status": "",
+  "keywords": [
+    "extractConcatToConcatExtract",
+    "ReplaceOp",
+    "use_empty",
+    "canonicalization",
+    "ExtractOp",
+    "ConcatOp",
+    "always_comb",
+    "multiple assignments",
+    "CombFolds",
+    "assertion failure"
+  ],
+  "potential_duplicates": [],
+  "notes": "Due to network/API limitations, comprehensive duplicate search could not be performed. Manual check recommended during issue submission."
+}

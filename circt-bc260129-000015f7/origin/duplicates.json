@@ -1,0 +1,69 @@
+{
+  "testcase_id": "260129-000015f7",
+  "search_summary": {
+    "queries_used": 6,
+    "issues_found": 3,
+    "recommendation": "likely_duplicate",
+    "top_score": 67.25,
+    "top_issue": 8693
+  },
+  "search_results": [
+    {
+      "issue_number": 8693,
+      "title": "[Mem2Reg] Local signal does not dominate final drive",
+      "state": "OPEN",
+      "created": "2025-07-11T20:11:54Z",
+      "labels": [
+        "LLHD"
+      ],
+      "similarity_score": 67.25,
+      "similarity_details": {
+        "has_mem2reg": true,
+        "has_llhd": true,
+        "keyword_score": 7.5,
+        "has_type_issue": true,
+        "title_similarity_score": 4.745762711864407
+      },
+      "body_preview": "For input (derived from SV import minized and then MLIR minized)\n\n```mlir\nmodule {\n  hw.module @a() {\n    %false = hw.constant false\n    %b = llhd.sig %false : i1\n    llhd.combinational {\n      cf.br ..."
+    },
+    {
+      "issue_number": 8286,
+      "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+      "state": "OPEN",
+      "created": "2025-03-03T10:23:03Z",
+      "labels": [],
+      "similarity_score": 54.75,
+      "similarity_details": {
+        "has_mem2reg": true,
+        "has_llhd": true,
+        "keyword_score": 7.5,
+        "title_similarity_score": 2.2535211267605635
+      },
+      "body_preview": "Hi all!\n\nThere are a few issues related to moore to llvm lowering pipeline.\n\nCurrently there is no possibility to lower combination logic with control flow operators into LLVM. For example:\n\n```verilo..."
+    },
+    {
+      "issue_number": 1352,
+      "title": "[FIRRTL] Add create vector/bundle ops",
+      "state": "OPEN",
+      "created": "2021-06-30T15:15:09Z",
+      "labels": [
+        "enhancement",
+        "FIRRTL"
+      ],
+      "similarity_score": 25.57,
+      "similarity_details": {
+        "has_llhd": true,
+        "keyword_score": 3.75,
+        "title_similarity_score": 1.8181818181818183
+      },
+      "body_preview": "As [discussed](https://github.com/llvm/circt/pull/1304#discussion_r659352639) in #1304, constructing a vector or bundle currently requires a temporary `firrtl.wire`, with subfield/subindex ops and con..."
+    }
+  ],
+  "analysis_keywords": {
+    "crash_type": "assertion",
+    "dialect": "LLHD",
+    "pass": "Mem2Reg",
+    "tool": "circt-verilog",
+    "error_message": "integer bitwidth is limited to 16777215 bits"
+  }
+}

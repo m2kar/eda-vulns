@@ -1,0 +1,14 @@
+{
+  "dialect": "LLHD",
+  "crash_type": "assertion",
+  "root_cause_hypothesis": "The LLHD Mem2Reg pass attempts to create an IntegerType using hw::getBitWidth() which returns -1 for unsupported types (like SystemVerilog 'real'). The -1 is interpreted as an unsigned value, causing an attempt to create an IntegerType with ~2^64-1 bits, exceeding MLIR's 16,777,215 bit limit.",
+  "key_construct": "real type (floating-point) in clocked assignment (always @(posedge clk) out_real <= in_real)",
+  "stack_trace_summary": "Mem2RegPass::runOnOperation -> Promoter::promote -> Promoter::insertBlockArgs -> builder.getIntegerType(hw::getBitWidth(type)) -> mlir::IntegerType::get fails assertion due to bitwidth > 16777215",
+  "crash_location": {
+    "file": "lib/Dialect/LLHD/Transforms/Mem2Reg.cpp",
+    "line": 1753,
+    "function": "Promoter::insertBlockArgs(BlockEntry*)"
+  },
+  "trigger_pattern": "SystemVerilog real type variable with clocked assignment",
+  "mlir_error": "integer bitwidth is limited to 16777215 bits"
+}

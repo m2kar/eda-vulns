@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T03:30:00Z",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": ""
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "verilator": "warning",
+    "icarus": "pass",
+    "slang": "pass"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid test case, unique timeout in CIRCT"
+  }
+}

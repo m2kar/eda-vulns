@@ -1,0 +1,16 @@
+{
+  "crash": {
+    "type": "legalization_failure",
+    "message": "failed to legalize operation 'sim.fmt.literal'",
+    "assertion": "Error: Assertion failed: q != 0"
+  },
+  "dialect": "Sim",
+  "operation": "sim.fmt.literal",
+  "suspected_pass": "LowerArcToLLVM",
+  "source_locations": [
+    "include/circt/Dialect/Sim/SimOps.td",
+    "lib/Conversion/ArcToLLVM/LowerArcToLLVM.cpp"
+  ],
+  "root_cause": "Arc-to-LLVM conversion does not legalize or lower sim.fmt.* ops, so sim.fmt.literal survives into legalization and fails.",
+  "confidence": "medium"
+}

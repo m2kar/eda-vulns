@@ -1,0 +1,37 @@
+; ModuleID = 'LLVMDialectModule'
+source_filename = "LLVMDialectModule"
+
+declare void @exit(i32)
+
+define void @MixPorts_eval(ptr %0) {
+  %2 = getelementptr i8, ptr %0, i32 2
+  %3 = load i1, ptr %2, align 1
+  %4 = getelementptr i8, ptr %0, i32 4
+  %5 = load i1, ptr %4, align 1
+  store i1 %3, ptr %4, align 1
+  %6 = xor i1 %5, %3
+  %7 = and i1 %6, %3
+  br i1 %7, label %8, label %12
+
+8:                                                ; preds = %1
+  %9 = getelementptr i8, ptr %0, i32 3
+  %10 = load i4, ptr %9, align 1
+  %11 = add i4 %10, 1
+  store i4 %11, ptr %9, align 1
+  br label %12
+
+12:                                               ; preds = %8, %1
+  %13 = load i1, ptr %0, align 1
+  %14 = getelementptr i8, ptr %0, i32 5
+  store i1 %13, ptr %14, align 1
+  %15 = getelementptr i8, ptr %0, i32 3
+  %16 = load i4, ptr %15, align 1
+  %17 = trunc i4 %16 to i1
+  %18 = getelementptr i8, ptr %0, i32 6
+  store i1 %17, ptr %18, align 1
+  ret void
+}
+
+!llvm.module.flags = !{!0}
+
+!0 = !{i32 2, !"Debug Info Version", i32 3}

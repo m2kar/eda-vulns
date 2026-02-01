@@ -1,0 +1,37 @@
+{
+  "testcase_id": "260128-00000d3f",
+  "crash_type": "assertion",
+  "status": "report_ready",
+  "current_step": "completed",
+  "reproducible": true,
+  "validated": "report",
+  "root_cause_analyzed": true,
+  "minimized": true,
+  "duplicates_checked": "review_existing",
+  "issue_generated": true,
+  "issue_submitted": false,
+  "start_time": "2026-02-01T00:38:04Z",
+  "last_updated": "2026-02-01T00:48:00Z",
+  "parallel_mode": true,
+  "phases": {
+    "phase1": {
+      "status": "completed",
+      "tasks": ["reproduce", "root-cause-analysis"]
+    },
+    "phase2": {
+      "status": "completed",
+      "tasks": ["minimize", "validate", "check-duplicates"]
+    },
+    "phase3": {
+      "status": "completed",
+      "tasks": ["generate-issue"]
+    }
+  },
+  "summary": {
+    "reduction_percent": 80,
+    "validation_result": "report",
+    "duplicate_score": 38,
+    "recommendation": "review_existing",
+    "related_issues": ["#8219", "#8930"]
+  }
+}

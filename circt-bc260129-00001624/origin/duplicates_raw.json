@@ -1,0 +1,224 @@
+{
+  "search_results": {
+    "label": {
+      "moore": [
+        {
+          "labels": [
+            {
+              "id": "LA_kwDODpuCgs7olJFv",
+              "name": "Moore",
+              "description": "",
+              "color": "04673D"
+            },
+            {
+              "id": "LA_kwDODpuCgs8AAAABp1j0gg",
+              "name": "ImportVerilog",
+              "description": "",
+              "color": "e99695"
+            }
+          ],
+          "number": 9206,
+          "state": "OPEN",
+          "title": "[ImportVerilog] moore.conversion generated instead of moore.int_to_string"
+        },
+        {
+          "labels": [
+            {
+              "id": "LA_kwDODpuCgs7olJFv",
+              "name": "Moore",
+              "description": "",
+              "color": "04673D"
+            }
+          ],
+          "number": 8973,
+          "state": "OPEN",
+          "title": "[MooreToCore] Lowering to math.ipow?"
+        },
+        {
+          "labels": [
+            {
+              "id": "LA_kwDODpuCgs7olJFv",
+              "name": "Moore",
+              "description": "",
+              "color": "04673D"
+            }
+          ],
+          "number": 8930,
+          "state": "OPEN",
+          "title": "[MooreToCore] Crash with sqrt/floor"
+        },
+        {
+          "labels": [
+            {
+              "id": "MDU6TGFiZWwxODg4ODczNzIx",
+              "name": "good first issue",
+              "description": "Good for newcomers",
+              "color": "7057ff"
+            },
+            {
+              "id": "LA_kwDODpuCgs7olJFv",
+              "name": "Moore",
+              "description": "",
+              "color": "04673D"
+            }
+          ],
+          "number": 8476,
+          "state": "OPEN",
+          "title": "[MooreToCore] Lower exponentiation to `math.ipowi`"
+        },
+        {
+          "labels": [
+            {
+              "id": "LA_kwDODpuCgs7olJFv",
+              "name": "Moore",
+              "description": "",
+              "color": "04673D"
+            }
+          ],
+          "number": 8269,
+          "state": "OPEN",
+          "title": "[MooreToCore] Support `real` constants"
+        },
+        {
+          "labels": [
+            {
+              "id": "LA_kwDODpuCgs7olJFv",
+              "name": "Moore",
+              "description": "",
+              "color": "04673D"
+            }
+          ],
+          "number": 8215,
+          "state": "OPEN",
+          "title": "[MooreToCore] OOB array slices of unpacked arrays lowered like packed arrays"
+        },
+        {
+          "labels": [
+            {
+              "id": "LA_kwDODpuCgs7olJFv",
+              "name": "Moore",
+              "description": "",
+              "color": "04673D"
+            }
+          ],
+          "number": 8211,
+          "state": "OPEN",
+          "title": "[MooreToCore]Unexpected observed values in llhd.wait."
+        },
+        {
+          "labels": [
+            {
+              "id": "LA_kwDODpuCgs7olJFv",
+              "name": "Moore",
+              "description": "",
+              "color": "04673D"
+            }
+          ],
+          "number": 8176,
+          "state": "OPEN",
+          "title": "[MooreToCore] Crash when getting values to observe"
+        },
+        {
+          "labels": [
+            {
+              "id": "LA_kwDODpuCgs7olJFv",
+              "name": "Moore",
+              "description": "",
+              "color": "04673D"
+            }
+          ],
+          "number": 8163,
+          "state": "OPEN",
+          "title": "[MooreToCore] Out-of-bounds moore.extract lowered incorrectly"
+        },
+        {
+          "labels": [
+            {
+              "id": "LA_kwDODpuCgs7olJFv",
+              "name": "Moore",
+              "description": "",
+              "color": "04673D"
+            },
+            {
+              "id": "LA_kwDODpuCgs8AAAABp1j0gg",
+              "name": "ImportVerilog",
+              "description": "",
+              "color": "e99695"
+            }
+          ],
+          "number": 8021,
+          "state": "OPEN",
+          "title": "[ImportVerilog] Support handling the slang::ast::StatementBlockSymbol."
+        },
+        {
+          "labels": [
+            {
+              "id": "LA_kwDODpuCgs7olJFv",
+              "name": "Moore",
+              "description": "",
+              "color": "04673D"
+            }
+          ],
+          "number": 7753,
+          "state": "OPEN",
+          "title": "[circt-verilog] zero parameter at module declaration fails when used "
+        },
+        {
+          "labels": [
+            {
+              "id": "MDU6TGFiZWwxODg4ODczNzIx",
+              "name": "good first issue",
+              "description": "Good for newcomers",
+              "color": "7057ff"
+            },
+            {
+              "id": "LA_kwDODpuCgs7olJFv",
+              "name": "Moore",
+              "description": "",
+              "color": "04673D"
+            }
+          ],
+          "number": 7629,
+          "state": "OPEN",
+          "title": "[MooreToCore] Support net op"
+        },
+        {
+          "labels": [
+            {
+              "id": "MDU6TGFiZWwxODg4ODczNzE3",
+              "name": "bug",
+              "description": "Something isn't working",
+              "color": "d73a4a"
+            },
+            {
+              "id": "LA_kwDODpuCgs7olJFv",
+              "name": "Moore",
+              "description": "",
+              "color": "04673D"
+            }
+          ],
+          "number": 7531,
+          "state": "OPEN",
+          "title": "[Moore] Input triggers assertion in canonicalizer infra"
+        }
+      ]
+    }
+  },
+  "issues": [],
+  "scoring": [],
+  "unique_issues": [
+    7531,
+    7629,
+    7753,
+    8021,
+    8163,
+    8176,
+    8211,
+    8215,
+    8269,
+    8476,
+    8930,
+    8973,
+    9206
+  ]
+}

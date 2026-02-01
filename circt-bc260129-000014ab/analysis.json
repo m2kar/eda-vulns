@@ -1,0 +1,62 @@
+{
+  "crash_id": "bc260129-000014ab",
+  "dialect": "LLHD",
+  "crash_type": "assertion",
+  "crash_location": {
+    "file": "lib/Dialect/LLHD/Transforms/Mem2Reg.cpp",
+    "line": 1742,
+    "function": "Promoter::insertBlockArgs"
+  },
+  "error_message": "integer bitwidth is limited to 16777215 bits",
+  "root_cause": {
+    "summary": "LLHD Mem2Reg pass attempts to create IntegerType with invalid bitwidth when processing class handle types",
+    "hypothesis": "hw::getBitWidth() returns -1 or invalid value for class/handle types, which is then used to create an IntegerType exceeding MLIR's 16777215-bit limit. The Mem2Reg pass lacks validation for class types during signal slot promotion.",
+    "trigger_pattern": "Class definition + class handle variable + assignment in always block triggers Mem2Reg to process unsupported class reference types",
+    "detailed_analysis": {
+      "crash_mechanism": "IntegerType::get() assertion failure when bitwidth exceeds 2^24-1",
+      "problematic_code_path": "insertBlockArgs() -> builder.getIntegerType(hw::getBitWidth(type)) where type is a class handle",
+      "missing_validation": "No check for whether stored type supports integer representation before bitwidth calculation"
+    }
+  },
+  "testcase_analysis": {
+    "features": [
+      "class_definition",
+      "class_handle_variable",
+      "always_block",
+      "class_instantiation",
+      "procedural_assignment"
+    ],
+    "problematic_construct": "Class handle variable (my_class mc_handle) and local class variable assignment within always block",
+    "language_features": {
+      "class_name": "my_class",
+      "handle_variable": "mc_handle",
+      "local_variable": "mc",
+      "assignment_context": "always @(posedge clk) with if(rst) condition"
+    }
+  },
+  "stack_trace_summary": {
+    "frames": [
+      {"frame": 12, "function": "mlir::IntegerType::get", "file": "MLIRContext.cpp", "line": 1101},
+      {"frame": 13, "function": "Promoter::insertBlockArgs(BlockEntry*)", "file": "Mem2Reg.cpp", "line": 1742},
+      {"frame": 14, "function": "Promoter::insertBlockArgs()", "file": "Mem2Reg.cpp", "line": 1654},
+      {"frame": 15, "function": "Promoter::promote()", "file": "Mem2Reg.cpp", "line": 764},
+      {"frame": 16, "function": "Mem2RegPass::runOnOperation()", "file": "Mem2Reg.cpp", "line": 1844}
+    ]
+  },
+  "warnings": [
+    {
+      "message": "Class builtin functions (needed for randomization, constraints, and covergroups) are not yet supported and will be dropped during lowering",
+      "location": "test_a1c64cace317.sv:3:9"
+    }
+  ],
+  "recommendations": [
+    "Add type validation in findPromotableSlots() to exclude class/handle types",
+    "Check hw::getBitWidth() return value before creating IntegerType",
+    "Emit proper diagnostic for unsupported types instead of crashing"
+  ],
+  "analysis_metadata": {
+    "source_available": false,
+    "source_analyzed_via": "GitHub grep search",
+    "confidence": "high"
+  }
+}

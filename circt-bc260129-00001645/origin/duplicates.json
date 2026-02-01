@@ -1,0 +1,600 @@
+{
+  "testcase_id": "260129-00001645",
+  "timestamp": "2026-02-01T10:57:51.893647",
+  "search_summary": {
+    "queries_executed": 8,
+    "issues_found": 62,
+    "unique_issues": 58
+  },
+  "found_issues": {
+    "9574": {
+      "title": "[Arc] Assertion failure when lowering inout ports in sequential logic",
+      "body": "## Description\n\nCIRCT crashes with an assertion failure when compiling SystemVerilog code that uses `inout` ports within `always_ff` blocks. The crash occurs in the Arc dialect's `LowerStatePass` when attempting to create a `StateType` for an LLHD reference type.\n\n## Steps to Reproduce\n\n1. Save the following code as `bug.sv`:\n\n```systemverilog\nmodule MixedPorts(\n  inout wire c,\n  input logic clk\n);\n  logic temp_reg;\n\n  always_ff @(posedge clk) begin\n    temp_reg <= c;\n  end\nendmodule\n```\n\n2. Run",
+      "similarity_score": 100,
+      "url": "https://github.com/llvm/circt/issues/9574",
+      "state": "[Arc] Assertion failure when lowering inout ports in sequential logic",
+      "search_queries": [
+        "inout arcilator arc",
+        "LowerState assertion state type",
+        "inout ports",
+        "arcilator",
+        "LowerState"
+      ]
+    },
+    "9052": {
+      "title": "[circt-verilog] Import difference of results in arcilator failure with remaining llhd constant_time",
+      "body": "Input test case:\n\n```verilog\nmodule bug (\n    input logic wr_clk,\n    input logic wr_data,\n    output logic [1:0] mem\n);\n`ifdef CASE_1\n  always_ff @(posedge (wr_clk)) begin\n      mem[0] <= wr_data;\n  end\n  always_ff @(posedge (wr_clk)) begin\n      mem[1] <= wr_data;\n  end\n`else\n  always_ff @(posedge (wr_clk)) begin\n      mem[0] <= wr_data;\n      mem[1] <= wr_data;\n  end\n`endif\nendmodule\n```\n\nthe two results in different outputs\n\n```mlir\nmodule {\n  hw.module @bug(in %wr_clk : i1 loc(#loc2), in %w",
+      "similarity_score": 55,
+      "url": "https://github.com/llvm/circt/issues/9052",
+      "state": "[circt-verilog] Import difference of results in arcilator failure with remaining llhd constant_time",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "8332": {
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "body": "Hi! Now I try to add types and operators in sim to get the lowered operators in moore, and then lower them to llvm dialect, so that the corresponding dynamic size container can be implemented in arcilator.\n\nFirst, add IntType and RefType in sim, as well as VariableOp, BlockAssignOp, Print, ReadOp, and ConcatOp operators.\nTaking Variable as an example, creating a stringtype VariableOp in Moore will create an int type through string_constant, and then perform conversionOp to convert the int type t",
+      "similarity_score": 45,
+      "url": "https://github.com/llvm/circt/issues/8332",
+      "state": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "9395": {
+      "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+      "body": "Hi, all! Let's look at this example on _Verilog_:\n\n```\nmodule comb_assert(\n    input wire clk,\n    input wire resetn\n);\n    always @* begin\n        if (resetn) begin\n            assert (0);\n        end\n    end\nendmodule\n```\nWhen we process this using _circt-verilog_ and _arcilator_:\n\n`circt-verilog test.v | arcilator`\n\nwe get the following internal _MLIR_ assertion failure: \n\n```\narcilator: /home/circt/llvm/mlir/lib/Transforms/Utils/DialectConversion.cpp:2230: void mlir::ConversionPatternRewrite",
+      "similarity_score": 40,
+      "url": "https://github.com/llvm/circt/issues/9395",
+      "state": "[circt-verilog][arcilator] Arcilator assertion failure",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "6948": {
+      "title": "[Arcilator] Integration tests failures without check-circt",
+      "body": "```\r\n********************\r\nFailed Tests (6):\r\n  CIRCT :: arcilator/JIT/basic.mlir\r\n  CIRCT :: arcilator/JIT/counter.mlir\r\n  CIRCT :: arcilator/JIT/err-not-found.mlir\r\n  CIRCT :: arcilator/JIT/err-not-func.mlir\r\n  CIRCT :: arcilator/JIT/err-wrong-func.mlir\r\n  CIRCT :: arcilator/JIT/print.mlir\r\n```\r\n\r\n```\r\n********************\r\nFAIL: CIRCT :: arcilator/JIT/err-not-func.mlir (6 of 96)\r\n******************** TEST 'CIRCT :: arcilator/JIT/err-not-func.mlir' FAILED ********************\r\nExit Code: 1\r\n\r\n",
+      "similarity_score": 40,
+      "url": "https://github.com/llvm/circt/issues/6948",
+      "state": "[Arcilator] Integration tests failures without check-circt",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "4036": {
+      "title": "[PrepareForEmission] Crash when inout operations are passed to instance ports",
+      "body": "```mlir\r\nhw.module @TopXMRAsserts(%I: !hw.inout<i1>) -> () {}\r\nhw.module @Top() -> () {\r\n    %I = sv.wire : !hw.inout<i1>\r\n    hw.instance \"TopXMRAsserts_inst0\" sym @Top.TopXMRAsserts_inst0 @TopXMRAsserts(I: %I: !hw.inout<i1>) -> () {doNotPrint = 1}\r\n}\r\nsv.bind #hw.innerNameRef<@Top::@Top.TopXMRAsserts_inst0>\r\n```\r\n`circt-opt -export-verilog`:\r\n```\r\ncirct-opt: /home/uenoku/dev/circt/llvm/llvm/../mlir/include/mlir/IR/StorageUniquerSupport.h:153: static ConcreteT mlir::detail::StorageUserBase<circ",
+      "similarity_score": 35,
+      "url": "https://github.com/llvm/circt/issues/4036",
+      "state": "[PrepareForEmission] Crash when inout operations are passed to instance ports",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "3853": {
+      "title": "[ExportVerilog] Try to make bind change the generated RTL as little as possible",
+      "body": "# Background\r\nWe would like generated RTL to be as invariant to bind statements as possible[^1].\r\n\r\nFor example, given the following original IR:\r\n```mlir\r\nhw.module @Bottom(%I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>) {\r\n    hw.output %I : !hw.struct<x: i1, y: i1>\r\n}\r\nhw.module @Middle(%I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>) {\r\n    %0 = hw.instance \"bottom\" @Bottom(I: %I: !hw.struct<x: i1, y: i1>) -> (O: !hw.struct<x: i1, y: i1>)\r\n    hw.output %0 : !hw.",
+      "similarity_score": 35,
+      "url": "https://github.com/llvm/circt/issues/3853",
+      "state": "[ExportVerilog] Try to make bind change the generated RTL as little as possible",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "933": {
+      "title": "Cross Module Reference (XMR) Primitive",
+      "body": "Add support for a cross module reference (XMR) operation to a core dialect and to SystemVerilog. The lowering of the core dialect XMR to SystemVerilog is either resolved through:\r\n1. Lowering to SystemVerilog XMRs\r\n2. Boring ports through the hierarchy\r\n\r\nThis should support the ability to differentiate specific instances in the design and not require an unfolded design. The following example shows what this could look like. Here, there is only one module `@Bar`, but there are different XMRs int",
+      "similarity_score": 35,
+      "url": "https://github.com/llvm/circt/issues/933",
+      "state": "Cross Module Reference (XMR) Primitive",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "2588": {
+      "title": "[ExportVerilog] [PrepareForEmission] Invalid wire creation with disallowLocalVariables option",
+      "body": "```mlir\r\n// circt-opt -export-verilog %s\r\nmodule attributes {circt.loweringOptions = \"disallowLocalVariables,verifLabels,emittedLineLength=240\"} {\r\nhw.module @Foo(%r: i1, %f: i1) -> (foo: i1) {\r\n  %false = hw.constant false\r\n  %reg = sv.reg sym @__reg__  : !hw.inout<i1>\r\n  sv.initial {\r\n    %3 = sv.read_inout %1 : !hw.inout<i1>\r\n    %6 = comb.or %f, %3 : i1\r\n    sv.if %3 {\r\n      sv.passign %reg, %r : i1\r\n    }\r\n  }\r\n  %0 = sv.read_inout %reg : !hw.inout<i1>\r\n  %.io_writeVec.wire = sv.wire  : !h",
+      "similarity_score": 35,
+      "url": "https://github.com/llvm/circt/issues/2588",
+      "state": "[ExportVerilog] [PrepareForEmission] Invalid wire creation with disallowLocalVariables option",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "863": {
+      "title": "[ExportVerilog] [Integration Tests] Naming broken and crashes",
+      "body": "One (or more) of today's verilog emission commits broke the integration tests. This showed up in the ESI integration tests, but I think that's only because they are the most comprehensive and/or use ExportVerilog differently than FIRRTL. It broke 4 tests total (one unit test, 3 integration tests), but I'm only including the lit output from two which are representative of the other failures.\r\n\r\n```\r\nFAIL: CIRCT :: ESI/system/basic.mlir (1 of 14)\r\n******************** TEST 'CIRCT :: ESI/system/bas",
+      "similarity_score": 35,
+      "url": "https://github.com/llvm/circt/issues/863",
+      "state": "[ExportVerilog] [Integration Tests] Naming broken and crashes",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "4916": {
+      "title": "[Arc] LowerState: nested arc.state get pulled in wrong clock tree",
+      "body": "In the following, somewhat artificial, example, the `arc.state` with `clock %clk1` is pulled into the clock tree of `%clk0`. As a result, it is also not lowered to a latency 0 arc with associated read and write operations. Even if that happened, it would be triggered by the wrong clock. In practice, this cannot occur right now, but it would still be great if the pass complains about such inputs.\r\n\r\n```mlir\r\nhw.module @MaterializeOpsWithRegions(%clk0: i1, %clk1: i1) -> (z: i42) {\r\n  %true = hw.co",
+      "similarity_score": 35,
+      "url": "https://github.com/llvm/circt/issues/4916",
+      "state": "[Arc] LowerState: nested arc.state get pulled in wrong clock tree",
+      "search_queries": [
+        "LowerState"
+      ]
+    },
+    "5053": {
+      "title": "[Arc] LowerState: combinatorial cycle reported in cases where there is none",
+      "body": "For the following testcase, LowerState emits an error that it has detected a combinatorial cycle in the design and crashes afterwards:\r\n\r\n```mlir\r\narc.define @i1passthrough(%arg0: i1) -> i1 {\r\n  arc.output %arg0 : i1\r\n}\r\narc.define @xor(%arg0: i1, %arg1: i1) -> i1 {\r\n  %0 = comb.xor %arg0, %arg1 : i1\r\n  arc.output %0 : i1\r\n}\r\nhw.module @CombinationalLoopDetectedError(%clock: i1, %reset: i1) {\r\n  %1 = arc.state @i1passthrough(%12) clock %clock lat 1 {names = [\"flight\"]} : (i1) -> i1\r\n  %11 = arc.",
+      "similarity_score": 35,
+      "url": "https://github.com/llvm/circt/issues/5053",
+      "state": "[Arc] LowerState: combinatorial cycle reported in cases where there is none",
+      "search_queries": [
+        "LowerState"
+      ]
+    },
+    "9467": {
+      "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "body": "## Title\n[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)\n\n## Summary\nI ran into a failure in the arcilator flow with a minimal SystemVerilog module using a single `#1` delay. The same design runs under Verilator, but arcilator reports `llhd.constant_time` as illegal during conversion to `arcs` and stops. I did a preliminary source-level analysis (below) and would like to discuss with maintainers whether this behavior is expected or",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/9467",
+      "state": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "9337": {
+      "title": "[arcilator] The position of the passthrough calling",
+      "body": "Should we call the passthrough after all arc.clock_tree calling? Take an output connected with a register for example, the output should be the latest value of the register after a clock trigger.",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/9337",
+      "state": "[arcilator] The position of the passthrough calling",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "9260": {
+      "title": "Arcilator crashes in Upload Release Artifacts CI",
+      "body": "It looks like there are two configs of the Upload Release Artifacts CI job where check-circt fails on three arcilator tests:\n\nhttps://github.com/llvm/circt/actions/runs/19579832326/job/56099287786\n\nNot sure what changed since the last run of this CI action that causes the crash. @jpienaar could this be related to the additional arguments that are now getting passed to the simulation if run in JIT mode?",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/9260",
+      "state": "Arcilator crashes in Upload Release Artifacts CI",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "8484": {
+      "title": "[arcilator] Add functionality to the arcilator runtime library",
+      "body": "There are a bunch of features we might want to support for arcilator simulations that are a pain to implement in MLIR / LLVM IR directly and should preferably made available by a runtime library. Off the top of my head, this could include:\n- Advanced formatted printing (arbitrary width integers, binary formatting, padding, X/Z values)\n- Everything involving the file system\n- Parsing memory initialization files\n- Managing dynamic buffers and containers\n- PRNG algorithms and seeding for reproducib",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/8484",
+      "state": "[arcilator] Add functionality to the arcilator runtime library",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "8212": {
+      "title": "[arcilator] Install configuration missing for arcilator-runtime.h",
+      "body": "The arcilator-runtime.h and python script are not installed and thus not included in pre-built releases.\n\nFor more information:\nhttps://discourse.llvm.org/t/proper-way-to-obtain-arcilator-runtime-h-for-c-integration/84553",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/8212",
+      "state": "[arcilator] Install configuration missing for arcilator-runtime.h",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "9191": {
+      "title": "MLIR pattern checks failing",
+      "body": "@fabianschuiki, @maerhart and I noticed while debugging some conversion that adding the flag `-DMLIR_ENABLE_EXPENSIVE_PATTERN_API_CHECKS=ON` to a CIRCT LLVM build exposes several places where our passes are using the MLIR rewriter/pattern API invalidly.\n\nRunning `ninja check-circt` produces failures on the following tests:\n\n```\nCIRCT :: Conversion/ArcToLLVM/lower-arc-to-llvm.mlir\nCIRCT :: Conversion/CombToArith/comb-to-arith.mlir\nCIRCT :: Conversion/ConvertToArcs/convert-to-arcs.mlir\nCIRCT :: Co",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/9191",
+      "state": "MLIR pattern checks failing",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "8012": {
+      "title": "[Moore][Arc][LLHD] Moore to LLVM lowering issues",
+      "body": "Hi all!\n\nI am trying to simulate a SystemVerilog code (listed below) using `arcilator`:\n\n```verilog\nmodule dff(D, clk, Q);\n    input D; // Data input \n    input clk; // clock input \n    output reg Q; // output Q\n\n    // Simple DFF\n    always @(negedge clk) \n    begin\n        Q <= D; \n    end \nendmodule\n```\n\n with such pipeline:\n\n```bash\ncirct-verilog dff.sv | arcilator\n```\n\n`arcilator` fails with  **error: 'llhd.process' op has regions; not supported by ConvertToArcs**\n\nThen I try to use a diffe",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/8012",
+      "state": "[Moore][Arc][LLHD] Moore to LLVM lowering issues",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "8065": {
+      "title": "[LLHD][Arc] Indexing and slicing lowering from Verilog to LLVM IR",
+      "body": "Hi! I'm trying to use circt for lowering to LLVM IR. I found such a construction in some example:\n\n```verilog\nmodule Mod (input clk, input a, input b, output logic[1:0] c);\nalways_ff @(posedge clk) begin\n    c[0] <= a;\n    c[1] <= b;\nend\nendmodule\n```\n\nI used this pipeline:\n\n```bash\ncirct-verilog ranges.sv | circt-opt --llhd-early-code-motion --llhd-temporal-code-motion --llhd-desequentialize --llhd-sig2reg --canonicalize | arcilator\n```\n\nBut I got error **body contains non-pure operation** in `",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/8065",
+      "state": "[LLHD][Arc] Indexing and slicing lowering from Verilog to LLVM IR",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "8286": {
+      "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+      "body": "Hi all!\n\nThere are a few issues related to moore to llvm lowering pipeline.\n\nCurrently there is no possibility to lower combination logic with control flow operators into LLVM. For example:\n\n```verilog\nmodule  top  (\n    input           clk ,\n    input           rstn ,\n    input      in\n    output     out\n    );\n\n    parameter            P1   = 3'd0 ;\n    parameter            P2  = 3'd3 ;\n\n    reg [2:0]            r1 = 3'd1;\n\n    always_comb begin\n        if (in)\n            r1 = P1;\n        els",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/8286",
+      "state": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "7942": {
+      "title": "[Arc] Introduce a Python simulation script generator for arcilator",
+      "body": "Hi,\n\nIn #7929 , I refactored the C++ header generator Python script for the C++ code that wants to call the LLVM IR produced by `arcilator`. The PR mainly refactors its structure, paving the way for future modularization.\n\nThe reason for making it modular is that the script contains some core functions that can serve as a reusable library for other scripts. My proposals are as follows:\n\n1. **Splitting the C++ header generator script**\n   - **Core module**: Extract the generic logic for interacti",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/7942",
+      "state": "[Arc] Introduce a Python simulation script generator for arcilator",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "9466": {
+      "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "body": "## Summary\nI ran into a failure in the arcilator flow with a minimal SystemVerilog module using a single `#1` delay. The same design runs under Verilator, but arcilator reports `llhd.constant_time` as illegal during conversion to `arcs` and stops. I did a preliminary source-level analysis (below) and would like to discuss with maintainers whether this behavior is expected or should be treated as a bug.\n\n## Details\n\nThe SV design is intentionally minimal and only uses an `initial` block with a\nsi",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/9466",
+      "state": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "8232": {
+      "title": "[Arc] Flatten public modules",
+      "body": "Arcilator is currently very easy to break if a public module is instantiated anywhere. In that case the module hierarchy does not get flattened completely, but the public module remains as an instance instead. This makes the instance behave like an external module. Fix the module flattening to also fully inline public modules (but instead also keep the public module itself around as a top-level entry point).",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/8232",
+      "state": "[Arc] Flatten public modules",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "6373": {
+      "title": "[Arc] Support hw.wires of aggregate types",
+      "body": "When i run `arcilator` with `$ ./arcilator a.mlir --state-file=a.json` i get the following error:\r\n```\r\na.mlir:9:23: error: 'arc.tap' op operand #0 must be signless integer, but got '!hw.struct<valid: i1, bits: i1>'\r\n    %_registers_0_T = hw.wire %2 sym @sym_0  : !hw.struct<valid: i1, bits: i1>\r\n                      ^\r\na.mlir:9:23: note: see current operation: \"arc.tap\"(%5) {name = \"_registers_0_T\"} : (!hw.struct<valid: i1, bits: i1>) -> ()\r\n```\r\n\r\n`a.mlir`:\r\n```\r\nmodule {\r\n  hw.module @Barrier",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/6373",
+      "state": "[Arc] Support hw.wires of aggregate types",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "9469": {
+      "title": "[circt-verilog][arcilator] Inconsistent compilation behavior: direct array indexing in always_ff sensitivity list vs. intermediate wire",
+      "body": "## [circt-verilog][arcilator] Inconsistent compilation behavior: direct array indexing in always_ff sensitivity list vs. intermediate wire\n\n## Summary\nI encountered an inconsistent compilation behavior in the arcilator flow when using synchronous reset with SystemVerilog array indexing. When directly using array indices (`clkin_data[0]` and `clkin_data[32]`) in an `always_ff` block, the compilation fails with an `llhd.constant_time` error. However, when the same signals are first assigned to int",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/9469",
+      "state": "[circt-verilog][arcilator] Inconsistent compilation behavior: direct array indexing in always_ff sensitivity list vs. intermediate wire",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "9417": {
+      "title": "[Arc][arcilator] `hw.bitcast` Data Corruption for Aggregate Types with Non-Power-of-2 Element Widths in Arc",
+      "body": "\n**Description:**\nThere is a data corruption issue in the `arc` backend when using `hw.bitcast` to convert between aggregate types (structs or arrays) and flattened integers. The issue manifests specifically when the aggregate contains elements with non-power-of-2 bit widths (e.g., `i17`, `i33`).\n\nWhen casting such an aggregate to its corresponding flattened integer type and casting it back, the resulting data does not match the input. This suggests that the lowering or handling of `hw.bitcast` ",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/9417",
+      "state": "[Arc][arcilator] `hw.bitcast` Data Corruption for Aggregate Types with Non-Power-of-2 Element Widths in Arc",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "9211": {
+      "title": "[Arcilator] 10x jitting performance regression",
+      "body": "I'm observing a 10x slow down from https://github.com/llvm/circt/commit/90757b53eec16e7d73f04950126d2c6b65ed559d. Jit time on my target prior is 1.3s, post is 12s. Running perf shows for example 40% wallclock newly spent in `DAGCombiner::mergeConsecutiveStores`.\n\nI guess one way to fix this is to implement \"proper RAW dependency checking\". Are there other mitigations?",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/9211",
+      "state": "[Arcilator] 10x jitting performance regression",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "9310": {
+      "title": "[arcilator] Why use a Mux to reset a register, instead of creating a CompRegOp with the reset signal and the reset value?",
+      "body": "This results in Arcilator being unable to perform effective reset grouping in the GroupResetAndEnable pass.\n\n```c\n      // Canonicalize registers.\n      if (auto reg = dyn_cast<seq::FirRegOp>(&op)) {\n        OpBuilder builder(reg);\n        Value next;\n        // Note: this register will have an sync reset regardless.\n        if (reg.hasReset())\n          next = comb::MuxOp::create(builder, reg.getLoc(), reg.getReset(),\n                                     reg.getResetValue(), reg.getNext(), fals",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/9310",
+      "state": "[arcilator] Why use a Mux to reset a register, instead of creating a CompRegOp with the reset signal and the reset value?",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "8706": {
+      "title": "[Arcilator] Arcilator/Verilator simulation mismatch on reduced Rocket core",
+      "body": "A circt-reduce run stumbled across what seems to be a bug with Arcilator on the following reduced Rocket code:\n\n[reduced_rocket.txt](https://github.com/user-attachments/files/21237376/reduced_rocket.txt)\n\nThe simulation mismatch when I plug it into arc-tests is the following:\n\n```\ncycle 1: mismatching mem_axi4_0_ar_bits_prot: 0 (vtor) != 2 (arcs)\ncycle 1: mismatching mem_axi4_0_aw_bits_prot: 0 (vtor) != 2 (arcs)\n```\n\nI traced the signals back, and they come, via a firreg, from a constant 1 conca",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/8706",
+      "state": "[Arcilator] Arcilator/Verilator simulation mismatch on reduced Rocket core",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "6390": {
+      "title": "[Arc] Improve how memory writes are legalized",
+      "body": "Memory write operations are currently legalized by just moving them after the last read from the same memory. This approach does not always work nicely because multiple memory reads and writes might already be grouped in a nested region (e.g., a `scf.if`). If the last read from memory happens outside of this nested region, but a write is inside that region, either the whole region has to be moved (possibly creating new conflicts due to the reads in the region also being moved) or the region has ",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/6390",
+      "state": "[Arc] Improve how memory writes are legalized",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "7230": {
+      "title": "[Arcilator] Performance Issue",
+      "body": "Hi everyone! I’m glad that the circt community has contributed the arcilator. I’ve been trying to integrate arcilator into my project recently but found that it’s not as fast as advertised.\r\n\r\nI've created a project called [rtl-sim-benchmark](https://github.com/owlxiao/rtl-sim-benchmark/tree/master), which is designed to test the speed performance of existing RTL simulators across different benchmarks. Currently, I have integrated arcilator, verilator-1 (single thread), and verilator-2 (multi-th",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/7230",
+      "state": "[Arcilator] Performance Issue",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "7410": {
+      "title": "[SV] custom op 'sv.ifdef' invalid kind of attribute specified.",
+      "body": "When I ran arc-tests, I met an error as follow:\r\n``` c\r\nmake -C boom run\r\nmake: Entering directory '/home/phoenix/Downloads/arc-tests/arc-tests/boom'\r\ngzip -dc boom-small.fir.gz > build/small/boom.fir\r\nfirtool --ir-hw build/small/boom.fir -o build/small/boom.mlir\r\narcilator build/small/boom.mlir --state-file=build/small/boom.json -o build/small/boom-arc.ll --mlir-timing --print-debug-info --mlir-pass-statistics --observe-wires=0 --observe-ports=0 --observe-named-values=0 --observe-registers=0 --",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/7410",
+      "state": "[SV] custom op 'sv.ifdef' invalid kind of attribute specified.",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "6938": {
+      "title": "[Arc] Generates signalling code",
+      "body": "`comb.divs` (and probably `comb.divu`) generate code that causes a `SIGFPE` signal on my system, due to division by zero.\r\n\r\nBelow is a small sample that should be equivalent to `b == 0 ? 0 : a / b`, which results in\r\n```\r\n$ ./build/bin/arcilator --jit-entry=main --run build/bin/div.mlir \r\noutput = 7ffeb8e6e2a0\r\n```\r\nwhen run with `--jit`.\r\n\r\n```\r\n// RUN: arcilator %s --run --jit-entry=main | FileCheck %s\r\n// REQUIRES: arcilator-jit\r\n// CHECK: output = 0\r\n\r\nhw.module @Baz(in %a: i8, in %b: i8, o",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/6938",
+      "state": "[Arc] Generates signalling code",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "6298": {
+      "title": "[Arc] Split large LLVM functions",
+      "body": "Arcilator has a tendency to produce very large LLVM functions in its output. For example, pretty much an entire clock domain will be grouped into a single function, which for large designs can be millions of LLVM IR ops in size. These cause massive compilation slowdowns (some parts of LLVM scale fairly poorly for excessively large functions -- e.g. O(n³) in regalloc, IIRC).\r\n\r\nTo fix this, add a pass that splits large functions up into smaller ones. This could be as simple as putting the ops in ",
+      "similarity_score": 30,
+      "url": "https://github.com/llvm/circt/issues/6298",
+      "state": "[Arc] Split large LLVM functions",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "3133": {
+      "title": "[ExportVerilog] Reuse output ports if possible",
+      "body": "Consider following IR (this kind of IR is frequently used to express FIRRTL's inout ports):\r\n```mlir\r\nhw.module @Foo(%x: i8) -> (y: i8, z: i8) {\r\n    %.z.output = sv.wire : !hw.inout<i8>\r\n    %0 = sv.read_inout %.z.output : !hw.inout<i8>\r\n    sv.assign %.z.output, %x : i8\r\n    hw.output %0, %0 : i8, i8\r\n }\r\n```\r\n`circt-opt -export-verilog`:\r\n```verilog\r\nmodule Foo(\t// foo.mlir:1:1\r\n  input  [7:0] x,\r\n  output [7:0] y,\r\n               z);\r\n\r\n  wire [7:0] _z_output;\t// foo.mlir:2:18\r\n\r\n  assign _z",
+      "similarity_score": 25,
+      "url": "https://github.com/llvm/circt/issues/3133",
+      "state": "[ExportVerilog] Reuse output ports if possible",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "5566": {
+      "title": "[SV] Crash in `P/BPAssignOp` verifiers for `hw.inout` ports",
+      "body": "[In the SV `P/BPAssignOp` verifiers](https://github.com/llvm/circt/blob/main/lib/Dialect/SV/SVOps.cpp#L1142-L1156) it is assumed that the target argument is defined by an op (`isa` used on `getDefiningOp`). Hence, in the case of a `hw.inout` input port, the verifier crashes.\r\n\r\ni.e.:\r\n```mlir\r\nhw.module @unsupported(%a: !hw.inout<i42>) {\r\n  %clock = hw.constant 1 : i1\r\n  %c42 = hw.constant 42 : i42\r\n  sv.alwaysff(posedge %clock) {\r\n    sv.passign %a, %c42 : i42\r\n  }\r\n}\r\n```\r\n\r\n",
+      "similarity_score": 25,
+      "url": "https://github.com/llvm/circt/issues/5566",
+      "state": "[SV] Crash in `P/BPAssignOp` verifiers for `hw.inout` ports",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "6468": {
+      "title": "[FIRRTL] 'Conditional' Analog attach",
+      "body": "I've been messing around with FIRRTL attach operations nested in `WhenOp` regions fully expecting them to be illegal. After all Chisel refuses to produce them. But, after careful reading of the spec, it appears to me that they should simply be unaffected by the condition and, in fact, this is what both SFC and firtool do:\r\n\r\nfoo.fir:\r\n```\r\ncircuit Example :\r\n  module Example :\r\n    output a : Analog<1>\r\n    output b : Analog<1>\r\n    output c : Analog<1>\r\n    output d : Analog<1>\r\n\r\n    when UInt",
+      "similarity_score": 25,
+      "url": "https://github.com/llvm/circt/issues/6468",
+      "state": "[FIRRTL] 'Conditional' Analog attach",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "5986": {
+      "title": "[HW][LegalizeNames] verilogName attribute on ports ignored",
+      "body": "`LegalizeNames` ignores the `verilogName` when legalizing the port names.\r\nThis `mlir` produces the incorrect verilog.\r\n```mlir\r\nhw.module @rename_port(%r: i1 {hw.verilogName = \"w\"}) {\r\n    %w = sv.wire : !hw.inout<i4>\r\n    hw.output\r\n}\r\n```\r\n```verilog\r\nmodule rename_port(     // 1.mlir:1:1\r\n  input w       // 1.mlir:1:24\r\n);\r\n\r\n  wire [3:0] w; // 1.mlir:2:10\r\nendmodule\r\n```",
+      "similarity_score": 25,
+      "url": "https://github.com/llvm/circt/issues/5986",
+      "state": "[HW][LegalizeNames] verilogName attribute on ports ignored",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "4786": {
+      "title": "[FIRRTL] InferWidths infers width for Analog that's unsatisifiable, should error (?)",
+      "body": "The FIRRTL specification says:\r\n\r\n> As with integer types, an analog type can represent a multi-bit signal. When analog signals are not given a concrete width, their widths are inferred according to a highly restrictive width inference rule, which requires that the widths of all arguments to a given attach operation be identical.\r\n\r\nThe following example should be an error (cannot infer a width to make the Analog the same width in all attach's), but instead an inconsistent width is used resultin",
+      "similarity_score": 25,
+      "url": "https://github.com/llvm/circt/issues/4786",
+      "state": "[FIRRTL] InferWidths infers width for Analog that's unsatisifiable, should error (?)",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "4001": {
+      "title": "[ETC] Extract a parent array instead of individual array access",
+      "body": "Consider following IR:\r\n```mlir\r\nhw.module @Array(%clock: i1, %cond: i1, %array: !hw.array<4xi1>) -> () {\r\n    %w = sv.wire : !hw.inout<!hw.array<4xi1>>\r\n    sv.assign %w, %array : !hw.array<4xi1>\r\n    %c0 = hw.constant 0: i2\r\n    %c1 = hw.constant 1: i2\r\n    %c2 = hw.constant 2: i2\r\n    %c3 = hw.constant 3: i2\r\n    %w1 = sv.array_index_inout %w[%c0] : !hw.inout<!hw.array<4xi1>>, i2\r\n    %w2 = sv.array_index_inout %w[%c1] : !hw.inout<!hw.array<4xi1>>, i2\r\n    %w3 = sv.array_index_inout %w[%c2] :",
+      "similarity_score": 25,
+      "url": "https://github.com/llvm/circt/issues/4001",
+      "state": "[ETC] Extract a parent array instead of individual array access",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "788": {
+      "title": "[FIRRTL] More alias copy propagation",
+      "body": "This is really just more of #738 and #740.\r\n\r\nCIRCT needs to work harder to eliminate or copy-propagate FIRRTL `Analog` types or Verilog `inout` types. `inout` support is _extremely_ spotty and weird across different tooling. \r\n\r\nAnnoyingly, the typical situation where use of `Analog` or `inout` shows up in code is purely passing these from a module's IO to a submodule's IO. Doing the direct assignment is fine and supported by basically all tooling, but anything else is extremely spotty.\r\n\r\nCons",
+      "similarity_score": 25,
+      "url": "https://github.com/llvm/circt/issues/788",
+      "state": "[FIRRTL] More alias copy propagation",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "324": {
+      "title": "[FIRRTL] How does Analog type work with instances?",
+      "body": "Analog types are implicitly \"inout\" sort of things that can only be casted to integer and clock when they are used as an input.  \r\n\r\nA few questions:\r\n\r\n1) Can they be used as output ports?  If so, are they of type `flip<Analog<42>>` or just `Analog<42>`?\r\n2) When dealing with an instance of a module that takes Analog inputs, do we get a bundle result with a flipped analog type?\r\n\r\n@seldridge do you know how this works?",
+      "similarity_score": 25,
+      "url": "https://github.com/llvm/circt/issues/324",
+      "state": "[FIRRTL] How does Analog type work with instances?",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "174": {
+      "title": "[RTL] Improve the asm syntax of RTLModuleOp",
+      "body": "Currently, the syntax is:\r\n```mlir\r\nrtl.module @B(%a: i1 { rtl.inout }) -> (i1 {rtl.name = \"b\"}, i1 {rtl.name = \"c\"}) \r\n```\r\n\r\nWith the not-really-optional port names for the output ports as hacky attributes on the results. Ideally, we'd have something like what was suggested in #93. Unfortunately (from #169): \r\n\r\n> On RTLModuleOp asm format: Ideally, the syntax would include the port names in the result specifications as shown in the #93. This would (best I can tell) require re-implementing the",
+      "similarity_score": 25,
+      "url": "https://github.com/llvm/circt/issues/174",
+      "state": "[RTL] Improve the asm syntax of RTLModuleOp",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "6810": {
+      "title": "[Arc] Add basic assertion support",
+      "body": "Add support for `verif.assert` and `sv.assert.concurrent` operations to the Arc dialect and passes. When lowering towards LLVM, the asserts should lower to an `scf.if` operation that checks whether their condition holds, and if it does not, calls a callback function (or aborts with a message for starters).\r\n\r\nThis is likely to uncover a lot of details about how clocked and unclocked asserts need to be handled, and where they have to be scheduled and checked in the simulation model.",
+      "similarity_score": 20,
+      "url": "https://github.com/llvm/circt/issues/6810",
+      "state": "[Arc] Add basic assertion support",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "8292": {
+      "title": "[MooreToCore] Support for Unsized Array Type",
+      "body": "Unsized array type in systemverilog like `OpenArrayType`, `QueueType` can't be lower to Arc Dialect, because Arc only has sized array type. \n\nCommon programming language like `Cpp` can directly call `mmap` provided by OS to get dynamic size array. I can't see this kind of ability in systemverilog.\n\nSo how to achieve that if we want to solve #8276? Can you give me some advice?",
+      "similarity_score": 10,
+      "url": "https://github.com/llvm/circt/issues/8292",
+      "state": "[MooreToCore] Support for Unsized Array Type",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "8430": {
+      "title": "[arcillator] Arcillator Can't be built Fully Static",
+      "body": "I ran into this when trying to build a fully static firtool while also running tests. The problem that I hit was that arcillator wants to statically link a .so:\n\n```\n/usr/lib/gcc/x86_64-alpine-linux-musl/14.2.0/../../../../x86_64-alpine-linux-musl/bin/ld: attempted static link of dynamic object `lib/libarc-jit-env.so'\n```\n\nFull build log:\n\nhttps://github.com/llvm/circt/actions/runs/14545811276/job/40811100200#step:9:4754",
+      "similarity_score": 10,
+      "url": "https://github.com/llvm/circt/issues/8430",
+      "state": "[arcillator] Arcillator Can't be built Fully Static",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "905": {
+      "title": "[Python] 'Connect' syntax for Python bindings",
+      "body": "I would like to add \"late-connect\" semantics to the Python bindings. That is, be able to create an arbitrary operation without having `Value`s for each operand. The user would be able to connect them later on using a `connect(a, b)` function. For instance, something like (pseudocode):\r\n\r\n```\r\nmod = rtl.RTLModuleOp(\r\n            name='MyWidget',\r\n            input_ports=[('in', i32)],\r\n            output_ports=[('out', i32)],\r\n            ...  )\r\n\r\ninst1 = rtl.InstanceOp(mod, \"instA\")\r\nreg1 = seq",
+      "similarity_score": 0,
+      "url": "https://github.com/llvm/circt/issues/905",
+      "state": "[Python] 'Connect' syntax for Python bindings",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "3023": {
+      "title": "Non-handhsake inter-module and host communication interfaces",
+      "body": "I could not find a specific issue dealing with this topic so I am just creating a new one. If there is, feel free to reference it here and I will close this one.\r\n\r\nMy questions is on the current status of adding a standardized interface wrapper to modules generated using the CIRCT flow. \r\n\r\nCurrently, I am taking the RTL generated by CIRCT and adding all the additional components necessary to talk to the kernel via AXI manually. This allows me to connect AXI-based IP to it and more importantly,",
+      "similarity_score": 0,
+      "url": "https://github.com/llvm/circt/issues/3023",
+      "state": "Non-handhsake inter-module and host communication interfaces",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "7472": {
+      "title": "circt-verilog: failed to legalize operation 'moore.variable'",
+      "body": "I'm playing around with the SV frontend, and I have yet to get it to work. What am I doing wrong here? I tried some other variants of the Verilog (without ports, with reg instead of logic, etc.), but the error remains roughly the same.\r\n\r\n```sv\r\n// dff.sv\r\n\r\n`timescale 1us/1ns\r\n\r\nmodule dff (\r\n    output logic q,\r\n    input logic clk, d\r\n);\r\n\r\nalways @(posedge clk) begin\r\n    q <= d;\r\nend\r\n\r\nendmodule\r\n```\r\n\r\n```shell-session\r\n$ ../circt/build/bin/circt-verilog dff.sv\r\ndff.sv:6:18: error: failed",
+      "similarity_score": 0,
+      "url": "https://github.com/llvm/circt/issues/7472",
+      "state": "circt-verilog: failed to legalize operation 'moore.variable'",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "4112": {
+      "title": "[FIRRTL] Analog Module Connection Generates Unnecessary Alias/Assign",
+      "body": "The following circuit generates an alias/attach for an analog connection from an instance to another instance. However, anytime we can avoid generating an alias/attach means that more tools will accept it. This should just generate a wire.\r\n\r\n```\r\ncircuit Foo:\r\n  extmodule Bar:\r\n    output a: Analog<1>\r\n  extmodule Baz:\r\n    input a: Analog<1>\r\n  module Foo:\r\n\r\n    inst bar of Bar\r\n    inst baz of Baz\r\n\r\n    attach(baz.a, bar.a)\r\n```\r\n\r\nThis produces with the MFC:\r\n```verilog\r\nmodule Foo();\r\n  w",
+      "similarity_score": 0,
+      "url": "https://github.com/llvm/circt/issues/4112",
+      "state": "[FIRRTL] Analog Module Connection Generates Unnecessary Alias/Assign",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "794": {
+      "title": "[FIRRTL] Memories with Multiple Write Ports Emit as Multiple Drivers",
+      "body": "A memory with multiple write ports is incorrectly emitted as Verilog which looks like there are multiple drivers on the same signal. However, this is really just the appearance of multiple clocks that are all wired together and create multiple always blocks.\r\n\r\nI think this is either one of two issues:\r\n\r\n1. We need more copy-propagation that aggressively removes \"temporaries\" (something that a front end language created and marked as optimizable) or \"synthetics\" (something that CIRCT created). ",
+      "similarity_score": 0,
+      "url": "https://github.com/llvm/circt/issues/794",
+      "state": "[FIRRTL] Memories with Multiple Write Ports Emit as Multiple Drivers",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "839": {
+      "title": "multi-port memories can cause writes in different always blocks",
+      "body": "due to the clocks being assigned to wires and the wires not deliminated, the always blocks aren't merged.",
+      "similarity_score": 0,
+      "url": "https://github.com/llvm/circt/issues/839",
+      "state": "multi-port memories can cause writes in different always blocks",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "7": {
+      "title": "Implement lowering of firrtl.wire to rtl.wire",
+      "body": "We now have an rtl.wire operation, and the verilog printer supports it as well, but we should implement lowering from firrtl.wire.\r\n\r\nThere are also other lowering that can be done: connect and partial connect, node, etc but those can be handled as a follow-on task.",
+      "similarity_score": 0,
+      "url": "https://github.com/llvm/circt/issues/7",
+      "state": "Implement lowering of firrtl.wire to rtl.wire",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "380": {
+      "title": "[FIRRTL] Type Canonicalization May Require Connect Canonicalization",
+      "body": "Consider the following two circuits that the Scala FIRRTL Compiler (SFC) treats as equivalent:\r\n\r\n```\r\ncircuit Foo1 :\r\n  module Foo1 :\r\n    input a : { a : UInt<1>}\r\n    output b : { a : UInt<1>}\r\n    b <= a\r\n```\r\n\r\nHere, the inputs are flipped _and the connection order is flipped_:\r\n```\r\ncircuit Foo2 :\r\n  module Foo2 :\r\n    output a : { flip a : UInt<1>}\r\n    input b : { flip a : UInt<1>}\r\n    a <= b\r\n```\r\n\r\nEither a connect (`<=`) or partial connect (`<-`) can be used.\r\n\r\nThis is problematic, ",
+      "similarity_score": 0,
+      "url": "https://github.com/llvm/circt/issues/380",
+      "state": "[FIRRTL] Type Canonicalization May Require Connect Canonicalization",
+      "search_queries": [
+        "inout ports"
+      ]
+    },
+    "8276": {
+      "title": "[MooreToCore] Support for UnpackedArrayType emission",
+      "body": "Currently, CIRCT's MooreToCore pass converts unpacked arrays to packed arrays (hw::ArrayType),\nlosing the unpacked semantics.\n\nWhen we've attempted to preserve unpacked arrays by emitting hw::UnpackedArrayType,\nMLIR raises \"failed to legalize operation\" errors.\n\n## Minimal Reproduction\n\nWhen running `circt-opt` on the following input,\n\n```systemverilog\nmodule a (\n  input logic b[3:0]\n);\nendmodule\n```\n\nwe get the following result:\n\n```mlir\nmodule {\n  hw.module @a(in %b : !hw.array<4xi1>) {\n    hw",
+      "similarity_score": 0,
+      "url": "https://github.com/llvm/circt/issues/8276",
+      "state": "[MooreToCore] Support for UnpackedArrayType emission",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "7692": {
+      "title": "[Sim] Combine integer formatting ops into one op",
+      "body": "@fzi-hielscher I was wondering what your thoughts are on maybe combining the integer formatting operations `sim.fmt.hex`, `sim.fmt.bin`, and `sim.fmt.dec` into a single `sim.fmt.int` operation. The Moore dialect wants to lower to these ops, and there are additional formatting options (width, alignment, zero/space padding) that apply to each of these ops. If we made the integer radix a parameter on the op, we might only have to add these formatting options to a single op. WDYT?",
+      "similarity_score": 0,
+      "url": "https://github.com/llvm/circt/issues/7692",
+      "state": "[Sim] Combine integer formatting ops into one op",
+      "search_queries": [
+        "arcilator"
+      ]
+    },
+    "5535": {
+      "title": "Nightlies failing",
+      "body": "https://github.com/llvm/circt/actions/runs/5444210245\r\n\r\nLooks like we're missing a cmake dep.\r\n\r\nAnd there's a failure in one of the ESI integration tests.",
+      "similarity_score": 0,
+      "url": "https://github.com/llvm/circt/issues/5535",
+      "state": "Nightlies failing",
+      "search_queries": [
+        "arcilator"
+      ]
+    }
+  },
+  "analysis": "review_existing",
+  "top_match": {
+    "issue_number": "9574",
+    "similarity_score": 100
+  }
+}

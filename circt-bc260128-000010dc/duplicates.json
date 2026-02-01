@@ -1,0 +1,67 @@
+{
+  "search_queries": [
+    "InferStateProperties assertion",
+    "ConstantOp cast IntegerType",
+    "arc array",
+    "applyEnableTransformation",
+    "hw::ConstantOp type",
+    "ArrayType IntegerType"
+  ],
+  "results": [
+    {
+      "issue_number": 3289,
+      "title": "[PyCDE] ConcatOp of arrays causes crash",
+      "state": "open",
+      "similarity_score": 6.5,
+      "matched_keywords": ["cast", "IntegerType", "array"],
+      "notes": "Similar crash in Type::cast for IntegerType, but in CombOps context (ConcatOp), not hw::ConstantOp. PyCDE vs Arc dialect.",
+      "url": "https://github.com/llvm/circt/issues/3289"
+    },
+    {
+      "issue_number": 6271,
+      "title": "[HW] Unequal equal types on instancing a module outputting a parametrized array",
+      "state": "open",
+      "similarity_score": 7.5,
+      "matched_keywords": ["ArrayType", "sizeAttr", "hw.int"],
+      "notes": "ArrayType parameter type mismatch (i32 vs i64), but not a crash. Different root cause - parameter attribute type mismatch, not enable transformation.",
+      "url": "https://github.com/llvm/circt/issues/6271"
+    },
+    {
+      "issue_number": 6373,
+      "title": "[Arc] Support hw.wires of aggregate types",
+      "state": "open",
+      "similarity_score": 4.0,
+      "matched_keywords": ["arc", "struct"],
+      "notes": "Arc dialect aggregate type issue, but for struct not array. Related to arc.tap validation, not state property inference.",
+      "url": "https://github.com/llvm/circt/issues/6373"
+    },
+    {
+      "issue_number": 8292,
+      "title": "[MooreToCore] Support for Unsized Array Type",
+      "state": "open",
+      "similarity_score": 3.0,
+      "matched_keywords": ["array"],
+      "notes": "Array type support in Moore dialect, unrelated to Arc or type casting issues.",
+      "url": "https://github.com/llvm/circt/issues/8292"
+    },
+    {
+      "issue_number": 8065,
+      "title": "[LLHD][Arc] Indexing and slicing lowering from Verilog to LLVM IR",
+      "state": "open",
+      "similarity_score": 2.0,
+      "matched_keywords": ["arc"],
+      "notes": "Arc dialect array indexing/slicing, different subsystem from state property inference.",
+      "url": "https://github.com/llvm/circt/issues/8065"
+    }
+  ],
+  "top_match": {
+    "issue_number": 6271,
+    "score": 7.5,
+    "title": "[HW] Unequal equal types on instancing a module outputting a parametrized array",
+    "url": "https://github.com/llvm/circt/issues/6271",
+    "reason": "Highest similarity - both involve array types and type casting/validation issues. However, different root causes."
+  },
+  "recommendation": "new_issue",
+  "reasoning": "This is a NEW BUG REPORT. While several issues involve arrays and type operations, none match the specific crash pattern:\n\n1. Issue #6271 (score 7.5): ArrayType type mismatch, but NOT a crash. Different subsystem (instance parameter attribute, not state property inference).\n2. Issue #3289 (score 6.5): Type::cast assertion crash, but in CombOps.ConcatOp, not in hw::ConstantOp. Different dialect (PyCDE/Comb vs Arc).\n3. Issue #6373 (score 4.0): Arc aggregate types, but for struct validation, not state property transformation.\n\nKey differences from the crash report:\n- Root cause: applyEnableTransformation attempting hw::ConstantOp::create with ArrayType (not IntegerType)\n- Component: Arc/InferStatePropertiesPass, not other dialects\n- Trigger: Array-typed state variables in always_ff blocks with enable patterns\n- Stack trace: InferStateProperties.cpp:211 specific assertion\n\nThis crash has NOT been reported before in these exact circumstances.",
+  "timestamp": "2026-02-01T12:00:00Z"
+}

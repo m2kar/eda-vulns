@@ -1,0 +1,131 @@
+{
+  "testcase_id": "260128-00000a1a",
+  "source_file": "source.sv",
+  "validation_timestamp": "2025-01-31T21:30:00Z",
+  "validation_status": "passed",
+  "validation_summary": {
+    "syntax_valid": true,
+    "feature_analysis_complete": true,
+    "classification": "report"
+  },
+  "syntax_validation": {
+    "slang": {
+      "version": "10.0.6+3d7e6cd2e",
+      "status": "passed",
+      "errors": 0,
+      "warnings": 0,
+      "details": "Build succeeded: 0 errors, 0 warnings",
+      "design_units": ["MixedPorts"]
+    },
+    "verilator": {
+      "version": "5.022 2024-02-24 rev v5.020-157-g2b4852048",
+      "status": "passed",
+      "details": "No lint errors or warnings detected"
+    },
+    "iverilog": {
+      "version": "2009/2012 standard supported",
+      "status": "passed",
+      "standard": "g2009",
+      "details": "Compilation successful with -g2009 flag"
+    }
+  },
+  "language_features": {
+    "module_structure": {
+      "module_name": "MixedPorts",
+      "port_count": 3,
+      "local_variable_count": 1
+    },
+    "port_directions": [
+      {
+        "name": "a",
+        "type": "input",
+        "data_type": "logic",
+        "width": 1
+      },
+      {
+        "name": "b",
+        "type": "output",
+        "data_type": "logic",
+        "width": 1
+      },
+      {
+        "name": "c",
+        "type": "inout",
+        "data_type": "wire",
+        "width": 1,
+        "note": "Bidirectional port with tristate capability"
+      }
+    ],
+    "port_characteristics": {
+      "mixed_port_directions": true,
+      "mixed_data_types": true,
+      "has_inout_port": true,
+      "has_tristate_assignment": true
+    },
+    "procedural_blocks": [
+      {
+        "type": "always_comb",
+        "line": 9,
+        "statements": 1,
+        "describes_combinational_logic": true
+      }
+    ],
+    "continuous_assignments": [
+      {
+        "target": "b",
+        "value": "r1",
+        "type": "standard_assignment"
+      },
+      {
+        "target": "c",
+        "value": "(r1) ? 1'bz : 1'b0",
+        "type": "tristate_assignment",
+        "note": "High impedance when r1 is true, 0 when r1 is false"
+      }
+    ],
+    "data_types_used": [
+      "logic",
+      "wire"
+    ],
+    "features_summary": [
+      "Mixed port directions (input, output, inout)",
+      "Combinational always block (always_comb)",
+      "Tristate assignment to inout port",
+      "Multiple continuous assignments",
+      "SystemVerilog constructs (logic data type, always_comb)"
+    ]
+  },
+  "crash_context": {
+    "original_crash_type": "assertion",
+    "original_tool": "arcilator",
+    "original_error": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "original_location": "mlir/include/mlir/IR/StorageUniquerSupport.h:180",
+    "original_function": "circt::arc::StateType::get()",
+    "reproduction_status": "NOT REPRODUCED",
+    "current_circt_version": "firtool-1.139.0",
+    "reproduction_attempts": 3,
+    "all_attempts_succeeded": true,
+    "hypothesis": "Bug may have been fixed in firtool-1.139.0"
+  },
+  "classification": {
+    "type": "report",
+    "reason": "Crash does not reproduce with current toolchain; classified as historical documentation",
+    "recommendation": "Document as fixed/resolved issue with reproducer for regression testing"
+  },
+  "technical_analysis": {
+    "hw_ir_generated": true,
+    "hw_ir_sample": "module { hw.module @MixedPorts(in %a : i1, out b : i1, in %c : !llhd.ref<i1>) { hw.output %a : i1 } }",
+    "problematic_type_generated": "!llhd.ref<i1>",
+    "problematic_type_explanation": "LLHD reference type used for inout port; likely caused verification issue in older arcilator version"
+  },
+  "recommendations": {
+    "test_validity": "VALID - Test case is syntactically correct SystemVerilog",
+    "use_case": "Regression test for LLHD ref type handling in arcilator",
+    "expected_behavior": "Should compile successfully without assertion failures",
+    "edge_cases_tested": [
+      "Inout port with tristate assignments",
+      "Mixed port directions in single module",
+      "always_comb with inout interactions"
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "crash_id": "origin",
+  "status": "reproduce_failed",
+  "phase": "completed",
+  "created_at": "$TIMESTAMP",
+  "updated_at": "2026-02-01T08:30:12+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "failed"
+    },
+    "phase2": {
+      "status": "pending"
+    },
+    "phase3": {
+      "status": "pending"
+    }
+  },
+  "notes": "Crash signature changed - original assertion failure now manifests as type verification error. Bug may be partially fixed."
+}

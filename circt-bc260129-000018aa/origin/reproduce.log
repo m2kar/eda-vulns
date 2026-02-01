@@ -1,0 +1,8 @@
+=== CIRCT Timeout Crash Reproduction ===
+Testcase ID: 260129-000018aa
+Source file: /tmp/test_crash_c2a66131a8ad.sv
+Timeout limit: 60s
+
+[Stage 1/4] Running circt-verilog --ir-hw
+  Exit code: 124, Elapsed time: 60s
+  [TIMEOUT] circt-verilog timed out!

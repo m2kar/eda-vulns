@@ -1,0 +1,82 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "moore",
+  "failing_pass": "convert-moore-to-core",
+  "crash_type": "assertion",
+  "assertion_message": "dyn_cast on a non-existent value",
+  "crash_location": {
+    "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+    "function": "getModulePortInfo",
+    "line": 259
+  },
+  "secondary_location": {
+    "file": "include/circt/Dialect/HW/PortImplementation.h",
+    "function": "sanitizeInOut",
+    "line": 177
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "output string port",
+      "unpacked string array",
+      "dynamic string type"
+    ],
+    "problematic_patterns": [
+      "string type as module output port",
+      "dynamic type in hardware synthesis context"
+    ]
+  },
+  "hypotheses": [
+    {
+      "description": "typeConverter.convertType() returns null for StringType in port conversion context, and getModulePortInfo() doesn't validate the result before passing to ModulePortInfo",
+      "confidence": "high",
+      "evidence": [
+        "Assertion message indicates null/non-existent mlir::Type",
+        "Stack trace shows crash in sanitizeInOut() during dyn_cast",
+        "Line 243 of MooreToCore.cpp has no null check after convertType",
+        "Test case has string output port which is uncommon"
+      ]
+    },
+    {
+      "description": "StringType to sim::DynamicStringType conversion succeeds but the result is not valid for hw::ModulePortInfo context",
+      "confidence": "medium",
+      "evidence": [
+        "Type conversion is registered at line 2304-2305",
+        "hw::ModulePortInfo may have assumptions about port types",
+        "Dynamic strings have no natural hardware representation"
+      ]
+    }
+  ],
+  "keywords": [
+    "StringType",
+    "DynamicStringType",
+    "getModulePortInfo",
+    "sanitizeInOut",
+    "dyn_cast non-existent",
+    "convertType null",
+    "MooreToCore",
+    "string output port",
+    "type conversion failure",
+    "ModulePortInfo"
+  ],
+  "root_cause_summary": "Missing null check in getModulePortInfo() after typeConverter.convertType() call. When StringType port conversion fails or returns null, the null type is passed to ModulePortInfo::sanitizeInOut() which crashes on dyn_cast<InOutType>().",
+  "stack_trace_summary": "MooreToCorePass → SVModuleOpConversion::matchAndRewrite → getModulePortInfo → ModulePortInfo(ports) → sanitizeInOut → dyn_cast<hw::InOutType>(null) → assertion failure",
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Contains getModulePortInfo() with missing null check"
+    },
+    {
+      "path": "include/circt/Dialect/HW/PortImplementation.h",
+      "reason": "Contains sanitizeInOut() that crashes on null type"
+    },
+    {
+      "path": "lib/Dialect/Moore/MooreTypes.cpp",
+      "reason": "StringType definition and handling"
+    }
+  ],
+  "tool": "circt-verilog",
+  "command": "circt-verilog --ir-hw",
+  "circt_version": "1.139.0"
+}

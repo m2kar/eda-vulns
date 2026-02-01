@@ -1,0 +1,1 @@
+export PATH=/opt/llvm-22/bin:$PATH && export PATH=/opt/firtool/bin:$PATH && circt-verilog --ir-hw bug.sv 2>&1

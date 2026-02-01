@@ -1,0 +1,51 @@
+{
+  "crash_id": "bc260127-0000058f",
+  "status": "report_ready",
+  "phase": "completed",
+  "created_at": "2026-01-31T18:57:09+00:00",
+  "updated_at": "2026-01-31T19:09:21+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "steps": {
+    "reproduce": {
+      "completed": true
+    },
+    "root_cause_analysis": {
+      "completed": true
+    },
+    "minimize": {
+      "completed": true
+    },
+    "validate": {
+      "completed": true
+    },
+    "check_duplicates": {
+      "completed": true
+    },
+    "generate_issue": {
+      "completed": true
+    }
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed",
+      "workers": [
+        "reproduce",
+        "root_cause_analysis"
+      ]
+    },
+    "phase2": {
+      "status": "completed",
+      "workers": [
+        "minimize_validate",
+        "check_duplicates"
+      ]
+    },
+    "phase3": {
+      "status": "running"
+    }
+  }
+}

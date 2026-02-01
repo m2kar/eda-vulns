@@ -1,0 +1,36 @@
+{
+  "crash_id": "origin",
+  "status": "report_ready",
+  "phase": "completed",
+  "created_at": "2026-02-01T14:00:34+00:00",
+  "updated_at": "2026-02-01T14:14:00+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed",
+      "workers": ["reproduce", "root-cause-analysis"],
+      "duration": "5m"
+    },
+    "phase2": {
+      "status": "completed",
+      "workers": ["minimize-validate", "check-duplicates"],
+      "duration": "3m"
+    },
+    "phase3": {
+      "status": "completed",
+      "task": "generate-issue",
+      "duration": "4m"
+    }
+  },
+  "summary": {
+    "reproduced": true,
+    "validation_result": "report",
+    "duplicate_score": 8,
+    "reduction_percent": 46,
+    "issue_generated": true
+  }
+}

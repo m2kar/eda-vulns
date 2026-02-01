@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T21:20:00Z",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "circt-verilog",
+    "version": "1.139.0",
+    "llvm_version": "22.0.0git",
+    "path": "/opt/firtool/bin/circt-verilog"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv",
+    "exit_code": 139,
+    "reproduced": true,
+    "match_result": "assertion_failure_same_file"
+  },
+  "crash_signature": {
+    "original_location": "extractConcatToConcatExtract (CombFolds.cpp:548)",
+    "original_assertion": "op->use_empty() && \"expected 'op' to have no uses\"",
+    "reproduced_location": "canonicalizeLogicalCstWithConcat (CombFolds.cpp)",
+    "reproduced_assertion": "Assertion failure in CombFolds.cpp",
+    "analysis": "Both crashes in CombFolds.cpp canonicalize patterns indicate same root cause in pattern rewriting logic"
+  },
+  "files": {
+    "reproduce_log": "reproduce.log",
+    "metadata": "metadata.json"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "crash_signature": "failed to legalize operation 'sim.fmt.literal'",
+    "command": "circt-verilog --ir-hw source.sv 2>&1 | arcilator 2>&1",
+    "timestamp": "2026-02-01T00:00:00Z",
+    "error_details": {
+      "error_type": "failed to legalize operation",
+      "operation": "sim.fmt.literal",
+      "message": "Error: Assertion failed: arr[0] != 1"
+    },
+    "original_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_78c42c6334f7.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_xfhtv50x/test_78c42c6334f7.o"
+  }
+}

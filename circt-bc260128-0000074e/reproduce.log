@@ -1,0 +1,18 @@
+=== Reproduction Log ===
+Date: 2026-01-31T19:27:41+00:00
+Toolchain: /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin
+Test file: origin/source.sv
+
+=== Command ===
+timeout 10s $CIRCT_BIN/circt-verilog --ir-hw origin/source.sv
+
+=== Result ===
+
+Exit code: 124
+Elapsed time: 10.008811061s
+Status: TIMEOUT (confirmed at 10s)
+
+=== Conclusion ===
+Timeout crash REPRODUCED successfully
+Original timeout: 300s
+Test timeout: 10s (hit limit)

@@ -1,0 +1,32 @@
+{
+  "classification": {
+    "result": "report",
+    "is_valid_bug": true,
+    "category": "crash_on_valid_input"
+  },
+  "syntax_validation": {
+    "verilator": {
+      "command": "verilator --lint-only bug.sv",
+      "result": "pass",
+      "version": "5.022"
+    },
+    "slang": {
+      "command": "slang --lint-only bug.sv",
+      "result": "pass",
+      "version": "10.0.6",
+      "message": "Build succeeded: 0 errors, 0 warnings"
+    }
+  },
+  "crash_validation": {
+    "tool": "arcilator",
+    "crash_confirmed": true,
+    "exit_code": 134,
+    "error_signature": "state type must have a known bit width; got '!llhd.ref<i1>'"
+  },
+  "test_case": {
+    "file": "bug.sv",
+    "content": "module Bug(inout logic c);\nendmodule\n",
+    "is_minimal": true
+  },
+  "verdict": "The minimized test case is valid SystemVerilog (confirmed by Verilator and Slang) that triggers a crash in arcilator. This is a legitimate bug report."
+}

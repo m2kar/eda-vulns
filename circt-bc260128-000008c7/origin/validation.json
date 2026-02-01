@@ -1,0 +1,15 @@
+{
+  "result": "report",
+  "syntax": {
+    "circt_verilog_exit_code": 0,
+    "circt_verilog_ok": true
+  },
+  "cross_tool": {
+    "verilator": "not_checked",
+    "slang": "not_checked"
+  },
+  "notes": "circt-verilog parses bug.sv successfully; failure occurs in arcilator pipeline",
+  "classification": {
+    "result": "report"
+  }
+}

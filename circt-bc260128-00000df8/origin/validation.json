@@ -1,0 +1,24 @@
+{
+  "syntax_valid": true,
+  "minimized_size": "2 lines / 39 bytes",
+  "original_size": "9 lines / 171 bytes",
+  "reduction_percent": 77,
+  "classification": {
+    "result": "report",
+    "reason": "Valid SystemVerilog code (verified by slang and verilator) crashes circt-verilog during MooreToCore conversion. The string type as module port is a legitimate SV feature that should either be supported or produce a clean error message, not crash."
+  },
+  "cross_tool_validation": {
+    "slang": {
+      "status": "success",
+      "version": "10.0.6+3d7e6cd2e",
+      "result": "Build succeeded: 0 errors, 0 warnings"
+    },
+    "verilator": {
+      "status": "success",
+      "version": "5.022",
+      "result": "No errors or warnings"
+    }
+  },
+  "crash_confirmed": true,
+  "crash_signature": "SVModuleOpConversion::matchAndRewrite in MooreToCore.cpp"
+}

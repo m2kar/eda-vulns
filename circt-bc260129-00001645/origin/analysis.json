@@ -1,0 +1,100 @@
+{
+  "testcase_id": "260129-00001645",
+  "crash_type": "assertion",
+  "tool": "arcilator",
+  "dialect": "arc",
+  "pass": "LowerState",
+  "severity": "high",
+  
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "assertion": "succeeded(ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))",
+  
+  "crash_location": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "line": 219,
+    "function": "ModuleLowering::run()",
+    "context": "StateType::get(arg.getType()) called on inout port type"
+  },
+  
+  "root_cause": {
+    "category": "unsupported_type",
+    "description": "LowerState pass does not handle inout ports (llhd.ref types)",
+    "trigger_construct": "inout port declaration",
+    "problematic_type": "!llhd.ref<i1>",
+    "expected_types": ["IntegerType", "seq::ClockType", "hw::ArrayType", "hw::StructType"]
+  },
+  
+  "source_analysis": {
+    "file": "source.sv",
+    "language": "SystemVerilog",
+    "trigger_line": 6,
+    "trigger_code": "inout logic c",
+    "construct_type": "inout_port"
+  },
+  
+  "stack_trace_summary": [
+    {
+      "frame": "#12",
+      "function": "circt::arc::StateType::get(mlir::Type)",
+      "file": "ArcTypes.cpp.inc",
+      "line": 108
+    },
+    {
+      "frame": "#13",
+      "function": "(anonymous namespace)::ModuleLowering::run()",
+      "file": "LowerState.cpp",
+      "line": 219
+    },
+    {
+      "frame": "#14",
+      "function": "(anonymous namespace)::LowerStatePass::runOnOperation()",
+      "file": "LowerState.cpp",
+      "line": 1198
+    }
+  ],
+  
+  "related_components": [
+    "lib/Dialect/Arc/ArcTypes.cpp",
+    "include/circt/Dialect/Arc/ArcTypes.td",
+    "lib/Dialect/Arc/Transforms/LowerState.cpp"
+  ],
+  
+  "verification_constraint": {
+    "function": "computeLLVMBitWidth(Type type)",
+    "requirement": "Type must be one of: seq::ClockType, IntegerType, hw::ArrayType, hw::StructType",
+    "violation": "llhd::RefType is not supported"
+  },
+  
+  "bug_classification": {
+    "type": "missing_type_handling",
+    "impact": "compilation_failure",
+    "workaround": "avoid_inout_ports",
+    "fix_complexity": "medium"
+  },
+  
+  "suggested_fixes": [
+    {
+      "approach": "graceful_rejection",
+      "description": "Add explicit check and emit user-friendly error for inout ports"
+    },
+    {
+      "approach": "type_support",
+      "description": "Extend computeLLVMBitWidth to handle llhd::RefType"
+    },
+    {
+      "approach": "preprocessing",
+      "description": "Convert inout ports to input/output pairs before lowering"
+    }
+  ],
+  
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv | arcilator",
+    "minimal_testcase": "module Test(inout logic c); endmodule"
+  },
+  
+  "metadata": {
+    "analysis_version": "1.0",
+    "analysis_date": "2025-01-29",
+    "circt_version": "1.139.0"
+  }
+}

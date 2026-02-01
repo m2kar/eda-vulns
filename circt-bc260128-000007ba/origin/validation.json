@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T20:15:00Z",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": ""
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "verilator": "pass",
+    "icarus": "pass",
+    "slang": "pass"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid test case, unique crash in CIRCT arcilator when processing inout ports"
+  }
+}

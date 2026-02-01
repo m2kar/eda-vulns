@@ -1,0 +1,1 @@
+[{"number":4780,"state":"closed","title":"[FIRRTL] Missed comb cycle, crash in canonicalizer","updatedAt":"2024-05-17T21:50:32Z","url":"https://github.com/llvm/circt/issues/4780"},{"number":3600,"state":"closed","title":"[FIRRTL] Crash using an instance input ports to drive another instance","updatedAt":"2023-04-26T18:12:41Z","url":"https://github.com/llvm/circt/issues/3600"}]

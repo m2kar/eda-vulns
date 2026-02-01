@@ -1,0 +1,40 @@
+{
+  "syntax_valid": true,
+  "tools_tested": [
+    "slang 10.0.6+3d7e6cd2e",
+    "verilator 5.022",
+    "circt-verilog --ir-moore (firtool-1.139.0)"
+  ],
+  "classification": {
+    "result": "report",
+    "reason": "Valid SystemVerilog code (verified by slang and verilator) causes assertion failure during MooreToCore conversion. The crash is due to missing type conversion for PackedUnionType in the MooreToCore pass. This is a compiler bug that should be reported."
+  },
+  "minimization_stats": {
+    "original_lines": 24,
+    "final_lines": 9,
+    "reduction_percent": 62.5
+  },
+  "crash_signature": {
+    "assertion": "detail::isPresent(Val) && \"dyn_cast on a non-existent value\"",
+    "location": "MooreToCore.cpp:SVModuleOpConversion::matchAndRewrite",
+    "type": "assertion_failure"
+  },
+  "validation_details": {
+    "slang": {
+      "status": "pass",
+      "output": "Build succeeded: 0 errors, 0 warnings"
+    },
+    "verilator": {
+      "status": "pass",
+      "output": "lint-only completed successfully"
+    },
+    "circt_moore_ir": {
+      "status": "pass",
+      "output": "Moore IR generated successfully (union type recognized)"
+    },
+    "circt_hw_ir": {
+      "status": "crash",
+      "output": "Assertion failure in MooreToCore conversion"
+    }
+  }
+}

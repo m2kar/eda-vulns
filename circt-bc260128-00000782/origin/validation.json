@@ -1,0 +1,26 @@
+{
+  "classification": {
+    "result": "report",
+    "reason": "Valid SystemVerilog code causes arcilator crash during LowerArcToLLVM pass. All three tools (circt-verilog, verilator, slang) accept the syntax. The sim.fmt.literal operation fails to legalize, indicating incomplete support for format strings in combinational contexts."
+  },
+  "syntax_check": {
+    "valid": true,
+    "tool": "circt-verilog",
+    "details": "Successfully parsed and generated MLIR IR"
+  },
+  "cross_tool_validation": {
+    "tested": true,
+    "tools": ["verilator", "slang"],
+    "results": {
+      "verilator": {
+        "valid": true,
+        "notes": "Warning DECLFILENAME (filename mismatch) with -Wall, passes without -Wall"
+      },
+      "slang": {
+        "valid": true,
+        "notes": "Parse successful with exit code 0"
+      }
+    }
+  },
+  "timestamp": "2026-01-31T19:55:00Z"
+}

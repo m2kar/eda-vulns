@@ -1,0 +1,3 @@
+#9572 | [Moore] Assertion failure when module has string type output port | OPEN | https://github.com/llvm/circt/issues/9572
+#9570 | [Moore] Assertion in MooreToCore when module uses packed union type as port | OPEN | https://github.com/llvm/circt/issues/9570
+#8930 | [MooreToCore] Crash with sqrt/floor | OPEN | https://github.com/llvm/circt/issues/8930

@@ -1,0 +1,1 @@
+/home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw bug.sv | /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator

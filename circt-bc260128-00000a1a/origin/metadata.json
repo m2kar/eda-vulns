@@ -1,0 +1,52 @@
+{
+  "testcase_id": "260128-00000a1a",
+  "crash_type": "assertion",
+  "tool": "arcilator",
+  "source_file": "source.sv",
+  "compilation_command": "circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj",
+  "environment": {
+    "circt_version": "firtool-1.139.0",
+    "llvm_version": "22.0.0git",
+    "path": "/opt/firtool/bin"
+  },
+  "reproduction": {
+    "reproduced": false,
+    "attempts": 3,
+    "crash_signature": {
+      "expected": "state type must have a known bit width; got '!llhd.ref<i1>'",
+      "expected_location": "mlir/include/mlir/IR/StorageUniquerSupport.h:180",
+      "expected_module": "circt::arc::StateType::get()",
+      "actual": "N/A - no crash occurred",
+      "match_type": "none"
+    },
+    "notes": [
+      "The crash could NOT be reproduced with the current CIRCT toolchain",
+      "Suggested cause: Bug may have been fixed in firtool-1.139.0",
+      "The generated HW IR contains !llhd.ref<i1> which is the problematic type",
+      "All reproduction attempts completed successfully without crashes"
+    ]
+  },
+  "hardware_ir_generated": true,
+  "hardware_ir_sample": "module { hw.module @MixedPorts(in %a : i1, out b : i1, in %c : !llhd.ref<i1>) { hw.output %a : i1 } }",
+  "reproduction_attempts": [
+    {
+      "name": "Basic pipeline",
+      "command": "circt-verilog --ir-hw source.sv | arcilator",
+      "result": "SUCCESS - no crash",
+      "exit_code": 0
+    },
+    {
+      "name": "Full pipeline with opt and llc",
+      "command": "circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj",
+      "result": "SUCCESS - object file generated",
+      "exit_code": 0
+    },
+    {
+      "name": "With optimization flags",
+      "command": "circt-verilog --ir-hw source.sv | arcilator --detect-enables --detect-resets",
+      "result": "SUCCESS - valid LLVM IR",
+      "exit_code": 0
+    }
+  ],
+  "timestamp": "2025-01-31T00:00:00Z"
+}

@@ -1,0 +1,66 @@
+================================================================================
+                    CHECK-DUPLICATES EXECUTION REPORT
+================================================================================
+
+TASK STATUS: ✅ COMPLETED
+
+WORKDIR: /home/zhiqing/edazz/eda-vulns/circt-bc260128-00000ac8/origin
+
+DEPENDENCIES VERIFIED:
+  ✓ analysis.json (2904 bytes)
+  ✓ metadata.json (2612 bytes)
+  ✓ gh CLI authenticated
+
+EXECUTION STEPS:
+  ✓ Step 1: Extract keywords from analysis.json
+  ✓ Step 2: Execute gh issue search (5 queries)
+  ✓ Step 3: Calculate similarity scores
+  ✓ Step 4: Generate duplicates.json
+  ✓ Step 5: Generate duplicates.md
+
+OUTPUT FILES:
+  ✓ duplicates.json (12K) - Structured search results with scores
+  ✓ duplicates.md (5.2K) - Human-readable duplicate check report
+
+SEARCH STATISTICS:
+  • Queries executed: 5
+  • Total issues found: 24
+  • Unique issues: 24
+  • Average similarity: 4.8/20
+
+TOP 5 MOST SIMILAR ISSUES:
+  1. #9260 (12.0pts) - Arcilator crashes in Upload Release Artifacts CI
+  2. #6373 (10.0pts) - [Arc] Support hw.wires of aggregate types
+  3. #8065 (10.0pts) - [LLHD][Arc] Indexing and slicing lowering from Verilog
+  4. #8930 (7.0pts)  - [MooreToCore] Crash with sqrt/floor
+  5. #3289 (7.0pts)  - [PyCDE] ConcatOp of arrays causes crash
+
+FINAL RESULTS:
+  recommendation: review_existing
+  top_score: 12.0
+  top_issue: #9260
+
+INTERPRETATION:
+  The search found a moderately similar issue (#9260) with a similarity score
+  of 12.0/20. This indicates potential overlap but not a perfect match.
+  
+  Recommended action: Review issue #9260 to determine if it's a duplicate or
+  a related but distinct issue before proceeding with a new bug report.
+
+KEYWORDS ANALYZED:
+  • Tool: arcilator
+  • Pass: InferStateProperties
+  • Crash Type: assertion
+  • Dialect: arc
+  • Function: applyEnableTransformation
+  • Error Pattern: cast<IntegerType>
+  • Type Issue: packed struct, struct array
+
+SCORING METHODOLOGY:
+  • Perfect match (same function+error): 20pts
+  • High relevance (same pass): 15pts
+  • Moderate (same dialect): 10pts
+  • Weak (same error type): 5pts
+  • No match: 0pts
+
+================================================================================

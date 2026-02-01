@@ -1,0 +1,43 @@
+{
+  "dialect": "sim",
+  "crash_type": "legalization_failure",
+  "operation": "sim.fmt.literal",
+  "location": {
+    "tool": "arcilator",
+    "stage": "legalization",
+    "ir_line": 3,
+    "ir_column": 10
+  },
+  "root_cause": "arcilator lacks a legalization pattern for sim.fmt.literal operation. When SystemVerilog $error system function generates format string literals via sim.fmt.literal, arcilator cannot lower them to its target IR representation.",
+  "trigger_pattern": {
+    "sv_construct": "immediate_assertion_with_error",
+    "key_code": "assert (...) else $error(\"...\");",
+    "generates_op": "sim.fmt.literal"
+  },
+  "keywords": [
+    "sim.fmt.literal",
+    "legalization",
+    "arcilator",
+    "failed to legalize",
+    "sim dialect",
+    "fstring",
+    "$error",
+    "assertion",
+    "format string"
+  ],
+  "affected_constructs": [
+    "$error",
+    "$fatal",
+    "$warning", 
+    "$info",
+    "assert with format string"
+  ],
+  "pipeline": [
+    "circt-verilog --ir-hw",
+    "arcilator (CRASH)",
+    "opt",
+    "llc"
+  ],
+  "severity": "high",
+  "testcase_id": "260128-00000959"
+}

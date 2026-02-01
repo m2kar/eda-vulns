@@ -1,0 +1,40 @@
+{
+  "crash_id": "circt-bc260129-000016a2",
+  "status": "report_ready",
+  "phase": "completed",
+  "created_at": "2026-02-01T11:06:10+00:00",
+  "updated_at": "2026-02-01T11:18:44+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed",
+      "tasks": ["reproduce", "root-cause-analysis"],
+      "outputs": ["metadata.json", "reproduce.log", "analysis.json", "root_cause.md"]
+    },
+    "phase2": {
+      "status": "completed",
+      "tasks": ["minimize", "validate", "check-duplicates"],
+      "outputs": ["bug.sv", "error.log", "command.txt", "validation.json", "validation.md", "duplicates.json", "duplicates.md"]
+    },
+    "phase3": {
+      "status": "completed",
+      "tasks": ["generate-issue"],
+      "outputs": ["issue.md"]
+    }
+  },
+  "result": {
+    "validation_result": "report",
+    "duplicate_check": {
+      "recommendation": "review_existing",
+      "top_match": "#9574",
+      "similarity_score": 9.5
+    },
+    "test_reduction": "85%",
+    "final_status": "report_ready"
+  },
+  "note": "Issue likely duplicate of #9574. Review before submitting."
+}

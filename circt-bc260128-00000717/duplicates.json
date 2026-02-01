@@ -1,0 +1,100 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T19:21:00Z",
+  "search_terms": {
+    "dialect": "moore",
+    "failing_pass": "SVModuleOpConversion",
+    "crash_type": "assertion",
+    "keywords": [
+      "union",
+      "packed union",
+      "module port",
+      "MooreToCore",
+      "sanitizeInOut",
+      "dyn_cast",
+      "assertion",
+      "ModulePortInfo",
+      "SVModuleOpConversion"
+    ],
+    "assertion_message": "dyn_cast on a non-existent value in circt::hw::ModulePortInfo::sanitizeInOut()"
+  },
+  "results": {
+    "total_found": 4,
+    "top_score": 7.0,
+    "issues": [
+      {
+        "number": 8930,
+        "title": "[MooreToCore] Crash with sqrt/floor",
+        "url": "https://github.com/llvm/circt/issues/8930",
+        "state": "OPEN",
+        "createdAt": "2025-09-06T09:21:38Z",
+        "labels": ["Moore"],
+        "similarity_score": 7.0,
+        "score_breakdown": {
+          "title_keyword_match": 2.0,
+          "body_keyword_match": 1.0,
+          "assertion_match": 3.0,
+          "dialect_label_match": 1.5,
+          "failing_pass_match": 0.0
+        },
+        "notes": "Same assertion message but different trigger (sqrt/floor vs union)"
+      },
+      {
+        "number": 8471,
+        "title": "[ImportVerilog] Union type in call",
+        "url": "https://github.com/llvm/circt/issues/8471",
+        "state": "OPEN",
+        "createdAt": "2025-05-08T20:55:11Z",
+        "labels": [],
+        "similarity_score": 2.0,
+        "score_breakdown": {
+          "title_keyword_match": 2.0,
+          "body_keyword_match": 0.0,
+          "assertion_match": 0.0,
+          "dialect_label_match": 0.0,
+          "failing_pass_match": 0.0
+        },
+        "notes": "Related to union type but different issue (type mismatch in call)"
+      },
+      {
+        "number": 7378,
+        "title": "[HW] Roundtrip test fail for !hw.union",
+        "url": "https://github.com/llvm/circt/issues/7378",
+        "state": "OPEN",
+        "createdAt": "2024-07-23T04:52:15Z",
+        "labels": ["bug", "HW"],
+        "similarity_score": 2.0,
+        "score_breakdown": {
+          "title_keyword_match": 2.0,
+          "body_keyword_match": 0.0,
+          "assertion_match": 0.0,
+          "dialect_label_match": 0.0,
+          "failing_pass_match": 0.0
+        },
+        "notes": "Related to hw.union but different issue (roundtrip test failure)"
+      },
+      {
+        "number": 8973,
+        "title": "[MooreToCore] Lowering to math.ipow?",
+        "url": "https://github.com/llvm/circt/issues/8973",
+        "state": "OPEN",
+        "createdAt": "2025-09-16T14:19:34Z",
+        "labels": ["Moore"],
+        "similarity_score": 1.5,
+        "score_breakdown": {
+          "title_keyword_match": 0.0,
+          "body_keyword_match": 0.0,
+          "assertion_match": 0.0,
+          "dialect_label_match": 1.5,
+          "failing_pass_match": 0.0
+        },
+        "notes": "MooreToCore related but different issue (power operation lowering)"
+      }
+    ]
+  },
+  "recommendation": {
+    "action": "likely_new",
+    "confidence": "medium",
+    "reason": "Related issues exist but differences suggest new bug. Issue #8930 has same assertion but different trigger (sqrt/floor vs union module port)."
+  }
+}

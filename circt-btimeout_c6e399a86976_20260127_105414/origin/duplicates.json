@@ -1,0 +1,52 @@
+{
+  "version": "1.0",
+  "crash_id": "c6e399a86976",
+  "checked_at": "2026-01-31T17:02:00Z",
+  "search_queries": [
+    {
+      "query": "timeout arcilator",
+      "state": "all",
+      "limit": 50,
+      "results_count": 0,
+      "issues": []
+    },
+    {
+      "query": "timeout",
+      "state": "all",
+      "limit": 20,
+      "results_count": 3,
+      "issues": [
+        {
+          "id": 2122,
+          "state": "OPEN",
+          "title": "[ESI] [Cosim] DPI cosim Capnp server polling",
+          "labels": ["ESI"],
+          "created_at": "2021-11-09T20:23:28Z"
+        },
+        {
+          "id": 8934,
+          "state": "CLOSED",
+          "title": "[MooreToCore] Unsupported $fatal to sim.terminate conversion",
+          "labels": ["Moore"],
+          "created_at": "2025-09-10T22:00:30Z"
+        },
+        {
+          "id": 4870,
+          "state": "CLOSED",
+          "title": "Nightly test failures -- 3/21/23",
+          "labels": [],
+          "created_at": "2023-03-23T16:36:20Z"
+        }
+      ]
+    }
+  ],
+  "duplicate_analysis": {
+    "is_duplicate": false,
+    "confidence": "high",
+    "reason": "No similar timeout issues found related to arcilator or the specific toolchain pipeline",
+    "similar_issues": []
+  },
+  "keywords_used": ["timeout", "arcilator", "performance", "compilation time"],
+  "crash_signature": "c6e399a86976_timeout",
+  "conclusion": "No duplicate issues found. This case is unique but classified as non-reproducible (false positive due to environmental factors)"
+}

@@ -1,0 +1,141 @@
+{
+  "crash_id": "260129-0000193c",
+  "analysis_version": "1.0",
+  "timestamp": "2026-02-01T14:05:00+00:00",
+  
+  "crash_info": {
+    "type": "assertion_failure",
+    "assertion_message": "integer bitwidth is limited to 16777215 bits",
+    "source_file": "mlir/include/mlir/IR/StorageUniquerSupport.h",
+    "source_line": 180,
+    "crash_signature": "IntegerType::get_bitwidth_overflow"
+  },
+  
+  "stack_trace": {
+    "crash_function": "mlir::IntegerType::get",
+    "crash_file": "mlir/lib/IR/MLIRContext.cpp",
+    "crash_line": 1101,
+    "call_chain": [
+      {
+        "function": "Promoter::insertBlockArgs(BlockEntry*)",
+        "file": "lib/Dialect/LLHD/Transforms/Mem2Reg.cpp",
+        "line": 1742
+      },
+      {
+        "function": "Promoter::insertBlockArgs()",
+        "file": "lib/Dialect/LLHD/Transforms/Mem2Reg.cpp",
+        "line": 1654
+      },
+      {
+        "function": "Promoter::promote()",
+        "file": "lib/Dialect/LLHD/Transforms/Mem2Reg.cpp",
+        "line": 764
+      },
+      {
+        "function": "Mem2RegPass::runOnOperation()",
+        "file": "lib/Dialect/LLHD/Transforms/Mem2Reg.cpp",
+        "line": 1844
+      }
+    ]
+  },
+  
+  "dialect_info": {
+    "primary_dialect": "LLHD",
+    "related_dialects": ["Moore", "HW", "Comb"],
+    "pass_name": "Mem2RegPass",
+    "pass_description": "Memory-to-Register Promotion for LLHD dialect"
+  },
+  
+  "test_case": {
+    "source_file": "source.sv",
+    "language": "SystemVerilog",
+    "key_constructs": [
+      "real type (floating-point)",
+      "always_ff (sequential logic)",
+      "floating-point arithmetic",
+      "floating-point comparison"
+    ],
+    "trigger_pattern": "real type in sequential logic block"
+  },
+  
+  "root_cause": {
+    "category": "type_handling_error",
+    "summary": "LLHD Mem2Reg pass fails to handle floating-point types during memory promotion",
+    "detailed_explanation": "The Mem2Reg pass attempts to promote signal/memory slots to SSA values by inserting block arguments. When processing a slot with Float64Type (from SystemVerilog 'real'), the pass incorrectly tries to create an IntegerType with an invalid bitwidth. This happens because hw::getBitWidth() returns -1 for unsupported types like Float64Type, and this value is mishandled, leading to an integer overflow or incorrect type creation.",
+    "technical_details": {
+      "problematic_type": "Float64Type",
+      "source_sv_type": "real",
+      "bitwidth_function": "hw::getBitWidth()",
+      "expected_behavior": "Should validate type is promotable or handle floating-point types correctly",
+      "actual_behavior": "Attempts to create IntegerType with invalid bitwidth"
+    }
+  },
+  
+  "affected_components": [
+    {
+      "path": "lib/Dialect/LLHD/Transforms/Mem2Reg.cpp",
+      "role": "crash_location",
+      "specific_function": "Promoter::insertBlockArgs"
+    },
+    {
+      "path": "lib/Dialect/HW/HWTypes.cpp",
+      "role": "type_utility",
+      "specific_function": "hw::getBitWidth"
+    },
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "role": "type_conversion",
+      "specific_function": "RealType conversion"
+    }
+  ],
+  
+  "severity": {
+    "level": "high",
+    "impact": "compiler_crash",
+    "reproducibility": "deterministic"
+  },
+  
+  "suggested_fixes": [
+    {
+      "priority": 1,
+      "description": "Add type validation in Mem2Reg to skip non-promotable types",
+      "location": "lib/Dialect/LLHD/Transforms/Mem2Reg.cpp"
+    },
+    {
+      "priority": 2,
+      "description": "Extend hw::getBitWidth to handle MLIR floating-point types",
+      "location": "lib/Dialect/HW/HWTypes.cpp"
+    },
+    {
+      "priority": 3,
+      "description": "Add proper floating-point type support in LLHD dialect",
+      "location": "lib/Dialect/LLHD/"
+    }
+  ],
+  
+  "related_issues": [
+    {
+      "id": 8269,
+      "title": "[MooreToCore] Support `real` constants",
+      "url": "https://github.com/llvm/circt/issues/8269",
+      "relevance": "direct"
+    },
+    {
+      "id": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "url": "https://github.com/llvm/circt/issues/8930",
+      "relevance": "related"
+    }
+  ],
+  
+  "keywords": [
+    "LLHD",
+    "Mem2Reg",
+    "real type",
+    "Float64Type",
+    "bitwidth",
+    "assertion failure",
+    "type conversion",
+    "MooreToCore"
+  ]
+}

@@ -1,0 +1,46 @@
+=== CIRCT Crash Reproduction Attempt ===
+Testcase ID: 260129-00001875
+Source: source.sv
+CIRCT Version: 1.139.0
+LLVM Version: 22.0.0git
+
+Command Executed:
+/opt/firtool/bin/circt-verilog --ir-hw source.sv | /opt/firtool/bin/arcilator | /opt/llvm-22/bin/opt -O0 | /opt/llvm-22/bin/llc -O0 --filetype=obj -o test_output.o
+
+=== Execution Output ===
+
+Step 1: circt-verilog --ir-hw source.sv
+Status: SUCCESS
+Output:
+module {
+  hw.module @test_module(in %c : !llhd.ref<i1>, in %a : i1) {
+    hw.output
+  }
+}
+
+Step 2: arcilator (with full pipeline)
+Status: SUCCESS
+Output: Generated valid LLVM IR
+
+Step 3: opt -O0
+Status: SUCCESS
+
+Step 4: llc -O0 --filetype=obj
+Status: SUCCESS
+Output object file size: 784 bytes
+
+=== Summary ===
+The CIRCT compilation pipeline completed successfully WITHOUT crashing.
+
+Original Error Expected:
+- Error: "state type must have a known bit width; got '!llhd.ref<i1>'"
+- Location: circt::arc::StateType::get() in ArcTypes.cpp.inc:108
+- This is an assertion failure in the arc state type creation
+
+Actual Result: NO CRASH - Pipeline succeeded
+
+The crash was NOT reproduced with the current CIRCT toolchain (1.139.0, LLVM 22.0.0git).
+This suggests the bug may have been fixed in a subsequent update or the specific configuration
+needed to trigger the crash is different in the current environment.
+
+Exit code: 0

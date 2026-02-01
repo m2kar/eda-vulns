@@ -1,0 +1,26 @@
+{
+  "testcase_id": "260128-0000074e",
+  "reproduction": {
+    "reproduced": true,
+    "crash_type": "timeout",
+    "exit_code": 124,
+    "timeout_used": 10,
+    "original_timeout": 300,
+    "timestamp": "2026-01-31T19:28:02+00:00"
+  },
+  "toolchain": {
+    "circt_version": "1.139.0",
+    "path": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin",
+    "llvm_version": "LLVM (http://llvm.org/):"
+  },
+  "command": {
+    "original": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_435d4f4ae36e.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_xfhtv50x/test_435d4f4ae36e.o",
+    "reproduced": "circt-verilog --ir-hw origin/source.sv",
+    "hanging_stage": "circt-verilog"
+  },
+  "files": {
+    "source": "origin/source.sv",
+    "error": "origin/error.txt",
+    "reproduce_log": "reproduce.log"
+  }
+}

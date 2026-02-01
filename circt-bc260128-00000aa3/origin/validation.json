@@ -1,0 +1,11 @@
+{
+  "syntax_valid": true,
+  "verilator_accepted": true,
+  "slang_accepted": true,
+  "circt_verilog_accepted": true,
+  "classification": "report",
+  "validation_notes": "Test case is valid SystemVerilog accepted by slang, verilator, and circt-verilog. The crash occurs in arcilator's InferStateProperties pass when processing array state operations with enable pattern detection. This is a legitimate bug in CIRCT's arcilator tool where the pass assumes all state types are scalars.",
+  "crash_confirmed": true,
+  "crash_signature": "arc.state op operand type mismatch with garbage integer type (e.g., i673700224) instead of expected !hw.array<2xi1>",
+  "timestamp": "2026-01-31T22:15:00+00:00"
+}

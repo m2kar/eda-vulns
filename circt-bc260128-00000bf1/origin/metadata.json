@@ -1,0 +1,37 @@
+{
+  "testcase_id": "260128-00000bf1",
+  "crash_type": "timeout",
+  "reproduction": {
+    "reproduced": true,
+    "command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw ./source.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o test_output.o",
+    "timeout": 60,
+    "actual_time": 60,
+    "exit_code": 124,
+    "exit_code_meaning": "TIMEOUT (command killed by timeout)"
+  },
+  "testcase": {
+    "language": "SystemVerilog",
+    "features": [
+      "array_declaration",
+      "struct_typedef",
+      "packed_struct",
+      "always_comb",
+      "always_ff",
+      "array_indexing",
+      "struct_field_access"
+    ],
+    "key_code_pattern": "struct field assignment with array indexing in combinational logic"
+  },
+  "analysis": {
+    "status": "timeout_confirmed",
+    "severity": "high",
+    "bug_type": "infinite_loop_or_performance_regression",
+    "pipeline_stages": [
+      "circt-verilog (IR generation)",
+      "arcilator (simulation)",
+      "opt (optimization)",
+      "llc (code generation)"
+    ],
+    "notes": "The pipeline hangs within 60 seconds on a relatively simple testcase, indicating a serious performance issue or infinite loop in the CIRCT compiler chain."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T09:44:31Z",
+  "search_terms": {
+    "dialect": "Arc",
+    "failing_pass": "LowerState",
+    "crash_type": "assertion",
+    "keywords": ["inout port arcilator", "LLHD ref type LowerState", "StateType known bit width", "arc dialect inout", "sequential logic inout", "!llhd.ref<i1>"],
+    "assertion_message": "state type must have a known bit width; got '!llhd.ref<i1>'"
+  },
+  "results": {
+    "total_found": 12,
+    "top_score": 9.0,
+    "issues": [
+      {
+        "number": 9574,
+        "title": "[Arc] Assertion failure when lowering inout ports in sequential logic",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/9574",
+        "similarity_score": 9.0,
+        "match_reasons": [
+          "Exact match on assertion context (inout ports in sequential logic)",
+          "Same dialect (Arc)",
+          "Same tool (arcilator)",
+          "Keyword match on 'inout', 'arcilator', 'LowerState'",
+          "Assertion failure type matches"
+        ]
+      },
+      {
+        "number": 4916,
+        "title": "[Arc] LowerState: nested arc.state get pulled in wrong clock tree",
+        "state": "OPEN",
+        "url": "https://github.com/llvm/circt/issues/4916",
+        "similarity_score": 4.0,
+        "match_reasons": [
+          "Same dialect (Arc)",
+          "Same failing pass (LowerState)",
+          "Keyword match on 'LowerState'"
+        ]
+      }
+    ]
+  },
+  "recommendation": {
+    "action": "review_existing",
+    "confidence": "high",
+    "reason": "Issue #9574 is highly relevant with exact match on problem description (inout ports in sequential logic causing assertion failure in arcilator)"
+  }
+}

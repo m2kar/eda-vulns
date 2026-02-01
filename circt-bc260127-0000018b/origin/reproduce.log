@@ -1,0 +1,43 @@
+Reproduction Attempt Report
+============================
+
+Command Executed:
+/opt/firtool/bin/circt-verilog --ir-hw source.sv
+
+Test File: source.sv
+- Location: /home/zhiqing/edazz/eda-vulns/circt-bc260127-0000018b/origin/source.sv
+- Content: Module with array element assignment in always_comb block
+
+CIRCT Version:
+- LLVM version: 22.0.0git
+- CIRCT firtool: firtool-1.139.0
+- Slang version: 9.1.0+0
+- Binary location: /opt/firtool/bin/circt-verilog
+
+Execution Result:
+- Exit Code: 0 (SUCCESS - No Crash)
+- Output: Valid MLIR IR produced
+- Expected Behavior: Should crash with assertion failure
+- Actual Behavior: Completed successfully
+
+Output:
+module {
+  hw.module @test_module() {
+    hw.output
+  }
+}
+
+Analysis:
+The test case does NOT reproduce the crash with the current toolchain.
+This could indicate:
+1. The bug has been fixed in the current CIRCT build
+2. The test case requires specific compilation flags or conditions
+3. The environment differs from the original crash environment
+4. The bug may be environment-dependent (architecture, LLVM version, etc.)
+
+Original Crash Signature (from error.txt):
+- Assertion: "expected 'op' to have no uses"
+- Location: llvm/mlir/lib/IR/PatternMatch.cpp:156
+- Function: mlir::RewriterBase::eraseOp(Operation *)
+- Called from: extractConcatToConcatExtract in CombFolds.cpp:548
+- Stack trace present in error.txt lines 12-56

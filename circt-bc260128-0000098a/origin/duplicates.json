@@ -1,0 +1,138 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T21:20:22+00:00",
+  "search_terms": {
+    "dialect": "comb",
+    "failing_pass": "canonicalize",
+    "crash_type": "assertion",
+    "crash_location": "CombFolds.cpp:548",
+    "assertion_message": "op->use_empty()",
+    "keywords": [
+      "extractConcatToConcatExtract",
+      "ExtractOp::canonicalize",
+      "use_empty",
+      "CombFolds",
+      "combinational loop",
+      "cycle",
+      "canonicalize assertion",
+      "eraseOp",
+      "comb.extract",
+      "comb.concat"
+    ]
+  },
+  "results": {
+    "total_found": 16,
+    "top_score": 13.0,
+    "top_issue_number": 8863,
+    "issues": [
+  {
+    "body": "Consider the following input:\n```mlir\nhw.module @Foo(in %a : i1, in %b : i1, out z : i4) {\n  %0 = comb.extract %1 from 2 : (i4) -> i2\n  %1 = comb.concat %0, %b, %a : i2, i1, i1\n  hw.output %1 : i4\n}\n```\nRunning this through `circt-opt --canonicalize` crashes:\n```\nAssertion `op->use_empty() && \"expected 'op' to have no uses\"' failed.\n[...]\n #8 mlir::RewriterBase::eraseOp(mlir::Operation*)\n #9 mlir::RewriterBase::replaceOp(mlir::Operation*, mlir::ValueRange)\n#10 circt::replaceOpAndCopyNamehint(mlir::PatternRewriter&, mlir::Operation*, mlir::Value) \n#11 extractConcatToConcatExtract(circt::comb::ExtractOp, circt::comb::ConcatOp, mlir::PatternRewriter&)\n    /home/fabian/code/circt/lib/Dialect/Comb/CombFolds.cpp:513:3\n#12 circt::comb::ExtractOp::canonicalize(circt::comb::ExtractOp, mlir::PatternRewriter&)\n    /home/fabian/code/circt/lib/Dialect/Comb/CombFolds.cpp:578:12\n```\nThe input was generate from (loop is useless in practice but intentional):\n```systemverilog\nmodule Foo(input logic a, logic b, output logic [3:0] z);\n  logic [3:0] x;\n  always_comb begin\n    x[0] = a;\n    x[1] = b;\n  end\n  assign z = x;\nendmodule\n```",
+    "createdAt": "2025-08-16T20:38:33Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwzMjYzNzQ4NjY5",
+        "name": "Comb",
+        "description": "Involving the `comb` dialect",
+        "color": "d4c5f9"
+      }
+    ],
+    "number": 8863,
+    "state": "OPEN",
+    "title": "[Comb] Concat/extract canonicalizer crashes on loop",
+    "url": "https://github.com/llvm/circt/issues/8863",
+    "similarity_score": 13.0
+  },
+  {
+    "body": "The comb dialect is missing folds for the new SV case equality and wildcard equality checks (`ceq`, `cne`, `weq`, `wne`) in `CombFolds.cpp`, specifically `applyCmpPredicate`, `applyCmpPredicateToEqualOperands`, and `ICmpOp::canonicalize`.\r\n\r\nThese might just work like the `eq` and `ne` cases since the SV flavors mostly differ for X and Z, which aren't modeled in anything that the folds would see (I think at least). This might need some additional thoughts and documenting the exact semantics of these comparisons.",
+    "createdAt": "2022-08-04T10:15:14Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzIx",
+        "name": "good first issue",
+        "description": "Good for newcomers",
+        "color": "7057ff"
+      },
+      {
+        "id": "MDU6TGFiZWwzMjYzNzQ4NjY5",
+        "name": "Comb",
+        "description": "Involving the `comb` dialect",
+        "color": "d4c5f9"
+      }
+    ],
+    "number": 3662,
+    "state": "OPEN",
+    "title": "[Comb] ICmp folds missing for CEQ/CNE/WEQ/WNE",
+    "url": "https://github.com/llvm/circt/issues/3662",
+    "similarity_score": 5.5
+  },
+  {
+    "body": "In a237db56518c66474489f7f794b0b22afeda2d7a:\n\n```mlir\nhw.module @MMIOAxiReadWriteDemux(in %data_valid : i1, out sel_ready : i1) {\n  %0 = comb.and bin %2, %data_valid : i1\n  %2 = comb.and bin %data_valid, %2 : i1\n  hw.output %0 : i1\n}\n```\n\n```\n> $ circt-opt crash.mlir --canonicalize\ncirct-opt: /home/jodemme/circt/llvm/llvm/include/llvm/ADT/STLExtras.h:1289: ReferenceT llvm::detail::indexed_accessor_range_base<mlir::OperandRange, mlir::OpOperand *, mlir::Value, mlir::Value, mlir::Value>::operator[](size_t) const [DerivedT = mlir::OperandRange, BaseT = mlir::OpOperand *, T = mlir::Value, PointerT = mlir::Value, ReferenceT = mlir::Value]: Assertion `Index < size() && \"invalid index for value range\"' failed.\nPLEASE submit a bug report to https://github.com/llvm/circt and include the crash backtrace.\nStack dump:\n0.      Program arguments: circt-opt crash.mlir --canonicalize\n #0 0x000055e35902849d llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /home/jodemme/circt/llvm/llvm/lib/Support/Unix/Signals.inc:723:11\n #1 0x000055e35902898b PrintStackTraceSignalHandler(void*) /home/jodemme/circt/llvm/llvm/lib/Support/Unix/Signals.inc:798:1\n #2 0x000055e3590269f6 llvm::sys::RunSignalHandlers() /home/jodemme/circt/llvm/llvm/lib/Support/Signals.cpp:105:5\n #3 0x000055e3590290c5 SignalHandler(int) /home/jodemme/circt/llvm/llvm/lib/Support/Unix/Signals.inc:413:1\n #4 0x00007f6b3a444420 __restore_rt (/lib/x86_64-linux-gnu/libpthread.so.0+0x14420)\n #5 0x00007f6b39dc800b raise /build/glibc-LcI20x/glibc-2.31/signal/../sysdeps/unix/sysv/linux/raise.c:51:1\n #6 0x00007f6b39da7859 abort /build/glibc-LcI20x/glibc-2.31/stdlib/abort.c:81:7\n #7 0x00007f6b39da7729 get_sysdep_segment_value /build/glibc-LcI20x/glibc-2.31/intl/loadmsgcat.c:509:8\n #8 0x00007f6b39da7729 _nl_load_domain /build/glibc-LcI20x/glibc-2.31/intl/loadmsgcat.c:970:34\n #9 0x00007f6b39db8fd6 (/lib/x86_64-linux-gnu/libc.so.6+0x33fd6)\n#10 0x000055e359062d88 llvm::detail::indexed_accessor_range_base<mlir::OperandRange, mlir::OpOperand*, mlir::Value, mlir::Value, mlir::Value>::operator[](unsigned long) const /home/jodemme/circt/llvm/llvm/include/llvm/ADT/STLExtras.h:0:5\n#11 0x000055e3594accdf circt::comb::AndOp::fold(circt::comb::AndOpGenericAdaptor<llvm::ArrayRef<mlir::Attribute> >) /home/jodemme/circt/lib/Dialect/Comb/CombFolds.cpp:880:12\n#12 0x000055e3595000c0 llvm::LogicalResult mlir::Op<circt::comb::AndOp, mlir::OpTrait::ZeroRegions, mlir::OpTrait::OneResult, mlir::OpTrait::OneTypedResult<circt::hw::TypeVariant<mlir::IntegerType, circt::hw::IntType> >::Impl, mlir::OpTrait::ZeroSuccessors, mlir::OpTrait::VariadicOperands, mlir::OpTrait::OpInvariants, mlir::BytecodeOpInterface::Trait, mlir::OpTrait::IsCommutative, mlir::OpTrait::SameTypeOperands, mlir::OpTrait::SameOperandsAndResultType, mlir::ConditionallySpeculatable::Trait, mlir::OpTrait::AlwaysSpeculatableImplTrait, mlir::MemoryEffectOpInterface::Trait>::foldSingleResultHook<circt::comb::AndOp>(mlir::Operation*, llvm::ArrayRef<mlir::Attribute>, llvm::SmallVectorImpl<mlir::OpFoldResult>&) /home/jodemme/circt/llvm/llvm/../mlir/include/mlir/IR/OpDefinition.h:1907:38\n#13 0x000055e359500011 mlir::Op<circt::comb::AndOp, mlir::OpTrait::ZeroRegions, mlir::OpTrait::OneResult, mlir::OpTrait::OneTypedResult<circt::hw::TypeVariant<mlir::IntegerType, circt::hw::IntType> >::Impl, mlir::OpTrait::ZeroSuccessors, mlir::OpTrait::VariadicOperands, mlir::OpTrait::OpInvariants, mlir::BytecodeOpInterface::Trait, mlir::OpTrait::IsCommutative, mlir::OpTrait::SameTypeOperands, mlir::OpTrait::SameOperandsAndResultType, mlir::ConditionallySpeculatable::Trait, mlir::OpTrait::AlwaysSpeculatableImplTrait, mlir::MemoryEffectOpInterface::Trait>::getFoldHookFn()::'lambda'(mlir::Operation*, llvm::ArrayRef<mlir::Attribute>, llvm::SmallVectorImpl<mlir::OpFoldResult>&)::operator()(mlir::Operation*, llvm::ArrayRef<mlir::Attribute>, llvm::SmallVectorImpl<mlir::OpFoldResult>&) const /home/jodemme/circt/llvm/llvm/../mlir/include/mlir/IR/OpDefinition.h:1883:16\n#14 0x000055e3594fffbd llvm::LogicalResult llvm::detail::UniqueFunctionBase<llvm::LogicalResult, mlir::Operation*, llvm::ArrayRef<mlir::Attribute>, llvm::SmallVectorImpl<mlir::OpFoldResult>&>::CallImpl<mlir::Op<circt::comb::AndOp, mlir::OpTrait::ZeroRegions, mlir::OpTrait::OneResult, mlir::OpTrait::OneTypedResult<circt::hw::TypeVariant<mlir::IntegerType, circt::hw::IntType> >::Impl, mlir::OpTrait::ZeroSuccessors, mlir::OpTrait::VariadicOperands, mlir::OpTrait::OpInvariants, mlir::BytecodeOpInterface::Trait, mlir::OpTrait::IsCommutative, mlir::OpTrait::SameTypeOperands, mlir::OpTrait::SameOperandsAndResultType, mlir::ConditionallySpeculatable::Trait, mlir::OpTrait::AlwaysSpeculatableImplTrait, mlir::MemoryEffectOpInterface::Trait>::getFoldHookFn()::'lambda'(mlir::Operation*, llvm::ArrayRef<mlir::Attribute>, llvm::SmallVectorImpl<mlir::OpFoldResult>&) const>(void*, mlir::Operation*, llvm::ArrayRef<mlir::Attribute>, llvm::SmallVectorImpl<mlir::OpFoldResult>&) /home/jodemme/circt/llvm/llvm/include/llvm/ADT/FunctionExtras.h:222:12\n#15 0x000055e3590321ff llvm::unique_function<llvm::LogicalResult (mlir::Operation*, llvm::ArrayRef<mlir::Attribute>, llvm::SmallVectorImpl<mlir::OpFoldResult>&) const>::operator()(mlir::Operation*, llvm::ArrayRef<mlir::Attribute>, llvm::SmallVectorImpl<mlir::OpFoldResult>&) const /home/jodemme/circt/llvm/llvm/include/llvm/ADT/FunctionExtras.h:413:12\n#16 0x000055e3594ff41e mlir::RegisteredOperationName::Model<circt::comb::AndOp>::foldHook(mlir::Operation*, llvm::ArrayRef<mlir::Attribute>, llvm::SmallVectorImpl<mlir::OpFoldResult>&) /home/jodemme/circt/llvm/llvm/../mlir/include/mlir/IR/OperationSupport.h:538:14\n#17 0x000055e35b88470e mlir::OperationName::foldHook(mlir::Operation*, llvm::ArrayRef<mlir::Attribute>, llvm::SmallVectorImpl<mlir::OpFoldResult>&) const /home/jodemme/circt/llvm/mlir/include/mlir/IR/OperationSupport.h:265:23\n#18 0x000055e35b87c9c8 mlir::Operation::fold(llvm::ArrayRef<mlir::Attribute>, llvm::SmallVectorImpl<mlir::OpFoldResult>&) /home/jodemme/circt/llvm/mlir/lib/IR/Operation.cpp:636:22\n#19 0x000055e35b87cdfe mlir::Operation::fold(llvm::SmallVectorImpl<mlir::OpFoldResult>&) /home/jodemme/circt/llvm/mlir/lib/IR/Operation.cpp:666:10\n...\n```\n\nWill try to reduce this test case further.",
+    "createdAt": "2025-01-02T21:29:53Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwzMjYzNzQ4NjY5",
+        "name": "Comb",
+        "description": "Involving the `comb` dialect",
+        "color": "d4c5f9"
+      }
+    ],
+    "number": 8024,
+    "state": "OPEN",
+    "title": "[Comb] Crash in AndOp folder",
+    "url": "https://github.com/llvm/circt/issues/8024",
+    "similarity_score": 5.5
+  },
+  {
+    "body": "If I'm reading this right, there could be a set of comb canonicalizers doing the following simplification from\n\n```mlir\n  hw.module @alias(in %init : i4, in %in0 : i1, in %in1 : i1, out out : i4) {\n    %c0_i2 = hw.constant 0 : i2\n    %false = hw.constant false\n    %c-5_i4 = hw.constant -5 : i4\n    %c-3_i4 = hw.constant -3 : i4\n    %c0_i3 = hw.constant 0 : i3\n    %c-2_i4 = hw.constant -2 : i4\n    %0 = comb.and %init, %c-2_i4 : i4\n    %1 = comb.concat %c0_i3, %in1 : i3, i1\n    %2 = comb.or %1, %0 : i4\n    %3 = comb.and %2, %c-3_i4 : i4\n    %4 = comb.concat %c0_i2, %in0, %false : i2, i1, i1\n    %5 = comb.or %4, %3 : i4\n    %6 = comb.and %5, %c-5_i4 : i4\n    %7 = comb.concat %false, %in1, %c0_i2 : i1, i1, i2\n    %8 = comb.or %7, %6 : i4\n    hw.output %8 : i4\n  }\n```\n\nto\n\n```mlir\n  hw.module @alias(in %init : i4, in %in0 : i1, in %in1 : i1, out out : i4) {\n    %0 = comb.extract %init from 3 : (i4) -> i1\n    %1 = comb.concat %0, %in1, %in0, %in1 : i1, i1, i1, i1\n    hw.output %1 : i4\n  }\n```",
+    "createdAt": "2025-02-20T12:11:06Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzIw",
+        "name": "enhancement",
+        "description": "New feature or request",
+        "color": "a2eeef"
+      },
+      {
+        "id": "MDU6TGFiZWwzMjYzNzQ4NjY5",
+        "name": "Comb",
+        "description": "Involving the `comb` dialect",
+        "color": "d4c5f9"
+      }
+    ],
+    "number": 8260,
+    "state": "OPEN",
+    "title": "[Comb] or(concat, concat) -> concat & or(and, concat) -> concat(extract) canonicalizer",
+    "url": "https://github.com/llvm/circt/issues/8260",
+    "similarity_score": 2.5
+  },
+  {
+    "body": "Here's the simplest example I came up with:\r\n\r\n```\r\nFIRRTL version 3.3.0\r\ncircuit Top :\r\n  module Top :\r\n    skip\r\n\r\n  class MyClass :\r\n    output out : Integer\r\n    propassign out, out\r\n```\r\n\r\nCurrently, this makes it to LowerClasses and then triggers an assert when we go to erase `MyClass`, because `out` still has uses (the `om.class.field` that the output propassign is converted to).\r\n\r\n```\r\nAssertion failed: (use_empty() && \"Cannot destroy a value that still has uses!\"), function ~IRObjectWithUseList, file UseDefLists.h, line 198.\r\n```\r\n\r\nI'm not sure where in the stack this flow checking should occur, but even handling it later in LowerClasses would at least give a better error message than the current one.",
+    "createdAt": "2023-11-10T01:16:41Z",
+    "labels": [
+      {
+        "id": "MDU6TGFiZWwxODg4ODczNzIw",
+        "name": "enhancement",
+        "description": "New feature or request",
+        "color": "a2eeef"
+      },
+      {
+        "id": "MDU6TGFiZWwyMTUyNzUzNjMw",
+        "name": "FIRRTL",
+        "description": "Involving the `firrtl` dialect",
+        "color": "fbca04"
+      }
+    ],
+    "number": 6405,
+    "state": "OPEN",
+    "title": "[FIRRTL] Property flow checking should ensure we can't assign an output to an output",
+    "url": "https://github.com/llvm/circt/issues/6405",
+    "similarity_score": 1.5
+  }
+]
+  },
+  "recommendation": {
+    "action": "review_existing",
+    "confidence": "high",
+    "reason": "High similarity score indicates potential duplicate - review before creating new issue"
+  }
+}

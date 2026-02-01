@@ -1,0 +1,131 @@
+================================================================================
+CIRCT DUPLICATE CHECK - SUMMARY REPORT
+================================================================================
+
+Crash ID:              260128-000007e8
+Crash Type:            Assertion failure (dyn_cast on non-existent value)
+Location:              circt::hw::ModulePortInfo::sanitizeInOut()
+Root Cause:            String-typed module output port lacks MooreToCore conversion
+
+================================================================================
+SEARCH RESULTS
+================================================================================
+
+Keywords Searched:
+  - string port, InOutType, dyn_cast, sanitizeInOut
+  - MooreToCore, SVModuleOp, Moore dialect, assertion
+
+Issues Found: 5 candidates
+Repository:   llvm/circt (open issues)
+
+================================================================================
+CANDIDATES (Ranked by Similarity)
+================================================================================
+
+RANK 1 - LIKELY DUPLICATE
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Issue #8332: [MooreToCore] Support for StringType from moore to llvm dialect│
+│ URL: https://github.com/llvm/circt/issues/8332                              │
+│ Similarity Score: 8.5/10 ★★★★★ (EXCELLENT MATCH)                           │
+│ Status: OPEN                                                                 │
+│ Match Keywords: string, MooreToCore, StringType, conversion                  │
+│                                                                               │
+│ ROOT CAUSE MATCH: ✓ CONFIRMED                                               │
+│   • Both involve MooreToCore's missing StringType support                    │
+│   • Our crash is direct consequence of this feature gap                      │
+│   • String port → no conversion → invalid type → dyn_cast assertion          │
+│                                                                               │
+│ ANALYSIS:                                                                    │
+│   Issue #8332 tracks the feature request for StringType support in          │
+│   MooreToCore. When module ports are declared as string type, the           │
+│   converter has no rules to handle them, leaving port types empty.           │
+│   sanitizeInOut() then attempts to cast this invalid/null type to           │
+│   InOutType, triggering the assertion failure seen in our crash.            │
+│                                                                               │
+│ RECOMMENDATION: Review existing issue - this is a concrete test case        │
+│ for demonstrating the impact of the missing feature.                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+RANK 2 - RELATED ISSUE
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Issue #8283: [ImportVerilog] Cannot compile forward decleared string type   │
+│ URL: https://github.com/llvm/circt/issues/8283                              │
+│ Similarity Score: 8.0/10 ★★★★★ (EXCELLENT MATCH)                           │
+│ Status: OPEN                                                                 │
+│                                                                               │
+│ SAME ROOT CAUSE, DIFFERENT MANIFESTATION:                                   │
+│   • #8283: Fails at moore.variable legalization                             │
+│   • #260128: Fails at module port sanitization                              │
+│   • Both: MooreToCore StringType conversion missing                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+RANK 3 - RELATED PATTERN
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Issue #8176: [MooreToCore] Crash when getting values to observe             │
+│ URL: https://github.com/llvm/circt/issues/8176                              │
+│ Similarity Score: 6.5/10 ★★★★☆ (GOOD MATCH)                                │
+│ Status: OPEN                                                                 │
+│ Pattern: dyn_cast assertion in MooreToCore context                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+RANK 4 - RELATED PATTERN
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Issue #8930: [MooreToCore] Crash with sqrt/floor                            │
+│ URL: https://github.com/llvm/circt/issues/8930                              │
+│ Similarity Score: 6.0/10 ★★★★☆ (GOOD MATCH)                                │
+│ Status: OPEN                                                                 │
+│ Pattern: dyn_cast assertion during type conversion                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+RANK 5
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Issue #7531: [Moore] Input triggers assertion in canonicalizer infra        │
+│ URL: https://github.com/llvm/circt/issues/7531                              │
+│ Similarity Score: 4.5/10 ★★★☆☆ (FAIR MATCH)                                │
+│ Status: OPEN                                                                 │
+│ Different mechanism (canonicalizer vs. port handling)                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+FINAL RECOMMENDATION
+================================================================================
+
+Recommendation Type:   review_existing
+Top Match Issue:       #8332 
+Top Similarity Score:  8.5/10
+Confidence Level:      HIGH (90%+ certainty this is related/duplicate)
+
+ACTION ITEMS:
+  ✓ Do NOT create new primary issue
+  ✓ Cross-reference crash in issue #8332
+  ✓ Use this test case as motivation for StringType support
+  ✓ Mark as known issue pending #8332 resolution
+  ✓ Add as regression test when StringType support lands
+
+RATIONALE:
+  The crash is an expected consequence of MooreToCore's missing StringType
+  support, which is already tracked in issue #8332. This specific crash
+  (module port level) complements #8283 (variable level) in demonstrating
+  the scope and impact of the feature gap.
+
+================================================================================
+ANALYSIS FILES GENERATED
+================================================================================
+
+1. duplicates.json (5.3K)
+   - Structured analysis data
+   - Similarity scoring details
+   - JSON for programmatic use
+
+2. duplicates.md (9.5K)
+   - Detailed markdown report
+   - Full analysis and rationale
+   - Human-readable documentation
+
+3. check-duplicates.summary.txt (this file)
+   - Quick reference summary
+   - Key findings at a glance
+
+================================================================================
+Report Date: 2026-01-31
+Status: COMPLETE ✓

@@ -1,0 +1,19 @@
+Crash Type: timeout
+Testcase ID: 260128-00000da7 (minimized)
+Reproduction Status: CONFIRMED
+
+--- Reproduction Command ---
+timeout 60s bash -c '/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw bug.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator'
+
+--- Result ---
+Exit code: 124 (timeout after 60 seconds)
+
+--- Analysis ---
+The minimized testcase successfully reproduces the arcilator timeout bug.
+The timeout occurs in the arcilator stage, not during IR generation.
+circt-verilog successfully generates HW IR, but arcilator hangs processing it.
+
+--- Environment ---
+CIRCT Version: 1.139.0
+Tool Path: /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/
+Timeout Setting: 60s (original was 300s)

@@ -1,0 +1,52 @@
+{
+  "dialect": "Sim",
+  "crash_type": "legalization_failure",
+  "root_cause_hypothesis": "The sim.fmt.literal operation generated from $error() in immediate assertions is not being consumed by a PrintFormattedProcOp or PrintFormattedOp. The LowerArcToLLVM pass marks sim::FormatLiteralOp as legal (not to be converted), expecting it to be used transitively by format print operations. However, when the sim.fmt.literal is orphaned or not connected to a print operation, the legalization framework fails because it remains as an unconverted operation that doesn't have a lowering pattern.",
+  "error_location": "arcilator pass (LowerArcToLLVM)",
+  "key_patterns": [
+    "sim.fmt.literal appears standalone without being consumed by sim.print",
+    "immediate assertion with $error() message creates format literal",
+    "LowerArcToLLVM marks FormatLiteralOp as legal but relies on Pure trait for cleanup",
+    "orphaned sim.fmt.literal not removed because still has uses or DCE not applied"
+  ],
+  "evidence": [
+    {
+      "source": "error.txt",
+      "content": "failed to legalize operation 'sim.fmt.literal'",
+      "significance": "Legalization error indicates the operation wasn't converted or marked legal properly"
+    },
+    {
+      "source": "error.txt",
+      "content": "sim.fmt.literal \"Error: Assertion failed: q != 0\"",
+      "significance": "The literal string directly comes from $error() argument in assertion"
+    },
+    {
+      "source": "source.sv",
+      "content": "assert (q == 1'b0) else $error(\"Assertion failed: q != 0\");",
+      "significance": "Immediate assertion inside always_comb triggers the issue"
+    },
+    {
+      "source": "LowerArcToLLVM.cpp:1236-1239",
+      "content": "target.addLegalOp<sim::FormatLiteralOp, ...> - marked Pure so removed after conversion",
+      "significance": "Shows FormatLiteralOp is expected to be removed by DCE, not lowered"
+    },
+    {
+      "source": "LowerArcToLLVM.cpp:805-823",
+      "content": "foldFormatString handles FormatLiteralOp only when called from PrintFormattedProcOp",
+      "significance": "Format literals only converted when part of a print chain"
+    }
+  ],
+  "related_files": [
+    "lib/Conversion/ArcToLLVM/LowerArcToLLVM.cpp",
+    "lib/Dialect/Sim/SimOps.cpp",
+    "lib/Conversion/ImportVerilog/Statements.cpp",
+    "include/circt/Dialect/Sim/SimOps.td"
+  ],
+  "triggering_construct": {
+    "type": "immediate_assertion",
+    "syntax": "assert (condition) else $error(message);",
+    "context": "inside always_comb procedural block"
+  },
+  "severity": "high",
+  "reproducibility": "deterministic"
+}

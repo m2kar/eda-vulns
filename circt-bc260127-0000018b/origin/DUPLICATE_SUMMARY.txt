@@ -1,0 +1,38 @@
+================================================================================
+                    DUPLICATE DETECTION SUMMARY
+================================================================================
+
+CRASH ANALYSIS RESULT: LIKELY DUPLICATE FOUND ✓
+
+Primary Match: Issue #8863
+Title: "[Comb] Concat/extract canonicalizer crashes on loop"
+URL: https://github.com/llvm/circt/issues/8863
+Status: OPEN
+Created: 2025-08-18
+
+Similarity Score: 9.5/10 (VERY HIGH)
+
+RECOMMENDATION: review_existing
+
+KEY MATCHING FACTORS:
+✓ Identical assertion: op->use_empty() && "expected 'op' to have no uses"
+✓ Identical function: extractConcatToConcatExtract
+✓ Identical caller: ExtractOp::canonicalize  
+✓ Identical helper: circt::replaceOpAndCopyNamehint
+✓ Identical trigger: indexed array assignment in always_comb
+✓ Identical file: lib/Dialect/Comb/CombFolds.cpp
+✓ Identical root cause: improper use replacement before erase operation
+
+SECONDARY MATCHES: None (Issue #8024 is unrelated - different crash type)
+
+ACTION ITEMS:
+1. Link this crash to issue #8863
+2. Consider closing as duplicate of #8863
+3. Track upstream fix for this issue
+
+IMPORTANT NOTE:
+The crash is not currently reproducible with the current toolchain, which may
+indicate partial fixes or code evolution. However, the root cause in issue #8863
+remains valid and relevant to this crash pattern.
+
+================================================================================

@@ -1,0 +1,5 @@
+module {
+  hw.module @top() {
+    hw.output
+  }
+}

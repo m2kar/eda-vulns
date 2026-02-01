@@ -1,0 +1,1 @@
+circt-verilog --ir-hw minimized_test.sv

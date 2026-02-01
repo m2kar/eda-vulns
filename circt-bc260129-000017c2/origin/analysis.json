@@ -1,0 +1,42 @@
+{
+  "crash_id": "260129-000017c2",
+  "crash_type": "assertion",
+  "dialect": "arc",
+  "component": "arcilator",
+  "pass": "LowerState",
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "crash_location": {
+    "file": "LowerState.cpp",
+    "line": 219,
+    "function": "ModuleLowering::run()"
+  },
+  "stack_trace_key_frames": [
+    "StateType::get() at ArcTypes.cpp.inc:108",
+    "ModuleLowering::run() at LowerState.cpp:219",
+    "LowerStatePass::runOnOperation() at LowerState.cpp:1198"
+  ],
+  "testcase_features": {
+    "has_inout": true,
+    "has_bidirectional": true,
+    "has_multiple_assignments": true,
+    "has_always_ff": true,
+    "has_clock": true,
+    "port_types": ["input", "output", "inout"]
+  },
+  "root_cause": {
+    "hypothesis": "The LowerState pass in arcilator iterates over all module arguments and attempts to create StateType for each. However, when an 'inout' port is present, the corresponding type '!llhd.ref<i1>' is passed to StateType::get(). The StateType::verify() function calls computeLLVMBitWidth() which only handles seq::ClockType, IntegerType, hw::ArrayType, and hw::StructType. Since llhd::RefType is not among these, computeLLVMBitWidth() returns an empty optional, causing the verification assertion to fail.",
+    "key_pattern": "Module contains 'inout' port declaration which gets lowered to '!llhd.ref<T>' type. When arcilator's LowerState pass processes module inputs at line 219, it tries to wrap all argument types in StateType, but RefType is not a supported inner type for StateType.",
+    "problematic_code_pattern": "inout logic <port_name>",
+    "trigger_condition": "Any SystemVerilog module with inout ports processed through circt-verilog --ir-hw | arcilator pipeline",
+    "likely_fix": "Either (1) filter out llhd::RefType arguments before creating RootInputOp, (2) extend computeLLVMBitWidth() to handle RefType (e.g., as 64-bit pointer), or (3) emit a proper user-facing error diagnostic stating that inout ports are not supported by arcilator instead of triggering an assertion failure."
+  },
+  "affected_types": {
+    "unsupported_type": "!llhd.ref<i1>",
+    "type_origin": "SystemVerilog inout port",
+    "type_dialect": "LLHD"
+  },
+  "reproduction_command": "circt-verilog --ir-hw source.sv | arcilator",
+  "severity": "medium",
+  "bug_category": "missing_type_handling",
+  "timestamp": "2026-02-01T11:56:04Z"
+}

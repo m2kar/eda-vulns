@@ -1,0 +1,9 @@
+module {
+  hw.module @example(in %clk : i1, in %c : !llhd.ref<i1>) {
+    %c1_i4 = hw.constant 1 : i4
+    %0 = comb.add %temp_reg, %c1_i4 : i4
+    %1 = seq.to_clock %clk
+    %temp_reg = seq.firreg %0 clock %1 : i4
+    hw.output
+  }
+}

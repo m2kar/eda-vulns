@@ -1,0 +1,176 @@
+{
+  "search_query": {
+    "keywords": [
+      "string type port declaration",
+      "string.len() built-in method",
+      "module port with unsupported type",
+      "dyn_cast on a non-existent value",
+      "ModulePortInfo",
+      "sanitizeInOut",
+      "MooreToCore"
+    ],
+    "error_signature": "Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"' failed",
+    "component": "MooreToCore dialect conversion"
+  },
+  "search_results": [
+    {
+      "issue_number": 8332,
+      "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+      "url": "https://github.com/llvm/circt/issues/8332",
+      "state": "OPEN",
+      "created": "2025-03-20T02:40:38Z",
+      "keywords_matched": [
+        "StringType",
+        "MooreToCore",
+        "type conversion"
+      ],
+      "similarity_analysis": {
+        "keywords_match": 0.8,
+        "crash_signature_similarity": 0.2,
+        "stack_trace_similarity": 0.1,
+        "overall_score": 3.7,
+        "reasoning": "Related to string type support in MooreToCore but focuses on LLVM dialect lowering, not module port handling. No mention of ModulePortInfo or sanitizeInOut."
+      }
+    },
+    {
+      "issue_number": 8283,
+      "title": "[ImportVerilog] Cannot compile forward decleared string type",
+      "url": "https://github.com/llvm/circt/issues/8283",
+      "state": "OPEN",
+      "created": "2025-03-04T11:15:57Z",
+      "keywords_matched": [
+        "string type",
+        "MooreToCore",
+        "type conversion",
+        "module port"
+      ],
+      "similarity_analysis": {
+        "keywords_match": 0.85,
+        "crash_signature_similarity": 0.3,
+        "stack_trace_similarity": 0.15,
+        "overall_score": 4.6,
+        "reasoning": "Highly relevant - mentions string type in module ports and MooreToCore conversion failure. Shows failed legalization of moore.variable with string type. However, error is about legalization, not dyn_cast assertion."
+      }
+    },
+    {
+      "issue_number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "url": "https://github.com/llvm/circt/issues/8930",
+      "state": "OPEN",
+      "created": "2025-09-09T17:34:30Z",
+      "keywords_matched": [
+        "dyn_cast on a non-existent value",
+        "MooreToCore",
+        "assertion failure"
+      ],
+      "similarity_analysis": {
+        "keywords_match": 0.7,
+        "crash_signature_similarity": 1.0,
+        "stack_trace_similarity": 0.8,
+        "overall_score": 13.0,
+        "reasoning": "LIKELY DUPLICATE - Same exact error signature and assertion failure from dyn_cast in MooreToCore. Stack trace shows ConversionOpConversion::matchAndRewrite calling getBitWidth which triggers dyn_cast on non-existent value. Different trigger (sqrt/floor conversion) but same root cause: type conversion failure in MooreToCore passing null/invalid type."
+      }
+    },
+    {
+      "issue_number": 5640,
+      "title": "[SV] Introduce SystemVerilog `string` type",
+      "url": "https://github.com/llvm/circt/issues/5640",
+      "state": "OPEN",
+      "created": "2023-07-25T19:20:33Z",
+      "keywords_matched": [
+        "string type",
+        "SystemVerilog",
+        "sv dialect"
+      ],
+      "similarity_analysis": {
+        "keywords_match": 0.6,
+        "crash_signature_similarity": 0.0,
+        "stack_trace_similarity": 0.0,
+        "overall_score": 2.4,
+        "reasoning": "Related feature request for SystemVerilog string type support in SV dialect. Different from our crash (which is in Moore dialect), but addresses missing string type handling infrastructure."
+      }
+    },
+    {
+      "issue_number": 8382,
+      "title": "[FIRRTL] Crash with fstring type on port",
+      "url": "https://github.com/llvm/circt/issues/8382",
+      "state": "OPEN",
+      "created": "2025-04-02T12:20:45Z",
+      "keywords_matched": [
+        "string type on port",
+        "crash",
+        "port handling"
+      ],
+      "similarity_analysis": {
+        "keywords_match": 0.65,
+        "crash_signature_similarity": 0.3,
+        "stack_trace_similarity": 0.2,
+        "overall_score": 4.4,
+        "reasoning": "Related to string type crashes on ports but in FIRRTL dialect, not Moore. May involve similar root cause (type conversion failure on ports) but different component."
+      }
+    },
+    {
+      "issue_number": 8269,
+      "title": "[MooreToCore] Support `real` constants",
+      "url": "https://github.com/llvm/circt/issues/8269",
+      "state": "OPEN",
+      "created": "2025-04-20T03:29:46Z",
+      "keywords_matched": [
+        "MooreToCore",
+        "type support"
+      ],
+      "similarity_analysis": {
+        "keywords_match": 0.3,
+        "crash_signature_similarity": 0.0,
+        "stack_trace_similarity": 0.0,
+        "overall_score": 1.2,
+        "reasoning": "Generic MooreToCore feature request for unsupported types. May share similar root cause (missing type conversions) but no crash evidence."
+      }
+    },
+    {
+      "issue_number": 8476,
+      "title": "[MooreToCore] Lower exponentiation to `math.ipowi`",
+      "url": "https://github.com/llvm/circt/issues/8476",
+      "state": "OPEN",
+      "created": "2025-06-17T12:42:02Z",
+      "keywords_matched": [
+        "MooreToCore"
+      ],
+      "similarity_analysis": {
+        "keywords_match": 0.2,
+        "crash_signature_similarity": 0.0,
+        "stack_trace_similarity": 0.0,
+        "overall_score": 0.8,
+        "reasoning": "Generic MooreToCore feature request unrelated to our crash."
+      }
+    }
+  ],
+  "duplicate_recommendation": {
+    "category": "likely_duplicate",
+    "top_score": 13.0,
+    "top_issue": 8930,
+    "confidence": "HIGH",
+    "reasoning": "Issue #8930 has the IDENTICAL error signature ('dyn_cast on a non-existent value') and occurs in the same component (MooreToCore conversion). The stack trace shows a similar root cause: a type conversion operation in MooreToCore that passes a null or invalid type to dyn_cast. While #8930 is triggered by sqrt/floor operations and our crash involves string ports, both result from the same underlying bug: improper handling of unsupported types in MooreToCore that leads to null types being passed to dyn_cast operations.",
+    "secondary_issues": [
+      {
+        "issue": 8283,
+        "title": "[ImportVerilog] Cannot compile forward decleared string type",
+        "score": 4.6,
+        "notes": "Related feature gap (string type in module ports) but different error path"
+      },
+      {
+        "issue": 8332,
+        "title": "[MooreToCore] Support for StringType from moore to llvm dialect",
+        "score": 3.7,
+        "notes": "Related feature request for string type lowering"
+      }
+    ]
+  },
+  "analysis_summary": {
+    "total_search_queries": 9,
+    "total_issues_found": 7,
+    "high_similarity_matches": 1,
+    "medium_similarity_matches": 2,
+    "low_similarity_matches": 4
+  }
+}

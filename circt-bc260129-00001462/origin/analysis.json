@@ -1,0 +1,80 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_component": "ImportVerilog",
+  "crash_type": "feature_limitation",
+  "is_bug": false,
+  "error_message": "concurrent assertion statements with action blocks are not supported yet",
+  "crash_location": {
+    "file": "lib/Conversion/ImportVerilog/Statements.cpp",
+    "function": "visit(const slang::ast::ConcurrentAssertionStatement &stmt)",
+    "line": 770
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "concurrent assertion (assert property)",
+      "clock-based property (@(posedge clk))",
+      "implication operator (|->)",
+      "action block (else $error)"
+    ],
+    "problematic_patterns": [
+      "concurrent assertion with action block"
+    ],
+    "minimal_trigger": "assert property (@(posedge clk) a |-> b) else $error(\"msg\");"
+  },
+  "root_cause": "The ImportVerilog component intentionally does not support concurrent assertion statements with action blocks. The code path exists for assertions without action blocks (creates verif::AssertOp), but assertions with action blocks emit an explicit 'not supported yet' error.",
+  "affected_components": [
+    "ImportVerilog",
+    "Moore dialect",
+    "verif dialect"
+  ],
+  "hypotheses": [
+    {
+      "description": "Feature not yet implemented - the 'not supported yet' message indicates this is a known limitation, not a bug",
+      "confidence": "high",
+      "evidence": [
+        "Explicit 'not supported yet' error message in source code",
+        "Code has clear conditional handling for assertions without action blocks",
+        "SV dialect supports action blocks (message attribute) but conversion path not implemented",
+        "ExportVerilog can emit action blocks for assertions from FIRRTL path"
+      ]
+    }
+  ],
+  "severity": "low",
+  "confidence": "high",
+  "workaround": "Remove the action block (else clause) from concurrent assertions",
+  "keywords": [
+    "concurrent assertion",
+    "action block",
+    "assert property",
+    "else $error",
+    "ImportVerilog",
+    "not supported yet",
+    "ConcurrentAssertionStatement"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/ImportVerilog/Statements.cpp",
+      "reason": "Contains the error emission and concurrent assertion handling"
+    },
+    {
+      "path": "include/circt/Dialect/Verif/VerifOps.td",
+      "reason": "Defines verif::AssertOp which lacks action block support"
+    },
+    {
+      "path": "include/circt/Dialect/SV/SVVerification.td",
+      "reason": "Defines sv.assert.concurrent which supports message attribute"
+    },
+    {
+      "path": "lib/Conversion/ExportVerilog/ExportVerilog.cpp",
+      "reason": "Shows how action blocks are emitted for SV dialect assertions"
+    }
+  ],
+  "classification": {
+    "category": "unimplemented_feature",
+    "sv_construct": "concurrent_assertion_action_block",
+    "ieee_reference": "IEEE 1800-2017 Section 16.5"
+  }
+}

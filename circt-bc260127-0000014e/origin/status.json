@@ -1,0 +1,37 @@
+{
+  "crash_id": "260127-0000014e",
+  "status": "report_ready",
+  "phase": "completed",
+  "created_at": "2026-01-31T17:28:29+00:00",
+  "updated_at": "2026-01-31T17:40:00+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed",
+      "reproduced": true,
+      "root_cause": "null mlir::Type from Moore-to-Core string port conversion"
+    },
+    "phase2": {
+      "status": "completed",
+      "minimized": true,
+      "reduction_percent": 71.43,
+      "validated": true,
+      "classification": "report",
+      "duplicate_check": "new_issue"
+    },
+    "phase3": {
+      "status": "completed",
+      "issue_generated": true
+    }
+  },
+  "outputs": {
+    "issue_report": "issue.md",
+    "minimized_testcase": "bug.sv",
+    "reproduce_command": "command.txt",
+    "crash_log": "error.log"
+  }
+}

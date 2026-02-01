@@ -1,0 +1,240 @@
+{
+  "testcase_id": "260127-000004a9",
+  "analysis": {
+    "crash_type": "assertion",
+    "dialect": [
+      "arc",
+      "llhd",
+      "hw"
+    ],
+    "tool": "arcilator",
+    "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'"
+  },
+  "search_summary": {
+    "total_issues_found": 36,
+    "queries_used": 5
+  },
+  "top_results": [
+    {
+      "number": 9467,
+      "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "url": "https://github.com/llvm/circt/issues/9467",
+      "state": "open",
+      "body_preview": "## Title\n[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)\n\n## Summary\nI ran into a failure in the arcilator flow with a minimal SystemVerilog module using a single `#1` delay. The same design runs under Verilator, but arcilator reports ",
+      "score": 42,
+      "details": [
+        "匹配(3): arc,arcilator,lowering",
+        "标签(2)"
+      ],
+      "found_by": 1,
+      "updated_at": "2026-01-20T17:10:39Z"
+    },
+    {
+      "number": 7703,
+      "title": "[Arc] Improve LowerState to never produce read-after-write conflicts",
+      "url": "https://github.com/llvm/circt/pull/7703",
+      "state": "closed",
+      "body_preview": "This is a complete rewrite of the `LowerState` pass that makes the `LegalizeStateUpdate` pass obsolete.\r\n\r\nThe old implementation of `LowerState` produces `arc.model`s that still contain read-after-write conflicts. This primarily happens because the pass simply emits `arc.state_write` operations tha",
+      "score": 40,
+      "details": [
+        "匹配(3): lowerstate,arc,lowering",
+        "标签(1)"
+      ],
+      "found_by": 3,
+      "updated_at": "2024-10-28T22:01:02Z"
+    },
+    {
+      "number": 9395,
+      "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+      "url": "https://github.com/llvm/circt/issues/9395",
+      "state": "closed",
+      "body_preview": "Hi, all! Let's look at this example on _Verilog_:\n\n```\nmodule comb_assert(\n    input wire clk,\n    input wire resetn\n);\n    always @* begin\n        if (resetn) begin\n            assert (0);\n        end\n    end\nendmodule\n```\nWhen we process this using _circt-verilog_ and _arcilator_:\n\n`circt-verilog ",
+      "score": 37,
+      "details": [
+        "匹配(3): assertion,arc,arcilator",
+        "标签(1)"
+      ],
+      "found_by": 1,
+      "updated_at": "2026-01-19T11:24:22Z"
+    },
+    {
+      "number": 8825,
+      "title": "[LLHD] Switch from hw.inout to a custom signal reference type",
+      "url": "https://github.com/llvm/circt/issues/8825",
+      "state": "open",
+      "body_preview": "A while ago, we have switched the LLHD dialect from a custom `!llhd.sig` wrapper type to `!hw.inout` in order to represent a reference to a signal slot that can be probed and driven. To support Verilog's `time` values, we have to be able to store an `!llhd.time` value in a variable and read and writ",
+      "score": 35,
+      "details": [
+        "匹配(2): inout,llhd.ref",
+        "标签(1)"
+      ],
+      "found_by": 1,
+      "updated_at": "2025-08-06T04:38:33Z"
+    },
+    {
+      "number": 8012,
+      "title": "[Moore][Arc][LLHD] Moore to LLVM lowering issues",
+      "url": "https://github.com/llvm/circt/issues/8012",
+      "state": "open",
+      "body_preview": "Hi all!\n\nI am trying to simulate a SystemVerilog code (listed below) using `arcilator`:\n\n```verilog\nmodule dff(D, clk, Q);\n    input D; // Data input \n    input clk; // clock input \n    output reg Q; // output Q\n\n    // Simple DFF\n    always @(negedge clk) \n    begin\n        Q <= D; \n    end \nendmod",
+      "score": 34,
+      "details": [
+        "匹配(3): arc,arcilator,lowering"
+      ],
+      "found_by": 1,
+      "updated_at": "2024-12-22T20:58:32Z"
+    },
+    {
+      "number": 8065,
+      "title": "[LLHD][Arc] Indexing and slicing lowering from Verilog to LLVM IR",
+      "url": "https://github.com/llvm/circt/issues/8065",
+      "state": "open",
+      "body_preview": "Hi! I'm trying to use circt for lowering to LLVM IR. I found such a construction in some example:\n\n```verilog\nmodule Mod (input clk, input a, input b, output logic[1:0] c);\nalways_ff @(posedge clk) begin\n    c[0] <= a;\n    c[1] <= b;\nend\nendmodule\n```\n\nI used this pipeline:\n\n```bash\ncirct-verilog ra",
+      "score": 34,
+      "details": [
+        "匹配(3): arc,arcilator,lowering"
+      ],
+      "found_by": 1,
+      "updated_at": "2025-02-11T09:21:22Z"
+    },
+    {
+      "number": 7676,
+      "title": "[RFC][Sim] Add triggered simulation procedures",
+      "url": "https://github.com/llvm/circt/pull/7676",
+      "state": "open",
+      "body_preview": "Continuing the series of #7314 and #7335 (and hoping to finally get to lower the `sim.proc.print` operation) this PR adds trigger-related types and operations to the Sim Dialect. The primary point is to be able to express the execution order of side-effecting ops and procedures without having to rel",
+      "score": 34,
+      "details": [
+        "匹配(3): arc,arcilator,lowering"
+      ],
+      "found_by": 1,
+      "updated_at": "2025-06-02T22:34:34Z"
+    },
+    {
+      "number": 6810,
+      "title": "[Arc] Add basic assertion support",
+      "url": "https://github.com/llvm/circt/issues/6810",
+      "state": "open",
+      "body_preview": "Add support for `verif.assert` and `sv.assert.concurrent` operations to the Arc dialect and passes. When lowering towards LLVM, the asserts should lower to an `scf.if` operation that checks whether their condition holds, and if it does not, calls a callback function (or aborts with a message for sta",
+      "score": 33,
+      "details": [
+        "匹配(3): assertion,arc,lowering",
+        "标签(1)"
+      ],
+      "found_by": 1,
+      "updated_at": "2024-03-15T01:45:57Z"
+    },
+    {
+      "number": 9466,
+      "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+      "url": "https://github.com/llvm/circt/issues/9466",
+      "state": "closed",
+      "body_preview": "## Summary\nI ran into a failure in the arcilator flow with a minimal SystemVerilog module using a single `#1` delay. The same design runs under Verilator, but arcilator reports `llhd.constant_time` as illegal during conversion to `arcs` and stops. I did a preliminary source-level analysis (below) an",
+      "score": 31,
+      "details": [
+        "匹配(3): arc,arcilator,lowering"
+      ],
+      "found_by": 1,
+      "updated_at": "2026-01-17T18:15:54Z"
+    },
+    {
+      "number": 9469,
+      "title": "[circt-verilog][arcilator] Inconsistent compilation behavior: direct array indexing in always_ff sensitivity list vs. intermediate wire",
+      "url": "https://github.com/llvm/circt/issues/9469",
+      "state": "closed",
+      "body_preview": "## [circt-verilog][arcilator] Inconsistent compilation behavior: direct array indexing in always_ff sensitivity list vs. intermediate wire\n\n## Summary\nI encountered an inconsistent compilation behavior in the arcilator flow when using synchronous reset with SystemVerilog array indexing. When directl",
+      "score": 31,
+      "details": [
+        "匹配(2): arc,arcilator",
+        "标签(2)"
+      ],
+      "found_by": 1,
+      "updated_at": "2026-01-25T05:13:52Z"
+    },
+    {
+      "number": 9442,
+      "title": "[Arc] Add nascent support for sim.proc.print and sim.fmt.*",
+      "url": "https://github.com/llvm/circt/pull/9442",
+      "state": "closed",
+      "body_preview": "Supports sim.fmt.* during ArcToLLVM lowering by converting the format ops\ninto a printf format string, then calling printf during the lowering of\n`sim.proc.print`.\n\nIdeally this would eventually be a runtime call rather than pure printf,\nbecause printf neither implements the exact specification of t",
+      "score": 30,
+      "details": [
+        "匹配(3): assertion,arc,lowering",
+        "标签(1)"
+      ],
+      "found_by": 1,
+      "updated_at": "2026-01-20T16:45:48Z"
+    },
+    {
+      "number": 6378,
+      "title": "[HW to BTOR2] btor2 conversion pass",
+      "url": "https://github.com/llvm/circt/pull/6378",
+      "state": "closed",
+      "body_preview": "## TLDR  \r\nThis PR introduces a btor emission pass that converts flattened (as in with inlined sub-modules) designs from the hw dialect into the `btor2` format used for bounded model checking. This PR is a first prototype implementation, my goal is to have this __feature__ merged into CIRCT and not ",
+      "score": 26,
+      "details": [
+        "匹配(3): assertion,arc,lowering"
+      ],
+      "found_by": 1,
+      "updated_at": "2023-12-15T19:30:08Z"
+    },
+    {
+      "number": 6783,
+      "title": "[arcilator] Introduce integrated JIT for simulation execution",
+      "url": "https://github.com/llvm/circt/pull/6783",
+      "state": "closed",
+      "body_preview": "This PR adds a JIT runtime for arcilator, backed by MLIR's ExecutionEngine. This JIT allows executing `arc.sim` operations directly from the arcilator binary.",
+      "score": 23,
+      "details": [
+        "匹配(2): arc,arcilator"
+      ],
+      "found_by": 1,
+      "updated_at": "2024-03-20T23:43:09Z"
+    },
+    {
+      "number": 8870,
+      "title": "[LLHD] Remove redundant destination operands from wait operation",
+      "url": "https://github.com/llvm/circt/pull/8870",
+      "state": "open",
+      "body_preview": "While lowering Rocket Chip from arc-tests through the `fir` -> `verilog` -> `moore` -> `core` -> `llhd` pipeline, a template is generated in which the `clock` module input is propagated through all control-flow branches. The corresponding basic block argument is then used as an operand in the destin",
+      "score": 23,
+      "details": [
+        "匹配(2): arc,lowering",
+        "标签(1)"
+      ],
+      "found_by": 1,
+      "updated_at": "2025-09-04T15:33:33Z"
+    },
+    {
+      "number": 8950,
+      "title": "[ConvertToArcs] Add llhd.combinational conversion",
+      "url": "https://github.com/llvm/circt/pull/8950",
+      "state": "closed",
+      "body_preview": "Introduce a dialect conversion step into the `ConvertToArcs` pass. We'll use this to map various core dialect operations to Arc-specific ones in the future. As a starting point, add a conversion from `llhd.combinational` to `arc.execute`. This, alongside lowering to LLVM to be added in later PRs, wi",
+      "score": 20,
+      "details": [
+        "匹配(2): arc,lowering",
+        "标签(1)"
+      ],
+      "found_by": 1,
+      "updated_at": "2025-09-18T15:55:16Z"
+    }
+  ],
+  "top_issue": 9467,
+  "top_score": 42,
+  "final_report": {
+    "testcase_id": "260127-000004a9",
+    "recommendation": "likely_new",
+    "top_score": 42,
+    "top_issue": 9467,
+    "summary": {
+      "total_issues_found": 36,
+      "status": "completed"
+    },
+    "reasoning": {
+      "recommendation": "likely_new",
+      "score_interpretation": "相似度 42/100",
+      "confidence": "中"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+# Reproduction Command
+circt-verilog --ir-hw bug.sv
+
+# Full path (using CIRCT 1.139.0):
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw bug.sv
+
+# System firtool (if available):
+/opt/firtool/bin/circt-verilog --ir-hw bug.sv
+
+# Expected behavior: Command should complete or report an error
+# Actual behavior: Command hangs indefinitely

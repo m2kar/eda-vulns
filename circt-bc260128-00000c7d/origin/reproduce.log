@@ -1,0 +1,60 @@
+Reproduction Report for CIRCT Bug #260128-00000c7d
+==================================================
+
+1. Testcase Information
+- Testcase ID: 260128-00000c7d
+- Source File: /home/zhiqing/edazz/eda-vulns/circt-bc260128-00000c7d/origin/source.sv
+- Crash Type: Assertion failure
+
+2. Execution Command
+circt-verilog --ir-hw /home/zhiqing/edazz/eda-vulns/circt-bc260128-00000c7d/origin/source.sv
+
+3. Environment
+- circt-verilog: /opt/firtool/bin/circt-verilog
+- Version: CIRCT firtool-1.139.0
+- LLVM version: 22.0.0git
+- Original version: circt-1.139.0
+- Version Match: YES (Exact match)
+
+4. Error Message
+circt-verilog: /opt/firtool-1.139.0-src/llvm/llvm/include/llvm/Support/Casting.h:650: 
+decltype(auto) llvm::dyn_cast(From &) [To = circt::hw::InOutType, From = mlir::Type]: 
+Assertion 'detail::isPresent(Val) && "dyn_cast on a non-existent value"' failed.
+
+5. Stack Trace Summary
+- Fault Location: MooreToCore.cpp:177:24 in circt::hw::ModulePortInfo::sanitizeInOut()
+- Call Stack:
+  1. circt::hw::ModulePortInfo::sanitizeInOut()
+  2. getModulePortInfo() - MooreToCore.cpp:259
+  3. SVModuleOpConversion::matchAndRewrite()
+  4. ConversionPattern dispatch
+  5. MooreToCorePass::runOnOperation()
+
+6. Crash Signature Analysis
+Original Crash:
+- Type: dyn_cast on a non-existent value
+- Call site: sanitizeInOut() at MooreToCore.cpp:177:24
+- Value type: circt::hw::InOutType vs mlir::Type
+
+Current Crash:
+- Type: dyn_cast on a non-existent value (EXACT MATCH)
+- Call site: sanitizeInOut() at MooreToCore.cpp:177:24 (EXACT MATCH)
+- Value type: circt::hw::InOutType vs mlir::Type (IDENTICAL)
+
+7. Source Code Analysis
+The buggy source contains:
+- struct packed pkt_t with logic valid and logic [7:0] data
+- Module test_module with clk input and string result output
+- Nested string array: string s[1]
+- Always block with concurrent assignment and procedural assignment
+- $display statement
+- String comparison assertion
+
+The bug occurs during Moore-to-Core conversion when processing module ports,
+specifically when sanitizing InOut types. The type is not properly initialized
+in the TypeStorage system before being passed to dyn_cast, causing the assertion failure.
+
+8. Reproduction Status
+Status: SUCCESS
+Reproduced: TRUE
+Signature Match: YES (100% match)

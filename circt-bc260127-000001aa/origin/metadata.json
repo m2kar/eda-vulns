@@ -1,0 +1,8 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw source.sv",
+    "exit_code": 134,
+    "notes": "Reproduced assertion with FeatureFuzz-SV circt-verilog; /opt/firtool/bin/circt-verilog hung under this input"
+  }
+}

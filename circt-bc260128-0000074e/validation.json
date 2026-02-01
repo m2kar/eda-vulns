@@ -1,0 +1,46 @@
+{
+  "testcase_id": "260128-0000074e",
+  "validation_timestamp": "2026-01-31T19:32:05+00:00",
+  "minimized_file": "bug.sv",
+  "tools": {
+    "verilator": {
+      "version": "5.022",
+      "command": "verilator --lint-only -Wall bug.sv",
+      "result": "warnings",
+      "exit_code": 1,
+      "warnings": [
+        "DECLFILENAME: module name mismatch (non-issue)",
+        "UNDRIVEN: out[1] not driven (expected - only out.b is assigned)",
+        "UNOPTFLAT: Circular combinational logic detected"
+      ],
+      "assessment": "Verilator correctly identifies the combinational loop"
+    },
+    "slang": {
+      "version": "current",
+      "command": "slang --lint-only bug.sv",
+      "result": "success",
+      "exit_code": 0,
+      "assessment": "Valid SystemVerilog syntax"
+    },
+    "circt": {
+      "version": "1.139.0",
+      "command": "circt-verilog --ir-hw bug.sv",
+      "result": "timeout",
+      "exit_code": 124,
+      "assessment": "Hangs indefinitely (BUG)"
+    }
+  },
+  "classification": {
+    "result": "report",
+    "is_valid_sv": true,
+    "is_bug": true,
+    "expected_behavior": "Should either compile or report combinational loop error",
+    "actual_behavior": "Infinite loop / hang"
+  },
+  "semantic_analysis": {
+    "construct": "self-referential packed struct output in always_comb",
+    "has_combinational_loop": true,
+    "verilator_detects": true,
+    "circt_handles": false
+  }
+}

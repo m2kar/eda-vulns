@@ -1,0 +1,33 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "original_crash": "MooreToCore dialect conversion assertion failure in SVModuleOpConversion::matchAndRewrite",
+    "test_command": "circt-verilog --ir-hw source.sv",
+    "toolchain_version": "CIRCT 1.139.0",
+    "original_signature_frames": [
+      "SVModuleOpConversion::matchAndRewrite",
+      "MooreToCorePass::runOnOperation"
+    ],
+    "reproduced_signature_frames": [
+      "SVModuleOpConversion::matchAndRewrite",
+      "MooreToCorePass::runOnOperation"
+    ],
+    "key_functions_match": true,
+    "assertion_type": "dyn_cast assertion failure on InOutType",
+    "root_cause_analysis": "Crash occurs during Moore to Core dialect conversion when processing SVModuleOp. The dyn_cast on InOutType fails with assertion 'dyn_cast on a non-existent value', indicating a type mismatch or invalid type in port handling."
+  },
+  "test_case": {
+    "name": "packed_struct_union_typedef",
+    "description": "SystemVerilog module with packed struct and union typedefs used in port declaration",
+    "file": "source.sv",
+    "key_features": [
+      "Packed struct typedef",
+      "Packed union typedef containing struct",
+      "Union typedef used as port type"
+    ]
+  },
+  "environment": {
+    "circt_path": "/opt/firtool/bin/circt-verilog",
+    "llvm_version": "22.0.0"
+  }
+}

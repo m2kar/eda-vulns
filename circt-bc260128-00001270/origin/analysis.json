@@ -1,0 +1,78 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Arc",
+  "failing_pass": "LowerState",
+  "crash_type": "assertion",
+  "assertion_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "crash_location": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "function": "(anonymous namespace)::ModuleLowering::run",
+    "line": 219
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "inout port with tri-state",
+      "signed types",
+      "bit slicing",
+      "always_comb with for loop"
+    ],
+    "problematic_patterns": [
+      "inout port using 1'bz (tri-state)",
+      "LLHD reference type (!llhd.ref<i1>) in Arc model ports"
+    ]
+  },
+  "hypotheses": [
+    {
+      "description": "Incomplete handling of LLHD reference types in Arc dialect's StateType verification",
+      "confidence": "high",
+      "evidence": [
+        "Error message explicitly states state type must have known bit width",
+        "Crash occurs in StateType::get() during verification",
+        "!llhd.ref<i1> is an LLHD reference type without fixed bit width",
+        "Test case uses inout port with tri-state represented as LLHD reference"
+      ]
+    },
+    {
+      "description": "Missing type conversion pass to handle LLHD references before StateType creation",
+      "confidence": "medium",
+      "evidence": [
+        "LLHD reference types may be valid in earlier compilation stages",
+        "Type conversion pass should convert these before LowerState",
+        "LLHD types in Arc models suggest incomplete conversion pipeline"
+      ]
+    }
+  ],
+  "keywords": [
+    "arcilator",
+    "StateType",
+    "LLHD reference",
+    "inout port",
+    "tri-state",
+    "verifyInvariants",
+    "LowerState pass",
+    "!llhd.ref<i1>",
+    "bit width"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "reason": "Failing pass implementation"
+    },
+    {
+      "path": "include/circt/Dialect/Arc/ArcTypes.cpp.inc",
+      "reason": "StateType definition (generated from TableGen)"
+    },
+    {
+      "path": "lib/Conversion/MooreToArc/",
+      "reason": "Moore to Arc conversion logic"
+    },
+    {
+      "path": "lib/Dialect/LLHD/IR/LLHDDialect.cpp",
+      "reason": "LLHD type implementation"
+    }
+  ],
+  "bug_status": "likely_fixed",
+  "notes": "Bug not reproducible with current toolchain (LLVM 22.0.0git, CIRCT firtool-1.139.0), suggesting fix has been implemented"
+}

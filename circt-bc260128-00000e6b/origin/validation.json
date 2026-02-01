@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T02:18:32+00:00",
+  "input_file": "bug.sv",
+  "original_lines": 9,
+  "minimized_lines": 2,
+  "reduction_percent": 77.8,
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": ""
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "slang": "pass",
+    "verilator": "pass",
+    "icarus": "error"
+  },
+  "cross_tool_notes": {
+    "icarus": "Net 'a' can not be of type 'string' - iverilog limitation, not IEEE standard"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid SystemVerilog test case causes crash in CIRCT. Slang and Verilator accept the code."
+  }
+}

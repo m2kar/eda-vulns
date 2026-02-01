@@ -1,0 +1,19 @@
+======================================
+CIRCT Bug Reproduction
+======================================
+
+Command executed:
+/opt/firtool/bin/circt-verilog --ir-hw source.sv | /opt/firtool/bin/arcilator | /opt/llvm-22/bin/opt -O0 | /opt/llvm-22/bin/llc -O0 --filetype=obj
+
+Tool versions:
+- circt-verilog: 1.140.0 (LLVM 22)
+- arcilator: 1.140.0 (LLVM 22)
+- opt: 22.0.0
+- llc: 22.0.0
+
+Error output:
+source.sv:10:3: error: concurrent assertion statements with action blocks are not supported yet
+  assert property (@(posedge clk) q |-> idx != 0) 
+  ^
+
+Exit code: 1

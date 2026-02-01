@@ -1,0 +1,112 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "crash_id": "260128-00000add",
+  "tool": "arcilator",
+  "dialect": "Arc",
+  "failing_pass": "arc::LowerStatePass",
+  "crash_type": "assertion",
+  "assertion_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "crash_location": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "function": "ModuleLowering::run",
+    "line": 219,
+    "secondary_location": {
+      "file": "lib/Dialect/Arc/ArcTypes.cpp",
+      "function": "StateType::verify",
+      "line": 78
+    }
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "file": "source.sv",
+    "key_constructs": [
+      "inout port",
+      "tristate assignment (1'bz)"
+    ],
+    "problematic_patterns": [
+      "inout logic io_sig - bidirectional port lowered to !llhd.ref<i1>"
+    ],
+    "minimal_trigger": "module with inout port piped through arcilator"
+  },
+  "error_context": {
+    "error_type": "type_verification_failure",
+    "unsupported_type": "!llhd.ref<i1>",
+    "expected_types": [
+      "IntegerType",
+      "seq::ClockType",
+      "hw::ArrayType",
+      "hw::StructType"
+    ],
+    "reason": "computeLLVMBitWidth() returns nullopt for llhd::RefType"
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "Arcilator does not support bidirectional (inout) ports represented as !llhd.ref types",
+      "confidence": "high",
+      "evidence": [
+        "Error message: state type must have a known bit width; got '!llhd.ref<i1>'",
+        "computeLLVMBitWidth() has no case for llhd::RefType",
+        "inout ports in SystemVerilog are lowered to !llhd.ref by circt-verilog",
+        "StateType::verify() explicitly rejects types without known bit width"
+      ],
+      "mechanism": "LowerStatePass creates StateType::get(arg.getType()) for module inputs, but !llhd.ref<i1> fails verification"
+    },
+    {
+      "id": 2,
+      "description": "Missing input validation allows unsupported types to reach internal assertions",
+      "confidence": "medium",
+      "evidence": [
+        "Error occurs in type construction rather than early validation",
+        "No graceful error handling for unsupported port types",
+        "Assertion failure instead of user-friendly error"
+      ],
+      "mechanism": "No early rejection of !llhd.ref types in LowerStatePass"
+    }
+  ],
+  "keywords": [
+    "arcilator",
+    "inout",
+    "llhd.ref",
+    "StateType",
+    "LowerStatePass",
+    "bit width",
+    "bidirectional",
+    "tristate",
+    "computeLLVMBitWidth"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Arc/ArcTypes.cpp",
+      "reason": "Contains computeLLVMBitWidth() and StateType::verify()"
+    },
+    {
+      "path": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "reason": "Pass implementation, crash site at line 219"
+    },
+    {
+      "path": "include/circt/Dialect/Arc/ArcTypes.td",
+      "reason": "StateType definition with genVerifyDecl = 1"
+    }
+  ],
+  "fix_suggestions": [
+    {
+      "approach": "Add llhd::RefType support to computeLLVMBitWidth()",
+      "complexity": "low",
+      "risk": "Need to verify simulation semantics for bidirectional signals"
+    },
+    {
+      "approach": "Add early validation to reject inout ports in LowerStatePass",
+      "complexity": "low",
+      "risk": "None - improves error message clarity"
+    }
+  ],
+  "classification": {
+    "bug_type": "incomplete_feature_support",
+    "severity": "medium",
+    "user_impact": "Cannot simulate modules with bidirectional ports using arcilator",
+    "reproducibility": "deterministic",
+    "workaround": "Avoid using inout ports in modules processed by arcilator"
+  }
+}

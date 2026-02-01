@@ -1,0 +1,126 @@
+{
+  "crash_id": "260128-00000ed6",
+  "dialect": "arc",
+  "crash_type": "assertion",
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "search_keywords": [
+    "arcilator assertion state type",
+    "llhd.ref",
+    "LowerState",
+    "arc state type",
+    "StateType"
+  ],
+  "search_results": {
+    "issues_found": 7,
+    "total_checked": 20,
+    "results": [
+      {
+        "issue_number": 5053,
+        "title": "[Arc] LowerState: combinatorial cycle reported in cases where there is none",
+        "state": "closed",
+        "severity": "medium",
+        "similarity_score": 0.45,
+        "reason": "Same LowerState pass, but different issue (combinatorial cycle detection). Shares same file and component.",
+        "matching_keywords": [
+          "LowerState",
+          "arc"
+        ],
+        "url": "https://github.com/llvm/circt/issues/5053"
+      },
+      {
+        "issue_number": 9246,
+        "title": "Bug: op failed to verify that width of result type has to be smaller than or equal to the input type",
+        "state": "closed",
+        "severity": "high",
+        "similarity_score": 0.52,
+        "reason": "Also involves llhd.ref type verification in arc/llhd context, but different error (array_slice width check vs state type bit width)",
+        "matching_keywords": [
+          "llhd.ref",
+          "arc"
+        ],
+        "url": "https://github.com/llvm/circt/issues/9246"
+      },
+      {
+        "issue_number": 9417,
+        "title": "[Arc][arcilator] `hw.bitcast` Data Corruption for Aggregate Types with Non-Power-of-2 Element Widths in Arc",
+        "state": "open",
+        "severity": "high",
+        "similarity_score": 0.35,
+        "reason": "Arc dialect issue but different problem (bitcast data corruption, not state type validation)",
+        "matching_keywords": [
+          "arc",
+          "arcilator"
+        ],
+        "url": "https://github.com/llvm/circt/issues/9417"
+      },
+      {
+        "issue_number": 9395,
+        "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+        "state": "closed",
+        "severity": "high",
+        "similarity_score": 0.48,
+        "reason": "Arcilator assertion failure in ConvertToArcs pass with assert replacement issue. Related tool, related pass.",
+        "matching_keywords": [
+          "arcilator",
+          "ConvertToArcs",
+          "assertion"
+        ],
+        "url": "https://github.com/llvm/circt/issues/9395"
+      },
+      {
+        "issue_number": 9466,
+        "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+        "state": "closed",
+        "severity": "high",
+        "similarity_score": 0.40,
+        "reason": "Arcilator legalization failure with llhd ops during ConvertToArcs, but different operation (llhd.constant_time)",
+        "matching_keywords": [
+          "arcilator",
+          "ConvertToArcs",
+          "llhd"
+        ],
+        "url": "https://github.com/llvm/circt/issues/9466"
+      },
+      {
+        "issue_number": 9469,
+        "title": "[circt-verilog][arcilator] Inconsistent compilation behavior: direct array indexing in always_ff sensitivity list vs. intermediate wire",
+        "state": "closed",
+        "severity": "high",
+        "similarity_score": 0.38,
+        "reason": "Arcilator compilation failure with llhd.constant_time legalization, similar error context",
+        "matching_keywords": [
+          "arcilator",
+          "llhd",
+          "ConvertToArcs"
+        ],
+        "url": "https://github.com/llvm/circt/issues/9469"
+      },
+      {
+        "issue_number": 9052,
+        "title": "[circt-verilog] Import difference of results in arcilator failure with remaining llhd constant_time",
+        "state": "closed",
+        "severity": "medium",
+        "similarity_score": 0.36,
+        "reason": "Arcilator failure with llhd constant_time legalization, but different trigger (import difference)",
+        "matching_keywords": [
+          "arcilator",
+          "llhd",
+          "state"
+        ],
+        "url": "https://github.com/llvm/circt/issues/9052"
+      }
+    ]
+  },
+  "analysis": {
+    "max_similarity": 0.52,
+    "top_issue": 9246,
+    "recommendation": "review_existing",
+    "rationale": "No exact duplicates found. Issue #9246 (0.52 similarity) involves llhd.ref type validation in arc/llhd context but with different error. This appears to be a distinct bug related to state type handling in arcilator. Most similar issues are arcilator legalization failures but with different operations (llhd.constant_time, not StateType). The bug is likely new or a specialized variant of existing issues.",
+    "next_steps": [
+      "Review issue #9246 for related state/type validation patterns",
+      "Check if StateType::get() validation was recently changed",
+      "Look for recent changes in ArcTypes.cpp or LowerState.cpp",
+      "Consider if this is regression from llhd.ref handling in Arc dialect"
+    ]
+  }
+}

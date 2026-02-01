@@ -1,0 +1,10 @@
+{
+  "queries": [
+    "dyn_cast on a non-existent value InOutType",
+    "sanitizeInOut"
+  ],
+  "results": [],
+  "recommendation": "new_issue",
+  "top_score": 0.0,
+  "top_issue": null
+}

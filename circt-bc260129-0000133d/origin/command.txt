@@ -1,0 +1,1 @@
+circt-verilog --ir-hw bug.sv 2>&1 | arcilator 2>&1

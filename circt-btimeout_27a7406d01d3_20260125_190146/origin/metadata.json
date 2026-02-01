@@ -1,0 +1,13 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "crash_type": "timeout",
+    "timeout_seconds": 60,
+    "command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv | /opt/firtool/bin/arcilator | /opt/firtool/bin/opt -O0 | /opt/firtool/bin/llc -O0 --filetype=obj",
+    "test_file": "source.sv",
+    "exit_code": 124,
+    "timestamp": "2026-01-31T00:00:00Z",
+    "toolchain": "CIRCT with LLVM-22",
+    "notes": "Timeout confirmed during pipeline execution. The compilation pipeline halted at 60s timeout threshold."
+  }
+}

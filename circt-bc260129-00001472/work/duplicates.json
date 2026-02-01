@@ -1,0 +1,35 @@
+{
+  "search_queries": [
+    "arcilator StateType llhd.ref",
+    "arcilator inout",
+    "LowerState StateType",
+    "arcilator crash",
+    "state type must have a known bit width"
+  ],
+  "found_issues": [
+    {
+      "number": 9574,
+      "title": "[Arc] Assertion failure when lowering inout ports in sequential logic",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/9574",
+      "created_at": "2026-02-01T05:48:51Z",
+      "similarity_score": 10.0,
+      "match_type": "exact_duplicate"
+    },
+    {
+      "number": 9260,
+      "title": "Arcilator crashes in Upload Release Artifacts CI",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/9260",
+      "similarity_score": 2.0,
+      "match_type": "different_issue"
+    }
+  ],
+  "recommendation": "review_existing",
+  "top_match": {
+    "issue_number": 9574,
+    "score": 10.0,
+    "reason": "Exact same bug - same error message, same crash location (LowerState.cpp:219), same trigger (inout ports), same root cause (StateType::get() fails on !llhd.ref<T> type)"
+  },
+  "verdict": "DUPLICATE - Issue #9574 is an exact duplicate of this bug report"
+}

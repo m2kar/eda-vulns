@@ -1,0 +1,91 @@
+{
+  "crash_type": "assertion_failure",
+  "component": "arcilator",
+  "dialect": "hw/arc",
+  "location": {
+    "file": "lib/Dialect/Arc/Transforms/InferStateProperties.cpp",
+    "line": 211,
+    "function": "applyEnableTransformation"
+  },
+  "assertion": {
+    "message": "cast<Ty>() argument of incompatible type!",
+    "source_file": "llvm/include/llvm/Support/Casting.h",
+    "source_line": 566,
+    "cast_from": "mlir::Type",
+    "cast_to": "mlir::IntegerType"
+  },
+  "root_cause": {
+    "summary": "Type safety bug: hw::ConstantOp::create called with non-integer array type",
+    "hypothesis": "The InferStateProperties pass's applyEnableTransformation function assumes all state argument types are scalar integers when creating zero constants. When processing state operations derived from unpacked arrays (e.g., 'logic [7:0] arr [0:15]'), the selfArg type is an array type (not IntegerType), causing the llvm::cast<mlir::IntegerType> to fail inside hw::ConstantOp::create.",
+    "triggering_pattern": "Unpacked array with shift register pattern (arr[i] <= arr[i-1]) combined with enable pattern detection in the InferStateProperties pass",
+    "code_path": [
+      "InferStatePropertiesPass::runOnOperation() walks arc::StateOp",
+      "runOnStateOp() detects enable patterns via computeEnableInfoFromPattern()",
+      "applyEnableTransformation() attempts to create zero constant for selfArg",
+      "hw::ConstantOp::create(builder, loc, enableInfos[i].selfArg.getType(), 0) called",
+      "Internal cast<mlir::IntegerType> fails because type is array/aggregate"
+    ]
+  },
+  "testcase_features": {
+    "has_arrays": true,
+    "has_unpacked_arrays": true,
+    "has_loops": true,
+    "has_combinational_logic": true,
+    "has_registered_logic": true,
+    "has_shift_register": true,
+    "array_size": 16,
+    "array_element_width": 8,
+    "output_width": 12
+  },
+  "testcase_analysis": {
+    "module_name": "array_reg",
+    "inputs": [
+      {"name": "clk", "type": "logic", "width": 1},
+      {"name": "data_in", "type": "logic", "width": 8}
+    ],
+    "outputs": [
+      {"name": "sum_out", "type": "logic", "width": 12}
+    ],
+    "internal_signals": [
+      {"name": "arr", "type": "unpacked_array", "element_width": 8, "size": 16},
+      {"name": "sum", "type": "logic", "width": 12}
+    ],
+    "always_blocks": {
+      "always_comb": 1,
+      "always_ff": 2
+    },
+    "problematic_construct": "Unpacked array 'arr' with shift register pattern creates state with array type that fails type assumption in InferStateProperties pass"
+  },
+  "affected_components": [
+    {
+      "name": "Arc Dialect",
+      "impact": "direct",
+      "description": "Crash occurs in Arc transformation pass"
+    },
+    {
+      "name": "InferStateProperties Pass",
+      "impact": "direct",
+      "description": "Contains the buggy code path"
+    },
+    {
+      "name": "hw::ConstantOp",
+      "impact": "indirect",
+      "description": "Correctly enforces IntegerType constraint, receives invalid type"
+    },
+    {
+      "name": "arc::StateOp",
+      "impact": "related",
+      "description": "State operations with array outputs trigger the bug"
+    }
+  ],
+  "suggested_fix": {
+    "description": "Add type check before creating hw::ConstantOp to ensure type is IntegerType or hw::IntType",
+    "location": "lib/Dialect/Arc/Transforms/InferStateProperties.cpp:211",
+    "approach": "Check if selfArg.getType() is castable to IntegerType before calling hw::ConstantOp::create; return failure() for non-integer types"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv | arcilator",
+    "minimal_trigger": "Unpacked array with registered shift pattern"
+  },
+  "timestamp": "2026-01-31T21:55:49+00:00"
+}

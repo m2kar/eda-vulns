@@ -1,0 +1,40 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T18:44:35.747788",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv",
+    "test_case_id": "260127-000004ad"
+  },
+  "tools": {
+    "circt_verilog": "circt-verilog (CIRCT firtool-1.139.0)",
+    "arcilator": "arcilator (LLVM 22.0.0git)",
+    "llvm_version": "LLVM 22.0.0git"
+  },
+  "original_error": {
+    "type": "assertion",
+    "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "assertion": "Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed.",
+    "location": "circt::arc::StateType::get(mlir::Type)",
+    "crash_tool": "arcilator"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv | arcilator",
+    "full_pipeline": "circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj",
+    "reproduced": false,
+    "error_match": false,
+    "exit_code": 0,
+    "result": "SUCCESS - No crash occurred",
+    "signature": "No assertion failure detected"
+  },
+  "analysis": {
+    "status": "BUG_NOT_REPRODUCED",
+    "reason": "Current tool chain (firtool-1.139.0 with LLVM 22.0.0git) successfully processes the test case without crashing",
+    "hypothesis": "Bug appears to have been fixed between original test creation date (Jan 27) and current date (Jan 31)",
+    "original_tool_version": "circt-1.139.0 (Jan 27 21:57)",
+    "current_tool_version": "CIRCT firtool-1.139.0 (LLVM 22.0.0git)"
+  },
+  "files": {
+    "reproduce_log": "reproduce.log"
+  }
+}

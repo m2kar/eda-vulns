@@ -1,0 +1,74 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T00:30:02.891294",
+  "search_terms": {
+    "dialect": "comb",
+    "failing_pass": "Canonicalizer",
+    "crash_type": "assertion",
+    "keywords": [
+      "extractConcatToConcatExtract",
+      "ExtractOp",
+      "ConcatOp",
+      "canonicalize",
+      "use_empty",
+      "eraseOp",
+      "CombFolds",
+      "replaceOpAndCopyNamehint",
+      "array indexing",
+      "Canonicalizer"
+    ],
+    "assertion_message": "op->use_empty() && \"expected 'op' to have no uses\""
+  },
+  "results": {
+    "total_found": 5,
+    "top_score": 17.5,
+    "top_issue": 8863,
+    "issues": [
+      {
+        "number": 8863,
+        "title": "[Comb] Concat/extract canonicalizer crashes on loop",
+        "url": "https://github.com/llvm/circt/issues/8863",
+        "state": "OPEN",
+        "createdAt": "2025-08-16T20:38:33Z",
+        "similarity_score": 17.5
+      },
+      {
+        "number": 4688,
+        "title": "comb::ExtractOp::canonicalize is very slow",
+        "url": "https://github.com/llvm/circt/issues/4688",
+        "state": "OPEN",
+        "createdAt": "2023-02-21T14:56:36Z",
+        "similarity_score": 11.5
+      },
+      {
+        "number": 8260,
+        "title": "[Comb] or(concat, concat) -> concat & or(and, concat) -> concat(extract) canonicalizer",
+        "url": "https://github.com/llvm/circt/issues/8260",
+        "state": "OPEN",
+        "createdAt": "2025-02-20T12:11:06Z",
+        "similarity_score": 9.5
+      },
+      {
+        "number": 4532,
+        "title": "[ExportVerilog] always_comb ordering issue",
+        "url": "https://github.com/llvm/circt/issues/4532",
+        "state": "OPEN",
+        "createdAt": "2023-01-11T18:58:12Z",
+        "similarity_score": 2.0
+      },
+      {
+        "number": 8586,
+        "title": "[ExportVerilog] Graph region op order creates redundant spills",
+        "url": "https://github.com/llvm/circt/issues/8586",
+        "state": "OPEN",
+        "createdAt": "2025-06-19T16:49:31Z",
+        "similarity_score": 0
+      }
+    ]
+  },
+  "recommendation": {
+    "action": "review_existing",
+    "confidence": "high",
+    "reason": "High similarity score with issue #8863 indicates this is a known and reported bug"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "comb",
+  "failing_pass": "Canonicalizer",
+  "crash_type": "assertion",
+  "assertion_message": "op->use_empty() && \"expected 'op' to have no uses\"",
+  "crash_location": {
+    "file": "lib/Dialect/Comb/CombFolds.cpp",
+    "function": "extractConcatToConcatExtract",
+    "line": 548
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "array element write",
+      "array element read",
+      "conditional assignment",
+      "ternary operator"
+    ],
+    "problematic_patterns": [
+      "write to arr[0] then read arr[0] in condition",
+      "extract from concat created by array update",
+      "mux using extracted bit as selector"
+    ]
+  },
+  "hypotheses": [
+    {
+      "description": "extractConcatToConcatExtract creates new ExtractOps as replacement but the original ExtractOp still has uses that haven't been updated by the rewriter, causing eraseOp assertion failure",
+      "confidence": "high",
+      "evidence": [
+        "Stack trace shows eraseOp called from replaceOpAndCopyNamehint",
+        "Function creates new ExtractOp operations in reverseConcatArgs",
+        "Assertion explicitly checks op->use_empty() before erase",
+        "Pattern runs during greedy rewrite where multiple ops may reference same values"
+      ]
+    },
+    {
+      "description": "Multiple ExtractOps referencing the same ConcatOp cause ordering issues in the canonicalizer worklist",
+      "confidence": "medium",
+      "evidence": [
+        "Test case reads arr[0] which may create multiple extract operations",
+        "Greedy pattern rewriter processes operations in worklist order",
+        "Canonicalizing one extract may create inconsistent state for others"
+      ]
+    },
+    {
+      "description": "replaceOpAndCopyNamehint helper has different erasure semantics than standard replaceOp",
+      "confidence": "low",
+      "evidence": [
+        "Custom helper function in Support/Naming.cpp",
+        "Standard replaceOp typically handles deferred erasure",
+        "Explicit eraseOp call visible in stack trace"
+      ]
+    }
+  ],
+  "suspected_pattern": "extract + concat canonicalization with array element access",
+  "keywords": [
+    "extractConcatToConcatExtract",
+    "ExtractOp",
+    "ConcatOp",
+    "canonicalize",
+    "use_empty",
+    "eraseOp",
+    "CombFolds",
+    "replaceOpAndCopyNamehint",
+    "array indexing",
+    "Canonicalizer"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Comb/CombFolds.cpp",
+      "reason": "Contains the failing extractConcatToConcatExtract function"
+    },
+    {
+      "path": "lib/Support/Naming.cpp",
+      "reason": "Contains replaceOpAndCopyNamehint which calls eraseOp"
+    },
+    {
+      "path": "llvm/mlir/lib/IR/PatternMatch.cpp",
+      "reason": "Contains the failing assertion in eraseOp"
+    }
+  ],
+  "tool_command": "circt-verilog --ir-hw source.sv",
+  "testcase_id": "260128-00000d1b"
+}

@@ -1,0 +1,286 @@
+{
+  "crash_id": "260129-0000193c",
+  "timestamp": "2026-02-01T14:05:00+00:00",
+  "search_summary": {
+    "total_search_queries": 5,
+    "total_issues_found": 27,
+    "search_terms_used": ["Mem2Reg", "real type Float64Type", "integer bitwidth assertion", "MooreToCore", "LLHD assertion failure"]
+  },
+  "duplicate_candidates": [
+    {
+      "issue_number": 8269,
+      "title": "[MooreToCore] Support `real` constants",
+      "url": "https://github.com/llvm/circt/issues/8269",
+      "created_at": "2025-02-23T19:01:31Z",
+      "similarity_score": 8,
+      "similarity_factors": {
+        "keywords_matched": ["real type", "MooreToCore", "floating-point types"],
+        "crash_signature_match": "medium",
+        "dialect_match": "Moore/MooreToCore",
+        "technical_relevance": "Deals with real constant handling in MooreToCore, related to floating-point type conversion",
+        "notes": "Directly addresses real type support in MooreToCore conversion"
+      }
+    },
+    {
+      "issue_number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "url": "https://github.com/llvm/circt/issues/8930",
+      "created_at": "2025-09-06T09:21:38Z",
+      "similarity_score": 8,
+      "similarity_factors": {
+        "keywords_matched": ["MooreToCore", "real type", "Float64Type", "hw::getBitWidth"],
+        "crash_signature_match": "high",
+        "dialect_match": "Moore/MooreToCore",
+        "technical_relevance": "Crash in MooreToCore when handling conversion of real types (Float64Type), assertion on getBitWidth",
+        "notes": "Very similar root cause: Mem2Reg/MooreToCore failing to handle floating-point types with getBitWidth returning -1"
+      }
+    },
+    {
+      "issue_number": 8693,
+      "title": "[Mem2Reg] Local signal does not dominate final drive",
+      "url": "https://github.com/llvm/circt/issues/8693",
+      "created_at": "2025-07-11T20:11:54Z",
+      "similarity_score": 7,
+      "similarity_factors": {
+        "keywords_matched": ["Mem2Reg", "LLHD", "dominance"],
+        "crash_signature_match": "medium",
+        "dialect_match": "LLHD",
+        "technical_relevance": "Mem2Reg pass domination issue in LLHD dialect",
+        "notes": "Related to Mem2Reg transformation issues in LLHD"
+      }
+    },
+    {
+      "issue_number": 8832,
+      "title": "[LLHD] Dominance issue with local signal",
+      "url": "https://github.com/llvm/circt/issues/8832",
+      "created_at": "2025-08-08T16:01:51Z",
+      "similarity_score": 7,
+      "similarity_factors": {
+        "keywords_matched": ["Mem2Reg", "LLHD", "dominance", "llhd.sig"],
+        "crash_signature_match": "medium",
+        "dialect_match": "LLHD",
+        "technical_relevance": "Dominance error in Mem2Reg pass with local signals in LLHD",
+        "notes": "Related Mem2Reg pass issues in LLHD dialect"
+      }
+    },
+    {
+      "issue_number": 8860,
+      "title": "[LLHD] Assigning array elements individually creates a combinational loop",
+      "url": "https://github.com/llvm/circt/issues/8860",
+      "created_at": "2025-08-15T21:28:03Z",
+      "similarity_score": 6,
+      "similarity_factors": {
+        "keywords_matched": ["Mem2Reg", "LLHD", "array handling"],
+        "crash_signature_match": "low",
+        "dialect_match": "LLHD",
+        "technical_relevance": "Mem2Reg pass type handling issue with arrays in LLHD",
+        "notes": "Related to Mem2Reg array element conversion"
+      }
+    },
+    {
+      "issue_number": 8245,
+      "title": "[LLHD] Mem2Reg crash on reasonable input",
+      "url": "https://github.com/llvm/circt/issues/8245",
+      "created_at": "2025-02-15T22:41:36Z",
+      "similarity_score": 7,
+      "similarity_factors": {
+        "keywords_matched": ["Mem2Reg", "LLHD", "assertion failure"],
+        "crash_signature_match": "high",
+        "dialect_match": "LLHD",
+        "technical_relevance": "Mem2Reg crash with llhd.prb operations in LLHD process blocks",
+        "notes": "Direct Mem2Reg crash, similar assertion failure pattern"
+      }
+    },
+    {
+      "issue_number": 8494,
+      "title": "[LLHD] Mem2Reg does not properly combine enables of successive drives",
+      "url": "https://github.com/llvm/circt/issues/8494",
+      "created_at": "2025-05-19T23:10:54Z",
+      "similarity_score": 6,
+      "similarity_factors": {
+        "keywords_matched": ["Mem2Reg", "LLHD", "llhd.drv"],
+        "crash_signature_match": "low",
+        "dialect_match": "LLHD",
+        "technical_relevance": "Mem2Reg pass logic error with successive drive operations",
+        "notes": "Related Mem2Reg LLHD transformation issue"
+      }
+    },
+    {
+      "issue_number": 9052,
+      "title": "[circt-verilog] Import difference of results in arcilator failure with remaining llhd constant_time",
+      "url": "https://github.com/llvm/circt/issues/9052",
+      "created_at": "2025-10-05T19:56:14Z",
+      "similarity_score": 6,
+      "similarity_factors": {
+        "keywords_matched": ["LLHD", "constant_time", "always_ff", "Mem2Reg"],
+        "crash_signature_match": "medium",
+        "dialect_match": "Moore/LLHD",
+        "technical_relevance": "LLHD constant_time handling in Moore import pipeline",
+        "notes": "Related to LLHD type handling in sequential logic"
+      }
+    },
+    {
+      "issue_number": 6273,
+      "title": "[HW] Crash in `seq.firreg` canonicalizer",
+      "url": "https://github.com/llvm/circt/issues/6273",
+      "created_at": "2023-10-09T19:02:20Z",
+      "similarity_score": 5,
+      "similarity_factors": {
+        "keywords_matched": ["integer bitwidth", "IntegerType", "getBitWidth", "assertion"],
+        "crash_signature_match": "medium",
+        "dialect_match": "HW/SEQ",
+        "technical_relevance": "Crash on invalid bitwidth in hw::getBitWidth function",
+        "notes": "Similar bitwidth handling issue with unsupported types"
+      }
+    },
+    {
+      "issue_number": 9570,
+      "title": "[Moore] Assertion in MooreToCore when module uses packed union type as port",
+      "url": "https://github.com/llvm/circt/issues/9570",
+      "created_at": "2026-02-01T02:15:22Z",
+      "similarity_score": 5,
+      "similarity_factors": {
+        "keywords_matched": ["MooreToCore", "type conversion", "assertion"],
+        "crash_signature_match": "low",
+        "dialect_match": "Moore/MooreToCore",
+        "technical_relevance": "Type conversion failure in MooreToCore for unsupported types",
+        "notes": "Related to type conversion issues in MooreToCore"
+      }
+    },
+    {
+      "issue_number": 9572,
+      "title": "[Moore] Assertion failure when module has string type output port",
+      "url": "https://github.com/llvm/circt/issues/9572",
+      "created_at": "2026-02-01T03:00:12Z",
+      "similarity_score": 5,
+      "similarity_factors": {
+        "keywords_matched": ["MooreToCore", "type conversion", "assertion", "getModulePortInfo"],
+        "crash_signature_match": "low",
+        "dialect_match": "Moore/MooreToCore",
+        "technical_relevance": "Type conversion and validation failure in MooreToCore",
+        "notes": "Related type conversion issues in MooreToCore"
+      }
+    },
+    {
+      "issue_number": 9574,
+      "title": "[Arc] Assertion failure when lowering inout ports in sequential logic",
+      "url": "https://github.com/llvm/circt/issues/9574",
+      "created_at": "2026-02-01T05:48:51Z",
+      "similarity_score": 5,
+      "similarity_factors": {
+        "keywords_matched": ["assertion failure", "sequential logic", "type handling"],
+        "crash_signature_match": "low",
+        "dialect_match": "Arc/LLHD",
+        "technical_relevance": "Type validation failure in Arc/LLHD sequential logic lowering",
+        "notes": "Related type handling in sequential logic processing"
+      }
+    },
+    {
+      "issue_number": 9542,
+      "title": "[Moore] to_builtin_bool should be replaced with to_builtin_int",
+      "url": "https://github.com/llvm/circt/issues/9542",
+      "created_at": "2026-01-29T18:09:01Z",
+      "similarity_score": 4,
+      "similarity_factors": {
+        "keywords_matched": ["MooreToCore", "type conversion"],
+        "crash_signature_match": "low",
+        "dialect_match": "Moore",
+        "technical_relevance": "MooreToCore type conversion refactoring",
+        "notes": "General type conversion issue in MooreToCore"
+      }
+    },
+    {
+      "issue_number": 8286,
+      "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+      "url": "https://github.com/llvm/circt/issues/8286",
+      "created_at": "2025-03-03T10:23:03Z",
+      "similarity_score": 4,
+      "similarity_factors": {
+        "keywords_matched": ["LLHD", "constant_time", "always_ff"],
+        "crash_signature_match": "low",
+        "dialect_match": "LLHD",
+        "technical_relevance": "LLHD to LLVM lowering issue with sequential logic",
+        "notes": "Related to LLHD dialect issues"
+      }
+    },
+    {
+      "issue_number": 9469,
+      "title": "[circt-verilog][arcilator] Inconsistent compilation behavior: direct array indexing in always_ff sensitivity list vs. intermediate wire",
+      "url": "https://github.com/llvm/circt/issues/9469",
+      "created_at": "2026-01-18T08:04:02Z",
+      "similarity_score": 4,
+      "similarity_factors": {
+        "keywords_matched": ["constant_time", "always_ff", "LLHD"],
+        "crash_signature_match": "low",
+        "dialect_match": "LLHD",
+        "technical_relevance": "LLHD constant_time legalization issue",
+        "notes": "Related to LLHD lowering issues"
+      }
+    },
+    {
+      "issue_number": 9395,
+      "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+      "url": "https://github.com/llvm/circt/issues/9395",
+      "created_at": "2025-12-29T16:25:43Z",
+      "similarity_score": 4,
+      "similarity_factors": {
+        "keywords_matched": ["assertion failure", "always_ff"],
+        "crash_signature_match": "low",
+        "dialect_match": "LLHD/Arc",
+        "technical_relevance": "Arcilator assertion failure with combinational assertions",
+        "notes": "Related assertion failure pattern"
+      }
+    },
+    {
+      "issue_number": 6926,
+      "title": "[FIRRTL] isX lowering doesn't work for bundles",
+      "url": "https://github.com/llvm/circt/issues/6926",
+      "created_at": "2024-04-17T14:09:42Z",
+      "similarity_score": 3,
+      "similarity_factors": {
+        "keywords_matched": ["getIntOrFloatBitWidth", "assertion"],
+        "crash_signature_match": "low",
+        "dialect_match": "FIRRTL",
+        "technical_relevance": "Bitwidth assertion failure with unsupported types",
+        "notes": "Different dialect but similar bitwidth assertion pattern"
+      }
+    },
+    {
+      "issue_number": 3235,
+      "title": "[Calyx] SCF and StaticLogic to Calyx passes should clear state.",
+      "url": "https://github.com/llvm/circt/issues/3235",
+      "created_at": "2022-05-28T05:33:35Z",
+      "similarity_score": 2,
+      "similarity_factors": {
+        "keywords_matched": ["getIntOrFloatBitWidth", "assertion"],
+        "crash_signature_match": "very_low",
+        "dialect_match": "Calyx",
+        "technical_relevance": "Bitwidth assertion in different dialect",
+        "notes": "Low relevance, different dialect and different root cause"
+      }
+    }
+  ],
+  "top_candidates": {
+    "most_similar": {
+      "issue_number": 8930,
+      "title": "[MooreToCore] Crash with sqrt/floor",
+      "similarity_score": 8,
+      "rationale": "Directly matches crash pattern: MooreToCore failing to handle Float64Type conversions with hw::getBitWidth returning invalid value"
+    },
+    "second_similar": {
+      "issue_number": 8269,
+      "title": "[MooreToCore] Support `real` constants",
+      "similarity_score": 8,
+      "rationale": "Addresses real type support in MooreToCore, relevant to floating-point type conversion issues"
+    },
+    "third_similar": {
+      "issue_number": 8245,
+      "title": "[LLHD] Mem2Reg crash on reasonable input",
+      "similarity_score": 7,
+      "rationale": "Direct Mem2Reg crash with assertion failure pattern, LLHD dialect match"
+    }
+  },
+  "recommendation": "likely_duplicate",
+  "recommendation_confidence": "high",
+  "rationale": "The crash is highly similar to issue #8930 (MooreToCore crash with real type conversions) and #8269 (real type support in MooreToCore). The root cause involves failing to handle floating-point types (Float64Type from SystemVerilog 'real') in the type conversion pipeline. The assertion on integer bitwidth is triggered because hw::getBitWidth() returns -1 for unsupported types. This suggests the issue is a known problem in the MooreToCore conversion of real type handling."
+}

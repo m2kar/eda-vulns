@@ -1,0 +1,8 @@
+Crash Type: timeout
+Testcase ID: 260129-000018aa
+
+--- Compilation Command ---
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_ziz5l5ni/test_c2a66131a8ad.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_ziz5l5ni/test_c2a66131a8ad.o
+
+--- Error Message ---
+Compilation timed out after 300s

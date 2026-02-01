@@ -1,0 +1,154 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore/HW/Arc",
+  "failing_pass": "arcilator (suspected)",
+  "crash_type": "timeout",
+  "timeout_seconds": 60,
+  "error_message": "Compilation timed out after 60s",
+  "crash_location": {
+    "file": "unknown (no stack trace - timeout)",
+    "function": "unknown",
+    "line": null
+  },
+  "command": {
+    "full": "circt-verilog --ir-hw | arcilator | opt -O0 | llc -O0",
+    "tools": ["circt-verilog", "arcilator", "opt", "llc"],
+    "circt_version": "1.139.0"
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "filename": "source.sv",
+    "key_constructs": [
+      "parameterized module",
+      "packed struct (typedef struct packed)",
+      "struct signal instantiation",
+      "struct field access",
+      "array slicing on struct field",
+      "module instantiation with struct port",
+      "implicit struct-to-logic type coercion",
+      "always_comb block",
+      "conditional operator with struct fields",
+      "replication operator"
+    ],
+    "problematic_patterns": [
+      {
+        "pattern": "struct-to-plain-logic port binding",
+        "location": "line 21-23",
+        "description": "mystruct_t passed to logic [DEPTH:0] port",
+        "severity": "high"
+      },
+      {
+        "pattern": "parameterized struct width",
+        "location": "line 7-10",
+        "description": "struct field width depends on DEPTH parameter",
+        "severity": "medium"
+      },
+      {
+        "pattern": "struct field slicing in conditional",
+        "location": "line 26",
+        "description": "struct_in.valid ? struct_in.data[3:0] : 4'b0",
+        "severity": "low"
+      }
+    ],
+    "modules": [
+      {
+        "name": "M",
+        "parameters": {"DEPTH": 16},
+        "ports": {
+          "input": [{"name": "a", "type": "logic [1:0]"}],
+          "output": [{"name": "z", "type": "logic [3:0]"}]
+        }
+      },
+      {
+        "name": "my_module",
+        "parameters": {"DEPTH": 16},
+        "ports": {
+          "input": [{"name": "D_flopped", "type": "logic [DEPTH:0]"}]
+        }
+      }
+    ],
+    "type_definitions": [
+      {
+        "name": "mystruct_t",
+        "kind": "packed struct",
+        "fields": [
+          {"name": "data", "type": "logic [DEPTH-1:0]"},
+          {"name": "valid", "type": "logic"}
+        ],
+        "total_bits": 17
+      }
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "Arcilator struct-to-logic lowering enters non-terminating or exponentially slow state when handling implicit type coercion at module port",
+      "confidence": "high",
+      "evidence": [
+        "struct_in (mystruct_t) connected to D_flopped (logic [DEPTH:0])",
+        "Types are bit-compatible but semantically different",
+        "Arcilator must generate simulation code for this conversion",
+        "No explicit bitcast in source - requires implicit handling"
+      ],
+      "affected_component": "arcilator"
+    },
+    {
+      "id": 2,
+      "description": "Moore-to-HW conversion generates excessive intermediate operations for struct-to-packed implicit conversion",
+      "confidence": "medium",
+      "evidence": [
+        "SystemVerilog allows implicit struct-to-packed at ports",
+        "HW dialect may require explicit operations",
+        "Excessive IR could slow downstream passes"
+      ],
+      "affected_component": "MooreToCore/MooreToHW"
+    },
+    {
+      "id": 3,
+      "description": "Parameter elaboration with struct types causes combinatorial complexity",
+      "confidence": "low",
+      "evidence": [
+        "Both modules parameterized with DEPTH",
+        "Struct type depends on parameter",
+        "Cross-module type checking complexity"
+      ],
+      "affected_component": "elaboration"
+    }
+  ],
+  "root_cause_summary": "Implicit type coercion from packed struct to plain packed logic at module port instantiation likely triggers inefficient handling in arcilator, causing compilation to exceed 60s timeout",
+  "keywords": [
+    "arcilator",
+    "struct",
+    "timeout",
+    "packed",
+    "type conversion",
+    "bitcast",
+    "moore",
+    "hw",
+    "non-terminating",
+    "port",
+    "module instantiation",
+    "packed struct",
+    "type coercion"
+  ],
+  "suggested_sources": [
+    {"path": "lib/Conversion/MooreToCore/MooreToCore.cpp", "reason": "Struct lowering to HW types"},
+    {"path": "lib/Dialect/Arc/Transforms/", "reason": "Arcilator transformation passes"},
+    {"path": "lib/Dialect/HW/Transforms/", "reason": "HW dialect type handling"},
+    {"path": "include/circt/Dialect/Moore/MooreTypes.td", "reason": "Moore struct type definitions"}
+  ],
+  "severity": {
+    "impact": "medium-high",
+    "reproducibility": "high",
+    "workaround_available": true,
+    "workaround_description": "Explicitly cast struct to packed bits before port connection: .D_flopped({struct_in.data, struct_in.valid})",
+    "priority": "medium"
+  },
+  "metadata": {
+    "analysis_date": "2026-01-31",
+    "hash": "04b77714d53d",
+    "original_file": "program_20260125_202457_076518.sv",
+    "circt_source_available": false
+  }
+}

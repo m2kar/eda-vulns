@@ -1,0 +1,37 @@
+{
+  "reproduction": {
+    "reproduced": false,
+    "crash_signature": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "crash_location": "circt::arc::StateType::get() in ArcTypes.cpp.inc:108",
+    "command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv | /opt/firtool/bin/arcilator | /opt/llvm-22/bin/opt -O0 | /opt/llvm-22/bin/llc -O0 --filetype=obj",
+    "timestamp": "2024-02-01T12:48:00Z",
+    "circt_version": "1.139.0",
+    "llvm_version": "22.0.0git",
+    "testcase_id": "260129-00001875",
+    "source_file": "source.sv",
+    "exit_code": 0,
+    "error_type": "assertion",
+    "reason_not_reproduced": "The CIRCT compilation pipeline completed successfully. The crash was not triggered. This may indicate the bug was fixed in a subsequent update or the specific conditions needed to trigger the crash differ in the current environment. The inout wire with llhd.ref<i1> type was processed without triggering the arc state type verification failure.",
+    "pipeline_stages_completed": [
+      {
+        "stage": "circt-verilog",
+        "status": "success",
+        "output": "Generated hw.module with inout wire typed as !llhd.ref<i1>"
+      },
+      {
+        "stage": "arcilator",
+        "status": "success",
+        "output": "Generated valid LLVM IR without assertion failure"
+      },
+      {
+        "stage": "opt",
+        "status": "success"
+      },
+      {
+        "stage": "llc",
+        "status": "success",
+        "output": "Generated 784-byte object file"
+      }
+    ]
+  }
+}

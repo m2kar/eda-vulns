@@ -1,0 +1,14 @@
+{
+  "syntax_valid": true,
+  "slang_valid": true,
+  "verilator_valid": true,
+  "verilator_notes": "Lint warnings only (UNUSEDSIGNAL, UNDRIVEN) - expected for minimal reproducer",
+  "classification": "report",
+  "minimization_percent": 37.5,
+  "original_size": 8,
+  "minimized_size": 5,
+  "crash_reproducible": false,
+  "crash_version": "circt-1.139.0",
+  "current_version": "circt (current toolchain)",
+  "notes": "Test case minimized from 8 to 5 lines. Crash not reproducible with current CIRCT toolchain but documented for historical tracking. Bug was in extractConcatToConcatExtract pattern rewriter."
+}

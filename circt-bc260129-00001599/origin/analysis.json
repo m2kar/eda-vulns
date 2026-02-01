@@ -1,0 +1,99 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Arc",
+  "failing_pass": "LowerState",
+  "crash_type": "assertion",
+  "assertion_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "crash_location": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "line": 219,
+    "function": "ModuleLowering::run()",
+    "call_chain": [
+      "LowerStatePass::runOnOperation()",
+      "ModuleLowering::run()",
+      "StateType::get(mlir::Type)",
+      "StateType::verifyInvariants()"
+    ]
+  },
+  "test_case": {
+    "language": "SystemVerilog",
+    "module_name": "MixedPorts",
+    "constructs": [
+      "input logic",
+      "output logic",
+      "inout wire",
+      "always_comb",
+      "for loop"
+    ],
+    "triggering_construct": "inout wire c",
+    "trigger_reason": "inout port is lowered to llhd::RefType which is not supported by computeLLVMBitWidth()"
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "LowerState pass blindly iterates all module block arguments and creates StateType for each, without checking if the type is supported",
+      "confidence": 0.95,
+      "evidence": [
+        "Stack trace shows crash at LowerState.cpp:219 in StateType::get()",
+        "Error message mentions llhd.ref<i1> type",
+        "Source code has inout port which becomes llhd::RefType"
+      ]
+    },
+    {
+      "id": 2,
+      "description": "computeLLVMBitWidth() in ArcTypes.cpp does not handle llhd::RefType, returning nullopt and causing StateType::verify() to fail",
+      "confidence": 0.90,
+      "evidence": [
+        "StateType::verify() calls computeLLVMBitWidth()",
+        "computeLLVMBitWidth only handles ClockType, IntegerType, ArrayType, StructType",
+        "llhd::RefType is not in the supported type list"
+      ]
+    },
+    {
+      "id": 3,
+      "description": "Arc dialect's cycle-based simulation model is incompatible with LLHD's discrete-event simulation model for bidirectional signals",
+      "confidence": 0.85,
+      "evidence": [
+        "Arc is designed for cycle-based simulation",
+        "llhd::RefType represents signal references for discrete-event simulation",
+        "No natural mapping exists between inout ports and Arc's StateType"
+      ]
+    }
+  ],
+  "keywords": [
+    "arcilator",
+    "LowerState",
+    "StateType",
+    "llhd.ref",
+    "llhd::RefType",
+    "inout",
+    "bidirectional port",
+    "computeLLVMBitWidth",
+    "assertion failure",
+    "verifyInvariants",
+    "cycle-based simulation"
+  ],
+  "suggested_sources": [
+    {
+      "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "relevance": "Main crash location - ModuleLowering::run() at line 219"
+    },
+    {
+      "file": "lib/Dialect/Arc/ArcTypes.cpp",
+      "relevance": "StateType::verify() and computeLLVMBitWidth() implementation"
+    },
+    {
+      "file": "include/circt/Dialect/Arc/ArcTypes.h",
+      "relevance": "StateType definition"
+    },
+    {
+      "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "relevance": "llhd::RefType usage in port conversion"
+    }
+  ],
+  "reproduction_pipeline": "circt-verilog --ir-hw source.sv | arcilator",
+  "severity": "crash",
+  "component": "arcilator",
+  "suggested_fix": "Add validation in LowerState pass to check for unsupported types (like llhd::RefType) and emit a diagnostic error instead of crashing, or extend computeLLVMBitWidth() to handle llhd::RefType by extracting nested type"
+}

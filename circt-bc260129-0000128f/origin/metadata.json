@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T06:00:20+00:00",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "circt-verilog",
+    "version": "LLVM 22.0.0git; CIRCT firtool-1.139.0; slang 9.1.0+0",
+    "path": "/opt/firtool/bin/circt-verilog"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o /tmp/arcilator_repro.o",
+    "exit_code": 1,
+    "reproduced": false,
+    "match_result": "different_crash"
+  },
+  "crash_signature": {
+    "original": "arcilator: /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/Casting.h:566: decltype(auto) llvm::cast(From &) [To = mlir::IntegerType, From = mlir::Type]: Assertion `isa<To>(Val) && \"cast<Ty>() argument of incompatible type!\"' failed.",
+    "reproduced": "<stdin>:30:10: error: 'arc.state' op operand type mismatch: operand #2"
+  },
+  "files": {
+    "reproduce_log": "reproduce.log"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "version": "1.0",
+  "timestamp": "2025-02-01T08:30:00Z",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "circt-verilog",
+    "version": "CIRCT firtool-1.139.0, LLVM 22.0.0git",
+    "path": "/opt/firtool/bin/circt-verilog"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv",
+    "exit_code": 1,
+    "reproduced": false,
+    "match_result": "different_error"
+  },
+  "crash_signature": {
+    "original": "Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed (integer bitwidth limit)",
+    "reproduced": "'hw.bitcast' op result #0 must be Type wherein the bitwidth in hardware is known, but got '!llvm.ptr'"
+  },
+  "notes": "The crash signature has changed. Original error was an assertion failure in IntegerType creation for bitwidth 16777215. Current version produces a different error: hw.bitcast type mismatch. Bug may be partially fixed or error handling improved."
+}

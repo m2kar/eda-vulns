@@ -1,0 +1,106 @@
+{
+  "search_terms": [
+    "timeout llhd-sig2reg",
+    "struct field assignment",
+    "always_comb timeout",
+    "circular SSA",
+    "canonicalize infinite loop",
+    "canonicalize timeout",
+    "llhd-sig2reg",
+    "struct_inject",
+    "infinite loop",
+    "canonicalize"
+  ],
+  "found_issues": [
+    {
+      "issue_number": 9560,
+      "title": "[FIRRTL] Canonicalize infinite loop",
+      "url": "https://github.com/llvm/circt/issues/9560",
+      "state": "open",
+      "created_at": "2026-01-31T01:38:54Z",
+      "similarity_score": 8.5,
+      "reasoning": "Very recent canonicalize infinite loop issue (FIRRTL dialect). Shows canonicalize entering indefinite loop during optimization. While different dialect, identical problem pattern: canonicalize pass stuck in infinite loop. Trigger: firrtl.regreset + firrtl.bits + constant folding pattern."
+    },
+    {
+      "issue_number": 8865,
+      "title": "[Comb] AddOp canonicalizer hangs in an infinite loop",
+      "url": "https://github.com/llvm/circt/issues/8865",
+      "state": "closed",
+      "created_at": "2025-07-18T15:39:27Z",
+      "similarity_score": 8.0,
+      "reasoning": "Closed canonicalize infinite loop in comb.add. Complex control flow creates recursive add operation that canonicalizer expands infinitely. Pattern: recursive operation + canonicalizer + infinite expansion. Different dialect but same canonicalize hang mechanism."
+    },
+    {
+      "issue_number": 8022,
+      "title": "[Comb] Infinite loop in OrOp folder",
+      "url": "https://github.com/llvm/circt/issues/8022",
+      "state": "open",
+      "created_at": "2025-01-23T09:39:54Z",
+      "similarity_score": 7.5,
+      "reasoning": "Recent infinite loop in OrOp folder (Comb dialect). Similar timeout/infinite loop class of bug. Appears to be canonicalize-related folding issue on bitwise operations."
+    },
+    {
+      "issue_number": 8863,
+      "title": "[Comb] Concat/extract canonicalizer crashes on loop",
+      "url": "https://github.com/llvm/circt/issues/8863",
+      "state": "open",
+      "created_at": "2025-08-18T11:02:23Z",
+      "similarity_score": 7.0,
+      "reasoning": "Canonicalizer crash on cyclic dependencies in Comb dialect (concat/extract). Mentions 'loop' behavior in canonicalizer. Different operations but same infinite loop class."
+    },
+    {
+      "issue_number": 8065,
+      "title": "[LLHD][Arc] Indexing and slicing lowering from Verilog to LLVM IR",
+      "url": "https://github.com/llvm/circt/issues/8065",
+      "state": "open",
+      "created_at": "2025-02-11T09:21:22Z",
+      "similarity_score": 6.5,
+      "reasoning": "LLHD + canonicalize issue. Uses same pipeline: llhd-sig2reg → canonicalize. Fails with non-pure operation error after canonicalization. Related area: LLHD lowering with struct-like types (array indexing similar to struct field operations)."
+    },
+    {
+      "issue_number": 8012,
+      "title": "[Moore][Arc][LLHD] Moore to LLVM lowering issues",
+      "url": "https://github.com/llvm/circt/issues/8012",
+      "state": "open",
+      "created_at": "2024-12-22T20:58:32Z",
+      "similarity_score": 6.0,
+      "reasoning": "LLHD + canonicalize pipeline issue. Uses: llhd-sig2reg → canonicalize. Different error (legalization failure) but same problematic pass sequence. Shows LLHD-to-LLVM lowering is fragile with canonicalize."
+    },
+    {
+      "issue_number": 9057,
+      "title": "[MooreToCore] Unexpected topological cycle after importing generated verilog",
+      "url": "https://github.com/llvm/circt/issues/9057",
+      "state": "closed",
+      "created_at": "2026-01-16T17:51:53Z",
+      "similarity_score": 5.5,
+      "reasoning": "Cyclic SSA dependency created by Moore→Core conversion. Shows similar pattern: struct/concat operations creating cycles. Different lowering path but demonstrates canonicalize can create circular references."
+    },
+    {
+      "issue_number": 4688,
+      "title": "comb::ExtractOp::canonicalize is very slow",
+      "url": "https://github.com/llvm/circt/issues/4688",
+      "state": "open",
+      "created_at": "2023-03-07T11:41:14Z",
+      "similarity_score": 5.0,
+      "reasoning": "Canonicalize slowness/performance issue on extract operations. Related to timeout class of problems but documented as performance rather than infinite loop."
+    }
+  ],
+  "top_issue": {
+    "number": 9560,
+    "title": "[FIRRTL] Canonicalize infinite loop",
+    "score": 8.5,
+    "reason": "Most recent and most similar: canonicalize entering infinite loop with timeout behavior"
+  },
+  "recommendation": "review_existing",
+  "detailed_analysis": {
+    "match_quality": "This bug appears NOVEL but HIGHLY RELATED to ongoing canonicalize stability issues",
+    "key_differences": [
+      "This bug: LLHD dialect (SystemVerilog Moore conversion), llhd-sig2reg pass creates circular SSA",
+      "Issue #9560: FIRRTL dialect, canonicalize loop on constant patterns",
+      "Issue #8865: Comb dialect, AddOp canonicalizer infinite loop on control flow",
+      "Pattern: All involve canonicalize pass entering infinite loop, but different root causes"
+    ],
+    "shared_root_cause_class": "canonicalize pass infinite loop detection/prevention needs improvement",
+    "recommendation_justification": "The specific trigger (partial struct field assignment + llhd-sig2reg creating cyclic SSA + canonicalize) appears novel. However, canonicalize infinite loops are a known systemic issue in CIRCT. Human review needed to determine if this is: (1) new specific bug, (2) variant of #9560/#8865/#8022, or (3) duplicate with different manifestation."
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T05:45:00Z",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "circt-verilog",
+    "version": "LLVM 22.0.0git, CIRCT firtool-1.139.0",
+    "path": "/opt/firtool/bin/circt-verilog"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv | arcilator",
+    "exit_code": 0,
+    "reproduced": false,
+    "match_result": "bug_fixed"
+  },
+  "crash_signature": {
+    "original": "error: state type must have a known bit width; got '!llhd.ref<i1>'\narcilator: ... Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed.",
+    "reproduced": "No crash - command completed successfully"
+  },
+  "analysis": {
+    "conclusion": "Bug appears to have been fixed in current toolchain (LLVM 22.0.0git, CIRCT firtool-1.139.0)",
+    "note": "Original error was from circt-1.139.0 with older LLVM version. The issue involved LLHD reference type (!llhd.ref<i1>) in arc.model port declarations."
+  },
+  "files": {
+    "reproduce_log": "reproduce.log"
+  }
+}

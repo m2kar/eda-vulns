@@ -1,0 +1,38 @@
+Crash Type: assertion
+Testcase ID: 260128-00000db6
+
+--- Compilation Command ---
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_07ab6d894d60.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_xfhtv50x/test_07ab6d894d60.o
+
+--- Error Message ---
+circt-verilog: /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/IR/PatternMatch.cpp:156: virtual void mlir::RewriterBase::eraseOp(Operation *): Assertion `op->use_empty() && "expected 'op' to have no uses"' failed.
+PLEASE submit a bug report to https://github.com/llvm/circt and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_07ab6d894d60.sv
+ #0 0x0000559ec2dfc32f llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/lib/Support/Unix/Signals.inc:842:13
+ #1 0x0000559ec2dfd2e9 llvm::sys::RunSignalHandlers() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/lib/Support/Signals.cpp:109:18
+ #2 0x0000559ec2dfd2e9 SignalHandler(int, siginfo_t*, void*) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/lib/Support/Unix/Signals.inc:412:3
+ #3 0x00007f26b834a330 (/lib/x86_64-linux-gnu/libc.so.6+0x45330)
+ #4 0x00007f26b83a3b2c __pthread_kill_implementation ./nptl/pthread_kill.c:44:76
+ #5 0x00007f26b83a3b2c __pthread_kill_internal ./nptl/pthread_kill.c:78:10
+ #6 0x00007f26b83a3b2c pthread_kill ./nptl/pthread_kill.c:89:10
+ #7 0x00007f26b834a27e raise ./signal/../sysdeps/posix/raise.c:27:6
+ #8 0x00007f26b832d8ff abort ./stdlib/abort.c:81:7
+ #9 0x00007f26b832d81b _nl_load_domain ./intl/loadmsgcat.c:1177:9
+#10 0x00007f26b8340517 (/lib/x86_64-linux-gnu/libc.so.6+0x3b517)
+#11 0x0000559ec1ccbdc3 (/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog+0x1e2ddc3)
+#12 0x0000559ec1920700 circt::replaceOpAndCopyNamehint(mlir::PatternRewriter&, mlir::Operation*, mlir::Value) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Support/Naming.cpp:82:1
+#13 0x0000559ec1518f4f extractConcatToConcatExtract(circt::comb::ExtractOp, circt::comb::ConcatOp, mlir::PatternRewriter&) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Dialect/Comb/CombFolds.cpp:548:3
+#14 0x0000559ec1518f4f circt::comb::ExtractOp::canonicalize(circt::comb::ExtractOp, mlir::PatternRewriter&) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Dialect/Comb/CombFolds.cpp:615:12
+#15 0x0000559ec28eb1f4 mlir::PatternApplicator::matchAndRewrite(mlir::Operation*, mlir::PatternRewriter&, llvm::function_ref<bool (mlir::Pattern const&)>, llvm::function_ref<void (mlir::Pattern const&)>, llvm::function_ref<llvm::LogicalResult (mlir::Pattern const&)>)::$_0::operator()() const /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Rewrite/PatternApplicator.cpp:223:13
+#16 0x0000559ec28eb1f4 void llvm::function_ref<void ()>::callback_fn<mlir::PatternApplicator::matchAndRewrite(mlir::Operation*, mlir::PatternRewriter&, llvm::function_ref<bool (mlir::Pattern const&)>, llvm::function_ref<void (mlir::Pattern const&)>, llvm::function_ref<llvm::LogicalResult (mlir::Pattern const&)>)::$_0>(long) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/ADT/STLFunctionalExtras.h:46:12
+#17 0x0000559ec28e56c5 mlir::PatternApplicator::matchAndRewrite(mlir::Operation*, mlir::PatternRewriter&, llvm::function_ref<bool (mlir::Pattern const&)>, llvm::function_ref<void (mlir::Pattern const&)>, llvm::function_ref<llvm::LogicalResult (mlir::Pattern const&)>) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Rewrite/PatternApplicator.cpp:242:9
+#18 0x0000559ec28bf2eb llvm::succeeded(llvm::LogicalResult) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/LogicalResult.h:0:0
+#19 0x0000559ec28bf2eb (anonymous namespace)::GreedyPatternRewriteDriver::processWorklist() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Transforms/Utils/GreedyPatternRewriteDriver.cpp:621:9
+#20 0x0000559ec28bdea3 (anonymous namespace)::RegionPatternRewriteDriver::simplify(bool*) &&::$_2::operator()() const /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Transforms/Utils/GreedyPatternRewriteDriver.cpp:889:11
+#21 0x0000559ec28bdea3 void llvm::function_ref<void ()>::callback_fn<(anonymous namespace)::RegionPatternRewriteDriver::simplify(bool*) &&::$_2>(long) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/ADT/STLFunctionalExtras.h:46:12
+#22 0x0000559ec28ba5c0 mlir::OperationFolder::~OperationFolder() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/include/mlir/Transforms/FoldUtils.h:33:7
+#23 0x0000559ec28ba5c0 (anonymous namespace)::RegionPatternRewriteDriver::simplify(bool*) && /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Transforms/Utils/GreedyPatternRewriteDriver.cpp:902:3
+#24 0x0000559ec28ba5c0 mlir::applyPatternsGreedily(mlir::Region&, mlir::FrozenRewritePatternSet const&, mlir::GreedyRewriteConfig, bool*) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Transforms/Utils/GreedyPatternRewriteDriver.cpp:934:47
+#25 0x0000559ec2860320 llvm::LogicalResult::failed() const /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/LogicalResult.h:0:0
+#26 0x0000559ec2860320 mlir::applyPatternsGreedily(mlir::Operation*, mlir::FrozenRewritePatternSet const&, mlir::GreedyRewriteConfig, bool*) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/include/mlir/Transforms/GreedyPatternRewriteDriver.h:225:20

@@ -1,0 +1,17 @@
+{
+  "dialect": "LLHD",
+  "crash_type": "assertion",
+  "assertion": "cannot RAUW a value with itself",
+  "pass": "Sig2RegPass",
+  "location": {
+    "file": "lib/Dialect/LLHD/Transforms/Sig2RegPass.cpp",
+    "functions": ["SigPromoter::isPromotable", "SigPromoter::promote", "Sig2RegPass::runOnOperation"],
+    "assert_file": "mlir/IR/UseDefLists.h",
+    "assert_line": 213
+  },
+  "suspected_cause": "Sig2Reg promotion replaces a read value that aliases its own use list due to a combinational self-loop, triggering a self-RAUW assertion.",
+  "input": {
+    "source_file": "source.sv",
+    "crash_log": "error.txt"
+  }
+}

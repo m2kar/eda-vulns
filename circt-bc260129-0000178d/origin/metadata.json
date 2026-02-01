@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T11:40:05.237175",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "circt-verilog",
+    "version": "CIRCT firtool-1.139.0",
+    "path": "/opt/firtool/bin/circt-verilog"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv",
+    "exit_code": 139,
+    "reproduced": true,
+    "match_result": "assertion_crash_in_same_location"
+  },
+  "crash_signature": {
+    "type": "assertion",
+    "original_assertion": "Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"` failed",
+    "original_location": "llvm/include/llvm/Support/Casting.h:650",
+    "original_file": "circt-verilog",
+    "reproduced_stack_frame_key": "SVModuleOpConversion::matchAndRewrite (MooreToCore.cpp)"
+  },
+  "analysis": {
+    "conclusion": "Bug is successfully reproduced with current toolchain",
+    "notes": "The crash occurs in the same code path (MooreToCore.cpp conversion) as the original bug. Stack signature matches: SVModuleOpConversion::matchAndRewrite at frame #4",
+    "root_cause_indicator": "dyn_cast on non-existent value in InOutType checking within module port sanitization"
+  }
+}

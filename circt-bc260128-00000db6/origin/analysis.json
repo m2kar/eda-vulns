@@ -1,0 +1,68 @@
+{
+  "testcase_id": "260128-00000db6",
+  "dialect": "comb",
+  "crash_type": "assertion_failure",
+  "assertion_message": "expected 'op' to have no uses",
+  "crash_location": {
+    "file": "llvm/mlir/lib/IR/PatternMatch.cpp",
+    "line": 156,
+    "function": "mlir::RewriterBase::eraseOp"
+  },
+  "trigger_location": {
+    "file": "lib/Dialect/Comb/CombFolds.cpp",
+    "line": 548,
+    "function": "extractConcatToConcatExtract"
+  },
+  "canonicalize_function": {
+    "file": "lib/Dialect/Comb/CombFolds.cpp",
+    "line": 615,
+    "function": "circt::comb::ExtractOp::canonicalize"
+  },
+  "source_features": [
+    "array_partial_assignment",
+    "mixed_assign_always_comb",
+    "packed_array_bit_access",
+    "combinational_logic"
+  ],
+  "root_cause_hypothesis": {
+    "summary": "replaceOpAndCopyNamehint attempts to erase an operation that still has uses during ExtractOp canonicalization",
+    "details": "When canonicalizing extract(concat(...)) pattern with mixed assign/always_comb array assignments, the extractConcatToConcatExtract function may produce a single-element result that triggers replaceOpAndCopyNamehint. This replacement incorrectly attempts to erase an operation that is still referenced by other IR nodes.",
+    "pattern": "extract(lo, cat(a, b, ...)) -> single element extraction",
+    "trigger_condition": "reverseConcatArgs.size() == 1 in extractConcatToConcatExtract"
+  },
+  "related_functions": [
+    "extractConcatToConcatExtract",
+    "circt::comb::ExtractOp::canonicalize",
+    "circt::replaceOpAndCopyNamehint",
+    "mlir::RewriterBase::eraseOp"
+  ],
+  "related_files": [
+    "lib/Dialect/Comb/CombFolds.cpp",
+    "lib/Support/Naming.cpp",
+    "llvm/mlir/lib/IR/PatternMatch.cpp"
+  ],
+  "stack_trace_key_frames": [
+    {
+      "frame": 11,
+      "location": "PatternMatch.cpp:156",
+      "function": "mlir::RewriterBase::eraseOp"
+    },
+    {
+      "frame": 12,
+      "location": "Naming.cpp:82",
+      "function": "circt::replaceOpAndCopyNamehint"
+    },
+    {
+      "frame": 13,
+      "location": "CombFolds.cpp:548",
+      "function": "extractConcatToConcatExtract"
+    },
+    {
+      "frame": 14,
+      "location": "CombFolds.cpp:615",
+      "function": "circt::comb::ExtractOp::canonicalize"
+    }
+  ],
+  "severity": "high",
+  "reproducibility": "deterministic"
+}

@@ -1,0 +1,82 @@
+================================================================================
+                    CIRCT CRASH REPRODUCTION REPORT
+                     Test Case: 260129-0000193b
+================================================================================
+
+REPRODUCTION STATUS: ✓ SUCCESSFULLY REPRODUCED
+
+================================================================================
+1. TEST CASE INFORMATION
+================================================================================
+Test File: source.sv (267 bytes)
+Test Case ID: 260129-0000193b
+Crash Type: Assertion failure
+Severity: CRASH (Aborted)
+
+================================================================================
+2. ORIGINAL ERROR SUMMARY
+================================================================================
+Error Message: integer bitwidth is limited to 16777215 bits
+Assertion Location: StorageUniquerSupport.h:180
+Failed Assertion: succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))
+
+Key Stack Frame:
+  #12 mlir::IntegerType::get(mlir::MLIRContext*, unsigned int, 
+                            mlir::IntegerType::SignednessSemantics)
+  #13 Promoter::insertBlockArgs() in Mem2Reg.cpp:1742:35
+
+================================================================================
+3. REPRODUCTION COMMAND
+================================================================================
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw source.sv
+
+================================================================================
+4. REPRODUCTION RESULTS
+================================================================================
+Crash Reproduced: YES
+Crash Signature: IDENTICAL
+Error Location: /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/include/mlir/IR/StorageUniquerSupport.h:180
+Assertion Message: Identical to original
+Stack Trace Frame #12: Identical function and location
+
+Key Call Chain:
+  1. circt-verilog (main)
+  2. Mem2RegPass::runOnOperation()
+  3. Promoter::promote()
+  4. Promoter::insertBlockArgs()
+  5. mlir::IntegerType::get() <- CRASH POINT
+
+================================================================================
+5. ROOT CAUSE INDICATOR
+================================================================================
+The crash occurs in the Mem2Reg (Memory to Register) transformation pass when
+trying to create an IntegerType with invalid bitwidth. The error message 
+"integer bitwidth is limited to 16777215 bits" suggests the input Verilog 
+contains a very large integer type that exceeds this limit.
+
+The test case uses:
+  - input signed [7:0] a  (valid 8-bit integer)
+  - input real in_real    (floating point)
+  - Comparison: -a <= a
+  - Real assignments
+
+The issue likely stems from how CIRCT processes the comparison operation 
+and memory operations in the LLHD dialect transformation.
+
+================================================================================
+6. OUTPUT FILES GENERATED
+================================================================================
+✓ reproduce.log     (14 KB)  - Full reproduction output with crash backtrace
+✓ metadata.json     (391 B)  - Reproduction metadata and status
+
+================================================================================
+7. VERIFICATION
+================================================================================
+Assertion Signature Match: PASS
+Stack Frame #12 Match: PASS
+Error Message Match: PASS
+Crash Type Match: PASS (Assertion failure)
+
+================================================================================
+                      REPRODUCTION CONFIRMED ✓
+================================================================================

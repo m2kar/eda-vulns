@@ -1,0 +1,32 @@
+{
+  "testcase_id": "260128-00000db6",
+  "reproduction": {
+    "reproduced": false,
+    "timestamp": "2025-02-01T00:00:00Z",
+    "crash_signature": {
+      "type": "assertion",
+      "location": "mlir/lib/IR/PatternMatch.cpp:156",
+      "message": "expected 'op' to have no uses",
+      "function_stack": [
+        "replaceOpAndCopyNamehint",
+        "extractConcatToConcatExtract",
+        "ExtractOp::canonicalize",
+        "PatternApplicator::matchAndRewrite"
+      ]
+    },
+    "execution_result": {
+      "status": "success",
+      "exit_code": 0,
+      "output": "IR canonicalized successfully without assertion failure"
+    },
+    "tool_version": {
+      "circt": "firtool-1.139.0",
+      "llvm": "22.0.0git",
+      "slang": "9.1.0"
+    },
+    "source_file": "source.sv",
+    "command_original": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_07ab6d894d60.sv",
+    "command_executed": "/opt/firtool/bin/circt-verilog --ir-hw /tmp/repro_test/test.sv",
+    "reason_not_reproduced": "The bug assertion in PatternMatch.cpp:156 was not triggered during canonicalization. This may indicate the bug was fixed in a subsequent CIRCT release or requires specific compilation flags not used in current tool configuration."
+  }
+}

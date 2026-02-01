@@ -1,0 +1,48 @@
+{
+  "search_query": "extractConcatToConcatExtract OR \"expected 'op' to have no uses\" OR CombFolds OR ExtractOp canonicalize OR assertion failure",
+  "search_terms": [
+    "extractConcatToConcatExtract",
+    "expected 'op' to have no uses",
+    "CombFolds",
+    "ExtractOp canonicalize",
+    "assertion failure"
+  ],
+  "total_issues": 4,
+  "issues": [
+    {
+      "issue_number": 8863,
+      "title": "[Comb] Concat/extract canonicalizer crashes on loop",
+      "url": "https://github.com/llvm/circt/issues/8863",
+      "state": "OPEN",
+      "similarity_score": 10,
+      "match_reason": "Exact assertion match; Same file (CombFolds.cpp); Extract/Concat operations involved"
+    },
+    {
+      "issue_number": 4688,
+      "title": "comb::ExtractOp::canonicalize is very slow",
+      "url": "https://github.com/llvm/circt/issues/4688",
+      "state": "OPEN",
+      "similarity_score": 7,
+      "match_reason": "Related assertion; Same file (CombFolds.cpp); Extract/Concat operations involved"
+    },
+    {
+      "issue_number": 8024,
+      "title": "[Comb] Crash in AndOp folder",
+      "url": "https://github.com/llvm/circt/issues/8024",
+      "state": "OPEN",
+      "similarity_score": 6,
+      "match_reason": "Related assertion; Same file (CombFolds.cpp); Canonicalizer involved"
+    },
+    {
+      "issue_number": 7531,
+      "title": "[Moore] Input triggers assertion in canonicalizer infra",
+      "url": "https://github.com/llvm/circt/issues/7531",
+      "state": "OPEN",
+      "similarity_score": 3,
+      "match_reason": "Related assertion; Canonicalizer involved"
+    }
+  ],
+  "recommendation": "likely_duplicate",
+  "top_score": 10,
+  "top_issue": 8863
+}

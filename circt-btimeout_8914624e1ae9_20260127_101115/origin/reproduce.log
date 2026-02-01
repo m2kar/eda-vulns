@@ -1,0 +1,33 @@
+=== REPRODUCTION ATTEMPT ===
+Date: Sat Jan 31 16:53:18 UTC 2026
+Command: /opt/firtool/bin/circt-verilog --ir-hw source.sv | /opt/firtool/bin/arcilator | /opt/llvm-22/bin/opt -O0 | /opt/llvm-22/bin/llc -O0 --filetype=obj -o test.o
+
+=== TOOL VERSIONS ===
+circt-verilog:
+LLVM (http://llvm.org/):
+  LLVM version 22.0.0git
+  Optimized build.
+CIRCT firtool-1.139.0
+
+arcilator:
+LLVM (http://llvm.org/):
+  LLVM version 22.0.0git
+  Optimized build.
+
+opt:
+LLVM (http://llvm.org/):
+  LLVM version 22.0.0git
+  Optimized build.
+
+llc:
+LLVM (http://llvm.org/):
+  LLVM version 22.0.0git
+  Optimized build.
+
+=== EXECUTION OUTPUT ===
+
+=== EXECUTION RESULT ===
+Exit Code: 0
+Output File: test.o
+-rw-r--r-- 1 root root 840 Jan 31 16:53 test.o
+File exists and is valid

@@ -1,0 +1,15 @@
+{
+  "testcase_id": "260127-000004a9",
+  "recommendation": "likely_new",
+  "top_score": 42,
+  "top_issue": 9467,
+  "summary": {
+    "total_issues_found": 36,
+    "status": "completed"
+  },
+  "reasoning": {
+    "recommendation": "likely_new",
+    "score_interpretation": "相似度 42/100",
+    "confidence": "中"
+  }
+}

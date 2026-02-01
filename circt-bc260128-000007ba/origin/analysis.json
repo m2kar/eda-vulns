@@ -1,0 +1,54 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Arc",
+  "failing_pass": "LowerStatePass",
+  "crash_type": "assertion",
+  "assertion_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "crash_location": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "function": "ModuleLowering::run()",
+    "line": 219
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": ["inout port", "bidirectional signal"],
+    "problematic_patterns": ["inout logic io_sig converted to !llhd.ref<i1>"]
+  },
+  "hypotheses": [
+    {
+      "description": "StateType does not support LLHD reference types (!llhd.ref<T>) - computeLLVMBitWidth() returns nullopt for this type",
+      "confidence": "high",
+      "evidence": [
+        "Error message: state type must have a known bit width; got '!llhd.ref<i1>'",
+        "computeLLVMBitWidth() only handles ClockType, IntegerType, ArrayType, StructType",
+        "llhd::RefType is not in the supported type list"
+      ]
+    },
+    {
+      "description": "Missing pre-pass filtering or conversion for bidirectional ports before LowerState",
+      "confidence": "medium",
+      "evidence": [
+        "LowerState loop processes ALL block arguments without type filtering",
+        "No check for whether port type is supported by arcilator"
+      ]
+    }
+  ],
+  "keywords": [
+    "arcilator",
+    "LowerState",
+    "StateType",
+    "inout",
+    "llhd.ref",
+    "bit width",
+    "verifyInvariants",
+    "computeLLVMBitWidth"
+  ],
+  "suggested_sources": [
+    {"path": "lib/Dialect/Arc/Transforms/LowerState.cpp", "reason": "Crashing pass - line 219"},
+    {"path": "lib/Dialect/Arc/ArcTypes.cpp", "reason": "StateType verification and computeLLVMBitWidth()"},
+    {"path": "lib/Conversion/MooreToCore/MooreToCore.cpp", "reason": "Where inout becomes llhd.ref"},
+    {"path": "include/circt/Dialect/LLHD/IR/LLHDTypes.td", "reason": "LLHD RefType definition"}
+  ],
+  "root_cause_summary": "Arcilator crashes when processing SystemVerilog inout ports because the !llhd.ref<T> type used to represent bidirectional ports is not supported by arc::StateType. The computeLLVMBitWidth() function cannot compute the bit width for LLHD reference types, causing the StateType::verify() to fail with an assertion."
+}

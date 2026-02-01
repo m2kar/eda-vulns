@@ -1,0 +1,107 @@
+{
+  "search_keywords": [
+    "inout",
+    "arc",
+    "StateType",
+    "llhd.ref",
+    "LowerState",
+    "arcilator",
+    "RefType",
+    "bit width"
+  ],
+  "search_results": [
+    {
+      "issue_number": 9574,
+      "title": "[Arc] Assertion failure when lowering inout ports in sequential logic",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/9574",
+      "created_at": "2026-02-01T05:48:51Z",
+      "similarity_score": 9.5,
+      "matching_criteria": [
+        "Error message contains 'state type must have a known bit width; got \\'!llhd.ref<i1>\\'': 5.0",
+        "Same dialect (arc) and pass (LowerState): 2.0",
+        "Same crash location (LowerState.cpp, StateType::get): 2.0",
+        "Same trigger condition (inout ports in sequential logic): 1.0",
+        "Same tool (arcilator): 0.5"
+      ],
+      "analysis": "This is extremely similar - nearly identical crash signature with same error message, same dialect, same pass, and same root cause."
+    },
+    {
+      "issue_number": 8825,
+      "title": "[LLHD] Switch from hw.inout to a custom signal reference type",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/8825",
+      "created_at": "2025-08-06T04:38:33Z",
+      "similarity_score": 5.5,
+      "matching_criteria": [
+        "Related to reference type handling and llhd.ref support: 2.0",
+        "Same dialect (LLHD/Arc interaction): 1.5",
+        "Related to inout port support: 1.0",
+        "Different focus (adding new reference type vs handling existing one): -1.0"
+      ],
+      "analysis": "Related to the same reference type problem but different context - this is about adding llhd.ref support generally, not the specific Arc LowerState issue."
+    },
+    {
+      "issue_number": 4916,
+      "title": "[Arc] LowerState: nested arc.state get pulled in wrong clock tree",
+      "state": "open",
+      "url": "https://github.com/llvm/circt/issues/4916",
+      "created_at": "2023-04-01T09:09:05Z",
+      "similarity_score": 3.5,
+      "matching_criteria": [
+        "Same Arc dialect: 2.0",
+        "Same LowerState pass affected: 1.0",
+        "Different crash type and root cause: 0.0",
+        "Not related to inout ports: 0.5"
+      ],
+      "analysis": "Different LowerState issue - about clock tree logic, not about type validation. Not a duplicate."
+    },
+    {
+      "issue_number": 5053,
+      "title": "[Arc] LowerState: combinatorial cycle reported in cases where there is none",
+      "state": "closed",
+      "url": "https://github.com/llvm/circt/issues/5053",
+      "created_at": "2023-04-22T18:45:34Z",
+      "similarity_score": 2.5,
+      "matching_criteria": [
+        "Same Arc dialect: 2.0",
+        "Same LowerState pass: 1.0",
+        "Different error type (combinatorial cycle vs type validation): 0.0",
+        "Already closed/resolved: -0.5"
+      ],
+      "analysis": "Different LowerState issue - about cycle detection, not type handling. Not a duplicate."
+    },
+    {
+      "issue_number": 9417,
+      "title": "[Arc][arcilator] `hw.bitcast` Data Corruption for Aggregate Types with Non-Power-of-2 Element Widths in Arc",
+      "state": "closed",
+      "url": "https://github.com/llvm/circt/issues/9417",
+      "created_at": "2026-01-07T19:50:10Z",
+      "similarity_score": 3.0,
+      "matching_criteria": [
+        "Same dialect (Arc) and tool (arcilator): 2.5",
+        "Different root cause (bitcast data corruption vs type validation): 0.0",
+        "Related to type handling but different context: 0.5"
+      ],
+      "analysis": "Arc/arcilator issue but different problem. Not a duplicate."
+    }
+  ],
+  "top_issue": {
+    "number": 9574,
+    "title": "[Arc] Assertion failure when lowering inout ports in sequential logic",
+    "state": "open",
+    "similarity_score": 9.5,
+    "url": "https://github.com/llvm/circt/issues/9574"
+  },
+  "recommendation": "review_existing",
+  "recommendation_rationale": "Issue #9574 has an extremely high similarity score (9.5/10.0) with identical error messages, crash locations, and root causes. The issue appears to be already reported and is actively tracked. This likely represents the same bug, and the new issue should reference the existing issue #9574 rather than creating a duplicate.",
+  "summary": {
+    "total_issues_found": 5,
+    "high_similarity_issues": 1,
+    "medium_similarity_issues": 1,
+    "low_similarity_issues": 3,
+    "highest_score": 9.5,
+    "search_success": true,
+    "gh_cli_available": true
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T05:50:00Z",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang 9.1.0+0"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": ""
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "verilator": "unavailable",
+    "icarus": "unavailable",
+    "slang": "pass"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid SystemVerilog test case that previously caused a crash in arcilator. Bug appears fixed in current toolchain but analysis is still valuable for documentation."
+  },
+  "bug_status": "fixed_in_current_version",
+  "notes": "Test case uses valid SystemVerilog constructs (inout ports with tri-state, signed types, loops). Original bug was in arcilator's LowerState pass handling of LLHD reference types."
+}

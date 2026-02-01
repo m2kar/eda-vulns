@@ -1,0 +1,37 @@
+=== Test Execution Details ===
+Date: 2026-01-31T19:38:22Z
+Working Directory: /home/zhiqing/edazz/eda-vulns/circt-bc260128-00000782/origin
+Test File: source.sv
+
+=== Compilation Pipeline ===
+Step 1: circt-verilog --ir-hw source.sv
+module {
+  hw.module @test_module(in %clk : i1, out arr : i8) {
+    %c1_i8 = hw.constant 1 : i8
+    %0 = sim.fmt.literal "Error: Assertion failed: arr["
+    %c1_i3 = hw.constant 1 : i3
+    %1 = sim.fmt.literal "] != 1"
+    %c0_i5 = hw.constant 0 : i5
+    %2 = comb.add %idx, %c1_i3 : i3
+    %3 = seq.to_clock %clk
+    %idx = seq.firreg %2 clock %3 : i3
+    %4 = llhd.combinational -> i8 {
+      %5 = comb.concat %c0_i5, %idx : i5, i3
+      %6 = comb.shl %c1_i8, %5 : i8
+      %7 = comb.shru %6, %5 : i8
+      %8 = comb.extract %7 from 0 : (i8) -> i1
+      cf.cond_br %8, ^bb2, ^bb1
+    ^bb1:  // pred: ^bb0
+      %9 = sim.fmt.dec %idx specifierWidth 0 : i3
+      %10 = sim.fmt.concat (%0, %9, %1)
+      sim.proc.print %10
+
+=== Full Pipeline Execution ===
+Command: circt-verilog --ir-hw source.sv | arcilator
+<stdin>:4:10: error: failed to legalize operation 'sim.fmt.literal'
+    %0 = sim.fmt.literal "Error: Assertion failed: arr["
+         ^
+<stdin>:4:10: note: see current operation: %28 = "sim.fmt.literal"() <{literal = "Error: Assertion failed: arr["}> : () -> !sim.fstring
+
+=== Crash Signature ===
+failed to legalize operation 'sim.fmt.literal'

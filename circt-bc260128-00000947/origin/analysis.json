@@ -1,0 +1,22 @@
+{
+  "dialect": "SystemVerilog",
+  "crash_type": "assertion failure",
+  "error_location": {
+    "file": "circt-src/lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "function": "(anonymous namespace)::ModuleLowering::run",
+    "line": "219"
+  },
+  "key_constructs": [
+    "inout wire port",
+    "tri-state assignment (1'bz)",
+    "always_comb",
+    "always_ff @(posedge clk)",
+    "nonblocking assignment",
+    "continuous assignment"
+  ],
+  "root_cause_summary": "LowerState allocates arc::StateType for all module arguments; when an argument is lowered as llhd.ref<i1> (from the inout tri-state port), StateType::verify rejects it because it lacks a known bit width, triggering an assertion in StateType::get.",
+  "affected_passes": [
+    "circt::arc::LowerStatePass",
+    "arcilator (Arc lowering pipeline)"
+  ]
+}

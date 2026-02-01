@@ -1,0 +1,15 @@
+{
+  "reproduction": {
+    "reproduced": false,
+    "command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv | /opt/firtool/bin/arcilator | /opt/firtool/bin/opt -O0 | /opt/firtool/bin/llc -O0 --filetype=obj -o test_output.o",
+    "exit_code": 0,
+    "timestamp": "2026-02-01T00:00:00Z",
+    "original_command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_xfhtv50x/test_27f882ff0d4c.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_xfhtv50x/test_27f882ff0d4c.o",
+    "original_error": "assertion failed in StateType::get - state type must have a known bit width; got '!llhd.ref<i1>'",
+    "notes": "The bug did not reproduce with the current CIRCT toolchain. The compilation completed successfully with exit code 0. This suggests the issue may have been fixed in a newer version of CIRCT or the toolchain configuration differs from the original.",
+    "toolchain_version": {
+      "circt_verilog": "using /opt/firtool/bin/circt-verilog",
+      "arcilator": "using /opt/firtool/bin/arcilator"
+    }
+  }
+}

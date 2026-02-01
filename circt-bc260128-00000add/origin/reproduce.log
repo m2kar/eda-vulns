@@ -1,0 +1,48 @@
+========================================
+CIRCT Bug Reproduction Report
+========================================
+
+Test Case ID: 260128-00000add
+Source File: source.sv
+Reproduction Date: 2025-01-31
+
+--- Execution Command ---
+circt-verilog --ir-hw source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o test.o
+
+--- Tool Information ---
+Tool Version (original): circt-1.139.0
+Tool Version (current):  firtool-1.139.0 + LLVM 22.0.0git
+Tool Path: /opt/firtool/bin
+
+--- Reproduction Result ---
+Status: FAILED - No crash reproduced
+Exit Code: 0 (Success)
+
+--- Original Crash Signature ---
+Error Type: Assertion failure in arcilator
+Location: circt::arc::StateType::get() at ArcTypes.cpp.inc:108
+Assertion: succeeded(ConcreteT::verifyInvariants(...))
+Message: state type must have a known bit width; got '!llhd.ref<i1>'
+
+--- Current Execution Output ---
+arcilator completed successfully and generated LLVM IR output:
+- Generated LLVM Module: LLVMDialectModule
+- Function output: test_module_eval
+- No assertion failures
+
+--- Analysis ---
+The bug does not reproduce on the current toolchain. Possible reasons:
+1. The bug has been fixed in a later version of CIRCT
+2. The StateType verification logic has been updated to handle llhd.ref<i1> types
+3. Changes in the arcilator pass pipeline may have addressed the root cause
+
+--- Recommendation ---
+Since the bug cannot be reproduced, this issue may have been:
+- Fixed in upstream CIRCT
+- Fixed in current build configuration
+- Dependent on specific toolchain version combination
+
+Further investigation may require:
+- Testing with circt-1.139.0 specifically (if available)
+- Checking CIRCT changelog/commits between 1.139.0 and current version
+- Analyzing StateType verification changes in Arc dialect

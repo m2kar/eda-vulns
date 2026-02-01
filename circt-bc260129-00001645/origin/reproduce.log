@@ -1,0 +1,129 @@
+================================================================================
+CIRCT Bug Reproduction Report
+Test Case ID: 260129-00001645
+================================================================================
+
+ENVIRONMENT INFORMATION:
+- CIRCT Version: firtool-1.139.0
+- LLVM Version: 22.0.0git
+- Build Type: Optimized
+- Toolchain Path: /opt/firtool/bin
+- Execution Date: $(date)
+
+================================================================================
+ORIGINAL BUG DETAILS:
+================================================================================
+Crash Type: assertion
+Component: arcilator - LowerState pass
+Error Message: state type must have a known bit width; got '!llhd.ref<i1>'
+Crash Location: circt::arc::StateType::get(mlir::Type) at ArcTypes.cpp.inc:108
+Signal: SIGABRT (Aborted)
+
+Original Command (from error.txt):
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw source.sv | \
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | \
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | \
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o test.o
+
+================================================================================
+TEST CASE DETAILS:
+================================================================================
+File: source.sv
+Description: MixedPorts module with:
+  - Mixed signed/unsigned port declarations
+  - Inout signals with llhd.ref type
+  - Sequential logic with clock edge
+  - Type conversions between signed and unsigned
+
+Module Structure:
+  - Input: logic signed [15:0] a
+  - Input: logic [15:0] b
+  - Inout: logic c
+  - Output: logic out_b
+  - Sequential: always_ff @(posedge clk)
+
+================================================================================
+REPRODUCTION ATTEMPT:
+================================================================================
+
+STEP 1: circt-verilog (Verilog to IR conversion)
+Command: /opt/firtool/bin/circt-verilog --ir-hw source.sv
+Status: SUCCESS
+Exit Code: 0
+Output:
+  - Generated MLIR IR with hw.module
+  - Inout signal 'c' correctly converted to !llhd.ref<i1>
+  - Sequential logic converted to seq.firreg
+  - No errors or warnings observed
+
+STEP 2: arcilator (Arc lowering - expected crash point)
+Command: /opt/firtool/bin/arcilator ir_hw.mlir
+Status: SUCCESS (NO CRASH)
+Exit Code: 0
+Output:
+  - Generated LLVM IR without errors
+  - Successfully lowered Arc dialect operations
+  - No assertion failures observed
+  - Output contains valid LLVM module
+
+STEP 3: opt pass
+Command: /opt/firtool/bin/opt -O0
+Status: SUCCESS
+Exit Code: 0
+
+STEP 4: llc pass
+Command: /opt/firtool/bin/llc -O0 --filetype=obj -o output.o
+Status: SUCCESS
+Exit Code: 0
+
+================================================================================
+CRASH SIGNATURE COMPARISON:
+================================================================================
+Original Crash Signature:
+  - Function: circt::arc::StateType::get(mlir::Type)
+  - File: ArcTypes.cpp.inc line 108
+  - Type: Assertion failure on verifyInvariants
+  - Related to: !llhd.ref<i1> type validation
+
+Current Execution:
+  - No crash observed
+  - No assertion failures
+  - Code executed successfully to completion
+  - All passes completed without errors
+
+SIGNATURE MATCH: NO - Bug is not reproducible
+
+================================================================================
+ANALYSIS:
+================================================================================
+
+The reported bug in test case 260129-00001645 is NOT reproducible with the 
+current CIRCT toolchain (firtool-1.139.0 with LLVM 22.0.0git).
+
+Possible explanations:
+1. Bug has been fixed in a commit after the original bug report
+2. The specific compiler flags or input conditions have changed
+3. The LLVM version used (22.0.0git) may include the fix
+4. The assertion check may have been relaxed or removed
+5. The inout signal handling may have been corrected
+
+The test case executes successfully through all compilation stages:
+- source.sv → IR conversion (SUCCESS)
+- IR → LLVM dialect lowering (SUCCESS)
+- LLVM → optimized IR (SUCCESS)
+- IR → object file (SUCCESS)
+
+All components complete without errors or crashes.
+
+================================================================================
+CONCLUSION:
+================================================================================
+Status: NOT REPRODUCED
+Reason: The bug described in issue 260129-00001645 cannot be reproduced with 
+        the current CIRCT toolchain. The issue appears to have been fixed or 
+        the conditions triggering it no longer apply.
+
+Recommendation: This test case may be considered RESOLVED or CLOSED if the 
+                associated GitHub issue has not already been addressed.
+
+================================================================================

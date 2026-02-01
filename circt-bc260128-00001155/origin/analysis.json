@@ -1,0 +1,101 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCore",
+  "conversion_pattern": "SVModuleOpConversion",
+  "crash_type": "assertion",
+  "assertion_message": "dyn_cast on a non-existent value",
+  "crash_location": {
+    "file": "include/circt/Dialect/HW/PortImplementation.h",
+    "function": "ModulePortInfo::sanitizeInOut()",
+    "line": 177
+  },
+  "secondary_location": {
+    "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+    "function": "getModulePortInfo()",
+    "line": 243
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "string type as module port",
+      "unpacked array of strings",
+      "string built-in methods (.toupper(), .len())"
+    ],
+    "problematic_patterns": [
+      "input string a - string type port has no type conversion rule"
+    ],
+    "minimal_trigger": "module with string type port"
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "Missing type conversion rule for moore::StringType in populateTypeConversion()",
+      "confidence": "high",
+      "evidence": [
+        "StringType defined in MooreTypes.td but no conversion in MooreToCore.cpp",
+        "FormatStringType has conversion, StringType does not",
+        "typeConverter.convertType() returns null for StringType",
+        "Null type passed to PortInfo triggers dyn_cast assertion"
+      ],
+      "mechanism": "StringType port → convertType returns null → null stored in PortInfo → sanitizeInOut dyn_cast fails"
+    },
+    {
+      "id": 2,
+      "description": "Missing error handling for unconvertible types in getModulePortInfo()",
+      "confidence": "medium",
+      "evidence": [
+        "No null check after convertType() call",
+        "Other patterns check conversion success",
+        "Should emit diagnostic instead of crash"
+      ],
+      "mechanism": "Unconvertible type silently becomes null, propagates until crash"
+    }
+  ],
+  "keywords": [
+    "StringType",
+    "MooreToCore",
+    "sanitizeInOut",
+    "dyn_cast non-existent",
+    "type conversion",
+    "module port",
+    "string port",
+    "circt-verilog",
+    "populateTypeConversion"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Add StringType conversion rule in populateTypeConversion()"
+    },
+    {
+      "path": "include/circt/Dialect/HW/PortImplementation.h",
+      "reason": "Add defensive null check in sanitizeInOut()"
+    },
+    {
+      "path": "include/circt/Dialect/Moore/MooreTypes.td",
+      "reason": "StringType definition"
+    }
+  ],
+  "fix_suggestions": [
+    {
+      "type": "add_conversion",
+      "description": "Add typeConverter.addConversion for StringType",
+      "location": "MooreToCore.cpp:populateTypeConversion()",
+      "priority": "high"
+    },
+    {
+      "type": "add_null_check",
+      "description": "Check convertType result before creating PortInfo",
+      "location": "MooreToCore.cpp:getModulePortInfo()",
+      "priority": "medium"
+    }
+  ],
+  "bug_classification": {
+    "category": "missing_implementation",
+    "subcategory": "type_conversion",
+    "severity": "crash",
+    "reproducibility": "always"
+  }
+}

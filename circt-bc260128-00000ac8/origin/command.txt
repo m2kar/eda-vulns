@@ -1,0 +1,5 @@
+# 复现命令
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw bug.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator
+
+# 或使用 PATH 中的工具 (需要 CIRCT 1.139.0)
+circt-verilog --ir-hw bug.sv | arcilator

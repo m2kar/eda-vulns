@@ -1,0 +1,17 @@
+{
+  "crash_id": "260129-00001374",
+  "status": "processing",
+  "phase": "phase2_parallel",
+  "created_at": "2026-02-01T06:47:22+00:00",
+  "updated_at": "2026-02-01T06:56:00+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {"status": "completed"},
+    "phase2": {"status": "in_progress"},
+    "phase3": {"status": "pending"}
+  }
+}

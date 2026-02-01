@@ -1,0 +1,32 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-01-31T18:36:00+08:00",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang",
+    "result": "Build succeeded: 0 errors, 0 warnings"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": [],
+    "note": "inout port is a standard IEEE 1800 feature"
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": null
+  },
+  "cross_tool_validation": {
+    "verilator": "pass",
+    "icarus": "pass",
+    "slang": "pass"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid SystemVerilog test case, unique crash in CIRCT arcilator"
+  },
+  "original_lines": 13,
+  "minimized_lines": 2,
+  "reduction_percent": 84.6
+}

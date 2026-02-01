@@ -1,0 +1,43 @@
+{
+  "crash_id": "260129-00001472",
+  "status": "duplicate",
+  "phase": "completed",
+  "created_at": "2026-02-01T00:00:00+08:00",
+  "updated_at": "2026-02-01T00:00:00+08:00",
+  "duplicate_of": {
+    "issue_number": 9574,
+    "url": "https://github.com/llvm/circt/issues/9574",
+    "title": "[Arc] Assertion failure when lowering inout ports in sequential logic"
+  },
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "reproduction": {
+    "reproduced": true,
+    "toolchain": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin",
+    "command": "circt-verilog --ir-hw source.sv | arcilator",
+    "exit_code": 134
+  },
+  "minimization": {
+    "original_lines": 31,
+    "minimized_lines": 2,
+    "reduction_percent": 96.0,
+    "minimized_file": "bug.sv"
+  },
+  "validation": {
+    "verilator": "pass",
+    "slang": "pass",
+    "classification": "report"
+  },
+  "outputs": {
+    "issue_report": "issue.md",
+    "root_cause": "root_cause.md",
+    "analysis": "analysis.json",
+    "validation": "validation.json",
+    "duplicates": "duplicates.json",
+    "minimized_test": "bug.sv",
+    "error_log": "error.log",
+    "command": "command.txt"
+  }
+}

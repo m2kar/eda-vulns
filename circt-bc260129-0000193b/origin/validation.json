@@ -1,0 +1,16 @@
+{
+  "validation": {
+    "result": "report",
+    "syntax_valid": true,
+    "cross_tool_check": "passed",
+    "minimized_from_original": "43.4%",
+    "tools_checked": {
+      "verilator": "passed (no errors)",
+      "slang": "passed (Build succeeded: 0 errors, 0 warnings)"
+    },
+    "crash_reproduced": true,
+    "crash_signature": "Assertion 'succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed - integer bitwidth is limited to 16777215 bits",
+    "original_size_bytes": 267,
+    "minimized_size_bytes": 151
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "crash_id": "circt-bc260128-00000d8d",
+  "status": "report_ready",
+  "phase": "completed",
+  "created_at": "2026-02-01T00:52:17+00:00",
+  "updated_at": "2026-02-01T01:06:38+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed",
+      "result": {
+        "reproduced": false,
+        "reason": "Bug appears to be fixed in current toolchain"
+      }
+    },
+    "phase2": {
+      "status": "skipped",
+      "reason": "Bug not reproduced in current toolchain"
+    },
+    "phase3": {
+      "status": "completed",
+      "result": {
+        "issue_generated": true,
+        "issue_file": "issue.md"
+      }
+    }
+  }
+}

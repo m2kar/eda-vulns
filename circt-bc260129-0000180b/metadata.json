@@ -1,0 +1,60 @@
+{
+  "version": "1.0",
+  "timestamp": "2025-02-01T12:02:04Z",
+  "input": {
+    "error_file": "origin/error.txt",
+    "source_file": "origin/source.sv",
+    "testcase_id": "260129-0000180b"
+  },
+  "original": {
+    "crash_type": "assertion",
+    "crash_location": "HoistSignals.cpp:510",
+    "assertion": "numBits >= 0",
+    "command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_08g_yrpv/test_cf032a556d41.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_08g_yrpv/test_cf032a556d41.o",
+    "error_message": "circt-verilog: /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Dialect/LLHD/Transforms/HoistSignals.cpp:510: auto (anonymous namespace)::DriveHoister::hoistDrives()::(lambda)::operator()(DriveValue)::(lambda)::operator()(auto) const [type:auto = mlir::Type]: Assertion `numBits >= 0' failed."
+  },
+  "tool": {
+    "circt-verilog": {
+      "name": "circt-verilog",
+      "version": "CIRCT firtool-1.139.0",
+      "path": "/opt/firtool/bin/circt-verilog",
+      "llvm_version": "22.0.0git"
+    },
+    "arcilator": {
+      "name": "arcilator",
+      "version": "LLVM 22.0.0git",
+      "path": "/opt/firtool/bin/arcilator"
+    },
+    "opt": {
+      "name": "opt",
+      "version": "LLVM 22.0.0git",
+      "path": "/opt/llvm-22/bin/opt"
+    },
+    "llc": {
+      "name": "llc",
+      "version": "LLVM 22.0.0git",
+      "path": "/opt/llvm-22/bin/llc"
+    }
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw ./origin/source.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o /tmp/test.o",
+    "exit_code": 1,
+    "reproduced": false,
+    "match_result": "different_crash",
+    "attempts": 3
+  },
+  "crash_signature": {
+    "original": "circt-verilog: /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Dialect/LLHD/Transforms/HoistSignals.cpp:510: auto (anonymous namespace)::DriveHoister::hoistDrives()::(lambda)::operator()(DriveValue)::(lambda)::operator()(auto) const [type:auto = mlir::Type]: Assertion `numBits >= 0' failed.",
+    "reproduced": "origin/source.sv:28:3: error: 'hw.bitcast' op result #0 must be Type wherein the bitwidth in hardware is known, but got '!llvm.ptr'\\n  initial begin\\n    ^\\norigin/source.sv:28:3: note: see current operation: %20 = \\\"hw.bitcast\\\"(%19) : (i1073741823) -> !llvm.ptr",
+    "analysis": "Original assertion failure in HoistSignals.cpp was not reproduced. Current version shows a semantic error earlier in the pipeline with invalid bit width (i1073741823 bits). The underlying issue appears to be the same: self-referential typedef causing recursive type size calculation overflow."
+  },
+  "files": {
+    "reproduce_log": "reproduce.log"
+  },
+  "next_steps": [
+    "Proceed with root cause analysis on the self-referential typedef",
+    "Analyze why i1073741823 bit width is being generated",
+    "Investigate container#(pkg::my_class) typedef recursion",
+    "Check if this is related to HoistSignals assertion or a different bug"
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "testcase_id": "260128-00000ff4",
+  "dialect": "Arc",
+  "failing_pass": "LowerStatePass (arc-lower-state)",
+  "crash_type": "assertion",
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "assertion_text": "Assertion `succeeded(ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed",
+  "crash_location": {
+    "file": "lib/Dialect/Arc/ArcTypes.cpp",
+    "function": "StateType::verify / StateType::get",
+    "line": 83,
+    "call_site": "lib/Dialect/Arc/Transforms/LowerState.cpp:219"
+  },
+  "tool_chain": [
+    "circt-verilog --ir-hw",
+    "arcilator"
+  ],
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": [
+      "inout wire port",
+      "tri-state assignment",
+      "always_ff sequential logic"
+    ],
+    "problematic_patterns": [
+      "inout wire c - bidirectional port lowered to !llhd.ref<i1>"
+    ],
+    "trigger_construct": "inout wire"
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "description": "Arc dialect's StateType does not support LLHD reference types (!llhd.ref<T>). The computeLLVMBitWidth() function returns nullopt for llhd::RefType, causing StateType::verify() to fail when LowerStatePass attempts to allocate storage for an inout port.",
+      "confidence": "high",
+      "evidence": [
+        "Error message: 'state type must have a known bit width; got !llhd.ref<i1>'",
+        "computeLLVMBitWidth() in ArcTypes.cpp only handles: ClockType, IntegerType, ArrayType, StructType",
+        "Test case contains 'inout wire c' which is lowered to !llhd.ref<i1>",
+        "Stack trace shows StateType::get called from LowerState.cpp:219 during input allocation"
+      ],
+      "mechanism": "circt-verilog --ir-hw lowers inout ports to !llhd.ref types. LowerStatePass::run() iterates over module inputs and calls StateType::get(arg.getType()). For the inout port with !llhd.ref<i1> type, verification fails because computeLLVMBitWidth returns nullopt."
+    },
+    {
+      "id": 2,
+      "description": "Missing early validation in arcilator pipeline to reject unsupported port types before LowerStatePass runs.",
+      "confidence": "medium",
+      "evidence": [
+        "No check in LowerStatePass to filter unsupported types",
+        "Error manifests as assertion failure rather than proper diagnostic",
+        "Arcilator is designed for synthesizable RTL, not LLHD simulation constructs"
+      ]
+    }
+  ],
+  "keywords": [
+    "arcilator",
+    "StateType",
+    "llhd.ref",
+    "inout",
+    "bit width",
+    "LowerState",
+    "computeLLVMBitWidth",
+    "bidirectional",
+    "tristate",
+    "verifyInvariants"
+  ],
+  "suggested_sources": [
+    {
+      "path": "lib/Dialect/Arc/ArcTypes.cpp",
+      "reason": "Contains StateType::verify and computeLLVMBitWidth - the verification logic that fails"
+    },
+    {
+      "path": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "reason": "Contains the call site at line 219 where StateType::get is invoked for module inputs"
+    },
+    {
+      "path": "tools/arcilator/arcilator.cpp",
+      "reason": "Pipeline setup - potential location for early validation of supported types"
+    },
+    {
+      "path": "include/circt/Dialect/Arc/ArcTypes.td",
+      "reason": "StateType TableGen definition with genVerifyDecl = 1"
+    }
+  ],
+  "root_cause_hypothesis": "Arc dialect's StateType cannot handle LLHD reference types (!llhd.ref<T>). When arcilator processes a module with an inout port (which circt-verilog lowers to !llhd.ref<i1>), the LowerStatePass attempts to create a StateType for each module input. The StateType::verify() function calls computeLLVMBitWidth() which returns nullopt for LLHD ref types (no case handler), causing the verification to fail and triggering an assertion in MLIR's type uniquer."
+}

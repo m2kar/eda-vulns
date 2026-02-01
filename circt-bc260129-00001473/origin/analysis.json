@@ -1,0 +1,69 @@
+{
+  "testcase_id": "260129-00001473",
+  "crash_type": "assertion",
+  "dialect": "MooreToCore",
+  "assertion_message": "detail::isPresent(Val) && \"dyn_cast on a non-existent value\"",
+  "crash_location": {
+    "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+    "line": 259,
+    "function": "getModulePortInfo",
+    "secondary_location": {
+      "file": "include/circt/Dialect/HW/PortImplementation.h",
+      "line": 177,
+      "function": "sanitizeInOut"
+    }
+  },
+  "root_cause": {
+    "category": "type_conversion_validation",
+    "summary": "String type module port causes assertion failure in sanitizeInOut() due to invalid dyn_cast on sim::DynamicStringType",
+    "details": "When a SystemVerilog module has a 'string' type port, the MooreToCore type converter converts it to sim::DynamicStringType. However, this type is not a valid HW dialect port type. When hw::ModulePortInfo is constructed, sanitizeInOut() attempts to dyn_cast<hw::InOutType> on all ports, which fails on sim::DynamicStringType because it's not a valid hw type, causing the assertion 'detail::isPresent(Val)' to fail.",
+    "trigger_construct": "string type as module port"
+  },
+  "source_analysis": {
+    "problematic_code": "output string s",
+    "language": "SystemVerilog",
+    "construct_type": "string_port",
+    "synthesizable": false
+  },
+  "call_stack": [
+    {
+      "frame": 17,
+      "function": "circt::hw::ModulePortInfo::sanitizeInOut()",
+      "file": "PortImplementation.h",
+      "line": 177
+    },
+    {
+      "frame": 21,
+      "function": "getModulePortInfo()",
+      "file": "MooreToCore.cpp",
+      "line": 259
+    },
+    {
+      "frame": 22,
+      "function": "SVModuleOpConversion::matchAndRewrite()",
+      "file": "MooreToCore.cpp",
+      "line": 276
+    },
+    {
+      "frame": 42,
+      "function": "MooreToCorePass::runOnOperation()",
+      "file": "MooreToCore.cpp",
+      "line": 2571
+    }
+  ],
+  "affected_types": [
+    "moore::StringType",
+    "sim::DynamicStringType",
+    "hw::InOutType"
+  ],
+  "suggested_fix": {
+    "approach": "validation",
+    "description": "Add null/validity check on converted port type in getModulePortInfo() before constructing hw::ModulePortInfo",
+    "alternative": "Use isa<> before dyn_cast<> in sanitizeInOut() to guard against invalid types"
+  },
+  "severity": "high",
+  "reproducibility": "100%",
+  "minimal_reproduction": "echo 'module m(output string s); endmodule' | circt-verilog --ir-hw -",
+  "version": "CIRCT 1.139.0",
+  "timestamp": "2026-02-01T07:57:00Z"
+}

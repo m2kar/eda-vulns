@@ -1,0 +1,33 @@
+{
+  "valid": true,
+  "syntax_valid": true,
+  "cross_tool_valid": true,
+  "cross_tool_results": {
+    "slang": {
+      "version": "10.0.6+3d7e6cd2e",
+      "result": "passed",
+      "errors": 0,
+      "warnings": 0
+    },
+    "verilator": {
+      "version": "5.022",
+      "result": "passed",
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "classification": "report",
+  "classification_reason": "Valid SystemVerilog syntax accepted by Slang and Verilator, but causes crash in circt-verilog during MooreToCore conversion",
+  "minimal": true,
+  "minimization": {
+    "original_file": "source.sv",
+    "original_size_bytes": 153,
+    "minimal_file": "bug.sv",
+    "minimal_size_bytes": 41,
+    "reduction_percent": 73.2,
+    "key_construct_preserved": "output string out"
+  },
+  "crash_confirmed": true,
+  "crash_signature": "SVModuleOpConversion::matchAndRewrite causes crash in MooreToCore pass",
+  "reproduction_command": "circt-verilog --ir-hw bug.sv"
+}

@@ -1,0 +1,13 @@
+{
+  "tool": {
+    "name": "circt-verilog",
+    "version": "firtool-1.139.0"
+  },
+  "llvm": {
+    "version": "22.0.0git"
+  },
+  "os": {
+    "kernel": "Linux",
+    "arch": "x86_64"
+  }
+}

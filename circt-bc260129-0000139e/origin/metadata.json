@@ -1,0 +1,30 @@
+{
+  "test_case_id": "260129-0000139e",
+  "crash_type": "assertion",
+  "tool": "circt-verilog",
+  "command": "circt-verilog --ir-hw source.sv",
+  "reproduced": true,
+  "original_crash_signature": "SVModuleOpConversion::matchAndRewrite -> InOutType dyn_cast assertion",
+  "reproduced_crash_signature": "SVModuleOpConversion::matchAndRewrite -> InOutType dyn_cast assertion",
+  "signature_match": true,
+  "error_location": "circt/Dialect/HW/PortImplementation.h:177",
+  "root_cause": "dyn_cast on a non-existent InOutType value in ModulePortInfo::sanitizeInOut()",
+  "test_file": "source.sv",
+  "reproduction_status": {
+    "reproduced": true,
+    "crash_confirmed": true,
+    "signature_identical": true,
+    "stack_frames_matched": [
+      "SVModuleOpConversion::matchAndRewrite",
+      "MooreToCorePass::runOnOperation",
+      "DialectConversion"
+    ]
+  },
+  "metadata": {
+    "circt_version": "firtool-1.139.0",
+    "llvm_version": "22.0.0git",
+    "source_feature": "Verilog output parameter with string type",
+    "trigger_condition": "Moore SVModule with string output port conversion to HW",
+    "related_issue": "CIRCT dyn_cast assertion in InOutType handling"
+  }
+}

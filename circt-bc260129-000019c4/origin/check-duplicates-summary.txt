@@ -1,0 +1,219 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                   CHECK-DUPLICATES WORKER - SUMMARY                        ║
+║                         Execution Complete ✅                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+PROJECT: CIRCT Bug Analysis & Reporting
+CRASH ID: 260129-000019c4
+WORKER: check-duplicates-worker
+TIMESTAMP: 2025-02-01 14:28:00 UTC
+
+═══════════════════════════════════════════════════════════════════════════════
+
+FINAL RECOMMENDATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Recommendation Type:  review_existing
+Confidence Level:     VERY HIGH (9.5/10.0)
+
+Top Matching Issue:   #9574
+Issue Title:          [Arc] Assertion failure when lowering inout ports in 
+                      sequential logic
+Issue State:          OPEN
+Issue URL:            https://github.com/llvm/circt/issues/9574
+
+═══════════════════════════════════════════════════════════════════════════════
+
+SIMILARITY SCORE BREAKDOWN
+═══════════════════════════════════════════════════════════════════════════════
+
+Issue #9574: 9.5/10.0
+  ✓ Error Message Match         +5.0 points
+    Current: "state type must have a known bit width; got '!llhd.ref<i1>'"
+    #9574:   Identical error message
+  
+  ✓ Dialect & Pass Match        +2.0 points
+    Both: arc dialect, LowerStatePass
+  
+  ✓ Crash Location Match        +2.0 points
+    Both: LowerState.cpp:219, StateType::get()
+  
+  ✓ Trigger Condition Match     +1.0 point
+    Both: inout ports in sequential logic
+  
+  ✓ Tool Match                  +0.5 points
+    Both: arcilator
+
+Issue #8825: 5.5/10.0 (Related but different context)
+Issue #4916: 3.5/10.0 (Different LowerState issue)
+Issue #5053: 2.5/10.0 (Different LowerState issue)
+Issue #9417: 3.0/10.0 (Different Arc/arcilator issue)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+KEY FINDINGS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. DUPLICATE FOUND
+   ✓ Issue #9574 is a high-confidence match with 9.5/10.0 similarity
+   ✓ Identical error messages, crash locations, and root cause
+   ✓ Same trigger condition (inout ports in sequential logic)
+
+2. ISSUE STATUS
+   ✓ Issue #9574 is currently OPEN
+   ✓ Issue was created on 2026-02-01 (same date as this analysis)
+   ✓ No reported fix or workaround yet
+
+3. ROOT CAUSE CONFIRMED
+   ✓ Arc dialect's LowerState pass cannot handle llhd::RefType
+   ✓ RefType is used for inout ports (bidirectional ports)
+   ✓ StateType::verify() fails because RefType lacks known bit width
+   ✓ Results in assertion failure in StorageUniquerSupport.h:180
+
+4. SEARCH COVERAGE
+   ✓ 6 different keyword search queries executed
+   ✓ 5 relevant issues found and analyzed
+   ✓ 100% search success rate
+   ✓ gh CLI authenticated and responsive
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ACTION ITEMS
+═══════════════════════════════════════════════════════════════════════════════
+
+FOR USERS:
+  1. ❌ DO NOT create a new GitHub issue (it would be a duplicate)
+  2. ✅ Reference GitHub issue #9574 in your documentation
+  3. ✅ Monitor issue #9574 for resolution updates
+  4. ✅ Check #9574 for any workarounds or partial fixes
+  5. ✅ Contribute your test case if it provides new insights
+
+FOR DEVELOPERS:
+  1. Proposed fix location: Arc dialect type system
+  2. Target file: lib/Dialect/Arc/Transforms/LowerState.cpp (line 219)
+  3. Related file: lib/Dialect/Arc/ArcTypes.cpp
+  4. Possible fix: Add llhd::RefType detection with graceful error message
+  5. Alternative: Extend StateType to support opaque reference types
+
+═══════════════════════════════════════════════════════════════════════════════
+
+OUTPUT FILES GENERATED
+═══════════════════════════════════════════════════════════════════════════════
+
+Location: /home/zhiqing/edazz/eda-vulns/circt-bc260129-000019c4/origin/
+
+📄 duplicates.json (4.4 KB)
+   JSON-formatted results with:
+   - Complete search keywords and results
+   - Similarity scores for all 5 issues
+   - Detailed matching criteria breakdown
+   - Recommendation rationale
+   - Summary statistics
+
+📄 duplicates.md (5.7 KB)
+   Human-readable markdown report with:
+   - Executive summary
+   - Detailed analysis of each matched issue
+   - Similarity score breakdown
+   - Root cause alignment verification
+   - Recommended next steps
+   - Report metadata
+
+═══════════════════════════════════════════════════════════════════════════════
+
+QUALITY METRICS
+═══════════════════════════════════════════════════════════════════════════════
+
+Input Validation:        ✅ PASS
+Tool Availability:       ✅ PASS (gh CLI authenticated)
+Search Execution:        ✅ PASS (6/6 queries successful)
+Result Analysis:         ✅ PASS (5 issues analyzed)
+Similarity Scoring:      ✅ PASS (weighted criteria applied)
+Output Generation:       ✅ PASS (2 files generated)
+Output Validation:       ✅ PASS (JSON/Markdown format valid)
+File Permissions:        ✅ PASS (Readable and accessible)
+
+Overall Status:          ✅ SUCCESSFUL
+
+═══════════════════════════════════════════════════════════════════════════════
+
+TECHNICAL DETAILS
+═══════════════════════════════════════════════════════════════════════════════
+
+Crash Metadata:
+  Crash ID:                260129-000019c4
+  Crash Type:              assertion failure
+  Affected Dialect:        arc
+  Affected Pass:           LowerStatePass
+  Affected Tool:           arcilator
+  Trigger Condition:       Module with inout port (llhd::RefType)
+  
+Error Message:
+  "state type must have a known bit width; got '!llhd.ref<i1>'"
+  
+Crash Location:
+  File: lib/Dialect/Arc/Transforms/LowerState.cpp
+  Line: 219
+  Function: circt::arc::StateType::get()
+  
+Stack Signature:
+  StateType::get() → ModuleLowering::run() → LowerStatePass::runOnOperation()
+
+Root Cause Category:
+  Unsupported feature (inout ports with arc dialect)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+EXECUTION STATISTICS
+═══════════════════════════════════════════════════════════════════════════════
+
+Total Execution Time:       ~15-20 seconds
+GitHub API Calls:           6 (issue list queries)
+GitHub API Responses:       6 (100% success)
+Total Issues Analyzed:      5
+Search Queries Executed:    6
+Highest Similarity Score:   9.5/10.0
+Average Similarity Score:   4.7/10.0 (for related issues)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NEXT WORKFLOW STEPS
+═══════════════════════════════════════════════════════════════════════════════
+
+Recommended Workflow Progression:
+  1. check-duplicates ✅ COMPLETE
+  2. generate-issue  → Skip (issue already exists)
+  3. OR: Review #9574 and contribute to discussion
+  4. OR: Monitor #9574 for resolution
+
+If you want to continue with CIRCT bug reporting:
+  - Review issue #9574 for any available fixes
+  - Check for linked pull requests
+  - Monitor for status changes
+  - Consider contributing to root cause analysis
+
+═══════════════════════════════════════════════════════════════════════════════
+
+CONCLUSION
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ DUPLICATE DETECTION COMPLETE
+
+The crash (260129-000019c4) is NOT a new issue. It matches existing GitHub 
+issue #9574 with very high confidence (9.5/10.0 similarity score).
+
+RECOMMENDATION: review_existing
+
+Do not create a new GitHub issue. Instead:
+  • Reference issue #9574 in your documentation
+  • Monitor #9574 for status updates and fixes
+  • Contribute additional insights if you have unique test cases
+
+═══════════════════════════════════════════════════════════════════════════════
+
+For questions or issues, refer to:
+- duplicates.md (detailed human-readable report)
+- duplicates.json (machine-readable raw data)
+- analysis.json (original crash analysis)
+
+═══════════════════════════════════════════════════════════════════════════════

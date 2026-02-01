@@ -1,0 +1,61 @@
+{
+  "testcase_id": "260128-00000dd1",
+  "crash_type": "assertion",
+  "dialect": "arc",
+  "pass": "LowerState",
+  "tool": "arcilator",
+  "crash_location": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "line": 219,
+    "function": "ModuleLowering::run()"
+  },
+  "verification_location": {
+    "file": "lib/Dialect/Arc/ArcTypes.cpp",
+    "line": 87,
+    "function": "StateType::verify()"
+  },
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "error_type": "type_verification_failure",
+  "key_constructions": [
+    "inout port declaration",
+    "bit-select on array element",
+    "continuous assignment to inout port"
+  ],
+  "triggering_sv_patterns": [
+    "inout logic io_sig",
+    "assign io_sig = data_array[0][0]"
+  ],
+  "hypothesis": "StateType::get() fails for LLHD reference types because computeLLVMBitWidth() does not handle llhd::RefType, causing assertion failure when arcilator attempts to allocate state storage for inout ports with bit-select assignments",
+  "root_cause_chain": [
+    "SystemVerilog inout port with bit-select assignment",
+    "circt-verilog generates !llhd.ref<i1> type for the reference",
+    "arcilator's LowerState pass processes module arguments",
+    "StateType::get() called with !llhd.ref<i1> argument type",
+    "StateType::verify() calls computeLLVMBitWidth()",
+    "computeLLVMBitWidth() returns nullopt for unknown type",
+    "Assertion failure: verifyInvariants failed"
+  ],
+  "affected_components": [
+    "arc dialect",
+    "LowerState pass",
+    "StateType verification",
+    "computeLLVMBitWidth()"
+  ],
+  "missing_type_support": {
+    "type": "llhd::RefType",
+    "file": "lib/Dialect/Arc/ArcTypes.cpp",
+    "function": "computeLLVMBitWidth()"
+  },
+  "suggested_fixes": [
+    {
+      "location": "lib/Dialect/Arc/ArcTypes.cpp:computeLLVMBitWidth()",
+      "description": "Add llhd::RefType handling to return bit width of underlying element type"
+    },
+    {
+      "location": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+      "description": "Unwrap or reject LLHD reference types before StateType::get() call"
+    }
+  ],
+  "reproducible": true,
+  "minimal_reproduction": "module with inout port assigned from array bit-select"
+}

@@ -1,0 +1,981 @@
+// -----// IR Dump Before StripOMPass (strip-om) //----- //
+module {
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %c-1_i32 = hw.constant -1 : i32
+    %c0_i31 = hw.constant 0 : i31
+    %true = hw.constant true
+    %c2_i32 = hw.constant 2 : i32
+    %c1_i32 = hw.constant 1 : i32
+    %0:4 = llhd.combinational -> i8, i1, !hw.array<2xstruct<a: i8>>, i1 {
+      %4 = hw.struct_create (%d) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arr[%true], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%in, %true, %7, %true : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32 : i32
+      %15 = comb.sub %c1_i32, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arr[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      llhd.yield %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = seq.to_clock %clk
+    %2 = comb.mux bin %0#1, %in, %d : i8
+    %d = seq.firreg %2 clock %1 : i8
+    %3 = comb.mux bin %0#3, %0#2, %arr : !hw.array<2xstruct<a: i8>>
+    %arr = seq.firreg %3 clock %1 : !hw.array<2xstruct<a: i8>>
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before StripEmitPass (strip-emit) //----- //
+module {
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %c-1_i32 = hw.constant -1 : i32
+    %c0_i31 = hw.constant 0 : i31
+    %true = hw.constant true
+    %c2_i32 = hw.constant 2 : i32
+    %c1_i32 = hw.constant 1 : i32
+    %0:4 = llhd.combinational -> i8, i1, !hw.array<2xstruct<a: i8>>, i1 {
+      %4 = hw.struct_create (%d) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arr[%true], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%in, %true, %7, %true : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32 : i32
+      %15 = comb.sub %c1_i32, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arr[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      llhd.yield %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = seq.to_clock %clk
+    %2 = comb.mux bin %0#1, %in, %d : i8
+    %d = seq.firreg %2 clock %1 : i8
+    %3 = comb.mux bin %0#3, %0#2, %arr : !hw.array<2xstruct<a: i8>>
+    %arr = seq.firreg %3 clock %1 : !hw.array<2xstruct<a: i8>>
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before LowerFirMem (lower-seq-firmem) //----- //
+module {
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %c-1_i32 = hw.constant -1 : i32
+    %c0_i31 = hw.constant 0 : i31
+    %true = hw.constant true
+    %c2_i32 = hw.constant 2 : i32
+    %c1_i32 = hw.constant 1 : i32
+    %0:4 = llhd.combinational -> i8, i1, !hw.array<2xstruct<a: i8>>, i1 {
+      %4 = hw.struct_create (%d) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arr[%true], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%in, %true, %7, %true : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32 : i32
+      %15 = comb.sub %c1_i32, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arr[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      llhd.yield %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = seq.to_clock %clk
+    %2 = comb.mux bin %0#1, %in, %d : i8
+    %d = seq.firreg %2 clock %1 : i8
+    %3 = comb.mux bin %0#3, %0#2, %arr : !hw.array<2xstruct<a: i8>>
+    %arr = seq.firreg %3 clock %1 : !hw.array<2xstruct<a: i8>>
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before LowerVerifSimulationsPass (arc-lower-verif-simulations) //----- //
+module {
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %c-1_i32 = hw.constant -1 : i32
+    %c0_i31 = hw.constant 0 : i31
+    %true = hw.constant true
+    %c2_i32 = hw.constant 2 : i32
+    %c1_i32 = hw.constant 1 : i32
+    %0:4 = llhd.combinational -> i8, i1, !hw.array<2xstruct<a: i8>>, i1 {
+      %4 = hw.struct_create (%d) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arr[%true], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%in, %true, %7, %true : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32 : i32
+      %15 = comb.sub %c1_i32, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arr[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      llhd.yield %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = seq.to_clock %clk
+    %2 = comb.mux bin %0#1, %in, %d : i8
+    %d = seq.firreg %2 clock %1 : i8
+    %3 = comb.mux bin %0#3, %0#2, %arr : !hw.array<2xstruct<a: i8>>
+    %arr = seq.firreg %3 clock %1 : !hw.array<2xstruct<a: i8>>
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before AddTaps (arc-add-taps) //----- //
+module {
+  func.func private @exit(i32)
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %c-1_i32 = hw.constant -1 : i32
+    %c0_i31 = hw.constant 0 : i31
+    %true = hw.constant true
+    %c2_i32 = hw.constant 2 : i32
+    %c1_i32 = hw.constant 1 : i32
+    %0:4 = llhd.combinational -> i8, i1, !hw.array<2xstruct<a: i8>>, i1 {
+      %4 = hw.struct_create (%d) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arr[%true], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%in, %true, %7, %true : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32 : i32
+      %15 = comb.sub %c1_i32, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arr[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      llhd.yield %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = seq.to_clock %clk
+    %2 = comb.mux bin %0#1, %in, %d : i8
+    %d = seq.firreg %2 clock %1 : i8
+    %3 = comb.mux bin %0#3, %0#2, %arr : !hw.array<2xstruct<a: i8>>
+    %arr = seq.firreg %3 clock %1 : !hw.array<2xstruct<a: i8>>
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before StripSV (arc-strip-sv) //----- //
+module {
+  func.func private @exit(i32)
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %c-1_i32 = hw.constant -1 : i32
+    %c0_i31 = hw.constant 0 : i31
+    %true = hw.constant true
+    %c2_i32 = hw.constant 2 : i32
+    %c1_i32 = hw.constant 1 : i32
+    %0:4 = llhd.combinational -> i8, i1, !hw.array<2xstruct<a: i8>>, i1 {
+      %4 = hw.struct_create (%d) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arr[%true], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%in, %true, %7, %true : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32 : i32
+      %15 = comb.sub %c1_i32, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arr[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      llhd.yield %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = seq.to_clock %clk
+    %2 = comb.mux bin %0#1, %in, %d : i8
+    %d = seq.firreg %2 clock %1 : i8
+    %3 = comb.mux bin %0#3, %0#2, %arr : !hw.array<2xstruct<a: i8>>
+    %arr = seq.firreg %3 clock %1 : !hw.array<2xstruct<a: i8>>
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before InferMemories (arc-infer-memories) //----- //
+module {
+  func.func private @exit(i32)
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %c-1_i32 = hw.constant -1 : i32
+    %c0_i31 = hw.constant 0 : i31
+    %true = hw.constant true
+    %c2_i32 = hw.constant 2 : i32
+    %c1_i32 = hw.constant 1 : i32
+    %0:4 = llhd.combinational -> i8, i1, !hw.array<2xstruct<a: i8>>, i1 {
+      %4 = hw.struct_create (%d) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arr[%true], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%in, %true, %7, %true : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32 : i32
+      %15 = comb.sub %c1_i32, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arr[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      llhd.yield %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = seq.to_clock %clk
+    %2 = comb.mux bin %0#1, %in, %d : i8
+    %d = seq.compreg %2, %1 : i8  
+    %3 = comb.mux bin %0#3, %0#2, %arr : !hw.array<2xstruct<a: i8>>
+    %arr = seq.compreg %3, %1 : !hw.array<2xstruct<a: i8>>  
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before LowerDPIFunc (sim-lower-dpi-func) //----- //
+module {
+  func.func private @exit(i32)
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %c-1_i32 = hw.constant -1 : i32
+    %c0_i31 = hw.constant 0 : i31
+    %true = hw.constant true
+    %c2_i32 = hw.constant 2 : i32
+    %c1_i32 = hw.constant 1 : i32
+    %0:4 = llhd.combinational -> i8, i1, !hw.array<2xstruct<a: i8>>, i1 {
+      %4 = hw.struct_create (%d) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arr[%true], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%in, %true, %7, %true : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32 : i32
+      %15 = comb.sub %c1_i32, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arr[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      llhd.yield %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = seq.to_clock %clk
+    %2 = comb.mux bin %0#1, %in, %d : i8
+    %d = seq.compreg %2, %1 : i8  
+    %3 = comb.mux bin %0#3, %0#2, %arr : !hw.array<2xstruct<a: i8>>
+    %arr = seq.compreg %3, %1 : !hw.array<2xstruct<a: i8>>  
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before CSE (cse) //----- //
+module {
+  func.func private @exit(i32)
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %c-1_i32 = hw.constant -1 : i32
+    %c0_i31 = hw.constant 0 : i31
+    %true = hw.constant true
+    %c2_i32 = hw.constant 2 : i32
+    %c1_i32 = hw.constant 1 : i32
+    %0:4 = llhd.combinational -> i8, i1, !hw.array<2xstruct<a: i8>>, i1 {
+      %4 = hw.struct_create (%d) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arr[%true], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%in, %true, %7, %true : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32 : i32
+      %15 = comb.sub %c1_i32, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arr[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      llhd.yield %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = seq.to_clock %clk
+    %2 = comb.mux bin %0#1, %in, %d : i8
+    %d = seq.compreg %2, %1 : i8  
+    %3 = comb.mux bin %0#3, %0#2, %arr : !hw.array<2xstruct<a: i8>>
+    %arr = seq.compreg %3, %1 : !hw.array<2xstruct<a: i8>>  
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before ArcCanonicalizer (arc-canonicalizer) //----- //
+module {
+  func.func private @exit(i32)
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %c-1_i32 = hw.constant -1 : i32
+    %c0_i31 = hw.constant 0 : i31
+    %true = hw.constant true
+    %c2_i32 = hw.constant 2 : i32
+    %c1_i32 = hw.constant 1 : i32
+    %0:4 = llhd.combinational -> i8, i1, !hw.array<2xstruct<a: i8>>, i1 {
+      %4 = hw.struct_create (%d) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arr[%true], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%in, %true, %7, %true : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32 : i32
+      %15 = comb.sub %c1_i32, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arr[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      llhd.yield %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = seq.to_clock %clk
+    %2 = comb.mux bin %0#1, %in, %d : i8
+    %d = seq.compreg %2, %1 : i8  
+    %3 = comb.mux bin %0#3, %0#2, %arr : !hw.array<2xstruct<a: i8>>
+    %arr = seq.compreg %3, %1 : !hw.array<2xstruct<a: i8>>  
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before ConvertToArcsPass (convert-to-arcs) //----- //
+module {
+  func.func private @exit(i32)
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %c-1_i32 = hw.constant -1 : i32
+    %c0_i31 = hw.constant 0 : i31
+    %true = hw.constant true
+    %c2_i32 = hw.constant 2 : i32
+    %c1_i32 = hw.constant 1 : i32
+    %0:4 = llhd.combinational -> i8, i1, !hw.array<2xstruct<a: i8>>, i1 {
+      %4 = hw.struct_create (%d) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arr[%true], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%in, %true, %7, %true : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32 : i32
+      %15 = comb.sub %c1_i32, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arr[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      llhd.yield %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = seq.to_clock %clk
+    %2 = comb.mux bin %0#1, %in, %d : i8
+    %d = seq.compreg %2, %1 : i8  
+    %3 = comb.mux bin %0#3, %0#2, %arr : !hw.array<2xstruct<a: i8>>
+    %arr = seq.compreg %3, %1 : !hw.array<2xstruct<a: i8>>  
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before Dedup (arc-dedup) //----- //
+module {
+  func.func private @exit(i32)
+  arc.define @bug_arc(%arg0: i1, %arg1: i8, %arg2: i8) -> i8 {
+    %0 = comb.mux bin %arg0, %arg1, %arg2 : i8
+    arc.output %0 : i8
+  }
+  arc.define @bug_arc_0(%arg0: i1, %arg1: !hw.array<2xstruct<a: i8>>, %arg2: !hw.array<2xstruct<a: i8>>) -> !hw.array<2xstruct<a: i8>> {
+    %0 = comb.mux bin %arg0, %arg1, %arg2 : !hw.array<2xstruct<a: i8>>
+    arc.output %0 : !hw.array<2xstruct<a: i8>>
+  }
+  arc.define @bug_arc_1(%arg0: i1) -> !seq.clock {
+    %0 = seq.to_clock %arg0
+    arc.output %0 : !seq.clock
+  }
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %c-1_i32 = hw.constant -1 : i32
+    %c0_i31 = hw.constant 0 : i31
+    %true = hw.constant true
+    %c2_i32 = hw.constant 2 : i32
+    %c1_i32 = hw.constant 1 : i32
+    %0:4 = arc.execute (%1, %2, %in : i8, !hw.array<2xstruct<a: i8>>, i8) -> (i8, i1, !hw.array<2xstruct<a: i8>>, i1) {
+    ^bb0(%arg0: i8, %arg1: !hw.array<2xstruct<a: i8>>, %arg2: i8):
+      %true_0 = hw.constant true
+      %c1_i32_1 = hw.constant 1 : i32
+      %c2_i32_2 = hw.constant 2 : i32
+      %c0_i31_3 = hw.constant 0 : i31
+      %c-1_i32_4 = hw.constant -1 : i32
+      %4 = hw.struct_create (%arg0) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arg1[%true_0], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32_1, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32_2 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%arg2, %true_0, %7, %true_0 : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32_1, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31_3 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32_4 : i32
+      %15 = comb.sub %c1_i32_1, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31_3 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arg1[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32_1 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      arc.output %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = arc.state @bug_arc(%0#1, %in, %1) clock %3 latency 1 : (i1, i8, i8) -> i8
+    %2 = arc.state @bug_arc_0(%0#3, %0#2, %2) clock %3 latency 1 : (i1, !hw.array<2xstruct<a: i8>>, !hw.array<2xstruct<a: i8>>) -> !hw.array<2xstruct<a: i8>>
+    %3 = arc.call @bug_arc_1(%clk) : (i1) -> !seq.clock
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before FlattenModules (hw-flatten-modules) //----- //
+module {
+  func.func private @exit(i32)
+  arc.define @bug_arc(%arg0: i1, %arg1: i8, %arg2: i8) -> i8 {
+    %0 = comb.mux bin %arg0, %arg1, %arg2 : i8
+    arc.output %0 : i8
+  }
+  arc.define @bug_arc_0(%arg0: i1, %arg1: !hw.array<2xstruct<a: i8>>, %arg2: !hw.array<2xstruct<a: i8>>) -> !hw.array<2xstruct<a: i8>> {
+    %0 = comb.mux bin %arg0, %arg1, %arg2 : !hw.array<2xstruct<a: i8>>
+    arc.output %0 : !hw.array<2xstruct<a: i8>>
+  }
+  arc.define @bug_arc_1(%arg0: i1) -> !seq.clock {
+    %0 = seq.to_clock %arg0
+    arc.output %0 : !seq.clock
+  }
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %c-1_i32 = hw.constant -1 : i32
+    %c0_i31 = hw.constant 0 : i31
+    %true = hw.constant true
+    %c2_i32 = hw.constant 2 : i32
+    %c1_i32 = hw.constant 1 : i32
+    %0:4 = arc.execute (%1, %2, %in : i8, !hw.array<2xstruct<a: i8>>, i8) -> (i8, i1, !hw.array<2xstruct<a: i8>>, i1) {
+    ^bb0(%arg0: i8, %arg1: !hw.array<2xstruct<a: i8>>, %arg2: i8):
+      %true_0 = hw.constant true
+      %c1_i32_1 = hw.constant 1 : i32
+      %c2_i32_2 = hw.constant 2 : i32
+      %c0_i31_3 = hw.constant 0 : i31
+      %c-1_i32_4 = hw.constant -1 : i32
+      %4 = hw.struct_create (%arg0) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arg1[%true_0], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32_1, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32_2 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%arg2, %true_0, %7, %true_0 : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32_1, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31_3 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32_4 : i32
+      %15 = comb.sub %c1_i32_1, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31_3 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arg1[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32_1 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      arc.output %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = arc.state @bug_arc(%0#1, %in, %1) clock %3 latency 1 : (i1, i8, i8) -> i8
+    %2 = arc.state @bug_arc_0(%0#3, %0#2, %2) clock %3 latency 1 : (i1, !hw.array<2xstruct<a: i8>>, !hw.array<2xstruct<a: i8>>) -> !hw.array<2xstruct<a: i8>>
+    %3 = arc.call @bug_arc_1(%clk) : (i1) -> !seq.clock
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before CSE (cse) //----- //
+module {
+  func.func private @exit(i32)
+  arc.define @bug_arc(%arg0: i1, %arg1: i8, %arg2: i8) -> i8 {
+    %0 = comb.mux bin %arg0, %arg1, %arg2 : i8
+    arc.output %0 : i8
+  }
+  arc.define @bug_arc_0(%arg0: i1, %arg1: !hw.array<2xstruct<a: i8>>, %arg2: !hw.array<2xstruct<a: i8>>) -> !hw.array<2xstruct<a: i8>> {
+    %0 = comb.mux bin %arg0, %arg1, %arg2 : !hw.array<2xstruct<a: i8>>
+    arc.output %0 : !hw.array<2xstruct<a: i8>>
+  }
+  arc.define @bug_arc_1(%arg0: i1) -> !seq.clock {
+    %0 = seq.to_clock %arg0
+    arc.output %0 : !seq.clock
+  }
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %c-1_i32 = hw.constant -1 : i32
+    %c0_i31 = hw.constant 0 : i31
+    %true = hw.constant true
+    %c2_i32 = hw.constant 2 : i32
+    %c1_i32 = hw.constant 1 : i32
+    %0:4 = arc.execute (%1, %2, %in : i8, !hw.array<2xstruct<a: i8>>, i8) -> (i8, i1, !hw.array<2xstruct<a: i8>>, i1) {
+    ^bb0(%arg0: i8, %arg1: !hw.array<2xstruct<a: i8>>, %arg2: i8):
+      %true_0 = hw.constant true
+      %c1_i32_1 = hw.constant 1 : i32
+      %c2_i32_2 = hw.constant 2 : i32
+      %c0_i31_3 = hw.constant 0 : i31
+      %c-1_i32_4 = hw.constant -1 : i32
+      %4 = hw.struct_create (%arg0) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arg1[%true_0], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32_1, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32_2 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%arg2, %true_0, %7, %true_0 : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32_1, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31_3 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32_4 : i32
+      %15 = comb.sub %c1_i32_1, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31_3 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arg1[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32_1 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      arc.output %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = arc.state @bug_arc(%0#1, %in, %1) clock %3 latency 1 : (i1, i8, i8) -> i8
+    %2 = arc.state @bug_arc_0(%0#3, %0#2, %2) clock %3 latency 1 : (i1, !hw.array<2xstruct<a: i8>>, !hw.array<2xstruct<a: i8>>) -> !hw.array<2xstruct<a: i8>>
+    %3 = arc.call @bug_arc_1(%clk) : (i1) -> !seq.clock
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before ArcCanonicalizer (arc-canonicalizer) //----- //
+module {
+  func.func private @exit(i32)
+  arc.define @bug_arc(%arg0: i1, %arg1: i8, %arg2: i8) -> i8 {
+    %0 = comb.mux bin %arg0, %arg1, %arg2 : i8
+    arc.output %0 : i8
+  }
+  arc.define @bug_arc_0(%arg0: i1, %arg1: !hw.array<2xstruct<a: i8>>, %arg2: !hw.array<2xstruct<a: i8>>) -> !hw.array<2xstruct<a: i8>> {
+    %0 = comb.mux bin %arg0, %arg1, %arg2 : !hw.array<2xstruct<a: i8>>
+    arc.output %0 : !hw.array<2xstruct<a: i8>>
+  }
+  arc.define @bug_arc_1(%arg0: i1) -> !seq.clock {
+    %0 = seq.to_clock %arg0
+    arc.output %0 : !seq.clock
+  }
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %0:4 = arc.execute (%1, %2, %in : i8, !hw.array<2xstruct<a: i8>>, i8) -> (i8, i1, !hw.array<2xstruct<a: i8>>, i1) {
+    ^bb0(%arg0: i8, %arg1: !hw.array<2xstruct<a: i8>>, %arg2: i8):
+      %true = hw.constant true
+      %c1_i32 = hw.constant 1 : i32
+      %c2_i32 = hw.constant 2 : i32
+      %c0_i31 = hw.constant 0 : i31
+      %c-1_i32 = hw.constant -1 : i32
+      %4 = hw.struct_create (%arg0) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arg1[%true], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%arg2, %true, %7, %true : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32 : i32
+      %15 = comb.sub %c1_i32, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arg1[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      arc.output %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = arc.state @bug_arc(%0#1, %in, %1) clock %3 latency 1 : (i1, i8, i8) -> i8
+    %2 = arc.state @bug_arc_0(%0#3, %0#2, %2) clock %3 latency 1 : (i1, !hw.array<2xstruct<a: i8>>, !hw.array<2xstruct<a: i8>>) -> !hw.array<2xstruct<a: i8>>
+    %3 = arc.call @bug_arc_1(%clk) : (i1) -> !seq.clock
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before SplitLoops (arc-split-loops) //----- //
+module {
+  func.func private @exit(i32)
+  arc.define @bug_arc(%arg0: i1, %arg1: i8, %arg2: i8) -> i8 {
+    %0 = comb.mux bin %arg0, %arg1, %arg2 : i8
+    arc.output %0 : i8
+  }
+  arc.define @bug_arc_0(%arg0: i1, %arg1: !hw.array<2xstruct<a: i8>>, %arg2: !hw.array<2xstruct<a: i8>>) -> !hw.array<2xstruct<a: i8>> {
+    %0 = comb.mux bin %arg0, %arg1, %arg2 : !hw.array<2xstruct<a: i8>>
+    arc.output %0 : !hw.array<2xstruct<a: i8>>
+  }
+  arc.define @bug_arc_1(%arg0: i1) -> !seq.clock {
+    %0 = seq.to_clock %arg0
+    arc.output %0 : !seq.clock
+  }
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %0:4 = arc.execute (%1, %2, %in : i8, !hw.array<2xstruct<a: i8>>, i8) -> (i8, i1, !hw.array<2xstruct<a: i8>>, i1) {
+    ^bb0(%arg0: i8, %arg1: !hw.array<2xstruct<a: i8>>, %arg2: i8):
+      %true = hw.constant true
+      %c1_i32 = hw.constant 1 : i32
+      %c2_i32 = hw.constant 2 : i32
+      %c0_i31 = hw.constant 0 : i31
+      %c-1_i32 = hw.constant -1 : i32
+      %4 = hw.struct_create (%arg0) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arg1[%true], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%arg2, %true, %7, %true : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32 : i32
+      %15 = comb.sub %c1_i32, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arg1[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      arc.output %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = arc.state @bug_arc(%0#1, %in, %1) clock %3 latency 1 : (i1, i8, i8) -> i8
+    %2 = arc.state @bug_arc_0(%0#3, %0#2, %2) clock %3 latency 1 : (i1, !hw.array<2xstruct<a: i8>>, !hw.array<2xstruct<a: i8>>) -> !hw.array<2xstruct<a: i8>>
+    %3 = arc.call @bug_arc_1(%clk) : (i1) -> !seq.clock
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before Dedup (arc-dedup) //----- //
+module {
+  func.func private @exit(i32)
+  arc.define @bug_arc(%arg0: i1, %arg1: i8, %arg2: i8) -> i8 {
+    %0 = comb.mux bin %arg0, %arg1, %arg2 : i8
+    arc.output %0 : i8
+  }
+  arc.define @bug_arc_0(%arg0: i1, %arg1: !hw.array<2xstruct<a: i8>>, %arg2: !hw.array<2xstruct<a: i8>>) -> !hw.array<2xstruct<a: i8>> {
+    %0 = comb.mux bin %arg0, %arg1, %arg2 : !hw.array<2xstruct<a: i8>>
+    arc.output %0 : !hw.array<2xstruct<a: i8>>
+  }
+  arc.define @bug_arc_1(%arg0: i1) -> !seq.clock {
+    %0 = seq.to_clock %arg0
+    arc.output %0 : !seq.clock
+  }
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %0:4 = arc.execute (%1, %2, %in : i8, !hw.array<2xstruct<a: i8>>, i8) -> (i8, i1, !hw.array<2xstruct<a: i8>>, i1) {
+    ^bb0(%arg0: i8, %arg1: !hw.array<2xstruct<a: i8>>, %arg2: i8):
+      %true = hw.constant true
+      %c1_i32 = hw.constant 1 : i32
+      %c2_i32 = hw.constant 2 : i32
+      %c0_i31 = hw.constant 0 : i31
+      %c-1_i32 = hw.constant -1 : i32
+      %4 = hw.struct_create (%arg0) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arg1[%true], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%arg2, %true, %7, %true : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32 : i32
+      %15 = comb.sub %c1_i32, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arg1[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      arc.output %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = arc.state @bug_arc(%0#1, %in, %1) clock %3 latency 1 : (i1, i8, i8) -> i8
+    %2 = arc.state @bug_arc_0(%0#3, %0#2, %2) clock %3 latency 1 : (i1, !hw.array<2xstruct<a: i8>>, !hw.array<2xstruct<a: i8>>) -> !hw.array<2xstruct<a: i8>>
+    %3 = arc.call @bug_arc_1(%clk) : (i1) -> !seq.clock
+    hw.output
+  }
+}
+
+
+// -----// IR Dump Before InferStateProperties (arc-infer-state-properties) //----- //
+module {
+  func.func private @exit(i32)
+  arc.define @bug_arc(%arg0: i1, %arg1: i8, %arg2: i8) -> i8 {
+    %0 = comb.mux bin %arg0, %arg1, %arg2 : i8
+    arc.output %0 : i8
+  }
+  arc.define @bug_arc_0(%arg0: i1, %arg1: !hw.array<2xstruct<a: i8>>, %arg2: !hw.array<2xstruct<a: i8>>) -> !hw.array<2xstruct<a: i8>> {
+    %0 = comb.mux bin %arg0, %arg1, %arg2 : !hw.array<2xstruct<a: i8>>
+    arc.output %0 : !hw.array<2xstruct<a: i8>>
+  }
+  arc.define @bug_arc_1(%arg0: i1) -> !seq.clock {
+    %0 = seq.to_clock %arg0
+    arc.output %0 : !seq.clock
+  }
+  hw.module @bug(in %clk : i1, in %in : i8) {
+    %0:4 = arc.execute (%1, %2, %in : i8, !hw.array<2xstruct<a: i8>>, i8) -> (i8, i1, !hw.array<2xstruct<a: i8>>, i1) {
+    ^bb0(%arg0: i8, %arg1: !hw.array<2xstruct<a: i8>>, %arg2: i8):
+      %true = hw.constant true
+      %c1_i32 = hw.constant 1 : i32
+      %c2_i32 = hw.constant 2 : i32
+      %c0_i31 = hw.constant 0 : i31
+      %c-1_i32 = hw.constant -1 : i32
+      %4 = hw.struct_create (%arg0) : !hw.struct<a: i8>
+      %5 = hw.array_inject %arg1[%true], %4 : !hw.array<2xstruct<a: i8>>, i1
+      cf.br ^bb1(%c1_i32, %5 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb1(%6: i32, %7: !hw.array<2xstruct<a: i8>>):  // 2 preds: ^bb0, ^bb2
+      %8 = comb.icmp slt %6, %c2_i32 : i32
+      cf.cond_br %8, ^bb2, ^bb3(%arg2, %true, %7, %true : i8, i1, !hw.array<2xstruct<a: i8>>, i1)
+    ^bb2:  // pred: ^bb1
+      %9 = comb.sub %c1_i32, %6 : i32
+      %10 = comb.extract %9 from 1 : (i32) -> i31
+      %11 = comb.extract %9 from 0 : (i32) -> i1
+      %12 = comb.icmp ne %10, %c0_i31 : i31
+      %13 = comb.or %12, %11 : i1
+      %14 = comb.add %6, %c-1_i32 : i32
+      %15 = comb.sub %c1_i32, %14 : i32
+      %16 = comb.extract %15 from 1 : (i32) -> i31
+      %17 = comb.extract %15 from 0 : (i32) -> i1
+      %18 = comb.icmp ne %16, %c0_i31 : i31
+      %19 = comb.or %18, %17 : i1
+      %20 = hw.array_get %arg1[%19] : !hw.array<2xstruct<a: i8>>, i1
+      %a = hw.struct_extract %20["a"] : !hw.struct<a: i8>
+      %21 = hw.struct_create (%a) : !hw.struct<a: i8>
+      %22 = hw.array_inject %7[%13], %21 : !hw.array<2xstruct<a: i8>>, i1
+      %23 = comb.add %6, %c1_i32 : i32
+      cf.br ^bb1(%23, %22 : i32, !hw.array<2xstruct<a: i8>>)
+    ^bb3(%24: i8, %25: i1, %26: !hw.array<2xstruct<a: i8>>, %27: i1):  // pred: ^bb1
+      arc.output %24, %25, %26, %27 : i8, i1, !hw.array<2xstruct<a: i8>>, i1
+    }
+    %1 = arc.state @bug_arc(%0#1, %in, %1) clock %3 latency 1 : (i1, i8, i8) -> i8
+    %2 = arc.state @bug_arc_0(%0#3, %0#2, %2) clock %3 latency 1 : (i1, !hw.array<2xstruct<a: i8>>, !hw.array<2xstruct<a: i8>>) -> !hw.array<2xstruct<a: i8>>
+    %3 = arc.call @bug_arc_1(%clk) : (i1) -> !seq.clock
+    hw.output
+  }
+}
+
+
+arcilator: /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/Casting.h:566: decltype(auto) llvm::cast(From &) [To = mlir::IntegerType, From = mlir::Type]: Assertion `isa<To>(Val) && "cast<Ty>() argument of incompatible type!"' failed.
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace and instructions to reproduce the bug.
+Stack dump:
+0.	Program arguments: /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator --mlir-print-ir-before-all
+ #0 0x000055cace7db23f llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/lib/Support/Unix/Signals.inc:842:13
+ #1 0x000055cace7dc379 llvm::sys::RunSignalHandlers() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/lib/Support/Signals.cpp:109:18
+ #2 0x000055cace7dc379 SignalHandler(int, siginfo_t*, void*) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/lib/Support/Unix/Signals.inc:412:3
+ #3 0x00007feb27b18330 (/lib/x86_64-linux-gnu/libc.so.6+0x45330)
+ #4 0x00007feb27b71b2c __pthread_kill_implementation ./nptl/pthread_kill.c:44:76
+ #5 0x00007feb27b71b2c __pthread_kill_internal ./nptl/pthread_kill.c:78:10
+ #6 0x00007feb27b71b2c pthread_kill ./nptl/pthread_kill.c:89:10
+ #7 0x00007feb27b1827e raise ./signal/../sysdeps/posix/raise.c:27:6
+ #8 0x00007feb27afb8ff abort ./stdlib/abort.c:81:7
+ #9 0x00007feb27afb81b _nl_load_domain ./intl/loadmsgcat.c:1177:9
+#10 0x00007feb27b0e517 (/lib/x86_64-linux-gnu/libc.so.6+0x3b517)
+#11 0x000055cacf92cf42 (/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator+0x87d5f42)
+#12 0x000055cacf93ca5f circt::hw::ConstantOp::create(mlir::OpBuilder&, mlir::Location, mlir::Type, long) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/build/tools/circt/include/circt/Dialect/HW/HW.cpp.inc:2591:55
+#13 0x000055cacef83382 mlir::Operation::getOpResultImpl(unsigned int) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/IR/Operation.h:1010:25
+#14 0x000055cacef83382 mlir::Operation::getResult(unsigned int) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/IR/Operation.h:407:54
+#15 0x000055cacef83382 mlir::OpTrait::OneTypedResult<circt::hw::TypeVariant<mlir::IntegerType, circt::hw::IntType>>::Impl<circt::hw::ConstantOp>::getResult() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/IR/OpDefinition.h:707:33
+#16 0x000055cacef83382 mlir::OpTrait::OneTypedResult<circt::hw::TypeVariant<mlir::IntegerType, circt::hw::IntType>>::Impl<circt::hw::ConstantOp>::operator mlir::detail::TypedValue<circt::hw::TypeVariant<mlir::IntegerType, circt::hw::IntType>>() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/IR/OpDefinition.h:712:54
+#17 0x000055cacef83382 applyEnableTransformation(circt::arc::DefineOp, circt::arc::StateOp, llvm::ArrayRef<(anonymous namespace)::EnableInfo>) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Dialect/Arc/Transforms/InferStateProperties.cpp:211:55
+#18 0x000055cacef83382 (anonymous namespace)::InferStatePropertiesPass::runOnStateOp(circt::arc::StateOp, circt::arc::DefineOp, llvm::DenseMap<circt::arc::DefineOp, unsigned int, llvm::DenseMapInfo<circt::arc::DefineOp, void>, llvm::detail::DenseMapPair<circt::arc::DefineOp, unsigned int>>&) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Dialect/Arc/Transforms/InferStateProperties.cpp:454:17
+#19 0x000055cacef8103d void llvm::function_ref<void (mlir::Operation*)>::callback_fn<std::enable_if<!llvm::is_one_of<circt::arc::StateOp, mlir::Operation*, mlir::Region*, mlir::Block*>::value && std::is_same<void, void>::value, void>::type mlir::detail::walk<(mlir::WalkOrder)1, mlir::ForwardIterator, (anonymous namespace)::InferStatePropertiesPass::runOnOperation()::$_0, circt::arc::StateOp, void>(mlir::Operation*, (anonymous namespace)::InferStatePropertiesPass::runOnOperation()::$_0&&)::'lambda'(mlir::Operation*)>(long, mlir::Operation*) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/ADT/STLFunctionalExtras.h:46:5
+#20 0x000055cacef35e5e void mlir::detail::walk<mlir::ForwardIterator>(mlir::Operation*, llvm::function_ref<void (mlir::Operation*)>, mlir::WalkOrder) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/IR/Visitors.h:0:9
+#21 0x000055cacef35e5e void mlir::detail::walk<mlir::ForwardIterator>(mlir::Operation*, llvm::function_ref<void (mlir::Operation*)>, mlir::WalkOrder) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/../mlir/include/mlir/IR/Visitors.h:0:9
+#22 0x000055cacef80c5c llvm::DenseMap<circt::arc::DefineOp, unsigned int, llvm::DenseMapInfo<circt::arc::DefineOp, void>, llvm::detail::DenseMapPair<circt::arc::DefineOp, unsigned int>>::deallocateBuckets() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/ADT/DenseMap.h:826:23
+#23 0x000055cacef80c5c llvm::DenseMap<circt::arc::DefineOp, unsigned int, llvm::DenseMapInfo<circt::arc::DefineOp, void>, llvm::detail::DenseMapPair<circt::arc::DefineOp, unsigned int>>::~DenseMap() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/ADT/DenseMap.h:788:5
+#24 0x000055cacef80c5c (anonymous namespace)::InferStatePropertiesPass::runOnOperation() /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Dialect/Arc/Transforms/InferStateProperties.cpp:401:1
+#25 0x000055cad292e782 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int)::$_3::operator()() const /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Pass/Pass.cpp:0:19
+#26 0x000055cad292e782 void llvm::function_ref<void ()>::callback_fn<mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int)::$_3>(long) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/ADT/STLFunctionalExtras.h:46:12
+#27 0x000055cad29207b1 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Pass/Pass.cpp:619:17
+#28 0x000055cad292177f llvm::failed(llvm::LogicalResult) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/LogicalResult.h:0:0
+#29 0x000055cad292177f mlir::detail::OpToOpPassAdaptor::runPipeline(mlir::OpPassManager&, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int, mlir::PassInstrumentor*, mlir::PassInstrumentation::PipelineParentInfo const*) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Pass/Pass.cpp:688:9
+#30 0x000055cad292b1e9 mlir::PassManager::runPasses(mlir::Operation*, mlir::AnalysisManager) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Pass/Pass.cpp:1123:3
+#31 0x000055cad292a431 mlir::PassManager::run(mlir::Operation*) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/Pass/Pass.cpp:1097:0
+#32 0x000055cace7042d3 processBuffer(mlir::MLIRContext&, mlir::TimingScope&, llvm::SourceMgr&, std::optional<std::unique_ptr<llvm::ToolOutputFile, std::default_delete<llvm::ToolOutputFile>>>&) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/tools/arcilator/arcilator.cpp:330:7
+#33 0x000055cace703395 processInputSplit(mlir::MLIRContext&, mlir::TimingScope&, std::unique_ptr<llvm::MemoryBuffer, std::default_delete<llvm::MemoryBuffer>>, std::optional<std::unique_ptr<llvm::ToolOutputFile, std::default_delete<llvm::ToolOutputFile>>>&) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/tools/arcilator/arcilator.cpp:546:12
+#34 0x000055cace7007b4 processInput(mlir::MLIRContext&, mlir::TimingScope&, std::unique_ptr<llvm::MemoryBuffer, std::default_delete<llvm::MemoryBuffer>>, std::optional<std::unique_ptr<llvm::ToolOutputFile, std::default_delete<llvm::ToolOutputFile>>>&) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/tools/arcilator/arcilator.cpp:562:12
+#35 0x000055cace7007b4 executeArcilator(mlir::MLIRContext&) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/tools/arcilator/arcilator.cpp:629:14
+#36 0x000055cace6ffe0e llvm::LogicalResult::failed() const /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/LogicalResult.h:43:42
+#37 0x000055cace6ffe0e llvm::failed(llvm::LogicalResult) /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/llvm/include/llvm/Support/LogicalResult.h:71:58
+#38 0x000055cace6ffe0e main /home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/tools/arcilator/arcilator.cpp:697:8
+#39 0x00007feb27afd1ca __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:74:3
+#40 0x00007feb27afd28b call_init ./csu/../csu/libc-start.c:128:20
+#41 0x00007feb27afd28b __libc_start_main ./csu/../csu/libc-start.c:347:5
+#42 0x000055cace6ff165 _start (/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator+0x75a8165)

@@ -1,0 +1,24 @@
+{
+  "crash": {
+    "tool": "arcilator",
+    "crash_type": "assertion_failure",
+    "assertion": "cast<Ty>() argument of incompatible type",
+    "source_location": "lib/Dialect/Arc/Transforms/InferStateProperties.cpp:211",
+    "stack_top": "applyEnableTransformation"
+  },
+  "dialects": [
+    "arc",
+    "hw",
+    "comb",
+    "seq"
+  ],
+  "reproduction": {
+    "current_toolchain_observed": "verifier_error",
+    "error": "'arc.state' op operand type mismatch"
+  },
+  "hypothesis": {
+    "summary": "InferStateProperties assumes integer-typed values when creating constants; array-typed values from state/mux path trigger a bad cast.",
+    "likely_cause": "Missing type guards or unsupported array types in enable transformation.",
+    "suggested_fix": "Validate/handle non-integer types before creating hw::ConstantOp in InferStateProperties."
+  }
+}

@@ -1,0 +1,2 @@
+/home/zhiqing/edazz/eda-vulns/circt-bc260128-00001074/origin/bug.sv:1: error: Net `a` can not be of type `string`.
+1 error(s) during elaboration.

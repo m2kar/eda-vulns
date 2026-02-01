@@ -1,0 +1,18 @@
+Crash Type: assertion
+Testcase ID: 260128-00000add
+
+--- Reproduction Command ---
+circt-verilog --ir-hw bug.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o test.o
+
+--- Error Message (from original circt-1.139.0) ---
+<unknown>:0: error: state type must have a known bit width; got '!llhd.ref<i1>'
+arcilator: Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed.
+
+--- Stack Trace (truncated) ---
+#12 circt::arc::StateType::get(mlir::Type)
+#13 (anonymous namespace)::ModuleLowering::run() LowerState.cpp:219
+#14 (anonymous namespace)::LowerStatePass::runOnOperation() LowerState.cpp:1198
+
+--- Note ---
+Bug was fixed in current toolchain (firtool-1.139.0 + LLVM 22.0.0git).
+Original crash occurred in circt-1.139.0.

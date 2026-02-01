@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T00:00:00Z",
+  "input": {
+    "error_file": "error.txt",
+    "source_file": "source.sv"
+  },
+  "tool": {
+    "name": "circt-verilog",
+    "version": "firtool-1.139.0",
+    "path": "/opt/firtool/bin/circt-verilog"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv",
+    "exit_code": 139,
+    "reproduced": true,
+    "match_result": "pattern_match"
+  },
+  "crash_signature": {
+    "original": "Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"' failed.",
+    "reproduced": "SVModuleOpConversion::matchAndRewrite - assertion in MooreToCore conversion"
+  },
+  "files": {
+    "reproduce_log": "reproduce.log",
+    "metadata": "metadata.json"
+  }
+}

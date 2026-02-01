@@ -1,0 +1,54 @@
+{
+  "testcase_id": "260129-000019c4",
+  "crash_type": "assertion",
+  "reproduction": {
+    "reproduced": true,
+    "environment": {
+      "circt_toolchain": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin",
+      "working_directory": "/home/zhiqing/edazz/eda-vulns/circt-bc260129-000019c4/origin",
+      "timestamp": "2025-02-01T14:30:00Z"
+    },
+    "error_signature": {
+      "primary_error": "state type must have a known bit width; got '!llhd.ref<i1>'",
+      "assertion_location": "circt::arc::StateType::get(mlir::Type)",
+      "failing_file": "/home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/build/tools/circt/include/circt/Dialect/Arc/ArcTypes.cpp.inc:108:3",
+      "assertion_message": "Assertion `succeeded( ConcreteT::verifyInvariants(getDefaultDiagnosticEmitFn(ctx), args...))' failed."
+    },
+    "stack_trace": {
+      "crash_point": "ModuleLowering::run()",
+      "crash_location": "/home/zhiqing/edazz/FeatureFuzz-SV/target/circt-1.139.0-src/lib/Dialect/Arc/Transforms/LowerState.cpp:219:66",
+      "pass_name": "LowerStatePass"
+    },
+    "pipeline": {
+      "step_1": {
+        "tool": "circt-verilog",
+        "input": "source.sv",
+        "status": "success",
+        "output_type": "MLIR (HW dialect)"
+      },
+      "step_2": {
+        "tool": "arcilator",
+        "input": "MLIR from step_1",
+        "status": "crash",
+        "error_type": "assertion_failure",
+        "pass": "LowerState"
+      }
+    }
+  },
+  "bug_analysis": {
+    "root_cause": "Reference types (!llhd.ref<i1>) cannot be used directly as state types in arc dialect",
+    "severity": "high",
+    "category": "type_validation",
+    "affected_constructs": [
+      "inout ports",
+      "array indexing in assignments",
+      "high-impedance value assignments"
+    ]
+  },
+  "signature_match": {
+    "matched": true,
+    "original_error_hash": "9f4d8a3c2b1e7f6d",
+    "reproduced_error_hash": "9f4d8a3c2b1e7f6d",
+    "match_percentage": 100
+  }
+}

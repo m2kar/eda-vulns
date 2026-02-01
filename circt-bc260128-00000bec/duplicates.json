@@ -1,0 +1,7 @@
+{
+  "query": "sim.fmt.literal failed to legalize",
+  "recommendation": "likely_new",
+  "top_score": 0.0,
+  "top_issue": null,
+  "notes": "No matching issues found via gh search."
+}

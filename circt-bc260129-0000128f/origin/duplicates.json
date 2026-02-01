@@ -1,0 +1,10 @@
+{
+  "query": [
+    "InferStateProperties arcilator cast<Ty>()",
+    "arc.state operand type mismatch"
+  ],
+  "results": [],
+  "recommendation": "new_issue",
+  "top_score": 0.0,
+  "top_issue": null
+}

@@ -1,0 +1,73 @@
+{
+  "version": "2.0",
+  "analysis_type": "ai_reasoning",
+  "dialect": "Moore",
+  "failing_pass": "MooreToCore",
+  "crash_type": "assertion_failure",
+  "assertion_message": "dyn_cast on a non-existent value",
+  "crash_location": {
+    "file": "PortImplementation.h",
+    "function": "ModulePortInfo::sanitizeInOut",
+    "line": 177
+  },
+  "test_case": {
+    "language": "systemverilog",
+    "key_constructs": ["packed struct", "string type", "string array"],
+    "problematic_patterns": ["string as module output port"]
+  },
+  "hypotheses": [
+    {
+      "description": "MooreToCore type converter does not handle string-to-HW conversion for module ports, causing StringType to be converted to sim::DynamicStringType which is not a hw::InOutType, triggering dyn_cast assertion",
+      "confidence": "high",
+      "evidence": [
+        "Crash occurs at typeConverter.convertType(port.type) in getModulePortInfo() line 243",
+        "StringType is converted to sim::DynamicStringType, not to an HW type",
+        "sim::DynamicStringType is not a hw::InOutType, causing dyn_cast to fail",
+        "Type converter only handles FormatStringType and StringType conversions, never creates HW type from string"
+      ],
+      "mechanism": "1. User code has 'output string result' 2. Moore parser creates moore::StringType 3. getModulePortInfo() converts it to sim::DynamicStringType 4. sanitizeInOut() tries dyn_cast<hw::InOutType>(sim::DynamicStringType) 5. Cast fails, LLVM's dyn_cast asserts with 'dyn_cast on a non-existent value'"
+    },
+    {
+      "description": "CIRCT's Moore-to-HW conversion does not support string as a valid hardware port type because string is a dynamic type with reference counting, fundamentally incompatible with traditional hardware designs",
+      "confidence": "medium",
+      "evidence": [
+        "No type conversion rule for sim::DynamicStringType to any HW type exists",
+        "FIXME comment in getModulePortInfo() (line 248-252) acknowledges limited support for special port types"
+      ],
+      "mechanism": "String types should either be rejected during parsing/validation with clear error message, converted to supported HW type representation (e.g., array of bytes), or handled explicitly in sanitizeInOut()"
+    },
+    {
+      "description": "The sanitizeInOut() function should check if the type is valid before attempting dyn_cast, as it iterates over all ports without type validation",
+      "confidence": "low",
+      "evidence": [
+        "sanitizeInOut() uses dyn_cast which can trigger assertions on invalid types",
+        "Other similar functions use type checking before dangerous operations"
+      ],
+      "mechanism": "Modify sanitizeInOut() to only process known HW types and skip unknown dialect types like sim::DynamicStringType"
+    }
+  ],
+  "keywords": [
+    "moore string port assertion failure dyn_cast",
+    "MooreToCore sanitizeInOut ModulePortInfo",
+    "StringType DynamicStringType hw::InOutType",
+    "circt-verilog output string module"
+  ],
+  "suggested_sources": [
+    {
+      "path": "/home/zhiqing/edazz/eda-vulns/circt-src/lib/Conversion/MooreToCore/MooreToCore.cpp",
+      "reason": "Main conversion logic and type converter setup, lines 2277-2278 convert StringType to DynamicStringType, lines 234-259 getModulePortInfo where crash occurs"
+    },
+    {
+      "path": "/home/zhiqing/edazz/eda-vulns/circt-src/include/circt/Dialect/HW/PortImplementation.h",
+      "reason": "ModulePortInfo construction and sanitizeInOut implementation at line 177 where dyn_cast causes assertion failure"
+    },
+    {
+      "path": "/home/zhiqing/edazz/eda-vulns/circt-src/include/circt/Dialect/Moore/MooreTypes.h",
+      "reason": "StringType definition and its position in UnpackedType hierarchy"
+    },
+    {
+      "path": "/home/zhiqing/edazz/eda-vulns/circt-src/include/circt/Dialect/HW/HWTypes.h",
+      "reason": "ModulePort and InOutType definitions, isHWValueType and hasHWInOutType helper functions"
+    }
+  ]
+}

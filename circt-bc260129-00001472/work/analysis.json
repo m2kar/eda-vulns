@@ -1,0 +1,39 @@
+{
+  "dialect": "arc",
+  "crash_type": "assertion_failure",
+  "tool": "arcilator",
+  "pass": "LowerState",
+  "crash_location": {
+    "file": "LowerState.cpp",
+    "line": 219,
+    "function": "ModuleLowering::run()"
+  },
+  "assertion": {
+    "file": "StorageUniquerSupport.h",
+    "line": 180,
+    "condition": "succeeded(ConcreteT::verifyInvariants(...))"
+  },
+  "error_type": {
+    "type": "llhd.ref<i1>",
+    "expected": "type with known bit width (IntegerType, ArrayType, StructType, ClockType)"
+  },
+  "root_cause": {
+    "summary": "StateType::get() called with unsupported !llhd.ref<T> type from inout port",
+    "function": "computeLLVMBitWidth",
+    "file": "ArcTypes.cpp",
+    "missing_handler": "llhd::RefType",
+    "explanation": "The arcilator LowerState pass iterates over all module inputs and creates state storage without validating if the input type is supported. When processing inout ports (represented as !llhd.ref<T>), the StateType::verify() fails because computeLLVMBitWidth() doesn't handle ref types."
+  },
+  "trigger": {
+    "construct": "SystemVerilog inout port",
+    "example": "inout logic c",
+    "ir_representation": "in %c : !llhd.ref<i1>"
+  },
+  "severity": "high",
+  "classification": "report",
+  "fix_suggestions": [
+    "Add early validation in LowerState to emit proper diagnostic for unsupported types",
+    "Extend computeLLVMBitWidth to handle llhd::RefType",
+    "Convert assertion to user-friendly error before StateType::get() call"
+  ]
+}

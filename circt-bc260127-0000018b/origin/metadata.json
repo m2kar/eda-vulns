@@ -1,0 +1,31 @@
+{
+  "reproduction": {
+    "reproduced": false,
+    "command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv",
+    "crash_signature": "Assertion `op->use_empty() && \"expected 'op' to have no uses\"' failed",
+    "expected_in_stack_trace": "extractConcatToConcatExtract",
+    "timestamp": "2026-01-31T00:00:00Z",
+    "exit_code": 0,
+    "status": "NOT_REPRODUCED"
+  },
+  "environment": {
+    "toolchain": "/opt/firtool/bin/circt-verilog",
+    "circt_version": "firtool-1.139.0",
+    "llvm_version": "22.0.0git",
+    "slang_version": "9.1.0+0",
+    "working_directory": "/home/zhiqing/edazz/eda-vulns/circt-bc260127-0000018b/origin",
+    "test_file": "source.sv"
+  },
+  "analysis": {
+    "issue": "Test case does not reproduce the crash with current CIRCT build",
+    "possible_reasons": [
+      "Bug may have been fixed in current build",
+      "Test case requires specific flags or conditions not captured in source.sv",
+      "Environmental differences from original crash environment",
+      "The bug might be environment-dependent"
+    ],
+    "original_error_file": "error.txt",
+    "original_crash_location": "llvm/mlir/lib/IR/PatternMatch.cpp:156",
+    "original_function": "mlir::RewriterBase::eraseOp(Operation *)"
+  }
+}

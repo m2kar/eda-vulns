@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "testcase_path": "/home/zhiqing/edazz/eda-vulns/circt-bc260128-00000c7d/origin/bug.sv",
+  "validation_result": "report",
+  "validation_type": "crash_verification",
+  "syntax_check": {
+    "status": "success",
+    "tool": "slang",
+    "result": "bug is valid systemverilog code"
+  },
+  "bug_confirmation": {
+    "status": "confirmed",
+    "crash_type": "assertion_failure",
+    "crash_location": "MooreToCore.cpp:4",
+    "crash_signature": "dyn_cast on a non-existent value",
+    "matches_original": true
+  },
+  "reduction": {
+    "original_lines": 22,
+    "minimized_lines": 5,
+    "reduction_percent": 77.27
+  },
+  "classification": {
+    "type": "CIRCT Bug",
+    "severity": "high",
+    "category": "type_conversion",
+    "affected_pass": "MooreToCore"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "search_results": {
+    "total_candidates": 12,
+    "issues_found": 10,
+    "similar_issues": {
+      "9469": {
+        "score": 6.5,
+        "matches": [
+          "title:arcilator",
+          "title:always_ff",
+          "body:circt-verilog --ir-hw",
+          "dialect:HW"
+        ],
+        "title": "[circt-verilog][arcilator] Inconsistent compilation behavior: direct array indexing in always_ff sensitivity list vs. intermediate wire",
+        "state": "CLOSED",
+        "labels": [
+          "llhd",
+          "arc"
+        ]
+      },
+      "9467": {
+        "score": 4.5,
+        "matches": [
+          "title:arcilator",
+          "body:circt-verilog --ir-hw",
+          "dialect:HW"
+        ],
+        "title": "[circt-verilog][arcilator] `arcilator` fails to lower `llhd.constant_time` generated from simple SV delay (`#1`)",
+        "state": "OPEN",
+        "labels": [
+          "llhd",
+          "arc"
+        ]
+      },
+      "9395": {
+        "score": 3.5,
+        "matches": [
+          "title:arcilator",
+          "dialect:HW"
+        ],
+        "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+        "state": "CLOSED",
+        "labels": [
+          "arc",
+          "importverilog"
+        ]
+      },
+      "9057": {
+        "score": 2.5,
+        "matches": [
+          "body:HW dialect",
+          "dialect:HW"
+        ],
+        "title": "[MooreToCore] Unexpected topological cycle after importing generated verilog",
+        "state": "CLOSED",
+        "labels": [
+          "importverilog"
+        ]
+      },
+      "8286": {
+        "score": 2.0,
+        "matches": [
+          "title:arcilator"
+        ],
+        "title": "[circt-verilog][llhd][arcilator] Verilog-to-LLVM lowering issues",
+        "state": "OPEN",
+        "labels": []
+      },
+      "8865": {
+        "score": 1.5,
+        "matches": [
+          "dialect:HW"
+        ],
+        "title": "[Comb] AddOp canonicalizer hangs in an infinite loop",
+        "state": "CLOSED",
+        "labels": [
+          "comb"
+        ]
+      },
+      "3403": {
+        "score": 1.5,
+        "matches": [
+          "dialect:HW"
+        ],
+        "title": "Circular logic not detected",
+        "state": "OPEN",
+        "labels": []
+      },
+      "3936": {
+        "score": 1.5,
+        "matches": [
+          "dialect:HW"
+        ],
+        "title": "[Handshake] Using `LazyFork` can produce combinatorial cycles.",
+        "state": "OPEN",
+        "labels": [
+          "handshake"
+        ]
+      },
+      "8610": {
+        "score": 1.5,
+        "matches": [
+          "dialect:HW"
+        ],
+        "title": "[FIRRTL] [Bug Report] Comb Loop Detect not aware of bitcast + extract",
+        "state": "CLOSED",
+        "labels": []
+      },
+      "7266": {
+        "score": 1.5,
+        "matches": [
+          "dialect:HW"
+        ],
+        "title": "[Seq] invalid register opt leads to comb loop",
+        "state": "CLOSED",
+        "labels": [
+          "bug",
+          "seq"
+        ]
+      }
+    }
+  },
+  "recommendation": {
+    "action": "review_existing",
+    "confidence": "high",
+    "reason": "Top score: 6.5 from issue #9469"
+  },
+  "top_issue": 9469,
+  "top_score": 6.5
+}

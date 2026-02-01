@@ -1,0 +1,19 @@
+{
+  "crash_id": "260129-0000129c",
+  "status": "report_ready",
+  "phase": "completed",
+  "created_at": "2026-02-01T06:12:04+00:00",
+  "updated_at": "2026-02-01T06:18:32+00:00",
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt"
+  },
+  "phases": {
+    "reproduce": {"status": "completed"},
+    "root_cause": {"status": "completed"},
+    "minimize": {"status": "completed"},
+    "validate": {"status": "completed"},
+    "duplicates": {"status": "completed"},
+    "report": {"status": "completed"}
+  }
+}

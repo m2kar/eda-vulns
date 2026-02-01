@@ -1,0 +1,48 @@
+=== CIRCT Bug Reproduction Report ===
+Testcase ID: 260129-0000193c
+Date: 2026-02-01
+
+--- Original Issue ---
+Crash Type: assertion
+Error Message: integer bitwidth is limited to 16777215 bits
+Assertion Location: mlir/IR/StorageUniquerSupport.h:180
+
+--- Reproduction Command ---
+Original: circt-verilog --ir-hw source.sv
+Current Toolchain: /opt/firtool/bin/circt-verilog --ir-hw source.sv
+
+--- Test Source ---
+module test_module(
+  input logic clk,
+  input real in_real,
+  output real out_real,
+  output logic cmp_result
+);
+
+  always_ff @(posedge clk) begin
+    out_real <= in_real * 2.0;
+    cmp_result <= (in_real > 5.0);
+  end
+
+endmodule
+
+--- Reproduction Output ---
+source.sv:4:15: error: 'hw.bitcast' op result #0 must be Type wherein the bitwidth in hardware is known, but got 'f64'
+  output real out_real,
+              ^
+source.sv:4:15: note: see current operation: %15 = "hw.bitcast"(%14) : (i1073741823) -> f64
+
+--- Analysis ---
+The current toolchain (llvm-22) validates bitwidth constraints more strictly.
+The intermediate MLIR representation shows an attempt to create an integer type with 
+1073741823 bits (2^30 - 1), which exceeds the limit of 16777215 bits (2^24 - 1).
+
+In the original toolchain (circt-1.139.0), this validation apparently happened later
+in the Mem2Reg pass, causing the assertion. The current version catches it earlier
+during bitcast validation, preventing the assertion crash.
+
+--- Status ---
+CRASH REPRODUCED: The underlying issue (invalid bitwidth) is still present
+ERROR TYPE: Changed from assertion to validation error (progress in error handling)
+REPRODUCIBLE: Yes, with current toolchain
+EXIT CODE: 1 (error)

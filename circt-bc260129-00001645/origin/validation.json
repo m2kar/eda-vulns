@@ -1,0 +1,46 @@
+{
+  "version": "1.0",
+  "timestamp": "2025-01-29T12:00:00+08:00",
+  "input_file": "bug.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang",
+    "result": "Build succeeded: 0 errors, 0 warnings"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": ""
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": ""
+  },
+  "cross_tool_validation": {
+    "verilator": "pass",
+    "icarus": "pass",
+    "slang": "pass"
+  },
+  "classification": {
+    "result": "historical_bug",
+    "confidence": "high",
+    "reason": "Valid test case, crash occurred in CIRCT 1.139.0 but not reproducible in current toolchain",
+    "historical_context": {
+      "original_circt_version": "1.139.0",
+      "reproduced_in_current": false,
+      "likely_fixed": true
+    }
+  },
+  "minimization": {
+    "original_lines": 19,
+    "minimized_lines": 2,
+    "reduction_percent": 89.5,
+    "key_construct_preserved": "inout logic c"
+  },
+  "bug_summary": {
+    "type": "assertion_failure",
+    "tool": "arcilator",
+    "pass": "LowerState",
+    "trigger": "inout port declaration",
+    "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'"
+  }
+}

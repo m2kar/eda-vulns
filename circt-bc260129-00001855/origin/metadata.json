@@ -1,0 +1,94 @@
+{
+  "reproduction": {
+    "reproduced": false,
+    "reason": "Current CIRCT toolchain version differs from original (1.139.0). The bug may have been fixed or requires specific configuration.",
+    "confidence": 0.3,
+    "timestamp": "2026-02-01T12:26:47.705586Z"
+  },
+  "original_crash": {
+    "testcase_id": "260129-00001855",
+    "crash_type": "assertion",
+    "component": "circt::arc::StateType",
+    "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+    "crash_location": "StorageUniquerSupport.h:180",
+    "symbol": "circt::arc::StateType::get(mlir::Type)",
+    "toolchain_version": "circt-1.139.0"
+  },
+  "reproduction_environment": {
+    "toolchain_path": "/opt/firtool/bin/",
+    "tools_available": {
+      "circt_verilog": true,
+      "arcilator": true,
+      "opt": true,
+      "llc": true
+    },
+    "system": {
+      "kernel": "Linux",
+      "hostname": "edazz",
+      "uname": "Linux edazz 5.15.0-164-generic #174-Ubuntu SMP Fri Nov 14 20:25:16 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux"
+    }
+  },
+  "input": {
+    "testcase_file": "source.sv",
+    "error_log_file": "error.txt",
+    "module_name": "test_module",
+    "ports": [
+      "clk",
+      "out",
+      "port_a",
+      "port_b"
+    ]
+  },
+  "compilation_pipeline": {
+    "step1_circt_verilog": {
+      "status": "SUCCESS",
+      "command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv",
+      "output": "CIRCT IR generated successfully"
+    },
+    "step2_arcilator": {
+      "status": "SUCCESS",
+      "command": "/opt/firtool/bin/arcilator circt_ir.mlir",
+      "output": "Arc IR generated successfully (no crash in current version)",
+      "note": "Original crash occurred at this step in version 1.139.0"
+    },
+    "step3_opt": {
+      "status": "SUCCESS",
+      "command": "/opt/firtool/bin/opt -O0 arc_ir.mlir",
+      "output": "Optimized IR generated successfully"
+    },
+    "step4_llc": {
+      "status": "SUCCESS",
+      "command": "/opt/firtool/bin/llc -O0 --filetype=obj -o test.o opt_ir.mlir",
+      "output": "Object file generated successfully"
+    }
+  },
+  "crash_analysis": {
+    "root_cause_candidate": "State type validation in Arc dialect lacks proper handling for ref types",
+    "error_class": "Type validation",
+    "assertion_failed": true,
+    "assertion_description": "StateType::verifyInvariants() rejected !llhd.ref<i1> as state type"
+  },
+  "reproduction_attempts": [
+    {
+      "attempt": 1,
+      "method": "Direct pipeline execution with current toolchain",
+      "result": "SUCCESS (no crash)",
+      "exit_code": 0
+    },
+    {
+      "attempt": 2,
+      "method": "Individual tool invocations",
+      "result": "SUCCESS (no crash)",
+      "exit_code": 0
+    }
+  ],
+  "version_info": {
+    "original_version": "1.139.0",
+    "current_version": "Unknown (possibly newer, from /opt/firtool/)",
+    "version_mismatch": true
+  },
+  "output_files": {
+    "reproduce_log": "reproduce.log",
+    "metadata_json": "metadata.json"
+  }
+}

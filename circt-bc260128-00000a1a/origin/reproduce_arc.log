@@ -1,0 +1,3 @@
+<stdin>:1:1: error: custom op 'circt' is unknown (tried 'builtin.circt' as well)
+circt-verilog: Unknown command line argument '--ir-arc'.  Try: '/opt/firtool/bin/circt-verilog --help'
+^

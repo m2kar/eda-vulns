@@ -1,0 +1,17 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "crash_signature": "failed to legalize operation 'sim.fmt.literal'",
+    "error_location": "<stdin>:4:10",
+    "error_message": "failed to legalize operation 'sim.fmt.literal'",
+    "operation": "%0 = sim.fmt.literal \"Error: Assertion failed: arr[\"",
+    "timestamp": "2026-01-31T19:38:28.037241Z",
+    "tools_used": {
+      "circt_verilog": "/opt/firtool/bin/circt-verilog",
+      "arcilator": "/opt/firtool/bin/arcilator",
+      "llvm_version": "22.0.0git"
+    },
+    "test_case": "source.sv",
+    "pipeline": "circt-verilog --ir-hw source.sv | arcilator"
+  }
+}

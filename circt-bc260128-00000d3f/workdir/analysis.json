@@ -1,0 +1,113 @@
+{
+  "dialect": "Moore",
+  "crash_type": "assertion",
+  "crash_function": "ModulePortInfo::sanitizeInOut",
+  "source_location": "include/circt/Dialect/HW/PortImplementation.h:177",
+  "trigger_location": "lib/Conversion/MooreToCore/MooreToCore.cpp:259",
+  "error_pattern": "dyn_cast on a non-existent value",
+  "error_message": "Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"' failed.",
+  "keywords": [
+    "packed union",
+    "TypeConverter",
+    "InOutType",
+    "sanitizeInOut",
+    "dyn_cast",
+    "null type",
+    "MooreToCore",
+    "SVModuleOp"
+  ],
+  "testcase_analysis": {
+    "file": "testcase.sv",
+    "constructs": [
+      {
+        "type": "packed_union",
+        "name": "my_union",
+        "fields": ["logic [31:0] a", "logic [31:0] b"]
+      },
+      {
+        "type": "module_with_union_port",
+        "name": "Sub",
+        "problematic_port": {
+          "name": "data_in",
+          "type": "my_union",
+          "direction": "input"
+        }
+      },
+      {
+        "type": "module_instantiation",
+        "parent": "Top",
+        "instance": "Sub s"
+      }
+    ],
+    "trigger_pattern": "packed union type used as module port",
+    "minimal_construct": "input my_union data_in"
+  },
+  "stack_trace_analysis": {
+    "crash_frame": {
+      "frame": 17,
+      "function": "circt::hw::ModulePortInfo::sanitizeInOut()",
+      "file": "include/circt/Dialect/HW/PortImplementation.h",
+      "line": 177
+    },
+    "key_frames": [
+      {
+        "frame": 21,
+        "function": "getModulePortInfo(const TypeConverter&, SVModuleOp)",
+        "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+        "line": 259
+      },
+      {
+        "frame": 22,
+        "function": "SVModuleOpConversion::matchAndRewrite()",
+        "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+        "line": 276
+      },
+      {
+        "frame": 42,
+        "function": "MooreToCorePass::runOnOperation()",
+        "file": "lib/Conversion/MooreToCore/MooreToCore.cpp",
+        "line": 2571
+      }
+    ],
+    "call_chain": [
+      "MooreToCorePass::runOnOperation()",
+      "mlir::applyFullConversion()",
+      "SVModuleOpConversion::matchAndRewrite()",
+      "getModulePortInfo()",
+      "hw::ModulePortInfo::ModulePortInfo()",
+      "hw::ModulePortInfo::sanitizeInOut()",
+      "llvm::dyn_cast<hw::InOutType>()"
+    ]
+  },
+  "root_cause": {
+    "summary": "TypeConverter fails to convert Moore packed union type to HW type, returning null. getModulePortInfo() does not check for null return value. ModulePortInfo::sanitizeInOut() calls dyn_cast on null type, triggering assertion failure.",
+    "primary_issue": "Missing type conversion support for packed union in MooreToCore TypeConverter",
+    "secondary_issue": "Missing null check for typeConverter.convertType() return value in getModulePortInfo()",
+    "tertiary_issue": "sanitizeInOut() assumes all port types are non-null without validation",
+    "failing_operation": "typeConverter.convertType(port.type) returns null for packed union type",
+    "immediate_trigger": "dyn_cast<hw::InOutType>(p.type) where p.type is null"
+  },
+  "reproduction": {
+    "command": "circt-verilog --ir-hw testcase.sv",
+    "tool": "circt-verilog",
+    "version": "1.139.0",
+    "minimal_input_pattern": "packed union type as module port input"
+  },
+  "fix_suggestions": [
+    {
+      "location": "MooreToCore TypeConverter",
+      "description": "Add type conversion rule for packed union types",
+      "approach": "Convert packed union to equivalent-width integer type"
+    },
+    {
+      "location": "getModulePortInfo()",
+      "description": "Add null check for typeConverter.convertType() return value",
+      "approach": "Return failure or emit error when conversion fails"
+    },
+    {
+      "location": "sanitizeInOut()",
+      "description": "Add defensive null check before dyn_cast",
+      "approach": "Skip ports with null types or assert with clear message"
+    }
+  ]
+}

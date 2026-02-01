@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T09:44:31Z",
+  "input_file": "source.sv",
+  "syntax_check": {
+    "status": "valid",
+    "tool": "slang",
+    "output": "Build succeeded: 0 errors, 0 warnings"
+  },
+  "feature_support": {
+    "status": "supported",
+    "unsupported_found": []
+  },
+  "known_limitations": {
+    "matched": false,
+    "description": null
+  },
+  "cross_tool_validation": {
+    "verilator": "pass",
+    "icarus": "pass",
+    "slang": "pass"
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reason": "Valid test case, unique crash in CIRCT (though fixed in current version 22.0.0git)"
+  },
+  "notes": "Bug does not reproduce in CIRCT 22.0.0git, indicating it may be fixed. However, related GitHub issue #9574 is still open, suggesting fix may not be complete or merged. Test case validates as syntactically correct and uses only supported SystemVerilog features."
+}

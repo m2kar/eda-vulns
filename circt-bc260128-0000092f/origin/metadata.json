@@ -1,0 +1,8 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "command": "/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw source.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator",
+    "signature": "Assertion `isa<To>(Val) && \"cast<Ty>() argument of incompatible type!\"' failed",
+    "timestamp": "2026-01-31T20:49:00Z"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "reproduction": {
+    "reproduced": true,
+    "crash_type": "assertion",
+    "crash_location": "SVModuleOpConversion::matchAndRewrite in MooreToCore.cpp",
+    "command": "/opt/firtool/bin/circt-verilog --ir-hw source.sv",
+    "testcase_id": "260127-0000014d"
+  },
+  "crash_signature": {
+    "primary": "SVModuleOpConversion::matchAndRewrite in MooreToCore",
+    "backtrace_key_frames": [
+      "#4 (anonymous namespace)::SVModuleOpConversion::matchAndRewrite",
+      "#16 (anonymous namespace)::MooreToCorePass::runOnOperation",
+      "#17 mlir::detail::OpToOpPassAdaptor::run"
+    ],
+    "original_assertion": "Assertion `detail::isPresent(Val) && \"dyn_cast on a non-existent value\"' failed in llvm::dyn_cast<circt::hw::InOutType>",
+    "related_function": "circt::hw::ModulePortInfo::sanitizeInOut"
+  },
+  "reproduction_details": {
+    "toolchain": "/opt/firtool-1.139.0",
+    "circt_version": "1.139.0",
+    "test_file": "source.sv",
+    "output_log": "reproduce.log",
+    "crash_confirmed": true,
+    "crash_signature_match": "Stack trace shows same conversion pass failure (MooreToCorePass)"
+  }
+}

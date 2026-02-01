@@ -1,0 +1,35 @@
+{
+  "testcase_id": "260128-00000883",
+  "validation_result": "report",
+  "classification": "bug",
+  "reason": "Valid SystemVerilog code causes assertion failure crash in CIRCT",
+  "syntax_check": {
+    "verilator": {
+      "result": "pass",
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    "slang": {
+      "result": "pass",
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "crash_reproduced": true,
+  "crash_signature_match": true,
+  "original_signature": "dyn_cast on a non-existent value",
+  "minimized_signature": "dyn_cast on a non-existent value",
+  "reduction_stats": {
+    "original_lines": 24,
+    "minimized_lines": 6,
+    "original_chars": 505,
+    "minimized_chars": 64,
+    "line_reduction_percent": 75,
+    "char_reduction_percent": 87
+  },
+  "is_valid_testcase": true,
+  "is_supported_feature": true,
+  "is_expected_crash": false
+}
