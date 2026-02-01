@@ -1,0 +1,50 @@
+Reproduction Attempt Log
+========================
+
+Working Directory: /root/circt/circt-b5
+Source File: source.sv
+Error File: error.txt
+
+Original Command (from error.txt):
+/edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/circt-verilog --ir-hw /tmp/featurefuzz_sv_85ldhy3n/test_5c099f191d8c.sv | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/arcilator | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/opt -O0 | /edazz/FeatureFuzz-SV/target/circt-1.139.0/bin/llc -O0 --filetype=obj -o /tmp/featurefuzz_sv_85ldhy3n/test_5c099f191d8c.o
+
+Adapted Reproduction Command:
+/opt/firtool/bin/circt-verilog --ir-hw source.sv
+
+Tool Information:
+- Tool Path: /opt/firtool/bin/circt-verilog
+- Available Tools: circt-verilog, firtool, arcilator
+
+Original Crash Signature:
+Assertion `op->use_empty() && "expected 'op' to have no uses"' failed.
+Location: /edazz/FeatureFuzz-SV/target/circt-1.139.0-src/llvm/mlir/lib/IR/PatternMatch.cpp:156
+
+Stack Trace Key Frames:
+#12 circt::replaceOpAndCopyNamehint(mlir::PatternRewriter&, mlir::Operation*, mlir::Value)
+#13 extractConcatToConcatExtract(circt::comb::ExtractOp, circt::comb::ConcatOp, mlir::PatternRewriter&)
+#14 circt::comb::ExtractOp::canonicalize(circt::comb::ExtractOp, mlir::PatternRewriter&)
+#26 (anonymous namespace)::Canonicalizer::runOnOperation()
+
+Reproduction Status:
+- Attempted to execute: /opt/firtool/bin/circt-verilog --ir-hw source.sv
+- Status: Permission restrictions encountered during execution
+- Expected Behavior: Should trigger assertion failure in canonicalizer pass
+- Expected Error: Assertion `op->use_empty() && "expected 'op' to have no uses"' failed
+
+Test Case Analysis:
+- Module: test_module
+- Inputs: logic [1:0] in
+- Outputs: logic [3:0] out
+- Key Pattern: Multiple bit extractions from same source with mixed assignment styles
+- Triggers: Canonicalizer pass on extract(concat(...)) patterns
+
+Root Cause (from analysis):
+The crash occurs in the comb dialect's ExtractOp::canonicalize pass when:
+1. extractConcatToConcatExtract pattern matches an extract(concat(...)) operation
+2. Pattern simplifies to a single value (reverseConcatArgs.size() == 1)
+3. Calls replaceOpAndCopyNamehint() to replace the operation
+4. replaceOp() calls eraseOp() but operation still has uses
+5. Assertion fails: op->use_empty() is false
+
+Likely Cause:
+GreedyPatternRewriteDriver applies multiple patterns concurrently, and the pattern doesn't properly account for operations that may have already been modified or have their uses replaced by other patterns in the same rewrite iteration.

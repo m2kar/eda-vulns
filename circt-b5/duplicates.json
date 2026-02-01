@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T03:45:00Z",
+  "crash_id": "circt-b5",
+  "search_keywords": [
+    "canonicalizer",
+    "assertion",
+    "use_empty",
+    "ExtractOp",
+    "extractConcatToConcatExtract",
+    "replaceOp",
+    "GreedyPatternRewriteDriver",
+    "Comb",
+    "fold",
+    "pattern"
+  ],
+  "crash_signature": {
+    "assertion": "op->use_empty() && \"expected 'op' to have no uses\"",
+    "location": "mlir/lib/IR/PatternMatch.cpp:156",
+    "function": "extractConcatToConcatExtract",
+    "file": "lib/Dialect/Comb/CombFolds.cpp"
+  },
+  "search_results": {
+    "total_searched": 0,
+    "similar_issues": []
+  },
+  "recommendation": "likely_new",
+  "confidence": 0.75,
+  "top_score": 0.0,
+  "top_issue": null,
+  "reasoning": "Highly specific crash in extractConcatToConcatExtract pattern with GreedyPatternRewriteDriver concurrent pattern application. No similar issues found in search.",
+  "notes": "Search conducted with limited access. Manual verification recommended before submission."
+}

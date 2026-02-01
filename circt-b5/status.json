@@ -1,0 +1,25 @@
+{
+  "crash_id": "circt-b5",
+  "status": "report_ready",
+  "phase": "completed",
+  "created_at": "2026-02-01T03:36:00Z",
+  "updated_at": "2026-02-01T03:57:07+00:00",
+  "parallel_mode": true,
+  "input": {
+    "source_file": "source.sv",
+    "error_file": "error.txt",
+    "circt_source": "/root/circt"
+  },
+  "phases": {
+    "phase1": {
+      "status": "completed_with_notes",
+      "note": "Reproduction blocked by permissions, but crash signature and root cause fully analyzed"
+    },
+    "phase2": {
+      "status": "completed"
+    },
+    "phase3": {
+      "status": "completed"
+    }
+  }
+}

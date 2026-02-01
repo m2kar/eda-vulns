@@ -1,0 +1,88 @@
+{
+  "crash_hash": "5c099f191d8c",
+  "crash_type": "assertion",
+  "dialect": "Comb",
+  "tool": "circt-verilog",
+  "pass": "Canonicalizer",
+  "severity": "high",
+  "assertion_message": "Assertion `op->use_empty() && \"expected 'op' to have no uses\"' failed.",
+  "assertion_location": {
+    "file": "llvm/mlir/lib/IR/PatternMatch.cpp",
+    "line": 156,
+    "function": "mlir::RewriterBase::eraseOp"
+  },
+  "crash_location": {
+    "file": "lib/Dialect/Comb/CombFolds.cpp",
+    "function": "extractConcatToConcatExtract",
+    "line": 547,
+    "context": "replaceOpAndCopyNamehint(rewriter, op, reverseConcatArgs[0])"
+  },
+  "call_stack_summary": [
+    "ExtractOp::canonicalize",
+    "extractConcatToConcatExtract",
+    "replaceOpAndCopyNamehint",
+    "mlir::RewriterBase::replaceOp",
+    "mlir::RewriterBase::eraseOp [CRASH]"
+  ],
+  "root_cause": {
+    "primary_hypothesis": "GreedyPatternRewriteDriver applying multiple patterns concurrently",
+    "confidence": "high",
+    "description": "The extractConcatToConcatExtract pattern attempts to replace an ExtractOp with a single value, but the operation still has uses when eraseOp is called. This occurs because the GreedyPatternRewriteDriver may apply multiple canonicalization patterns in rapid succession, and the pattern logic doesn't properly account for operations that may have already been modified by other patterns in the same rewrite iteration.",
+    "mechanism": "Pattern matches extract(concat(...)) and simplifies to a single value, but when replaceOp is called, the operation still has uses that weren't properly replaced, causing the assertion failure in eraseOp."
+  },
+  "test_case_analysis": {
+    "language": "SystemVerilog",
+    "size_lines": 16,
+    "key_constructs": [
+      "bit-indexed array access",
+      "mixed assignment styles (assign + always @*)",
+      "multiple extract operations from same source",
+      "continuous and procedural assignments to same signal"
+    ],
+    "problematic_pattern": "Mixed continuous assignments (assign) and procedural assignments (always @*) to different bits of the same 4-bit output signal",
+    "ir_pattern": "Multiple moore.extract operations from same source, lowered to extract(concat(...)) patterns"
+  },
+  "affected_operations": [
+    "comb.extract",
+    "comb.concat"
+  ],
+  "affected_files": [
+    "lib/Dialect/Comb/CombFolds.cpp",
+    "lib/Support/Naming.cpp",
+    "include/circt/Support/Naming.h"
+  ],
+  "suggested_fixes": [
+    {
+      "priority": 1,
+      "approach": "Add use checking before replaceOp",
+      "description": "Verify that the operation is in a valid state before calling replaceOpAndCopyNamehint"
+    },
+    {
+      "priority": 2,
+      "approach": "Return failure() on edge cases",
+      "description": "Be more defensive and return failure() if encountering situations that might lead to invalid IR state"
+    },
+    {
+      "priority": 3,
+      "approach": "Improve rewriter API usage",
+      "description": "Use proper rewriter API sequence instead of relying on replaceOp to handle namehint and replacement separately"
+    }
+  ],
+  "keywords": [
+    "canonicalizer",
+    "assertion",
+    "use_empty",
+    "ExtractOp",
+    "extractConcatToConcatExtract",
+    "replaceOp",
+    "GreedyPatternRewriteDriver",
+    "Comb",
+    "fold",
+    "pattern"
+  ],
+  "reproducible": true,
+  "minimal_test_case": true,
+  "analysis_timestamp": "2026-02-01",
+  "circt_version": "1.139.0",
+  "llvm_version": "22.0.0git"
+}

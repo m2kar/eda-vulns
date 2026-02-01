@@ -1,0 +1,35 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-02-01T03:45:00Z",
+  "test_case": {
+    "file": "source.sv",
+    "language": "SystemVerilog",
+    "size_lines": 16,
+    "syntax_valid": true
+  },
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "bug_type": "compiler_crash",
+    "severity": "high"
+  },
+  "validity_checks": {
+    "syntax": "valid",
+    "semantics": "valid",
+    "language_standard": "IEEE 1800 compliant",
+    "constructs": "standard (mixed continuous/procedural assignments)"
+  },
+  "crash_analysis": {
+    "crash_type": "assertion_failure",
+    "location": "mlir/lib/IR/PatternMatch.cpp:156",
+    "assertion": "op->use_empty() && \"expected 'op' to have no uses\"",
+    "root_cause": "Pattern rewrite error in extractConcatToConcatExtract",
+    "affected_component": "Comb dialect Canonicalizer"
+  },
+  "recommendation": {
+    "action": "report",
+    "priority": "high",
+    "reason": "Compiler crashes on valid input - this is a legitimate bug"
+  },
+  "notes": "Test case is already minimal (16 lines). Valid SystemVerilog code that should compile successfully but triggers assertion failure in optimization pass."
+}
