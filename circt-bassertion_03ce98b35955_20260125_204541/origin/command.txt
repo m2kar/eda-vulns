@@ -1,1 +1,0 @@
-/opt/firtool/bin/circt-verilog --ir-hw bug.sv
