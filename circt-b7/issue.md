@@ -1,0 +1,160 @@
+# [circt-verilog][LLHD] Compiler hangs on invalid code with procedural and continuous assignment to same signal
+
+## Description
+
+CIRCT hangs indefinitely when processing invalid SystemVerilog code that has both procedural (non-blocking) and continuous assignments to the same signal. Other tools (Verilator, Icarus Verilog) correctly reject this code with an error message. CIRCT should detect this invalid pattern and report an error instead of hanging.
+
+## Steps to Reproduce
+
+1. Save the following code as `bug.sv`
+2. Run: `circt-verilog --ir-hw bug.sv`
+3. Observe: Compiler hangs indefinitely (no output, no error message)
+
+## Test Case
+
+```systemverilog
+module bug(input logic clk, output logic q);
+  logic d;
+
+  always @(negedge clk) begin
+    q <= d;  // Non-blocking procedural assignment
+  end
+
+  assign q = q;  // Continuous assignment to same signal
+endmodule
+```
+
+## Expected Behavior
+
+CIRCT should reject this code with an error message similar to:
+```
+error: Cannot perform procedural assignment to variable 'q' because it is also continuously assigned
+```
+
+## Actual Behavior
+
+### v1.139.0:
+
+Compiler hangs indefinitely in the LLHD Sig2Reg pass (no output after 60+ seconds).
+
+```
+$ circt-verilog --ir-hw bug.sv
+[1]    1623059 terminated  circt-verilog --ir-hw bug.sv
+
+(manually killed after 60+ seconds)
+
+$ circt-verilog --version
+LLVM (http://llvm.org/):
+  LLVM version 22.0.0git
+  Optimized build.
+CIRCT firtool-1.139.0
+slang version 9.1.0+0
+```
+### main branch (commit e4838c703)
+
+However, in the main branch (commit e4838c703), the compiler crashes with a stack dump instead. This leaves uncertainty about whether the hang has been fixed or merely replaced with a different failure mode.
+
+```
+$ circt-verilog --ir-hw bug.sv 
+bug.sv:8:14: error: 'llhd.prb' op operation destroyed but still has uses
+  assign q = q;  // Combinational loop
+             ^
+bug.sv:8:14: note: see current operation: %0 = "llhd.prb"(<<UNKNOWN SSA VALUE>>) : (!llhd.ref<i1>) -> i1
+bug.sv:1:8: note: - use: "hw.output"(<<UNKNOWN SSA VALUE>>) : (i1) -> ()
+
+module bug(input logic clk, output logic q);
+       ^
+LLVM ERROR: operation destroyed but still has uses
+PLEASE submit a bug report to https://github.com/llvm/circt and include the crash backtrace.
+Stack dump:
+0.      Program arguments: /root/circt/build/bin/circt-verilog --ir-hw bug.sv
+ #0 0x00005607819e0738 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /root/circt/llvm/llvm/lib/Support/Unix/Signals.inc:842:13
+ #1 0x00005607819de333 llvm::sys::RunSignalHandlers() /root/circt/llvm/llvm/lib/Support/Signals.cpp:109:18
+ #2 0x00005607819e1471 SignalHandler(int, siginfo_t*, void*) /root/circt/llvm/llvm/lib/Support/Unix/Signals.inc:429:38
+ #3 0x00007f30dec7b330 (/lib/x86_64-linux-gnu/libc.so.6+0x45330)
+ #4 0x00007f30decd4b2c __pthread_kill_implementation ./nptl/pthread_kill.c:44:76
+ #5 0x00007f30decd4b2c __pthread_kill_internal ./nptl/pthread_kill.c:78:10
+ #6 0x00007f30decd4b2c pthread_kill ./nptl/pthread_kill.c:89:10
+ #7 0x00007f30dec7b27e raise ./signal/../sysdeps/posix/raise.c:27:6
+ #8 0x00007f30dec5e8ff abort ./stdlib/abort.c:81:7
+ #9 0x00005607819a7cd7 llvm::report_fatal_error(llvm::Twine const&, bool) /root/circt/llvm/llvm/lib/Support/ErrorHandling.cpp:137:5
+#10 0x00005607819a7b26 (/root/circt/build/bin/circt-verilog+0xff3b26)
+#11 0x000056078109dec6 mlir::InFlightDiagnostic::attachNote(std::optional<mlir::Location>) /root/circt/llvm/mlir/include/mlir/IR/Diagnostics.h:366:5
+#12 0x000056078109dec6 mlir::Operation::~Operation() /root/circt/llvm/mlir/lib/IR/Operation.cpp:187:14
+#13 0x000056078109ea7d mlir::Operation::destroy() /root/circt/llvm/mlir/lib/IR/Operation.cpp:214:3
+#14 0x000056078109ea7d llvm::ilist_traits<mlir::Operation>::deleteNode(mlir::Operation*) /root/circt/llvm/mlir/lib/IR/Operation.cpp:487:7
+#15 0x0000560780ca030e llvm::iplist_impl<llvm::simple_ilist<mlir::Operation>, llvm::ilist_traits<mlir::Operation>>::erase(llvm::ilist_iterator<llvm::ilist_detail::node_options<mlir::Operation, true, false, void, false, void>, false, false>) /root/circt/llvm/llvm/include/llvm/ADT/ilist.h:206:5
+#16 0x0000560780ca2e7a bool std::operator==<mlir::Operation**>(std::reverse_iterator<mlir::Operation**> const&, std::reverse_iterator<mlir::Operation**> const&) /usr/lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/stl_iterator.h:450:25
+#17 0x0000560780ca2e7a bool std::operator!=<mlir::Operation**>(std::reverse_iterator<mlir::Operation**> const&, std::reverse_iterator<mlir::Operation**> const&) /usr/lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/stl_iterator.h:464:20
+#18 0x0000560780ca2e7a (anonymous namespace)::SigPromoter::promote() /root/circt/lib/Dialect/LLHD/Transforms/Sig2RegPass.cpp:293:19
+#19 0x0000560780ca2e7a (anonymous namespace)::Sig2RegPass::runOnOperation() /root/circt/lib/Dialect/LLHD/Transforms/Sig2RegPass.cpp:368:14
+#20 0x0000560781827df2 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int)::$_3::operator()() const /root/circt/llvm/mlir/lib/Pass/Pass.cpp:0:19
+#21 0x0000560781827df2 void llvm::function_ref<void ()>::callback_fn<mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int)::$_3>(long) /root/circt/llvm/llvm/include/llvm/ADT/STLFunctionalExtras.h:46:12
+#22 0x0000560781827df2 llvm::function_ref<void ()>::operator()() const /root/circt/llvm/llvm/include/llvm/ADT/STLFunctionalExtras.h:69:12
+#23 0x0000560781827df2 void mlir::MLIRContext::executeAction<mlir::PassExecutionAction, mlir::Pass&>(llvm::function_ref<void ()>, llvm::ArrayRef<mlir::IRUnit>, mlir::Pass&) /root/circt/llvm/mlir/include/mlir/IR/MLIRContext.h:290:7
+#24 0x0000560781827df2 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int) /root/circt/llvm/mlir/lib/Pass/Pass.cpp:606:23
+#25 0x0000560781828ab4 mlir::detail::OpToOpPassAdaptor::runPipeline(mlir::OpPassManager&, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int, mlir::PassInstrumentor*, mlir::PassInstrumentation::PipelineParentInfo const*) /root/circt/llvm/mlir/lib/Pass/Pass.cpp:688:9
+#26 0x0000560781833282 mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::$_12::operator()(mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo&) const /root/circt/llvm/mlir/lib/Pass/Pass.cpp:1004:9
+#27 0x0000560781833282 auto void mlir::parallelForEach<__gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::$_12>(mlir::MLIRContext*, __gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, __gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::$_12&&)::'lambda'(__gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>&&)::operator()<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo&>(__gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>&&) const /root/circt/llvm/mlir/include/mlir/IR/Threading.h:120:12
+#28 0x000056078182b39b llvm::LogicalResult mlir::failableParallelForEach<__gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, void mlir::parallelForEach<__gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::$_12>(mlir::MLIRContext*, __gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, __gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::$_12&&)::'lambda'(__gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>&&)>(mlir::MLIRContext*, __gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, __gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::$_12&&) /root/circt/llvm/mlir/include/mlir/IR/Threading.h:0:18
+#29 0x000056078182b39b void mlir::parallelForEach<__gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::$_12>(mlir::MLIRContext*, __gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, __gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::$_12&&) /root/circt/llvm/mlir/include/mlir/IR/Threading.h:119:9
+#30 0x000056078182b39b void mlir::parallelForEach<std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>&, mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::$_12>(mlir::MLIRContext*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>&, mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::$_12&&) /root/circt/llvm/mlir/include/mlir/IR/Threading.h:131:3
+#31 0x000056078182b39b mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool) /root/circt/llvm/mlir/lib/Pass/Pass.cpp:991:3
+#32 0x0000560781828037 mlir::detail::OpToOpPassAdaptor::runOnOperation(bool) /root/circt/llvm/mlir/lib/Pass/Pass.cpp:0:5
+#33 0x0000560781828037 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int)::$_3::operator()() const /root/circt/llvm/mlir/lib/Pass/Pass.cpp:610:22
+#34 0x0000560781828037 void llvm::function_ref<void ()>::callback_fn<mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int)::$_3>(long) /root/circt/llvm/llvm/include/llvm/ADT/STLFunctionalExtras.h:46:12
+#35 0x0000560781828037 llvm::function_ref<void ()>::operator()() const /root/circt/llvm/llvm/include/llvm/ADT/STLFunctionalExtras.h:69:12
+#36 0x0000560781828037 void mlir::MLIRContext::executeAction<mlir::PassExecutionAction, mlir::Pass&>(llvm::function_ref<void ()>, llvm::ArrayRef<mlir::IRUnit>, mlir::Pass&) /root/circt/llvm/mlir/include/mlir/IR/MLIRContext.h:290:7
+#37 0x0000560781828037 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int) /root/circt/llvm/mlir/lib/Pass/Pass.cpp:606:23
+#38 0x0000560781828ab4 mlir::detail::OpToOpPassAdaptor::runPipeline(mlir::OpPassManager&, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int, mlir::PassInstrumentor*, mlir::PassInstrumentation::PipelineParentInfo const*) /root/circt/llvm/mlir/lib/Pass/Pass.cpp:688:9
+#39 0x000056078182f6fb mlir::PassManager::runPasses(mlir::Operation*, mlir::AnalysisManager) /root/circt/llvm/mlir/lib/Pass/Pass.cpp:1123:3
+#40 0x000056078182ed7e mlir::PassManager::run(mlir::Operation*) /root/circt/llvm/mlir/lib/Pass/Pass.cpp:1097:0
+#41 0x0000560780ab1cad executeWithSources(mlir::MLIRContext*, llvm::SourceMgr&) /root/circt/tools/circt-verilog/circt-verilog.cpp:404:9
+#42 0x0000560780aaea1f execute(mlir::MLIRContext*) /root/circt/tools/circt-verilog/circt-verilog.cpp:481:10
+#43 0x0000560780aae0c8 main /root/circt/tools/circt-verilog/circt-verilog.cpp:534:15
+#44 0x00007f30dec601ca __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:74:3
+#45 0x00007f30dec6028b call_init ./csu/../csu/libc-start.c:128:20
+#46 0x00007f30dec6028b __libc_start_main ./csu/../csu/libc-start.c:347:5
+#47 0x0000560780aad4d5 _start (/root/circt/build/bin/circt-verilog+0xf94d5)
+[1]    1619108 IOT instruction (core dumped)  /root/circt/build/bin/circt-verilog --ir-hw bug.sv
+
+$ circt-verilog --version     
+LLVM (http://llvm.org/):
+  LLVM version 23.0.0git
+  Optimized build with assertions.
+CIRCT e4838c703
+slang version 9.1.0+0
+```
+
+## Root Cause Analysis
+
+The test case violates IEEE 1800 semantics by having multiple drivers to signal `q`:
+- Procedural driver: `always @(negedge clk) q <= d`
+- Continuous driver: `assign q = q`
+
+The continuous assignment also creates a combinational loop (`q` depends on itself).
+
+During LLHD lowering, the Sig2Reg pass attempts to promote signals to registers but encounters a circular dependency when processing the self-referencing assignment. This causes infinite recursion in the signal promotion logic.
+
+## Cross-Tool Validation
+
+- **Icarus Verilog**: ✅ Correctly rejects
+  ```
+  error: Cannot perform procedural assignment to variable 'q' because it is also continuously assigned.
+  ```
+
+- **Verilator**: ✅ Correctly rejects
+  ```
+  %Error-BLKANDNBLK: Blocked and non-blocking assignments to same variable: 'q'
+  ```
+
+- **CIRCT**: ❌ Hangs indefinitely
+
+## Suggested Fix
+
+Add validation in the LLHD lowering pipeline to detect:
+1. Multiple drivers to the same signal (procedural + continuous)
+2. Combinational loops in signal assignments
+
+The compiler should emit a diagnostic error and fail gracefully instead of hanging.
+
