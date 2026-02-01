@@ -1,0 +1,48 @@
+{
+  "dialect": "LLHD",
+  "failing_pass": "Sig2RegPass",
+  "crash_category": "Infinite Loop / RAUW Self-Reference",
+  "crash_location": "lib/Dialect/LLHD/Transforms/Sig2RegPass.cpp:286",
+  "key_constructs": [
+    "negedge clock sensitivity",
+    "non-blocking assignment in always block",
+    "continuous assignment to same signal",
+    "combinational loop (q_out depends on itself)"
+  ],
+  "root_cause_hypotheses": [
+    {
+      "rank": 1,
+      "hypothesis": "Combinational loop causes infinite recursion in signal promotion",
+      "evidence": [
+        "q_out is assigned in always @(negedge clock) block",
+        "q_out is also used in its own continuous assignment: assign q_out = _02_ ? 1'b0 : q_out",
+        "Sig2Reg pass tries to promote signals to registers but gets stuck resolving circular dependency",
+        "Original assertion: 'cannot RAUW a value with itself' indicates self-reference detection",
+        "Current behavior: timeout indicates infinite loop in dependency resolution"
+      ],
+      "confidence": "high"
+    },
+    {
+      "rank": 2,
+      "hypothesis": "Missing combinational loop detection in LLHD lowering",
+      "evidence": [
+        "CIRCT should detect and reject combinational loops during lowering",
+        "The pass hangs instead of reporting a proper error",
+        "Stack trace shows crash during SigPromoter::promote() destructor cleanup"
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "keywords": [
+    "LLHD",
+    "Sig2Reg",
+    "combinational loop",
+    "RAUW",
+    "signal promotion",
+    "negedge",
+    "circular dependency",
+    "infinite loop",
+    "timeout"
+  ],
+  "suggested_fix": "Add combinational loop detection before signal promotion in Sig2RegPass"
+}

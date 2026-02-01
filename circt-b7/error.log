@@ -1,0 +1,4 @@
+TIMEOUT: Compiler hangs indefinitely (no output after 60 seconds)
+
+Expected: Error message about combinational loop or multiple drivers
+Actual: Infinite loop in LLHD Sig2Reg pass

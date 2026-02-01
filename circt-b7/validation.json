@@ -1,0 +1,43 @@
+{
+  "test_file": "bug.sv",
+  "dialect": "LLHD",
+  "unsupported_features": [],
+  "syntax_issues": [
+    {
+      "issue": "missing_semicolon",
+      "description": "Missing semicolon after keyword",
+      "valid_sv": false
+    }
+  ],
+  "dialect_limitations": [],
+  "other_tools": {
+    "verilator": {
+      "success": false,
+      "errors": "%Warning-UNDRIVEN: /home/zhiqing/edazz/eda-vulns/circt-b7/circt-b1/bug.sv:2:9: Signal is not driven: 'd'\n                                                                             : ... note: In instance 'bug'\n    2 |   logic d;\n      |         ^\n                   ... For warning description see https://verilator.org/warn/UNDRIVEN?v=5.022\n                   ... Use \"/* verilator lint_off UNDRIVEN */\" and lint_on around source to disable this message.\n%Error: /home/zhiqing/edazz/eda-vulns/circt-b7/circt-b1/bug.sv:8:12: Wire inputs its own output, creating circular logic (wire x=x)\n    8 |   assign q = q;   \n      |            ^\n%Error-BLKANDNBLK: /home/zhiqing/edazz/eda-vulns/circt-b7/circt-b1/bug.sv:1:42: Unsupported: Blocked and non-blocking assignments to same variable: 'q'\n    1 | module bug(input logic clk, output logic q);\n      |                                          ^\n                   /home/zhiqing/edazz/eda-vulns/circt-b7/circt-b1/bug.sv:8:12: ... Location of blocking assignment\n    8 |   assign q = q;   \n      |            ^\n                   /home/zhiqing/edazz/eda-vulns/circt-b7/circt-b1/bug.sv:5:7: ... Location of nonblocking assignment\n    5 |     q <= d;\n      |       ^~\n%Warning-UNOPTFLAT: /home/zhiqing/edazz/eda-vulns/circt-b7/circt-b1/bug.sv:1:42: Signal unoptimizable: Circular combinational logic: 'q'\n    1 | module bug(input logic clk, output logic q);\n      |                                          ^\n                    /home/zhiqing/edazz/eda-vulns/circt-b7/circt-b1/bug.sv:1:42:      Example path: q\n                    /home/zhiqing/edazz/eda-vulns/circt-b7/circt-b1/bug.sv:8:12:      Example path: ASSIGNW\n                    /home/zhiqing/edazz/eda-vulns/circt-b7/circt-b1/bug.sv:1:42:      Example path: q\n%Error: Exiting due to 2 error(s), 2 warning(s)\n"
+    },
+    "iverilog": {
+      "success": false,
+      "errors": "/home/zhiqing/edazz/eda-vulns/circt-b7/circt-b1/bug.sv:5: error: Cannot perform procedural assignment to variable 'q' because it is also continuously assigned.\nElaboration failed\n"
+    },
+    "slang": {
+      "success": false,
+      "errors": "slang: unknown command line argument '--syntax-only'\n"
+    }
+  },
+  "classification": {
+    "is_valid_testcase": true,
+    "is_genuine_bug": true,
+    "is_design_limitation": false,
+    "is_unsupported_feature": false,
+    "bug_type": "missing_validation",
+    "recommendation": "report",
+    "confidence": "high",
+    "reasoning": [
+      "Test case is intentionally invalid SystemVerilog (procedural + continuous assignment to same variable)",
+      "Iverilog correctly rejects: 'Cannot perform procedural assignment to variable q because it is also continuously assigned'",
+      "Verilator correctly rejects: 'Blocked and non-blocking assignments to same variable'",
+      "CIRCT hangs indefinitely instead of reporting an error",
+      "This is a missing validation bug - CIRCT should detect and reject invalid code gracefully"
+    ]
+  }
+}
