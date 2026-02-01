@@ -1,0 +1,18 @@
+circt-verilog: mlir/include/mlir/IR/StorageUniquerSupport.h:180: static ConcreteT mlir::StorageUserBase<ConcreteT, BaseT, StorageT, UniquerT, Traits>::get(mlir::MLIRContext *, Args &&...) [with ConcreteT = circt::arc::StateType; BaseT = mlir::Type; StorageT = circt::arc::detail::StateTypeStorage; UniquerT = mlir::DefaultTypeStorage; Traits = mlir::TypeTrait::IsMutable; Args = {mlir::Type &}]: Assertion `succeeded(result.verifyInvariants(loc))' failed.
+PLEASE submit a bug report to https://github.com/llvm/circt/issues/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /root/circt/build/bin/arcilator
+1.	Running pass 'LowerStatePass' on operation 'builtin.module'
+ #0 0x00007f2865e79567 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (arcilator+0x3e79567)
+ #1 0x00007f2865e77543 llvm::sys::RunSignalHandlers() (arcilator+0x3e77543)
+ #2 0x00007f2865e79d2f SignalHandler(int) (arcilator+0x3e79d2f)
+ #3 0x00007f286a642520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)
+ #4 0x00007f286a6969fc pthread_kill (/lib/x86_64-linux-gnu/libc.so.6+0x969fc)
+ #5 0x00007f286a642476 gsignal (/lib/x86_64-linux-gnu/libc.so.6+0x42476)
+ #6 0x00007f286a6287f3 abort (/lib/x86_64-linux-gnu/libc.so.6+0x287f3)
+ #7 0x00007f286a62871b (/lib/x86_64-linux-gnu/libc.so.6+0x2871b)
+ #8 0x00007f286a639e96 (/lib/x86_64-linux-gnu/libc.so.6+0x39e96)
+ #9 0x00007f2866b8a234 circt::arc::StateType::get(mlir::Type) (arcilator+0x6b8a234)
+#10 0x00007f2866b8f891 (anonymous namespace)::ModuleLowering::run() (arcilator+0x6b8f891)
+#11 0x00007f2866b8e123 (anonymous namespace)::LowerStatePass::runOnOperation() (arcilator+0x6b8e123)
+Aborted (core dumped)

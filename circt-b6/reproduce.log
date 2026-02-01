@@ -1,0 +1,43 @@
+CIRCT Bug Reproduction Log
+==========================
+Crash ID: circt-b6
+Date: 2026-02-01T04:45:00Z
+
+Original Crash:
+--------------
+Tool: arcilator
+Version: CIRCT 1.139.0
+Error: state type must have a known bit width; got '!llhd.ref<i1>'
+Assertion: StorageUniquerSupport.h:180
+
+Reproduction Attempt:
+--------------------
+Command: circt-verilog --ir-hw source.sv | arcilator
+CIRCT Binary: /root/circt/build/bin
+CIRCT Version: e4838c703
+LLVM Version: 23.0.0git (with assertions)
+
+Result: SUCCESS - CRASH REPRODUCED ✓
+------------------------------------
+Exit Code: 134 (SIGABRT)
+
+Error Output:
+<unknown>:0: error: state type must have a known bit width; got '!llhd.ref<i1>'
+arcilator: /root/circt/llvm/llvm/../mlir/include/mlir/IR/StorageUniquerSupport.h:180: Assertion failed
+
+Stack Trace (Key Frames):
+#12: circt::arc::StateType::get(mlir::Type)
+#13: ModuleLowering::run() at LowerState.cpp:219:66
+#14: LowerStatePass::runOnOperation() at LowerState.cpp:1198:41
+
+Crash Signature Match: ✓
+-------------------------
+Original: LowerState.cpp:219 -> StateType::get -> assertion on !llhd.ref<i1>
+Reproduced: LowerState.cpp:219 -> StateType::get -> assertion on !llhd.ref<i1>
+
+Conclusion:
+-----------
+Reproduction: SUCCESS
+Status: reproduced
+Same Crash: YES
+Ready for Phase 2: minimize + validate + check-duplicates

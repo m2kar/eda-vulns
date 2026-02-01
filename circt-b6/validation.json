@@ -1,0 +1,52 @@
+{
+  "crash_id": "circt-b6",
+  "validation_timestamp": "2026-02-01T05:10:00Z",
+  "classification": {
+    "result": "report",
+    "confidence": "high",
+    "reasoning": "Compiler crash on syntactically valid SystemVerilog code. The test case uses standard inout ports in sequential logic, which should either compile successfully or produce a graceful error message, not an assertion failure."
+  },
+  "syntax_validation": {
+    "systemverilog_valid": true,
+    "notes": "Test case uses standard SystemVerilog constructs: inout ports, always_ff blocks, and non-blocking assignments. All syntax is IEEE 1800-2017 compliant."
+  },
+  "cross_tool_validation": {
+    "verilator": {
+      "available": false,
+      "result": "not_tested",
+      "notes": "Verilator not available in environment"
+    },
+    "slang": {
+      "available": false,
+      "result": "not_tested",
+      "notes": "Slang not available in environment"
+    },
+    "iverilog": {
+      "available": false,
+      "result": "not_tested",
+      "notes": "Icarus Verilog not available in environment"
+    }
+  },
+  "bug_characteristics": {
+    "is_compiler_crash": true,
+    "is_assertion_failure": true,
+    "is_graceful_error": false,
+    "affects_valid_code": true,
+    "severity": "high",
+    "impact": "Users cannot compile valid SystemVerilog designs with inout ports in sequential logic"
+  },
+  "minimization_quality": {
+    "original_lines": 21,
+    "minimal_lines": 9,
+    "reduction_percent": 57.14,
+    "preserves_crash": true,
+    "removes_irrelevant_code": true,
+    "readability": "excellent"
+  },
+  "recommendation": {
+    "action": "report_to_circt",
+    "priority": "high",
+    "labels": ["bug", "Arc", "LLHD", "type-system"],
+    "title_suggestion": "[Arc] Assertion failure when lowering inout ports in sequential logic"
+  }
+}

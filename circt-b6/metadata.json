@@ -1,0 +1,23 @@
+{
+  "crash_id": "circt-b6",
+  "crash_type": "assertion",
+  "hash": "7f2865e79567",
+  "original_file": "program_20260126_014614_506021.sv",
+  "original_command": "circt-verilog --ir-hw test.sv | arcilator | opt -O0 | llc -O0 --filetype=obj -o test.o",
+  "assertion_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "crashing_tool": "arcilator",
+  "stack_trace": "StorageUniquerSupport.h:180 -> StateType::get -> LowerState.cpp:219",
+  "reproduction": {
+    "command": "circt-verilog --ir-hw source.sv | arcilator",
+    "circt_bin": "/root/circt/build/bin",
+    "circt_version": "e4838c703",
+    "llvm_version": "23.0.0git",
+    "timestamp": "2026-02-01T04:45:00Z",
+    "reproduced": true,
+    "same_crash": true,
+    "exit_code": 134,
+    "original_signature": "7f2865e79567",
+    "repro_signature": "7f2865e79567",
+    "notes": "Crash successfully reproduced with CIRCT e4838c703. Same assertion failure at LowerState.cpp:219."
+  }
+}

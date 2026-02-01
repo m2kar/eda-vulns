@@ -1,0 +1,45 @@
+{
+  "crash_id": "circt-b6",
+  "check_timestamp": "2026-02-01T05:15:00Z",
+  "search_queries": [
+    "Arc StateType",
+    "LowerState assertion",
+    "LLHD inout",
+    "arcilator crash",
+    "inout always_ff",
+    "StateType bit width",
+    "llhd.ref"
+  ],
+  "issues_found": [
+    {
+      "number": 8825,
+      "title": "[LLHD] Switch from hw.inout to a custom signal reference type",
+      "state": "OPEN",
+      "similarity_score": 7.5,
+      "reasoning": "Related to LLHD reference types (!llhd.ref<T>) but is a feature request to introduce the type, not a bug report about crashes when using it."
+    },
+    {
+      "number": 9395,
+      "title": "[circt-verilog][arcilator] Arcilator assertion failure",
+      "state": "CLOSED",
+      "similarity_score": 3.0,
+      "reasoning": "Arcilator assertion failure but different root cause (combinational blocks with assertions, not inout ports in sequential logic)."
+    },
+    {
+      "number": 9260,
+      "title": "Arcilator crashes in Upload Release Artifacts CI",
+      "state": "OPEN",
+      "similarity_score": 2.0,
+      "reasoning": "Arcilator crash but appears to be CI-specific, not related to inout ports or StateType."
+    }
+  ],
+  "top_match": {
+    "issue_number": 8825,
+    "similarity_score": 7.5,
+    "is_duplicate": false,
+    "reasoning": "Issue #8825 discusses introducing !llhd.ref<T> type (which is what causes our crash), but it's a feature request about the type system design, not a bug report about crashes when using inout ports."
+  },
+  "recommendation": "new_issue",
+  "confidence": "high",
+  "summary": "No duplicate found. Issue #8825 is related (discusses LLHD reference types) but is a feature request, not a bug report. Our crash is a specific bug: Arc StateType cannot handle !llhd.ref<i1> from inout ports in sequential logic."
+}

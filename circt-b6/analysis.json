@@ -1,0 +1,90 @@
+{
+  "crash_id": "circt-b6",
+  "analysis_timestamp": "2026-02-01T04:30:00Z",
+  "dialect": "Arc",
+  "related_dialects": ["LLHD", "HW", "Moore"],
+  "crash_type": "assertion",
+  "severity": "high",
+  "root_cause": {
+    "category": "type_system_mismatch",
+    "summary": "Arc StateType cannot handle LLHD reference types from inout ports",
+    "detailed": "The LowerStatePass in Arc dialect attempts to create StateType storage for sequential logic that reads from an inout port. The inout port is represented as !llhd.ref<i1> (LLHD reference type), which lacks a known bit width. StateType::verifyInvariants() rejects this type, causing an assertion failure instead of a graceful error."
+  },
+  "error_message": "state type must have a known bit width; got '!llhd.ref<i1>'",
+  "assertion_location": {
+    "file": "mlir/include/mlir/IR/StorageUniquerSupport.h",
+    "line": 180,
+    "function": "StorageUserBase::get"
+  },
+  "crash_point": {
+    "file": "lib/Dialect/Arc/Transforms/LowerState.cpp",
+    "line": 219,
+    "function": "ModuleLowering::run",
+    "context": "Attempting to create Arc StateType for inout port state"
+  },
+  "problematic_construct": {
+    "type": "inout_port_in_sequential_logic",
+    "description": "Inout port used as input to always_ff block",
+    "code_snippet": "always_ff @(posedge clk) begin\n  temp_reg <= c;  // c is inout wire\nend"
+  },
+  "type_flow": [
+    {
+      "stage": "frontend",
+      "dialect": "HW/Moore",
+      "type": "inout wire",
+      "representation": "!llhd.ref<i1>"
+    },
+    {
+      "stage": "arc_lowering",
+      "dialect": "Arc",
+      "operation": "StateType::get()",
+      "expected_type": "type with known bit width",
+      "actual_type": "!llhd.ref<i1>",
+      "result": "assertion_failure"
+    }
+  ],
+  "affected_tools": [
+    "arcilator"
+  ],
+  "affected_passes": [
+    "LowerStatePass"
+  ],
+  "reproducibility": {
+    "rate": "100%",
+    "circt_version": "1.139.0",
+    "minimal_test_case": true
+  },
+  "suggested_fixes": [
+    {
+      "location": "lib/Dialect/Arc/Transforms/LowerState.cpp:219",
+      "approach": "Add type checking before StateType::get()",
+      "description": "Check if input type is LLHD reference and either dereference it or emit proper error"
+    },
+    {
+      "location": "lib/Dialect/Arc/IR/ArcTypes.cpp",
+      "approach": "Improve error diagnostics",
+      "description": "Replace assertion with diagnostic error message for unsupported types"
+    },
+    {
+      "location": "Frontend lowering",
+      "approach": "Insert explicit load operations",
+      "description": "Convert !llhd.ref<T> to T when used in sequential contexts"
+    }
+  ],
+  "impact": {
+    "user_facing": "Compiler crash on valid SystemVerilog with inout ports",
+    "expected_behavior": "Either successful compilation or graceful error message",
+    "actual_behavior": "Assertion failure and crash"
+  },
+  "keywords": [
+    "inout",
+    "bidirectional",
+    "StateType",
+    "LLHD",
+    "Arc",
+    "LowerState",
+    "reference_type",
+    "type_verification",
+    "always_ff"
+  ]
+}
