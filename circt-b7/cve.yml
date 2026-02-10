@@ -17,8 +17,9 @@
 "Affected component(s)": "circt-verilog,  LLHD lowering pipeline (Sig2Reg)"
 "Attack vector(s)": "Compile SystemVerilog Code with both procedural and continuous assignments to the same signal (e.g., `q <= d` and `assign q = q`)"
 "Suggested description of the vulnerability for use in the CVE": |
-  llvm circt-1.139.0 and earlier mishandles multiple drivers to the same signal (e.g., `q <= d` and `assign q = q`),
-  causing  infinite recursion during LLHD lowering.
+ CIRCT firtool-1.139.0 and earlier contains a vulnerability in the LLHD Sig2Reg pass. 
+ Signals with overlapping or conflicting drivers (e.g., `q <= d` and `assign q = q` ) are not properly detected.
+ This can cause the compiler to hang, resulting in denial of service in automated or multi-user compilation environments.
 "Discoverer(s)/Credits": "Zhiqing Rui ,Haoran Liu(Institute of Software, Chinese Academy of Sciences)"
 "Reference(s)": |
   https://github.com/m2kar/eda-vulns/tree/main/circt-b7

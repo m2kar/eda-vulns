@@ -121,29 +121,28 @@ circt-b7/
 
 ## 4. Impact Analysis
 
-### 4.1 Functional Impact
+### 4.1 4.1 Security Implications
 
-| Category | Level | Description |
-|----------|-------|-------------|
-| Design Correctness | 🟡 MEDIUM | Code must be refactored to avoid compiler hang |
-| Tool Interoperability | 🟡 MEDIUM | Automation and synthesis tools may hang |
-| Development Workflow | 🟡 MEDIUM | Manual intervention required to continue compilation |
-| Verification Coverage | 🟢 LOW | Workaround code preserves behavior |
+A specially crafted input  can cause the compiler to enter an infinite loop, resulting in failed compilation jobs.
 
-### 4.2 Security Implications
+ Denial of Service (DoS):
 
-- **Code Integrity Risk:** Manual modifications introduce human error
-- **Supply Chain Vulnerability:** Automated pipelines may hang on invalid code
-- **Compiler Trust:** Inconsistent handling reduces reliability
+A single malformed IR/RTL file can block the compilation process indefinitely.
 
-### 4.3 Affected Use Cases
+In automated or multi-job EDA environments, such a hang may occupy compiler worker slots, delay queued jobs, and stall pipelines until manual intervention occurs.
 
-- FPGA development with multi-driver signals
-- ASIC designs with procedural + continuous assignments
-- Hardware fuzzing pipelines
-- Legacy IP migration
+Prolonged execution may consume additional CPU cycles and memory, potentially increasing the operational cost in shared infrastructure, though full node exhaustion is not required for impact.
 
----
+- Scope of Impact:
+
+This vulnerability does not allow arbitrary code execution or privilege escalation, but it can significantly affect workflow reliability.
+
+All environments relying on automated compilation, continuous integration, regression testing, or cloud-based EDA services are susceptible to operational disruption.
+
+The issue is triggered by inputs fully controlled by the user, making it possible for a single job to affect the stability of other users’ workflows in shared environments.
+### 4.2 Affected Use Cases
+- Automated compilation pipelines – In multi-job or CI environments, a single malformed IR/RTL input can trigger the affected pass to hang indefinitely. This blocks the compilation job, stalls downstream pipeline stages such as synthesis or regression tests, and prevents other queued jobs from executing. Manual intervention is required to terminate the stalled job and restart the pipeline, resulting in increased operational overhead and delays in automated workflows.
+- Hardware fuzzing pipelines – Randomly generated or mutated RTL used for hardware fuzzing can hit the affected pass and hang compilation jobs. This can freeze the automated fuzzing workflow, block other fuzzing tasks in shared compute environments, and waste CPU and memory resources until manual cleanup is performed.
 
 ## 5. Remediation
 
