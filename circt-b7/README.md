@@ -121,7 +121,7 @@ circt-b7/
 
 ## 4. Impact Analysis
 
-### 4.1 4.1 Security Implications
+### 4.1 Security Implications
 
 A specially crafted input  can cause the compiler to enter an infinite loop, resulting in failed compilation jobs.
 
