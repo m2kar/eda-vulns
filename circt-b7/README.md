@@ -133,7 +133,7 @@ In automated or multi-job EDA environments, such a hang may occupy compiler work
 
 Prolonged execution may consume additional CPU cycles and memory, potentially increasing the operational cost in shared infrastructure, though full node exhaustion is not required for impact.
 
-- Scope of Impact:
+ Scope of Impact:
 
 This vulnerability does not allow arbitrary code execution or privilege escalation, but it can significantly affect workflow reliability.
 
